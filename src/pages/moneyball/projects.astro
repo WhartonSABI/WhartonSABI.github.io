@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { loadRepos, type Project } from '../../lib/data';
+
+const repos = loadRepos();
+const config = repos.moneyball;
+const org = config.org;
+---
+
+<Layout title="Moneyball Academy – Projects" description="Wharton Moneyball Academy project portfolio.">
+  <Nav />
+  <main class="mx-auto max-w-5xl px-6 py-16">
+    <h1 class="text-3xl font-bold text-stone-900">Moneyball Academy</h1>
+    <p class="mt-2 text-stone-600">High school summer program projects.</p>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {config.projects.map((p: Project) => (
+        <ProjectCard
+          name={p.name}
+          description={p.description}
+          org={p.org_override || org}
+          repo={p.repo}
+          deliverables={p.deliverables}
+        />
+      ))}
+    </div>
+  </main>
+</Layout>

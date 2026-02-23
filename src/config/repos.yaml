@@ -1,0 +1,80 @@
+# WSABI Projects - Seminar, Lab, and Moneyball Academy (public repos only)
+# GitHub raw file URL: https://github.com/{org}/{repo}/raw/main/{path}
+
+seminar:
+  org: WhartonSABI
+  projects:
+    - name: Curlers
+      repo: curlers
+      description: Mixed Doubles curling – end-level EP model, Power Play MDP policy, CSAS 2026 Data Challenge.
+      deliverables:
+        - label: Research Note
+          path: research-note/article.pdf
+        - label: CSAS 2026 Report
+          path: csas2026/writeup/report.pdf
+    - name: Rugby Expected Points
+      repo: rugby-ep
+      description: Expected points model for rugby union.
+      deliverables:
+        - label: JQAS Article
+          path: jqas/cover.pdf
+    - name: Halo 2026
+      repo: halo2026
+      description: NHL tracking data analysis and modeling.
+      deliverables:
+        - label: Writeup
+          path: writeup/main.pdf
+
+lab:
+  org: WhartonSABI
+  projects:
+    - name: NFL Elo
+      repo: nfl-elo
+      description: NFL pass rushing Elo ratings from Hudl IQ data.
+      deliverables:
+        - label: Lab Capstone
+          path: presentations/lab-capstone.pdf
+        - label: Results Summary
+          path: results/nflelo.pdf
+    - name: NBA Lineups
+      repo: nba-lineups
+      description: NBA lineup optimization and analysis.
+      deliverables:
+        - label: CMU Presentation
+          path: presentations/cmu.pdf
+    - name: Server Quality
+      repo: server-quality
+      description: Tennis server quality modeling.
+      deliverables:
+        - label: Lab Presentation
+          path: presentations/lab.pdf
+        - label: CMSAC 2025
+          path: presentations/cmsac2025.pdf
+        - label: Paper
+          path: paper/main.pdf
+    - name: xG+
+      repo: xg-plus
+      description: Probabilistic goalscoring framework for soccer.
+      deliverables:
+        - label: Paper
+          path: paper/paper.pdf
+        - label: JSM 2025
+          path: jsm2025/presentation.pdf
+        - label: ASI 2026
+          path: asi2026/presentation.pdf
+
+moneyball:
+  org: Wharton-Moneyball
+  projects:
+    - name: NBA Draft Lottery
+      repo: nba-draft-lottery
+      description: NBA draft lottery probability analysis.
+    - name: QB Pressure
+      repo: qb-pressure
+      description: Quarterback pressure modeling.
+    - name: Serve Performance
+      repo: serve-performance
+      description: Tennis serve performance analysis.
+    - name: Stolen Base Leads
+      repo: stolen-base-leads
+      description: MLB stolen bases and optimal lead distance.
