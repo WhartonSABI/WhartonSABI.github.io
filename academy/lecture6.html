@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Lecture 6: Linear Regression</title>
+
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-sign-in"></span>
+     
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture0.html">Lecture 0</a>
+    </li>
+    <li>
+      <a href="ps0.html">Problem Set 0</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-institution"></span>
+     
+    Academy
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="lecture5.html">Lecture 5</a>
+    </li>
+    <li>
+      <a href="lecture6.html">Lecture 6</a>
+    </li>
+    <li>
+      <a href="lecture7.html">Lecture 7</a>
+    </li>
+    <li>
+      <a href="lecture8.html">Lecture 8</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="ps3.html">Problem Set 3</a>
+    </li>
+    <li>
+      <a href="ps4.html">Problem Set 4</a>
+    </li>
+    <li>
+      <a href="ps5.html">Problem Set 5</a>
+    </li>
+    <li>
+      <a href="ps6.html">Problem Set 6</a>
+    </li>
+    <li>
+      <a href="ps7.html">Problem Set 7</a>
+    </li>
+    <li>
+      <a href="ps8.html">Problem Set 8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-dribbble"></span>
+     
+    Training Camp
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="tc_lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="tc_lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="tc_lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="tc_lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="tc_lecture5.html">Lecture 5</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="tc_ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="tc_ps3.html">Problem Set 3</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_lecture_data_sources.html">Data Sources Lecture</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lecture 6: Linear Regression</h1>
+
+</div>
+
+
+<p>In <a href="lecture4.html">Lecture 4</a>, we looked at predicting an
+MLB player’s 2015 batting average using their 2014 batting average. We
+did so by binning the data and looking at the average within each bin.
+What if we wanted to make the bins infinitesimally small? This brings us
+to the ideas of <em>correlation</em> and the <em>regression
+method</em>.</p>
+<p>We again load the data (if you don’t have it, you can download it <a
+href="data/batting_2014_2015.RData">here</a>) and use the
+<code>pivot_wider</code> function to separate the 2014 and 2015 batting
+averages into separate columns.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/batting_2014_2015.RData&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>batting_2014_2015 <span class="ot">&lt;-</span> batting_2014_2015 <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="at">names_from =</span> yearID,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>    <span class="at">values_from =</span> BA,</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">&quot;BA_&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  )</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">head</span>(batting_2014_2015)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 3
+##   playerID  BA_2014 BA_2015
+##   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;
+## 1 abreujo02   0.317   0.290
+## 2 altuvjo01   0.341   0.313
+## 3 andruel01   0.263   0.258
+## 4 aybarer01   0.278   0.270
+## 5 bautijo02   0.286   0.250
+## 6 beltrad01   0.324   0.287</code></pre>
+<p>Again we plot the 2014 batting averages against the 2015 batting
+averages:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> batting_2014_2015) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">y =</span> BA_2015)) <span class="sc">+</span> </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;2014 Batting Average&quot;</span>, <span class="at">y =</span> <span class="st">&quot;2015 Batting Average&quot;</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>g</span></code></pre></div>
+<p><img src="lecture6_files/figure-html/plot%20batting_2014_2015-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="correlation" class="section level3">
+<h3>Correlation</h3>
+<p>We can see a positive trend between the 2014 and 2015 batting
+averages. How can we quantify the relationship between the 2014 and 2015
+data?</p>
+<p>The <strong>correlation coefficient</strong>, <em>r</em>, is one way
+to summarize the dependence between two seasons with one number.
+<em>r</em> is a standardized measure of the <em>linear</em> dependence
+between two variables (usually called <span
+class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span>) and can take values between -1 and
++1.</p>
+<p>If <span class="math inline">\(r = 1\)</span>, then the points all
+lie on a line with positive slope. If <span class="math inline">\(r =
+-1\)</span>, the points all lie on a line with negative slope.</p>
+<p>Loosely speaking, we can think of correlation as a measure of how
+well a line fits our data. <a
+href="http://guessthecorrelation.com/">Let’s get some practice!</a></p>
+<p>We can calculate the correlation between two variables in
+<code>R</code> using the function <code>cor()</code>. Note that
+<code>cor()</code> is a Base R function and does not work with the other
+tidyverse functions, so we cannot pipe our data into it. Instead, we
+need to specifically point to each variable within the dataset, using
+the dollar sign symbol we’ve seen a couple times before:
+<code>our_dataset$our_variable</code>. This is equivalent to the
+tidyverse notation for doing
+<code>our_dataset %&gt;% select(our_variable)</code>.</p>
+<p>The correlation between the 2014 and 2015 batting averages is:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">cor</span>(batting_2014_2015<span class="sc">$</span>BA_2014, batting_2014_2015<span class="sc">$</span>BA_2015)</span></code></pre></div>
+<pre><code>## [1] 0.4928799</code></pre>
+<p>We have a moderate amount of correlation between 2014 and 2015
+batting averages, but there is still a lot of noise.</p>
+<p>It is important to remember that correlation is only a measure of
+<em>linear</em> dependence between two variables. The below example
+shows data where <span class="math inline">\(y = x^2\)</span>
+exactly.</p>
+<p><img src="lecture6_files/figure-html/quadratic%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Even though <span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span> are dependent, <span
+class="math inline">\(r = -0.1\)</span>, indicating a weak linear
+dependence. If we were to draw a line to fit this data, it would be
+quite flat!</p>
+<p><img src="lecture6_files/figure-html/quadratic%20plot%20line-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now let’s go back to the 2014 and 2015 batting data. To visualize our
+correlation, we draw the <em>line of best fit</em> through our data. In
+this example, the line of best fit has <span
+class="math inline">\(y\)</span>-intercept = 0.141 and slope = 0.485
+(we’ll talk about how we find this values later).</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>g <span class="ot">&lt;-</span> g <span class="sc">+</span> <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">0.141</span>, <span class="at">slope =</span> <span class="fl">0.485</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;y = 0.141 + 0.485x&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>g</span></code></pre></div>
+<p><img src="lecture6_files/figure-html/slope%20intercept%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Question:</strong> Which feature of the best fit line, <span
+class="math inline">\(a\)</span> or <span
+class="math inline">\(b\)</span>, quantifies the linear dependence
+between 2014 and 2015 FG%?</p>
+<p>How does correlation relate to our line of best fit? This brings us
+to the <em>regression method</em>.</p>
+</div>
+<div id="the-regression-method" class="section level3">
+<h3>The Regression Method</h3>
+<p>If we standardize both datasets, <span
+class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span>, the correlation is the <em>slope</em>
+of the line of best fit:</p>
+<p><span class="math display">\[\frac{y - \bar{y}}{sd(y)} = r \times
+\frac{x - \bar{x}}{sd(x)}\]</span></p>
+<p>We can unpack this equation to get the formula for our unstandardized
+line of best fit:</p>
+<p><span class="math display">\[y = a + bx\]</span> where <span
+class="math inline">\(a = \bar{y} - b\bar{x}\)</span> and <span
+class="math inline">\(b = r \times sd(y)/sd(x)\)</span>.</p>
+<p>Now that we have our regression line, we can predict a future <span
+class="math inline">\(y\)</span> value given we know <span
+class="math inline">\(x\)</span>. For example, if we know that a
+player’s 2014 batting average was 0.31, we predict that their 2015
+batting average will be: <span class="math display">\[\widehat{y} =
+0.141 + 0.485 \times 0.31 = 0.291.\]</span> Note that we use <span
+class="math inline">\(\widehat{y}\)</span> for a predicted value of
+<span class="math inline">\(y\)</span>; we can think of this as <span
+class="math inline">\(\widehat{y} = E[Y|x]\)</span>.</p>
+<pre><code>## Warning in geom_segment(aes(x = 0.19, y = 0.291, yend = 0.291, xend = 0.31), : All aesthetics have length 1, but the data has 70 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.</code></pre>
+<pre><code>## Warning in geom_segment(aes(x = 0.31, y = 0.2, yend = 0.291, xend = 0.31), : All aesthetics have length 1, but the data has 70 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.</code></pre>
+<pre><code>## Warning in geom_point(aes(x = 0.31, y = 0.291), color = &quot;dodgerblue&quot;, size = 2): All aesthetics have length 1, but the data has 70 rows.
+## ℹ Please consider using `annotate()` or provide this layer with data containing
+##   a single row.</code></pre>
+<p><img src="lecture6_files/figure-html/plot%20predicted%20y-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Question:</strong> What is the interpretation of the slope
+coefficient, <span class="math inline">\(b\)</span>?</p>
+</div>
+<div id="fitting-linear-models" class="section level3">
+<h3>Fitting linear models</h3>
+<p>To find the regression coefficients, <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span>, we use the function <code>lm()</code>.
+The usage of <code>lm()</code> is as follows:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(BA_2015 <span class="sc">~</span> BA_2014, <span class="at">data =</span> batting_2014_2015)</span></code></pre></div>
+<p>The first argument in the <code>lm()</code> call is called a
+<code>formula</code>. This takes input <code>y ~ x</code>, where
+<code>y</code> is our response and <code>x</code> is our predictor or
+covariate. In the <code>lm()</code> call above, the column
+<code>BA_2015</code> is our response and <code>BA_2014</code> is our
+predictor.</p>
+<p>The second argument in <code>lm()</code> is where we specifiy our
+data: <code>batting_2014_2015</code>. <code>R</code> then looks for the
+columns <code>BA_2014</code> and <code>BA_2015</code> in the given
+dataset to calculate the regression coefficients.</p>
+<p>Our new object, <code>fit</code>, contains a lot of information about
+our regression line. At the moment, we just want the coefficients. We
+can access the coefficients as follows:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>model<span class="sc">$</span>coefficients</span></code></pre></div>
+<pre><code>## (Intercept)     BA_2014 
+##   0.1409779   0.4851417</code></pre>
+<p>We can plot the data by feeding these coefficients to
+<code>geom_abline()</code>, however this approach only works for linear
+regression. A more efficient way is to use <code>predict()</code> to add
+predicted values from the model to our dataset, then add these points to
+our plot with <code>geom_line()</code>. We can do this as below:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>batting_2014_2015 <span class="ot">&lt;-</span> batting_2014_2015 <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pred =</span> <span class="fu">predict</span>(model))</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> batting_2014_2015) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">y =</span> BA_2015)) <span class="sc">+</span> </span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">y =</span> pred), <span class="at">color =</span> <span class="st">&quot;lightcoral&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;2014 Batting Average&quot;</span>, <span class="at">y =</span> <span class="st">&quot;2015 Batting Average&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Batting Average w/ Regression Line&quot;</span>)</span></code></pre></div>
+<p><img src="lecture6_files/figure-html/plot%20predictions-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="the-modelr-package" class="section level3">
+<h3>The <code>modelr</code> package</h3>
+<p><code>modelr</code> is another package that is part of the
+<code>tidyverse</code>. It has a number of useful functions for linear
+regression models.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co">#install.packages(&quot;modelr&quot;)</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">library</span>(modelr)</span></code></pre></div>
+<p>We can use the function <code>rsquare</code> to get the square of the
+correlation, <span class="math inline">\(r^2\)</span>. The quantity
+<span class="math inline">\(r^2\)</span> is the <em>proportion of
+variance</em> explained by the linear model. The first argument of the
+<code>rsquare</code> function is the output <code>fit</code> from our
+linear model function <code>lm</code>. The second argument is our
+original dataset, <code>batting_2014_2015</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">rsquare</span>(fit, batting_2014_2015)</span></code></pre></div>
+<pre><code>## [1] 0.2429305</code></pre>
+<div id="adding-predictions-and-residuals" class="section level4">
+<h4>Adding Predictions and Residuals</h4>
+<p>We can also use <code>modelr</code> to add predictions and residuals
+to our original dataset:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>batting_2014_2015 <span class="ot">&lt;-</span> batting_2014_2015 <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">add_predictions</span>(<span class="at">model =</span> fit, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>, <span class="at">var =</span> <span class="st">&quot;pred&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">add_residuals</span>(<span class="at">model =</span> fit, <span class="at">var =</span> <span class="st">&quot;resid&quot;</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>batting_2014_2015</span></code></pre></div>
+<pre><code>## # A tibble: 70 × 5
+##    playerID  BA_2014 BA_2015  pred    resid
+##    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+##  1 abreujo02   0.317   0.290 0.295 -0.00417
+##  2 altuvjo01   0.341   0.313 0.306  0.00711
+##  3 andruel01   0.263   0.258 0.269 -0.0103 
+##  4 aybarer01   0.278   0.270 0.276 -0.00638
+##  5 bautijo02   0.286   0.250 0.280 -0.0291 
+##  6 beltrad01   0.324   0.287 0.298 -0.0108 
+##  7 blackch02   0.288   0.287 0.281  0.00577
+##  8 bogaexa01   0.240   0.320 0.257  0.0624 
+##  9 brantmi02   0.327   0.310 0.300  0.0102 
+## 10 braunry02   0.266   0.285 0.270  0.0145 
+## # ℹ 60 more rows</code></pre>
+<p>In <code>add_predictions</code>, we have to specify three arguments:
+(i) the model, which is just the output of <code>lm()</code>, (ii) the
+type, which will always be “response” for this course, and (iii) the
+name of the column we want our predictions to be stored in. We similarly
+have to specify a <code>model</code> and <code>var</code> argument in
+<code>add_residual</code>.</p>
+<p>Using these new columns, we can create the original plot and add the
+residual lengths:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(batting_2014_2015) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">xend =</span> BA_2014, <span class="at">y =</span> BA_2015, <span class="at">yend =</span> pred), <span class="at">color =</span> <span class="st">&quot;dodgerblue&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">y =</span> BA_2015)) <span class="sc">+</span> </span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">0.1409779</span>, <span class="at">slope =</span> <span class="fl">0.4851417</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>g</span></code></pre></div>
+<p><img src="lecture6_files/figure-html/plot%20residuals-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="predict" class="section level3">
+<h3>Predict</h3>
+<p>So far we have looked at the predicted values from our
+<em>training</em> data; that is, the data we used to fit our linear
+model. Suppose we have more players’ batting averages from 2014 but we
+do not have their batting averages from 2015. We can once again use the
+<code>predict</code> function to obtain values for these new players
+based on our model.</p>
+<p>In the below code, we enter the players’ 2014 batting averages as the
+tibble <code>new_data</code>. We then use the function
+<code>predict</code>. The first argument of <code>predict</code> is the
+fitted model, <code>model</code>. The second argument is
+<code>new_data</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">BA_2014 =</span> <span class="fu">c</span>(<span class="fl">0.241</span>, <span class="fl">0.31</span>, <span class="fl">0.265</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>new_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, new_data)</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>new_pred</span></code></pre></div>
+<pre><code>##         1         2         3 
+## 0.2578971 0.2913719 0.2695405</code></pre>
+<p>We can also add these predictions to <code>new_data</code> using
+<code>add_predictions</code>:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> new_data <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>  <span class="fu">add_predictions</span>(model)</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>new_data</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
+##   BA_2014  pred
+##     &lt;dbl&gt; &lt;dbl&gt;
+## 1   0.241 0.258
+## 2   0.31  0.291
+## 3   0.265 0.270</code></pre>
+<p>We add these predictions to our plot:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">ggplot</span>(batting_2014_2015) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">y =</span> BA_2015)) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">y =</span> pred), <span class="at">color =</span> <span class="st">&quot;lightcoral&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> new_data, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">y =</span> pred), <span class="at">color =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span></code></pre></div>
+<p><img src="lecture6_files/figure-html/plot%20new%20predictions-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>For more details on modelling using the <code>tidyverse</code>, you
+can look at <a href="http://r4ds.had.co.nz/model-basics.html">Chapter
+23</a> of the book <em>R for Data Science</em> by Hadley Wickham and
+Garrett Grolemund. It’s also a great reference in general!</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

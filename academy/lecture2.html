@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Lecture 2: Visualization and More Data Wrangling</title>
+
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-sign-in"></span>
+     
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture0.html">Lecture 0</a>
+    </li>
+    <li>
+      <a href="ps0.html">Problem Set 0</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-institution"></span>
+     
+    Academy
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="lecture5.html">Lecture 5</a>
+    </li>
+    <li>
+      <a href="lecture6.html">Lecture 6</a>
+    </li>
+    <li>
+      <a href="lecture7.html">Lecture 7</a>
+    </li>
+    <li>
+      <a href="lecture8.html">Lecture 8</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="ps3.html">Problem Set 3</a>
+    </li>
+    <li>
+      <a href="ps4.html">Problem Set 4</a>
+    </li>
+    <li>
+      <a href="ps5.html">Problem Set 5</a>
+    </li>
+    <li>
+      <a href="ps6.html">Problem Set 6</a>
+    </li>
+    <li>
+      <a href="ps7.html">Problem Set 7</a>
+    </li>
+    <li>
+      <a href="ps8.html">Problem Set 8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-dribbble"></span>
+     
+    Training Camp
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="tc_lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="tc_lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="tc_lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="tc_lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="tc_lecture5.html">Lecture 5</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="tc_ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="tc_ps3.html">Problem Set 3</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_lecture_data_sources.html">Data Sources Lecture</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lecture 2: Visualization and More Data
+Wrangling</h1>
+
+</div>
+
+
+<p>We’re going to pick up right where we left off yesterday in <a
+href="ps1.html">Problem Set 1</a>, where you wrote a script to create a
+tbl containing several shooting statistics for NBA players between the
+1996-97 season and the 2015-16 season. Your script should look something
+like what is the code block below. For reasons that will become clear
+shortly, we are going to call our tbl <code>raw_shooting</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># Read in data</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>raw_shooting <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;data/nba_shooting.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 7447 Columns: 8
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): PLAYER
+## dbl (7): SEASON, FGM, FGA, TPM, TPA, FTM, FTA
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Create new columns</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>raw_shooting <span class="ot">&lt;-</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">mutate</span>(raw_shooting,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>         <span class="at">FGP =</span> FGM <span class="sc">/</span> FGA,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>         <span class="at">TPP =</span> TPM <span class="sc">/</span> TPA,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>         <span class="at">FTP =</span> FTM <span class="sc">/</span> FTA,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>         <span class="at">eFGP =</span> (FGM <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> TPM) <span class="sc">/</span> (FGA),</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>         <span class="at">PTS =</span> FTM <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> FGM <span class="sc">+</span> TPM,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>         <span class="at">TSP =</span> PTS<span class="sc">/</span>(<span class="dv">2</span> <span class="sc">*</span> (FGA <span class="sc">+</span> <span class="fl">0.44</span> <span class="sc">*</span> FTA)))</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># Sort by the TSP in descending order</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>raw_shooting <span class="ot">&lt;-</span> <span class="fu">arrange</span>(raw_shooting, <span class="fu">desc</span>(TSP))</span></code></pre></div>
+<p>We will use visualization to answer some questions about the data.
+Specifically, we will study the distribution of the individual columns
+as well as try to understand the relationship between pairs of
+variables. For instance, is a player’s free throw percentage predictive
+of his three point percentage?</p>
+<p>To produce graphics throughout this course, we will use ggplot2,
+which is a package contained in the tidyverse. At a very high level,
+ggplot2 works by layering graphics, adding different features one on top
+of another. You can learn much much more about ggplot2 <a
+href="https://ggplot2.tidyverse.org">here</a>. We will cover some of the
+more advanced functionality of ggplot2 in</p>
+<div id="histograms" class="section level3">
+<h3>Histograms</h3>
+<p>As you saw in Prof. Wyner’s lectures, histograms are a powerful way
+to describe a single dataset.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span> </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP), <span class="at">bins =</span> <span class="dv">5</span>)</span></code></pre></div>
+<p><img src="lecture2_files/figure-html/hist%20basic-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The first bit of the code above,
+<code>ggplot(data = nba_shooting)</code> tells R to create a coordinate
+system to which can add additional layers. It also tells R that the data
+to be plotted is coming from the tibble <code>nba_shooting</code>. The
+next part of the code,
+<code>+ geom_histogram(mapping = aes(FGP), bins = 5)</code> tells R to
+<em>add</em> a layer to the blank plot, in this case a histogram of
+field goal percentage that uses 5 bins. The first argument is the
+mapping, which defines how each variable in our dataset is mapped to
+visual components of the graph (the <em>aesthetics</em>) In the case of
+a histogram, we really only need to tell R that the variable we want to
+visualize goes on the horizontal (x) axis. To improve readability, we
+have divided the code to produce the histogram over two lines.
+<strong>It is very important when using ggplot to have the + sign at the
+end of the line.</strong></p>
+<p>In the code above, we also told R how many bins into which to divide
+the data. We can vary the number of bins to get a higher-resolution view
+of our data. For instance, we can use 50 bins:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP), <span class="at">bins =</span> <span class="dv">50</span>)</span></code></pre></div>
+<p><img src="lecture2_files/figure-html/ggplot%20hist-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Instead of specifying the number of bins, which can sometimes be
+difficult, we could instead specify the width of the bins. For instance,
+we could split our data into bins of width 0.05 as follows:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span> </span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP), <span class="at">binwidth =</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<p><img src="lecture2_files/figure-html/hist%20binwidth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It is often preferable to use a density histogram instead of a
+frequency histogram. This is because the areas of the density histogram
+boxes always sums to 1 no matter how much data you have.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP, <span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="dv">50</span>)</span></code></pre></div>
+<pre><code>## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
+## ℹ Please use `after_stat(density)` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<p><img src="lecture2_files/figure-html/hist%20density-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Visually, the histograms look identical but now the vertical (y) axis
+has a different scale.</p>
+<p><strong>Now you should spend time making histograms of FTP and TPP,
+and other variables created in code above. Discuss the differences with
+others.</strong></p>
+</div>
+<div id="visualizing-bivariate-data" class="section level3">
+<h3>Visualizing bivariate data</h3>
+<p>While examining one variable (i.e. column of our data table) is
+useful, we are often more interested in understanding the relationships
+between multiple variables. For instance, how do you think a player’s
+free throw percentage (FTP) is related to his field goal percentage
+(FGP)?</p>
+<p>To make a scatterplot in R, we can run the following code. Notice
+that it is very similar to the code used to make histograms, but with a
+few important differences</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP, <span class="at">y =</span> FTP))</span></code></pre></div>
+<p><img src="lecture2_files/figure-html/scatter-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Just like the code used to produce the histograms above, we began by
+calling <code>ggplot(data = nba_shooting)</code>. Now, however, instead
+of calling <code>geom_histogram()</code> we are calling
+<code>geom_point()</code>. This tells R that instead of a histogram, we
+want to plot the data using points. We will learn much more about the
+different “geom” objects available in ggplot2 in Lecture 4. Since we are
+plotting multiple variables, we need to tell R to which axis each
+variable is mapped. This is exactly
+what<code>mapping = aes(x = FGP, y = FTP)</code> does.</p>
+<p>Immediately, we notice a few things about the figure. First, we see
+what appears to be a big black cloud of points in the middle of the
+plotting region. This is a result of R trying to plot lots and lots of
+data points in a small region of the plane. Additionally, we find a few
+rather interesting data points, corresponding to players who have never
+made a field goal but are perfect free throw shooters and to players who
+have never missed a field goal but have made only 50% of their free
+throws. A major drawback of this scatterplot is its inability to show
+the relative density of points. That is, does the point at (1.00, 0.50)
+correspond to a single player or does it correspond to multiple
+ones?</p>
+<p>One way to address this is to use <em>alpha-blending</em> to change
+the transparency of each point. When there are many points plotted in
+the same region, that region will appear darker.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP, <span class="at">y =</span> FTP), <span class="at">alpha =</span> <span class="fl">0.1</span>)</span></code></pre></div>
+<p><img src="lecture2_files/figure-html/scatter%20alpha-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now we can start to distinguish the number of players represented by
+each point. The fact that the point at (0.00, 0.50) is much darker than
+the point at (0.00, 1.00) indicates that there are more players who
+missed every one of their field goal attempts and made 50% of their free
+throws than players who missed every field goal but made every free
+throw.</p>
+<p>To get an even better idea, we can make a <em>heatmap</em>, which you
+can think of as a two-dimensional analog of a histogram. To form a
+heatmap, you start by dividing the plane into lots of evenly-sized
+two-dimensional bins and counting the number of datapoints within each
+bin. You then color the bin according to the count. While you can
+conceptually make the bins any shape you want, there are two popular
+conventions: rectangular binning and hexagonal binning. For the purposes
+of this course, we will focus on rectangular binning, using the
+<code>geom_bin2d()</code> function.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>(<span class="fu">aes</span>(<span class="at">x =</span> FGP, <span class="at">y =</span> FTP)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>, <span class="at">direction =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="lecture2_files/figure-html/heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We can increase the number of bins to get a much more high-resolution
+view of our data.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span> </span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">geom_bin2d</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP, <span class="at">y =</span> FTP), <span class="at">bins =</span> <span class="dv">100</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>, <span class="at">direction =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="lecture2_files/figure-html/heatmap%20bins-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now we are starting to get some sense that there are some outliers in
+our data. We can confirm this visually in another way.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGA, <span class="at">y =</span> FGP), <span class="at">alpha =</span> <span class="fl">0.1</span>)</span></code></pre></div>
+<p><img src="lecture2_files/figure-html/scatter%20outliers-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Sometimes, we don’t want to look at the entire range of the data and
+only want to plot a smaller window. We can do this by changing the x and
+y limits of the plotting region.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> FGA, <span class="at">y =</span> FGP)) <span class="sc">+</span> </span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="dv">200</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 5346 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="lecture2_files/figure-html/scatter%20xlim-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="filtering" class="section level2">
+<h2>Filtering</h2>
+<p>By this point, it should be clear that there are a number of rather
+curious features in our dataset. For instance, there seem to be several
+players who have never made a field goal but have made every one of
+their free throw attempts. After re-arranging our tbl according to the
+number of field goals made, it is clear that we have several players who
+have attempted fewer than 5 field goals in a single season. Before
+examining the relationship between a player’s field goal percentage and
+free throw percentage, we’d like to remove all of the players who have
+not attempted many of each type of shot.</p>
+<p>The function <code>filter()</code> is used to pull out subsets of
+observations that satisfy some logical condition like “FGA &gt; 100” or
+“FGA &gt; 100 and FTA &gt; 50”. To make such comparisons in R, we have
+the following operators available at our disposal:</p>
+<ul>
+<li><code>==</code> for “equal to”</li>
+<li><code>!=</code> for “not equal to”</li>
+<li><code>&lt;</code> and <code>&lt;=</code> for “less than” and “less
+than or equal to”</li>
+<li><code>&gt;</code> and <code>&gt;=</code> for “greater than” and
+“greater than or equal to”</li>
+<li><code>&amp;</code>, <code>|</code>, <code>!</code> for “AND” and
+“OR” and “NOT”</li>
+</ul>
+<p>The code below filters out all of the players with at least 100 field
+goals in a single season.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">filter</span>(raw_shooting, FGA <span class="sc">&gt;</span> <span class="dv">100</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 6,295 × 14
+##    PLAYER     SEASON   FGM   FGA   TPM   TPA   FTM   FTA   FGP   TPP   FTP  eFGP
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Chris Wil…   2013   110   153     0     1    39    58 0.719 0     0.672 0.719
+##  2 Tyson Cha…   2012   241   355     0     2   217   315 0.679 0     0.689 0.679
+##  3 Kyle Korv…   2015   292   600   221   449   106   118 0.487 0.492 0.898 0.671
+##  4 Steve Nov…   2012   161   337   133   282    22    26 0.478 0.472 0.846 0.675
+##  5 Chris And…   2014   177   275     3    12   120   169 0.644 0.25  0.710 0.649
+##  6 Jeremy Ev…   2011    76   115     0     1    26    37 0.661 0     0.703 0.661
+##  7 Carlos Ro…   2001    75   110     0     1    29    52 0.682 0     0.558 0.682
+##  8 Mason Plu…   2014   199   302     0     3   122   195 0.659 0     0.626 0.659
+##  9 Stephen C…   2016   805  1597   402   887   363   400 0.504 0.453 0.908 0.630
+## 10 Brent Bar…   2004   215   427   114   252    91   110 0.504 0.452 0.827 0.637
+## # ℹ 6,285 more rows
+## # ℹ 2 more variables: PTS &lt;dbl&gt;, TSP &lt;dbl&gt;</code></pre>
+<p>When we run this code, you’ll notice that R prints out a tbl with
+6,295 rows.</p>
+<p>We can also filter on more complicated conditions constructed using
+the AND, OR, and NOT operators: <code>&amp;</code>, <code>|</code>, and
+<code>!</code>. For instance, to filter observations with at least 100
+field goal attempts OR 50 three point attempts, we would do the
+following:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">filter</span>(raw_shooting, FGA <span class="sc">&gt;=</span> <span class="dv">100</span> <span class="sc">|</span> TPA <span class="sc">&gt;=</span> <span class="dv">50</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 6,328 × 14
+##    PLAYER     SEASON   FGM   FGA   TPM   TPA   FTM   FTA   FGP   TPP   FTP  eFGP
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Chris Wil…   2013   110   153     0     1    39    58 0.719 0     0.672 0.719
+##  2 Tyson Cha…   2012   241   355     0     2   217   315 0.679 0     0.689 0.679
+##  3 Kyle Korv…   2015   292   600   221   449   106   118 0.487 0.492 0.898 0.671
+##  4 Steve Nov…   2012   161   337   133   282    22    26 0.478 0.472 0.846 0.675
+##  5 Chris And…   2014   177   275     3    12   120   169 0.644 0.25  0.710 0.649
+##  6 Jeremy Ev…   2011    76   115     0     1    26    37 0.661 0     0.703 0.661
+##  7 Carlos Ro…   2001    75   110     0     1    29    52 0.682 0     0.558 0.682
+##  8 Brian Car…   2011    43   100    42    87    17    18 0.43  0.483 0.944 0.64 
+##  9 Mason Plu…   2014   199   302     0     3   122   195 0.659 0     0.626 0.659
+## 10 Stephen C…   2016   805  1597   402   887   363   400 0.504 0.453 0.908 0.630
+## # ℹ 6,318 more rows
+## # ℹ 2 more variables: PTS &lt;dbl&gt;, TSP &lt;dbl&gt;</code></pre>
+<p>We may combine these constraints by enclosing them in
+parentheses.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">filter</span>(raw_shooting, (FGA <span class="sc">&gt;=</span> <span class="dv">100</span> <span class="sc">&amp;</span> TPA <span class="sc">&gt;=</span> <span class="dv">50</span>) <span class="sc">|</span> (FGP <span class="sc">&gt;=</span> <span class="fl">0.45</span> <span class="sc">&amp;</span> FGP <span class="sc">&lt;=</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 4,837 × 14
+##    PLAYER     SEASON   FGM   FGA   TPM   TPA   FTM   FTA   FGP   TPP   FTP  eFGP
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Keith Bog…   2014     3     6     3     6     3     3 0.5   0.5   1     0.75 
+##  2 Kyle Korv…   2015   292   600   221   449   106   118 0.487 0.492 0.898 0.671
+##  3 Aleksanda…   1997     8    16     5     7     4     5 0.5   0.714 0.8   0.656
+##  4 Steve Nov…   2012   161   337   133   282    22    26 0.478 0.472 0.846 0.675
+##  5 Brian Car…   2011    43   100    42    87    17    18 0.43  0.483 0.944 0.64 
+##  6 Stephen C…   2016   805  1597   402   887   363   400 0.504 0.453 0.908 0.630
+##  7 Brent Bar…   2004   215   427   114   252    91   110 0.504 0.452 0.827 0.637
+##  8 Manu Gino…   2012   150   285    52   126    88   101 0.526 0.413 0.871 0.618
+##  9 Steve Kerr   1997   249   467   110   237    54    67 0.533 0.464 0.806 0.651
+## 10 Brent Bar…   2007   202   425   128   287   103   117 0.475 0.446 0.880 0.626
+## # ℹ 4,827 more rows
+## # ℹ 2 more variables: PTS &lt;dbl&gt;, TSP &lt;dbl&gt;</code></pre>
+<p>What if we wanted to pull out the observations corresponding to the
+2015-16 and 2014-15 season? We could do something like
+<code>filter(raw_shooting, (SEASON == 2016) | (SEASON == 2015))</code>,
+which would be perfectly fine. However, what if we wanted data from
+1998-99, 2011-12, and 2015-16? Typing a lot of expressions like
+<code>SEASON == ...</code> would be rather tedious. The
+<code>%in%</code> operator lets us avoid this tedium:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">filter</span>(raw_shooting, SEASON <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1999</span>, <span class="dv">2012</span>, <span class="dv">2016</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 1,150 × 14
+##    PLAYER     SEASON   FGM   FGA   TPM   TPA   FTM   FTA   FGP   TPP   FTP  eFGP
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Tyson Whe…   1999     1     1     1     1     1     2 1     1     0.5   1.5  
+##  2 Tyson Cha…   2012   241   355     0     2   217   315 0.679 0     0.689 0.679
+##  3 Jorge Gut…   2016     6    11     0     2    10    11 0.545 0     0.909 0.545
+##  4 Steve Nov…   2012   161   337   133   282    22    26 0.478 0.472 0.846 0.675
+##  5 Sam Jacob…   1999     3     5     0     1     2     2 0.6   0     1     0.6  
+##  6 Stephen C…   2016   805  1597   402   887   363   400 0.504 0.453 0.908 0.630
+##  7 Manu Gino…   2012   150   285    52   126    88   101 0.526 0.413 0.871 0.618
+##  8 James Har…   2012   309   629   114   292   312   369 0.491 0.390 0.846 0.582
+##  9 Steve Nov…   2016     8    18     7    15     1     1 0.444 0.467 1     0.639
+## 10 Brad Mill…   1999    78   138     1     2    81   102 0.565 0.5   0.794 0.569
+## # ℹ 1,140 more rows
+## # ℹ 2 more variables: PTS &lt;dbl&gt;, TSP &lt;dbl&gt;</code></pre>
+<p>We could also filter out data from the two lockout-shortened seasons,
+1998-99 and 2011-12 using a combination of the NOT <code>!</code>
+operator and <code>%in%</code>.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">filter</span>(raw_shooting, <span class="sc">!</span>SEASON <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1999</span>, <span class="dv">2012</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 6,721 × 14
+##    PLAYER     SEASON   FGM   FGA   TPM   TPA   FTM   FTA   FGP   TPP   FTP  eFGP
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Dajuan Wa…   2007     1     1     1     1     1     2 1     1     0.5   1.5  
+##  2 Amir John…   2006     7    10     2     3     4     4 0.7   0.667 1     0.8  
+##  3 Keith Bog…   2014     3     6     3     6     3     3 0.5   0.5   1     0.75 
+##  4 Steve Nov…   2011    35    67    26    46     8     8 0.522 0.565 1     0.716
+##  5 Chris Cra…   2003     8    13     1     3     7     8 0.615 0.333 0.875 0.654
+##  6 Chris Wil…   2013   110   153     0     1    39    58 0.719 0     0.672 0.719
+##  7 Maceo Bas…   2007    49    76     3     7    37    47 0.645 0.429 0.787 0.664
+##  8 Kyle Korv…   2015   292   600   221   449   106   118 0.487 0.492 0.898 0.671
+##  9 Jorge Gut…   2016     6    11     0     2    10    11 0.545 0     0.909 0.545
+## 10 Aleksanda…   1997     8    16     5     7     4     5 0.5   0.714 0.8   0.656
+## # ℹ 6,711 more rows
+## # ℹ 2 more variables: PTS &lt;dbl&gt;, TSP &lt;dbl&gt;</code></pre>
+<p>For the remainder of this module, we will focus on the players who
+attempted at least 100 field goals, 100 free throws, 50 three pointers
+in the non-lockout seasons.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>nba_shooting <span class="ot">&lt;-</span> </span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>  <span class="fu">filter</span>(raw_shooting, </span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>         (FGA <span class="sc">&gt;=</span> <span class="dv">100</span> <span class="sc">&amp;</span> </span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>           FTA <span class="sc">&gt;=</span> <span class="dv">100</span> <span class="sc">&amp;</span> </span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>           TPA <span class="sc">&gt;=</span> <span class="dv">50</span> <span class="sc">&amp;</span> </span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>           <span class="sc">!</span>SEASON <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1999</span>, <span class="dv">2012</span>)))</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>nba_shooting</span></code></pre></div>
+<pre><code>## # A tibble: 2,254 × 14
+##    PLAYER     SEASON   FGM   FGA   TPM   TPA   FTM   FTA   FGP   TPP   FTP  eFGP
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Kyle Korv…   2015   292   600   221   449   106   118 0.487 0.492 0.898 0.671
+##  2 Stephen C…   2016   805  1597   402   887   363   400 0.504 0.453 0.908 0.630
+##  3 Brent Bar…   2004   215   427   114   252    91   110 0.504 0.452 0.827 0.637
+##  4 Brent Bar…   2007   202   425   128   287   103   117 0.475 0.446 0.880 0.626
+##  5 Fred Hoib…   2005   139   284    70   145    89   102 0.489 0.483 0.873 0.613
+##  6 Mario Elie   1997   291   585   120   286   207   231 0.497 0.420 0.896 0.6  
+##  7 Brent Bar…   2001   198   401   109   229    84   103 0.494 0.476 0.816 0.630
+##  8 John Stoc…   1997   416   759    76   180   275   325 0.548 0.422 0.846 0.598
+##  9 Steve Nash   2007   517   971   156   343   222   247 0.532 0.455 0.899 0.613
+## 10 Brent Bar…   2002   401   790   164   387   198   234 0.508 0.424 0.846 0.611
+## # ℹ 2,244 more rows
+## # ℹ 2 more variables: PTS &lt;dbl&gt;, TSP &lt;dbl&gt;</code></pre>
+</div>
+<div id="creating-categorical-variables" class="section level2">
+<h2>Creating Categorical Variables</h2>
+<p>So far, we have used <code>mutate()</code> to compute numeric or
+continuous variables. Often in an analysis, however, we may want to
+<em>bin</em> these values into smaller buckets or categories. For
+instance, we may rather arbitrarily classify players based on their
+three-point shooting prowess as follows:</p>
+<ul>
+<li>Hopeless: TPP &lt; 20%</li>
+<li>Below Average: 20% &lt;= TPP &lt; 30%</li>
+<li>Average: 30% &lt;= TPP &lt; 35%</li>
+<li>Above Average: 35% &lt; TPP &lt; 40%</li>
+<li>Elite: TPP &gt; 40%</li>
+</ul>
+<p>In order to add a column to <code>nba_shooting</code> that includes
+these classifications, we can use the <code>case_when()</code>
+function.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>nba_shooting <span class="ot">&lt;-</span> <span class="fu">mutate</span>(nba_shooting,</span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>                       <span class="at">Classification =</span> <span class="fu">case_when</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>                         TPP <span class="sc">&lt;</span> <span class="fl">0.2</span> <span class="sc">~</span>  <span class="st">&quot;Hopeless&quot;</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>                         <span class="fl">0.2</span> <span class="sc">&lt;=</span> TPP <span class="sc">&amp;</span> TPP <span class="sc">&lt;</span> <span class="fl">0.3</span> <span class="sc">~</span> <span class="st">&quot;Below Average&quot;</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>                         <span class="fl">0.3</span> <span class="sc">&lt;=</span> TPP <span class="sc">&amp;</span> TPP <span class="sc">&lt;</span> <span class="fl">0.35</span> <span class="sc">~</span>  <span class="st">&quot;Average&quot;</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>                         <span class="fl">0.35</span> <span class="sc">&lt;=</span> TPP <span class="sc">&amp;</span> TPP <span class="sc">&lt;</span> <span class="fl">0.4</span> <span class="sc">~</span> <span class="st">&quot;Above Average&quot;</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>                         <span class="fl">0.4</span> <span class="sc">&lt;=</span> TPP <span class="sc">~</span> <span class="st">&quot;Elite&quot;</span>))</span></code></pre></div>
+<p>Let’s take a minute to unpack the code above. Within
+<code>mutate()</code>, we have started like we always did, with the name
+of the new variable on the left hand side of an equal sign. Then we
+called the <code>case_when()</code> function. Within this function, we
+have a new line for each of the values of the new variable
+“Classification”. On each line we have an expression with a tilde
+(<code>~</code>). On the left of the <code>~</code>, we have put a
+logical expression and on the right we have written the value of
+“Clasification.”</p>
+<div id="selecting-columns" class="section level3">
+<h3>Selecting Columns</h3>
+<p>Oftentimes, the dataset you load into R contains many, many more
+columns than you need. We can use <code>select()</code> to pull out the
+columns we want to use in our subsequent analyses. For instance, we may
+want to only focus on the columns SEASON, FGP, TPP, FTP, eFGP, PTS, and
+TSP and ignore the rest of the columns.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">select</span>(nba_shooting, PLAYER, SEASON, FGP, TPP, FTP, eFGP, PTS, TSP)</span></code></pre></div>
+<pre><code>## # A tibble: 2,254 × 8
+##    PLAYER        SEASON   FGP   TPP   FTP  eFGP   PTS   TSP
+##    &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Kyle Korver     2015 0.487 0.492 0.898 0.671   911 0.699
+##  2 Stephen Curry   2016 0.504 0.453 0.908 0.630  2375 0.670
+##  3 Brent Barry     2004 0.504 0.452 0.827 0.637   635 0.668
+##  4 Brent Barry     2007 0.475 0.446 0.880 0.626   635 0.666
+##  5 Fred Hoiberg    2005 0.489 0.483 0.873 0.613   437 0.664
+##  6 Mario Elie      1997 0.497 0.420 0.896 0.6     909 0.662
+##  7 Brent Barry     2001 0.494 0.476 0.816 0.630   589 0.660
+##  8 John Stockton   1997 0.548 0.422 0.846 0.598  1183 0.656
+##  9 Steve Nash      2007 0.532 0.455 0.899 0.613  1412 0.654
+## 10 Brent Barry     2002 0.508 0.424 0.846 0.611  1164 0.652
+## # ℹ 2,244 more rows</code></pre>
+</div>
+</div>
+<div id="summarizing-individual-columns" class="section level2">
+<h2>Summarizing Individual Columns</h2>
+<p>Among eligible players, what was the average field goal percentage in
+the 2015-16 season? To answer this, we can use <code>filter()</code> to
+create a new tbl containing the data only for this season. Then we can
+use the dplyr verb <code>reframe()</code> as follows:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>nba_shooting_2016 <span class="ot">&lt;-</span> <span class="fu">filter</span>(nba_shooting, SEASON <span class="sc">==</span> <span class="dv">2016</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">reframe</span>(nba_shooting_2016, <span class="at">FGP =</span> <span class="fu">mean</span>(FGP))</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
+##     FGP
+##   &lt;dbl&gt;
+## 1 0.438</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">reframe</span>(nba_shooting_2016, <span class="at">FGP =</span> <span class="fu">mean</span>(FGP), <span class="at">TPP =</span> <span class="fu">mean</span>(TPP), <span class="at">FTP =</span> <span class="fu">mean</span>(FTP))</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 3
+##     FGP   TPP   FTP
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.438 0.346 0.790</code></pre>
+<p>In the first line, we compute the average field goal percentage and
+in the second example, we compute the average field goal, three point,
+and free throw percentages. Of course, we are not limited to computing
+just the mean. The following functions are quite useful for summarizing
+several aspects of the distribution of the variables in our dataset:</p>
+<ul>
+<li>Center: <code>mean()</code>, <code>median()</code></li>
+<li>Spread: <code>sd()</code>, <code>IQR()</code></li>
+<li>Range: <code>min()</code>, <code>max()</code></li>
+<li>Count: <code>n()</code>, <code>n_distinct()</code></li>
+</ul>
+<p>We will have much more to say about <code>reframe()</code> in <a
+href="lecture3.html">Lecture 3</a> when we discuss grouped
+manipulations.</p>
+</div>
+<div id="saving-our-work" class="section level2">
+<h2>Saving our work</h2>
+<p>By this point, the <code>nba_shooting</code> tbl has much more
+information in it than the original data file we read in. While we can
+always re-run the commands used to produce this tbl from our script,
+when data analyses become more complicated, it is helpful to save these
+objects. R has its own special file format for efficiently saving data
+on your computer.</p>
+<p>We will use the <code>save()</code> command.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">save</span>(nba_shooting, <span class="at">file =</span> <span class="st">&quot;data/nba_shooting.RData&quot;</span>)</span></code></pre></div>
+<p>When we want to <em>load</em> the data back into R, we can use the
+<code>load()</code> function</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/nba_shooting.RData&quot;</span>)</span></code></pre></div>
+</div>
+<div id="thinking-ahead-for-tomorrow" class="section level2">
+<h2>Thinking Ahead for Tomorrow</h2>
+<p>Up to this point, we have only used the dplyr verbs
+<code>mutate()</code>, <code>filter()</code>, and <code>arrange()</code>
+one at a time. What if we wanted to do something a bit more complicated
+like:</p>
+<ol style="list-style-type: decimal">
+<li>Remove players from the lockout season who had fewer than 100 field
+goal attempts, fewer than 100 free throw attempts, or fewer than 50
+three point attempts</li>
+<li>Arrange them according to their three point percentage.</li>
+<li>Add a classification of their three point shooting ability (as we
+did above with <code>case_when()</code>)</li>
+<li>Compute the mean field goal percentage of all of the players within
+each of these categories. That is, separately compute the mean field
+goal percentage of the “Elite” three point shooters, the “Above Average”
+three point shooters, etc.</li>
+</ol>
+<p>In <a href="lecture3.html">Lecture 3</a>, we will learn how to string
+together several dplyr verbs to perform the above tasks. We will also
+learn how to perform grouped calculations.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

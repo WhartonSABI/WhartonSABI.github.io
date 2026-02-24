@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Problem Set 5</title>
+
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-sign-in"></span>
+     
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture0.html">Lecture 0</a>
+    </li>
+    <li>
+      <a href="ps0.html">Problem Set 0</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-institution"></span>
+     
+    Academy
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="lecture5.html">Lecture 5</a>
+    </li>
+    <li>
+      <a href="lecture6.html">Lecture 6</a>
+    </li>
+    <li>
+      <a href="lecture7.html">Lecture 7</a>
+    </li>
+    <li>
+      <a href="lecture8.html">Lecture 8</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="ps3.html">Problem Set 3</a>
+    </li>
+    <li>
+      <a href="ps4.html">Problem Set 4</a>
+    </li>
+    <li>
+      <a href="ps5.html">Problem Set 5</a>
+    </li>
+    <li>
+      <a href="ps6.html">Problem Set 6</a>
+    </li>
+    <li>
+      <a href="ps7.html">Problem Set 7</a>
+    </li>
+    <li>
+      <a href="ps8.html">Problem Set 8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-dribbble"></span>
+     
+    Training Camp
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="tc_lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="tc_lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="tc_lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="tc_lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="tc_lecture5.html">Lecture 5</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="tc_ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="tc_ps3.html">Problem Set 3</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_lecture_data_sources.html">Data Sources Lecture</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Problem Set 5</h1>
+
+</div>
+
+
+<div id="data-visualization-with-nflfastr" class="section level1">
+<h1>Data visualization with nflfastR</h1>
+<p>We will now apply our newly acquired plotting skills to make some
+visualizations working with data from nflfastR. Let’s load in our usual
+libraries, as well as nflfastR.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(nflfastR)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li>Let’s load in the data for the 2024 season. This dataset contains
+play-by-play data for all games in the 2024 NFL season.</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>pbp_2024 <span class="ot">&lt;-</span> <span class="fu">load_pbp</span>(<span class="dv">2024</span>)</span></code></pre></div>
+<ol style="list-style-type: decimal">
+<li>We can see that there are more than 100 columns. Let’s tackle
+specific questions one at a time. First, lets look at quarterback
+completions by filtering for where <code>play_type == pass</code> and
+then selecting the following columns in a new table caled
+<code>pbp_pass</code>.</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>pbp_pass <span class="ot">&lt;-</span> pbp_2024 <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">filter</span>(play_type <span class="sc">==</span> <span class="st">&quot;pass&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">select</span>(play_type, pass_location, yards_gained, air_yards, yards_after_catch, </span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>         passer_player_name, complete_pass, incomplete_pass, cpoe)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">head</span>(pbp_pass)</span></code></pre></div>
+<pre><code>## ── nflverse play by play data ──────────────────────────────────────────────────</code></pre>
+<pre><code>## ℹ Data updated: 2025-04-30 02:39:06 EDT</code></pre>
+<pre><code>## # A tibble: 6 × 9
+##   play_type pass_location yards_gained air_yards yards_after_catch
+##   &lt;chr&gt;     &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;             &lt;dbl&gt;
+## 1 pass      left                    22        -3                25
+## 2 pass      middle                   9         2                 7
+## 3 pass      middle                   8         6                 2
+## 4 pass      right                    0        12                NA
+## 5 pass      &lt;NA&gt;                     0        NA                NA
+## 6 pass      left                     5         5                 0
+## # ℹ 4 more variables: passer_player_name &lt;chr&gt;, complete_pass &lt;dbl&gt;,
+## #   incomplete_pass &lt;dbl&gt;, cpoe &lt;dbl&gt;</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li><p>nflfastR unfortunately doesn’t include a position field to
+identify quarterbacks. To workaround, this, groupby player and filter
+for players with &gt;150 pass attempts to remove players without
+sufficient play time. <em>Hint: pass attempts will be the sum of entries
+in complete_pass and incomplete_pass</em></p></li>
+<li><p>Let’s take a preliminary look at how location might affect pass
+outcomes. First, use <code>!na</code> with <code>filter()</code> to
+filter out pass attempts without a location label. Then, create a bar
+plot to visualize the frequency of attempts in each pass location. Feed
+<code>pass_location</code> as a fill argument to make each bar a
+different color and make sure to use <code>labs()</code> to set axis and
+plot titles. You should see that ggplot automatically adds a legend for
+you!</p></li>
+<li><p>Let’s look at the distribution of yards gained based on pass
+location with some box plots. Use <code>geom_boxplot()</code> to create
+a box plot of <code>yards_gained</code> by <code>pass_location</code>.
+Continue using fill and labs to format the plots nicely.</p></li>
+<li><p>Completion yards over expected is a metric that adjusts for the
+difficulty of a QB’s throw by calculating the yards completed above the
+expected amount based on throw timing, coverage, and location. Take a
+look at how <code>cpoe</code> may differ based on the pass location
+alone with <code>geom_violin()</code> Discuss your plots for 4 and 5
+with other students. What conclusions can you draw about the pass
+location and how it may affect pass outcomes?</p></li>
+<li><p>Let’s now turn to aggregated pass statistics per quarterback.
+Group by <code>passer_player_name</code> and create a table called
+<code>pbp_grouped</code> with columns <code>passer_player_name</code>,
+<code>attempts</code>, <code>avg_yards_gained</code>, and
+<code>avg_cpoe</code> using <code>reframe()</code>.</p></li>
+<li><p>We can first visualize how attempts and avg_yards_gained are
+related by using a scatterplot. Let’s feed a color and size argument to
+<code>geom_point()</code> to visually change the appearance of your plot
+and make the points take up an appropriate amount of space. Feel free to
+change the color argument to a color of your choice!</p></li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">ggplot</span>(pbp_grouped, <span class="fu">aes</span>(<span class="at">x =</span> attempts, <span class="at">y =</span> avg_yards_gained)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&#39;darkseagreen3&#39;</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Quarterback Attempts vs Average Yards Gained&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Attempts&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Average Yards Gained&quot;</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="ps5_files/figure-html/scatter-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ol start="8" style="list-style-type: decimal">
+<li><p>Next, add an abline to the plot using <code>geom_abline()</code>
+to see how linear the data may be. Use the <code>slope</code> and
+<code>intercept</code> arguments to set the slope to 0.005 and the
+intercept to 5. Set the linetype to dashed, and the color to black.
+Note: This line was arbitrarily made with a slope and intercept that
+“looks best”, but in lecture 6, you will learn how to fit regression
+models to the data mathematically to make a line of best fit.</p></li>
+<li><p>Now, let’s add a third variable. Set the color to equal
+<code>avg_cpoe</code> and use <code>scale_color_viridis_c()</code> to
+set the color scale.</p></li>
+<li><p>Finally, visualize the average yards gained and completion yards
+over expected by quarterback. Choose to arrange either by
+<code>avg_yards_gained</code> or <code>avg_cpoe</code> and obtain the
+top 10 quarterbacks for this metric. Pivot long to create a table
+similar to the one shown in lecutre 4, where each QB has a row for their
+average yards gained and average cpoe, then generate a bar plot with
+<code>geom_col()</code>. Make sure to use <code>dodge</code> and to
+either use 45 degree axis labels or flip the coordinates with
+<code>coord_flip()</code> so that the QB names are visible.</p></li>
+</ol>
+<p>What have you learned from these graphs? How do quarterbacks differ
+in their average yards gained vs average completion yards over expected?
+Is Lamar the GOAT??</p>
+<p>Let’s do one more small case study on explosive plays.</p>
+<ol start="11" style="list-style-type: decimal">
+<li>First, start by filtering the data as below to get the appropriate
+columns.</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>pbp_explosive <span class="ot">&lt;-</span> pbp_2024 <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">filter</span>(play_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;pass&quot;</span>, <span class="st">&quot;run&quot;</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(yards_gained),</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(defteam),</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(down),</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(yardline_100)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>    <span class="at">explosive =</span> <span class="fu">case_when</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>      play_type <span class="sc">==</span> <span class="st">&quot;run&quot;</span>  <span class="sc">&amp;</span> yards_gained <span class="sc">&gt;=</span> <span class="dv">10</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>      play_type <span class="sc">==</span> <span class="st">&quot;pass&quot;</span> <span class="sc">&amp;</span> yards_gained <span class="sc">&gt;=</span> <span class="dv">20</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>    )</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  <span class="fu">filter</span>(explosive <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>    game_id,</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>    play_id,</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>    defteam,          <span class="co"># defensive team</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>    play_type,        <span class="co"># pass or run</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>    ydstogo,          <span class="co"># yards to go for first down</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>    yardline_100,     <span class="co"># field position (how far from opponent&#39;s end zone)</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>    yards_gained,     <span class="co"># actual yards gained on play</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>    explosive         <span class="co"># your new indicator (1 or 0)</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>  )</span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="fu">head</span>(pbp_explosive)</span></code></pre></div>
+<pre><code>## ── nflverse play by play data ──────────────────────────────────────────────────</code></pre>
+<pre><code>## ℹ Data updated: 2025-04-30 02:39:06 EDT</code></pre>
+<pre><code>## # A tibble: 6 × 8
+##   game_id  play_id defteam play_type ydstogo yardline_100 yards_gained explosive
+##   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;
+## 1 2024_01…      83 BUF     pass            7           67           22         1
+## 2 2024_01…     622 BUF     pass            4           65           24         1
+## 3 2024_01…     707 BUF     run            10           28           11         1
+## 4 2024_01…     902 ARI     run            10           64           15         1
+## 5 2024_01…     946 ARI     pass            5           44           23         1
+## 6 2024_01…    1269 BUF     run             6           56           12         1</code></pre>
+<ol start="12" style="list-style-type: decimal">
+<li><p>Let’s visualize the distribution of explosive plays by defensive
+team. Use <code>geom_bar()</code> to create a bar plot of the number of
+explosive plays by <code>defteam</code>. Use <code>fill = defteam</code>
+to color the bars by team and use <code>labs()</code> to set the axis
+and plot titles.</p></li>
+<li><p>Let’s take a closer look at the worst defenses against explosive
+plays. Group by defensive team and play type, then use reframe to obtain
+the number of explosive plays in each category, and
+<code>slice_max()</code> to obtain the top 10 teams. Replot the bar
+graphs and facet by pass or run plays. <em>Hint: to create a column
+counting the number of rows, use <code>n()</code> with
+<code>reframe()</code>. Additionally, use <code>scales = 'free'</code>
+with <code>facet_wrap()</code> to allow each facet to have its own
+y-axis scale.</em></p></li>
+<li><p><em>Challenge</em>: Finally, let’s visualize the relationship
+between explosive plays and yards to go with a heat map. First, run the
+following code below to obtain the needed columns for this
+plot.</p></li>
+</ol>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>pbp_explosive_rate <span class="ot">&lt;-</span> pbp_2024 <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">filter</span>(play_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;pass&quot;</span>, <span class="st">&quot;run&quot;</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(yards_gained),</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(defteam),</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(down),</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(yardline_100)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>    <span class="at">explosive =</span> <span class="fu">case_when</span>(</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>      play_type <span class="sc">==</span> <span class="st">&quot;run&quot;</span>  <span class="sc">&amp;</span> yards_gained <span class="sc">&gt;=</span> <span class="dv">10</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>      play_type <span class="sc">==</span> <span class="st">&quot;pass&quot;</span> <span class="sc">&amp;</span> yards_gained <span class="sc">&gt;=</span> <span class="dv">20</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>    )</span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>    game_id,</span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>    play_id,</span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>    defteam,          <span class="co"># defensive team</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a>    play_type,        <span class="co"># pass or run</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a>    ydstogo,          <span class="co"># yards to go for first down</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a>    yardline_100,     <span class="co"># field position (how far from opponent&#39;s end zone)</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a>    yards_gained,     <span class="co"># actual yards gained on play</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a>    explosive         <span class="co"># your new indicator (1 or 0)</span></span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Then, group by <code>defteam</code> and <code>ydstogo</code> and
+obtain the explosive play <em>rate</em>, instead of number of explosive
+plays. <em>Hint: You will need to use <code>n()</code> and
+<code>sum()</code> for this task.</em> Then, use
+<code>geom_tile()</code> to create a heat map with <code>defteam</code>
+on the x-axis, <code>ydstogo</code> on the y-axis, and fill based on the
+number of explosive plays. Set a color gradient to your liking.</p>
+<p>Discuss with fellow students possible conclusions that can be drawn
+from the visualizations in this section. How are teams’ defenses
+stacking up against explosive plays? How much should certain bins in
+this visualization be weighed over others?</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

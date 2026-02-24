@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Problem Set 3</title>
+
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-sign-in"></span>
+     
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture0.html">Lecture 0</a>
+    </li>
+    <li>
+      <a href="ps0.html">Problem Set 0</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-institution"></span>
+     
+    Academy
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="lecture5.html">Lecture 5</a>
+    </li>
+    <li>
+      <a href="lecture6.html">Lecture 6</a>
+    </li>
+    <li>
+      <a href="lecture7.html">Lecture 7</a>
+    </li>
+    <li>
+      <a href="lecture8.html">Lecture 8</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="ps3.html">Problem Set 3</a>
+    </li>
+    <li>
+      <a href="ps4.html">Problem Set 4</a>
+    </li>
+    <li>
+      <a href="ps5.html">Problem Set 5</a>
+    </li>
+    <li>
+      <a href="ps6.html">Problem Set 6</a>
+    </li>
+    <li>
+      <a href="ps7.html">Problem Set 7</a>
+    </li>
+    <li>
+      <a href="ps8.html">Problem Set 8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-dribbble"></span>
+     
+    Training Camp
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="tc_lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="tc_lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="tc_lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="tc_lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="tc_lecture5.html">Lecture 5</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="tc_ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="tc_ps3.html">Problem Set 3</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_lecture_data_sources.html">Data Sources Lecture</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Problem Set 3</h1>
+
+</div>
+
+
+<div id="mlb-batting-statistics" class="section level2">
+<h2>MLB Batting Statistics</h2>
+<p>In this problem set, you will practice using the pipe
+<code>%&gt;%</code> and grouped calculations with batting statistics
+taken from the Lahman dataset. We will compute the same statistics as we
+did in <a href="ps2.html">Problem Set 2</a> and also standardize these
+statistics within year, year and league, and also historical era.</p>
+<p>To load the batting data into R, we can do the following:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(Lahman)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>batting <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(Batting)</span></code></pre></div>
+<p>Unfortunately, some statistics like hit-by-pitch (HBP) were not
+recorded in the earlier decades of baseball. In the tbl, these missing
+values are designated <code>NA</code>. To see some of these, we can run
+the following code:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>batting <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">select</span>(playerID, yearID, teamID, AB, BB, HBP, SH, SF, IBB, GIDP)</span></code></pre></div>
+<pre><code>## # A tibble: 113,799 × 10
+##    playerID  yearID teamID    AB    BB   HBP    SH    SF   IBB  GIDP
+##    &lt;chr&gt;      &lt;int&gt; &lt;fct&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1 aardsda01   2004 SFN        0     0     0     0     0     0     0
+##  2 aardsda01   2006 CHN        2     0     0     1     0     0     0
+##  3 aardsda01   2007 CHA        0     0     0     0     0     0     0
+##  4 aardsda01   2008 BOS        1     0     0     0     0     0     0
+##  5 aardsda01   2009 SEA        0     0     0     0     0     0     0
+##  6 aardsda01   2010 SEA        0     0     0     0     0     0     0
+##  7 aardsda01   2012 NYA        0     0     0     0     0     0     0
+##  8 aardsda01   2013 NYN        0     0     0     0     0     0     0
+##  9 aardsda01   2015 ATL        1     0     0     0     0     0     0
+## 10 aaronha01   1954 ML1      468    28     3     6     4    NA    13
+## # ℹ 113,789 more rows</code></pre>
+<p>A common convention for dealing with the missing values when
+computing <span class="math inline">\(\text{PA}\)</span> is to replace
+the <code>NA</code> with a <code>0</code>. To do this, we can use the
+function <code>replace_na()</code> within a pipe as follows.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>batting <span class="ot">&lt;-</span> </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  batting <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">replace_na</span>(<span class="fu">list</span>(<span class="at">IBB =</span> <span class="dv">0</span>, <span class="at">HBP =</span> <span class="dv">0</span>, <span class="at">SH =</span> <span class="dv">0</span>, <span class="at">SF =</span> <span class="dv">0</span>, <span class="at">GIDP =</span> <span class="dv">0</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>batting <span class="sc">%&gt;%</span> <span class="fu">select</span>(playerID, yearID, teamID, AB, BB, HBP, SH, SF, IBB)</span></code></pre></div>
+<pre><code>## # A tibble: 113,799 × 9
+##    playerID  yearID teamID    AB    BB   HBP    SH    SF   IBB
+##    &lt;chr&gt;      &lt;int&gt; &lt;fct&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1 aardsda01   2004 SFN        0     0     0     0     0     0
+##  2 aardsda01   2006 CHN        2     0     0     1     0     0
+##  3 aardsda01   2007 CHA        0     0     0     0     0     0
+##  4 aardsda01   2008 BOS        1     0     0     0     0     0
+##  5 aardsda01   2009 SEA        0     0     0     0     0     0
+##  6 aardsda01   2010 SEA        0     0     0     0     0     0
+##  7 aardsda01   2012 NYA        0     0     0     0     0     0
+##  8 aardsda01   2013 NYN        0     0     0     0     0     0
+##  9 aardsda01   2015 ATL        1     0     0     0     0     0
+## 10 aaronha01   1954 ML1      468    28     3     6     4     0
+## # ℹ 113,789 more rows</code></pre>
+<p>The syntax for <code>replace_na()</code> is a bit involved but the
+basic idea is you have to specify the value you want to replace each
+<code>NA</code>. When using <code>replace_na()</code> it is very
+important to remember to include the <code>list(...)</code> bit.</p>
+<ol style="list-style-type: decimal">
+<li><p>Load the Lahman data and run the above code to create the tbl
+<code>Batting</code>, which has replaced all of the <code>NA</code>’ in
+the columns <code>IBB, HBP, SH, SF</code> and GIDP`.</p></li>
+<li><p>Using the pipe <code>%&gt;%</code>, <code>mutate()</code>,
+<code>filter()</code>, and <code>select()</code>, create a tbl
+<code>batting</code> by:</p>
+<ul>
+<li>Adding columns (with <code>mutate()</code>) for plate appearances
+(PA), unintentional walks (uBB), singles (X1B), batting average (BA),
+on-base percentage (OBP), on-base plus slugging (OPS), and weighted
+On-Base Average (wOBA). Note that the formula for plate appearances is
+<span class="math inline">\(\text{PA} = \text{AB} + \text{BB} +
+\text{HBP} + \text{SH} + \text{SF}.\)</span> Formulae for the remaining
+statistics are given in <a href="ps2.html">Problem Set 2</a>.</li>
+<li>Pulling out only those rows of players with at least 502 plate
+appearances with <code>filter()</code></li>
+<li>Select the following columns: playerID, yearID, lgID, teamID, PA,
+BA, OBP, OPS, wOBA.
+<p/></li>
+</ul></li>
+<li><p>Standardize each of BA, OBP, OPS, and wOBA using data from all of
+the years. Name the columns containing these new standardized values
+<code>zBA_all</code>, <code>zOPB_all</code>, etc. <em>Remember, you can
+do this with the <code>scale()</code> function from <a
+href="lecture3.html">Lecture 3</a></em> Who were the best and worst
+batters according to these four metrics?</p></li>
+<li><p>Group <code>batting</code> by year and compute the standardized
+BA, OBP, OPS, and wOBA within each year. Name the columns containing
+these new standardized values <code>zBA_year</code>,
+<code>zOBP_year</code>, etc. Now who are the best and worst batters
+according to the four measures?</p></li>
+<li><p>Remove the grouping by year and instead group by year and league.
+Once again, standardize OBP, OPS, and wOBA within each league-year
+combination, and name the columns containing these new standardized
+values <code>zBA_year_lg</code>, <code>zOBP_year_lg</code>, etc. Are the
+best and worst batters still the same?</p></li>
+<li><p>Remove the grouping you created in Problem 4. Bill James <a
+href="https://www.billjamesonline.com/dividing_baseball_history_into_eras/">divided
+baseball history into several eras</a> as follows:</p>
+<ul>
+<li>Pioneer Era: 1871 – 1892</li>
+<li>Spitball Era: 1893 – 1919</li>
+<li>Landis Era: 1920 – 1946</li>
+<li>Baby Boomer Era: 1947 – 1968</li>
+<li>Artifical Turf Era: 1969 – 1992</li>
+<li>Camden Yards Era: 1993 – present
+<p/></li>
+</ul>
+<p>Use <code>mutate()</code> and <code>case_when()</code> (just like we
+did in <a href="lecture2.html">Lecture 2</a>) to add a column called
+Hist_era to <code>batting</code> that records the historical
+era.</p></li>
+<li><p>Group <code>batting</code> by Hist_era and standardize BA, OBP,
+OPS, and wOBA within historical era. Who are the best and worst batters
+now? Name the columns containing these new standardized values
+<code>zBA_hist</code>, <code>zOBP_hist</code>, etc.</p></li>
+<li><p>Optional: choose one historical statistic calculated in question
+7 and plot the top 10 players for this statistic.</p></li>
+</ol>
+</div>
+<div id="mlb-payroll-and-winnings" class="section level2">
+<h2>MLB Payroll and Winnings</h2>
+<p>Recall from <a href="ps2.html">Problem Set 2</a>, we plotted the
+relative payroll of MLB teams against their winning percentage. In that
+problem set, we read in a file that had included the relative payroll
+for each team as a separate column. To get some additional practice with
+dplyr, we will read in a different dataset and re-compute these relative
+payrolls.</p>
+<ol style="list-style-type: decimal">
+<li>In <a href="lecture3.html">Lecture 3</a> we utilized
+<code>scale()</code> to compute z-scores. We can manually recreate this
+code with a function, as reproduced below:</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>standardize <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">return</span>( (x <span class="sc">-</span> mu)<span class="sc">/</span>sigma)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>}</span></code></pre></div>
+<ul>
+<li>We need to write another function in order to compute “relative
+payroll”. This function will take in a vector <code>x</code>, compute
+its median, and then divides every element of <code>x</code> by the
+median.</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Read in the <a href="data/mlb_payrolls.csv">MLB Payroll Data</a>
+and load it into a tibble called <code>mlb_payrolls</code>.</p></li>
+<li><p>Using the pipe <code>%&gt;%</code>, <code>group_by()</code>, and
+<code>mutate()</code>, add a column to <code>mlb_payrolls</code> that
+contains the relative payroll for each team.</p></li>
+<li><p>Make a scatterplot of winning percentage against relative
+payrolls. Comment on the relationship. Your scatterplot should be
+identical to one you made in <a href="ps2.html">Problem Set
+2</a>.</p></li>
+<li><p>Using the <code>reframe()</code> function, compute the average
+team payroll and relative payroll for each year. Save these results in a
+new tbl called <code>payroll_avg</code>.</p></li>
+<li><p>Make a scatterplot that shows how team payrolls have evolved over
+the year. Similar to what we did in <a href="lecture3.html">Lecture
+3</a>, add a line to this scatterplot that shows the average team
+payroll. Do the same thing for relative payroll. What do you notice
+about the average team payroll and relative payroll?</p></li>
+<li><p>As you will see in coming lectures, correlation is a measure of
+the strength of the <em>linear</em> relationship between two variables.
+The closer to +1 or -1 the correlation between two variables is, the
+more predictable they are of each other. We can compute it using the
+<code>cor()</code> function. Using <code>summary()</code> and
+<code>cor()</code>, compute the correlation between relative payroll and
+winning percentage within each year. What do you notice about how the
+relationship between winning percentage and relative payroll changes
+year to year?</p></li>
+</ol>
+</div>
+<div id="a-challenge-question" class="section level2">
+<h2>A Challenge Question</h2>
+<p>Without running the code, work with your teammates to see if you can
+figure out what the code below is doing.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>batting_2014_2015 <span class="ot">&lt;-</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  batting <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">filter</span>(yearID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2014</span>, <span class="dv">2015</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">group_by</span>(playerID) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">==</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">select</span>(playerID, yearID, BA) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="fu">arrange</span>(playerID)</span></code></pre></div>
+<p>Now, run the code above and save the tbl
+<code>batting_2014_2015</code> to the file “data/batting_2014_2015.csv”
+using the <code>write_csv()</code> function. We will return to this
+dataset in <a href="lecture4.html">Lecture 4</a>.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

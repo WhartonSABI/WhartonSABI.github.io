@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Problem Set 2</title>
+
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-sign-in"></span>
+     
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture0.html">Lecture 0</a>
+    </li>
+    <li>
+      <a href="ps0.html">Problem Set 0</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-institution"></span>
+     
+    Academy
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="lecture5.html">Lecture 5</a>
+    </li>
+    <li>
+      <a href="lecture6.html">Lecture 6</a>
+    </li>
+    <li>
+      <a href="lecture7.html">Lecture 7</a>
+    </li>
+    <li>
+      <a href="lecture8.html">Lecture 8</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="ps3.html">Problem Set 3</a>
+    </li>
+    <li>
+      <a href="ps4.html">Problem Set 4</a>
+    </li>
+    <li>
+      <a href="ps5.html">Problem Set 5</a>
+    </li>
+    <li>
+      <a href="ps6.html">Problem Set 6</a>
+    </li>
+    <li>
+      <a href="ps7.html">Problem Set 7</a>
+    </li>
+    <li>
+      <a href="ps8.html">Problem Set 8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-dribbble"></span>
+     
+    Training Camp
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="tc_lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="tc_lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="tc_lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="tc_lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="tc_lecture5.html">Lecture 5</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="tc_ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="tc_ps3.html">Problem Set 3</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_lecture_data_sources.html">Data Sources Lecture</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Problem Set 2</h1>
+
+</div>
+
+
+<div id="review-lecture-2-notes" class="section level2">
+<h2>Review Lecture 2 Notes</h2>
+<p>Please spend a few minutes reading through the notes from <a
+href="lecture2.html">Lecture 2</a>. Like in <a href="ps1.html">Problem
+Set 1</a>, you should go through each code block with someone in your
+group and see if you can both explain to each other what all of the code
+does.</p>
+</div>
+<div id="payroll-and-winning-percentage-in-the-mlb"
+class="section level2">
+<h2>Payroll and Winning Percentage in the MLB</h2>
+<p>In lecture, Professor Wyner discussed the relationship between a
+team’s payroll and its winning percentage. In particular, for each
+season, he computed the “relative payroll” of each team by taking its
+payroll and dividing it by the median of payrolls of all teams in that
+season. We will replicate his analysis in the following problems using
+the dataset “mlb_relative_payrolls.csv”, which we saved to the “data”
+folder of our working directory back in <a href="lecture0">Lecture
+0</a>. You should save all of the code for this analysis in an R script
+called “ps2_mlb_payroll.R”.</p>
+<ol style="list-style-type: decimal">
+<li><p>Read the data in from “mlb_relative_payrolls.csv” and save it as
+a tbl called “relative_payroll”</p></li>
+<li><p>Make a histogram of team winning percentages. Play around with
+different binwidths.</p></li>
+<li><p>Make a histogram of the relative payrolls.</p></li>
+<li><p>Make a scatterplot with relative payroll on the horizontal axis
+and winning percentage on the vertical axis.</p></li>
+<li><p>Without executing the code below, discuss with your group and see
+if you can figure out what it is doing.</p></li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> relative_payroll) <span class="sc">+</span> </span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Team_Payroll))</span></code></pre></div>
+<ol start="6" style="list-style-type: decimal">
+<li>Execute the code above. What can you say about how team payrolls
+have evolved over time? Make a similar plot that visualizes how
+<em>relative payrolls</em> have evolved over time.</li>
+</ol>
+</div>
+<div id="mlb-batting-statistics" class="section level2">
+<h2>MLB Batting Statistics</h2>
+<p>In this problem set, we will gain more experience using the dplyr
+verbs we learned in Lecture 2 to analyze batting statistics of MLB
+players with at least 502.2 plate appearances. We will be using the
+dataset <a href="data/hitting_qualified.csv">hitting_qualified.csv</a>
+(click on that link to download it, then move it into your “data”
+folder). You should write save all of the code for this analyses in an R
+script called “ps2_mlb_batting.R”.</p>
+<ol style="list-style-type: decimal">
+<li><p>Load the data into a tibble called <code>hitting_qualified</code>
+using <code>read_csv()</code>.</p>
+<p>The columns of this dataset include:</p>
+<ul>
+<li><code>playerID</code>: the player’s ID code</li>
+<li><code>yearID</code>: Year</li>
+<li><code>stint</code>: the player’s stint (order of appearances within
+a season)</li>
+<li><code>teamID</code>: the player’s team</li>
+<li><code>lgID</code>: the player’s league</li>
+<li><code>G</code>: the number of Games the player played in that
+year</li>
+<li><code>AB</code>: number of At Bats of that player in that year</li>
+<li><code>PA</code>: number of plate appearances by the player that
+year</li>
+<li><code>R</code>: number of Runs the player made in that year</li>
+<li><code>H</code>: number of Hits the player had in that year</li>
+<li><code>X2B</code>: number of Doubles (hits on which the batter
+reached second base safely)</li>
+<li><code>X3B</code>: number of Triples (hits on which the batter
+reached third base safely)</li>
+<li><code>HR</code>: number of Homeruns the player made that year</li>
+<li><code>RBI</code>: number of Runs Batted In the player made that
+year</li>
+<li><code>SB</code>: number of Bases Stolen by the player in that
+year</li>
+<li><code>CS</code>: number of times a player was Caught Stealing that
+year</li>
+<li><code>BB</code>: Base on Balls</li>
+<li><code>SO</code>: number of Strikeouts the player had that year</li>
+<li><code>IBB</code> Intentional walks</li>
+<li><code>HBP</code>: Hit by pitch</li>
+<li><code>SH</code>: Sacrifice hits</li>
+<li><code>SF</code> Sacrifice flies</li>
+<li><code>GIDP</code> Grounded into double plays</li>
+</ul></li>
+<li><p>Use <code>arrange()</code> to find out the first and last season
+for which we have data. <em>Hint: you may need to use
+<code>desc()</code> as well.</em></p></li>
+<li><p>Use <code>reframe()</code> to find out the first and last season
+for which we have data. <em>Hint, you only need one line of code to do
+this</em></p></li>
+<li><p>When you print out <code>hitting_qualified</code> you’ll notice
+that some columns were read in as characters and not integers or
+numerics. This can happen sometimes whenever the original csv file has
+missing values. In this case, the columns IBB, HBP, SH, SF, and GIDP
+were read in as characters. We want to <em>convert</em> these to
+integers. We can do this using <code>mutate()</code> and the function
+<code>as.integer()</code>.</p></li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>hitting_qualified <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hitting_qualified,</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                            <span class="at">IBB =</span> <span class="fu">as.integer</span>(IBB),</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                            <span class="at">HBP =</span> <span class="fu">as.integer</span>(HBP),</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>                            <span class="co"># finish on your own</span></span></code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>Let’s take a look at some of the columns we just converted:</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">select</span>(hitting_qualified, playerID, yearID, AB, IBB, HBP, SH, SF, GIDP)</span></code></pre></div>
+<pre><code>## # A tibble: 12,043 × 8
+##    playerID  yearID    AB   IBB   HBP    SH    SF  GIDP
+##    &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1 ansonca01   1884   475    NA    NA    NA    NA    NA
+##  2 bradyst01   1884   485    NA     0    NA    NA    NA
+##  3 connoro01   1884   477    NA    NA    NA    NA    NA
+##  4 dalryab01   1884   521    NA    NA    NA    NA    NA
+##  5 farreja02   1884   469    NA    NA    NA    NA    NA
+##  6 gleasbi01   1884   472    NA    12    NA    NA    NA
+##  7 hinespa01   1884   490    NA    NA    NA    NA    NA
+##  8 hornujo01   1884   518    NA    NA    NA    NA    NA
+##  9 jonesch01   1884   472    NA    10    NA    NA    NA
+## 10 nelsoca01   1884   432    NA     9    NA    NA    NA
+## # ℹ 12,033 more rows</code></pre>
+<ul>
+<li>You’ll notice that a lot of these columns contain <code>NA</code>
+values, which indicates that some of these values are missing. This
+makes sense, since a lot of these statistics were not recorded in the
+early years of baseball. A popular convention for dealing with these
+missing statistics is to <strong>impute</strong> the missing values with
+0. That is, for instance, every place we see an <code>NA</code> we need
+to replace it with a 0. We can do that with <code>mutate()</code> and
+<code>replace_na()</code> function as follows.</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>hitting_qualified <span class="ot">&lt;-</span> <span class="fu">replace_na</span>(hitting_qualified, </span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>                                <span class="fu">list</span>(<span class="at">IBB =</span> <span class="dv">0</span>, <span class="at">HBP =</span> <span class="dv">0</span>, <span class="at">SH =</span> <span class="dv">0</span>, <span class="at">SF =</span> <span class="dv">0</span>, <span class="at">GIDP =</span> <span class="dv">0</span>))</span></code></pre></div>
+<ul>
+<li>We will discuss the syntax for <code>replace_na()</code> later in
+lecture. Now, rerun the <code>select()</code> function from above to
+check that the NAs were replaced with zeros.</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li><p>Use <code>mutate()</code> to add a column for the number of
+singles, which can be computed as <span class="math inline">\(\text{X1B}
+= \text{H} - \text{X2B} - \text{X3B} - \text{HR}\)</span>.</p></li>
+<li><p>The variable BB includes as a subset all intentional walks (IBB).
+Use <code>mutate()</code> to add a column to
+<code>hitting_qualified</code> that counts the number of
+<em>un-intentional walks</em> (uBB). Be sure to save the resulting
+tibble as <code>hitting_qualified</code>.</p></li>
+<li><p>Use <code>mutate()</code> to add columns for the following
+offensive statistics, whose formulae are given below. We have also
+included links to pages on <a
+href="https://www.fangraphs.com">Fangraphs</a> that define and discuss
+each of these statistics.</p>
+<ul>
+<li><a href="https://www.fangraphs.com/library/offense/rate-stats/">Walk
+Percentage</a> (BBP): <span class="math display">\[
+\text{BBP} = \frac{\text{BB}}{\text{PA}}
+\]</span></li>
+<li><a
+href="https://www.fangraphs.com/library/offense/rate-stats/">Strike-out
+Percentage</a> (KP): <span class="math display">\[\text{KP} =
+\frac{\text{SO}}{\text{PA}}\]</span></li>
+<li><a href="https://www.fangraphs.com/library/offense/obp/">On-Base
+Percentage</a> (OBP): <span class="math display">\[\text{OBP} =
+\frac{\text{H} + \text{BB} + \text{HBP}}{\text{AB} + \text{BB} +
+\text{HBP} + \text{SF}}\]</span></li>
+<li>Slugging (SLG): <span class="math display">\[
+\text{SLG} = \frac{\text{X1B} + 2 \times \text{X2B} + 3\times \text{X3B}
++ 4\times \text{HR}}{\text{AB}}
+\]</span></li>
+<li><a href="https://www.fangraphs.com/library/offense/ops/">On-Base
+Plus Slugging</a> (OPS): <span class="math display">\[\text{OPS} =
+\text{OBP} + \text{SLG}\]</span></li>
+<li><a href="https://www.fangraphs.com/library/offense/woba/">weighted
+On-Base Average</a> (wOBA): We will use the 2013 weights which can be
+found <a href="https://www.fangraphs.com/guts.aspx?type=cn">here</a>
+<span class="math display">\[
+\text{wOBA} = \frac{0.687 \times \text{uBB} + 0.718 \times \text{HBP} +
+0.881 \times \text{X1B} + 1.256 \times \text{X2B} + 1.594 \times
+\text{X3B} + 2.065 \times \text{HR}}{\text{AB} + \text{uBB} + \text{SF}
++ \text{HBP}}
+\]</span></li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>hitting_qualified <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hitting_qualified,</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                  <span class="at">BBP =</span> BB<span class="sc">/</span>PA,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                  <span class="at">KP =</span> SO<span class="sc">/</span>PA,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                  <span class="co"># finish on your own</span></span></code></pre></div>
+<ol start="9" style="list-style-type: decimal">
+<li>For most of the statistics in the previous question, Fangraphs has
+defined rating scales (to see these ratings, click on the linked page
+for each statistic in Question 6 and scroll down to the “Context”
+section of the page). Use <code>mutate()</code> and
+<code>case_when()</code> to add the ratings for walk percentage (BBP),
+strike-out percentage (KP), on-base percentage (OBP), on-base plus
+slugging (OPS), and wOBA. Call the columns “BBP_rating”, “KP_rating”,
+“OBP_rating”, “OPS_rating”, and “wOBA_rating.”</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>hitting_qualified <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hitting_qualified, </span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                            <span class="at">BBP_rating =</span> <span class="fu">case_when</span>(BBP <span class="sc">&gt;=</span> .<span class="dv">15</span> <span class="sc">~</span> <span class="st">&quot;Excellent&quot;</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>                                                   BBP <span class="sc">&lt;</span> .<span class="dv">15</span> <span class="sc">&amp;</span> BBP <span class="sc">&gt;=</span> .<span class="dv">125</span> <span class="sc">~</span> <span class="st">&quot;Great&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>                                                   <span class="co"># finish on your own</span></span></code></pre></div>
+<ol start="10" style="list-style-type: decimal">
+<li><p>Use <code>filter()</code> to subset the players who played
+between 2000 and 2015. Call the new tbl
+<code>tmp_batting</code>.</p></li>
+<li><p>Use <code>select()</code> on <code>tmp_batting</code> to create a
+tibble called <code>batting_recent</code> containing all players who
+played between 2000 and 2015 with the following columns: playerID,
+yearID, teamID, lgID, and all of the statistics and rankings created in
+Problems 8 and 9.</p></li>
+<li><p>Explore the distribution of some of the batting statistics
+introduced in problem 8 using the tbl <code>batting_recent</code> using
+histograms. Then explore the relationship between some of these
+statistics with scatterplots.</p></li>
+<li><p>Explore the distribution of the ratings for the statistics
+introduced in Problem 9 using bar plots. <em>Hint: You may need to
+mutate the rating columns with
+<code>factor(BBP_rating, levels = c(Awful, Poor...))</code> to ensure
+the ratings are plotted in the correct order.</em></p></li>
+</ol>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

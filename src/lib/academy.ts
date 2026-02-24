@@ -1,10 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import * as cheerio from 'cheerio';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ACADEMY_SOURCE = path.resolve(__dirname, '../../../academy/website');
+/** Academy HTML files live in the website repo for independent builds */
+const ACADEMY_SOURCE = path.join(process.cwd(), 'academy');
 const BASE_PATH = '/moneyball/academy';
 const TC_BASE_PATH = '/moneyball/tc';
 

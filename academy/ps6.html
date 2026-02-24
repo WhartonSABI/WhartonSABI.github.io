@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Problem Set 6</title>
+
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-sign-in"></span>
+     
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture0.html">Lecture 0</a>
+    </li>
+    <li>
+      <a href="ps0.html">Problem Set 0</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-institution"></span>
+     
+    Academy
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="lecture5.html">Lecture 5</a>
+    </li>
+    <li>
+      <a href="lecture6.html">Lecture 6</a>
+    </li>
+    <li>
+      <a href="lecture7.html">Lecture 7</a>
+    </li>
+    <li>
+      <a href="lecture8.html">Lecture 8</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="ps3.html">Problem Set 3</a>
+    </li>
+    <li>
+      <a href="ps4.html">Problem Set 4</a>
+    </li>
+    <li>
+      <a href="ps5.html">Problem Set 5</a>
+    </li>
+    <li>
+      <a href="ps6.html">Problem Set 6</a>
+    </li>
+    <li>
+      <a href="ps7.html">Problem Set 7</a>
+    </li>
+    <li>
+      <a href="ps8.html">Problem Set 8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-dribbble"></span>
+     
+    Training Camp
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="tc_lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="tc_lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="tc_lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="tc_lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="tc_lecture5.html">Lecture 5</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="tc_ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="tc_ps3.html">Problem Set 3</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_lecture_data_sources.html">Data Sources Lecture</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Problem Set 6</h1>
+
+</div>
+
+
+<div id="regression-with-triathlon-data" class="section level1">
+<h1>Regression with Triathlon Data</h1>
+<p>Now that we’ve seen linear regression in R applied to MLB batting
+averages, let’s practice what we’ve learned in a context we haven’t
+worked with before. We will look at past results of the Ironman
+Triathlon and investigate relationships between racing splits and
+demographic variables. First let us download the <a
+href="data/Ironman%20Data.csv">Ironman Data</a> and save it to our
+“data” folder.</p>
+<p>Let’s read in the data and take a look at the variables.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/Ironman Data.csv&#39;</span>)</span></code></pre></div>
+<pre><code>## Rows: 22124 Columns: 389
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (103): Source Table, Name, Country, Gender, Division, Swim, Bike, Run, Overall, Division Ra...
+## dbl  (102): BIB, Gender Rank, Overall Rank, Log Rank, Bike 28.2 mi Distance, Bike 50.4 mi Distan...
+## time (184): Swim Total Split Time, Swim Total Race Time, T1, Bike 28.2 mi Split Time, Bike 28.2 ...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>This is a large data set with hundreds of variables. Digging deeper,
+we can see that many of the variables seem to be repeated and many have
+data only in certain rows. This is common in historical racing results,
+so it’s important to determine which variables are most important for
+our analysis. In our case, this analysis will be looking at the results
+from the 2017 Florida race, and we will focus on the swim, bike, run,
+and overall finishing times as well as demographics including country,
+gender, and division.</p>
+<p>Moreover, we note that the finishing times are actually
+character-types in the form of ‘minutes:seconds’. Keeping these
+variables in this form will pose problems as we are going to be
+performing operations that require numeric data. So, we need to convert
+these clock times into pure numbers. The best way to work with clock
+times within the tidyverse framework is to use the
+<code>lubridate</code> package. Within this package, we can parse the
+times in the ‘minutes:seconds’ format using the <code>ms()</code>
+function, and then convert the result to a numeric using the
+<code>period_to_seconds()</code> function (the result will be a time in
+seconds, so we can get this back to minutes by dividing by 60).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#install.packages(&quot;lubridate&quot;)</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>results_2017 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Source Table</span><span class="st">`</span> <span class="sc">==</span> <span class="st">&#39;2017 - Florida&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">select</span>(Country, Gender, Division, Swim, Bike, Run, Overall) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Swim =</span> <span class="fu">period_to_seconds</span>(<span class="fu">ms</span>(Swim))<span class="sc">/</span><span class="dv">60</span>, </span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>         <span class="at">Bike =</span> <span class="fu">period_to_seconds</span>(<span class="fu">ms</span>(Bike))<span class="sc">/</span><span class="dv">60</span>, </span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>         <span class="at">Run =</span> <span class="fu">period_to_seconds</span>(<span class="fu">ms</span>(Run))<span class="sc">/</span><span class="dv">60</span>, </span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>         <span class="at">Overall =</span> <span class="fu">period_to_seconds</span>(<span class="fu">ms</span>(Overall))<span class="sc">/</span><span class="dv">60</span>)</span></code></pre></div>
+<div id="simple-linear-regression" class="section level2">
+<h2>Simple Linear Regression</h2>
+<p>Now that we have our tidy dataset, let’s start looking at the
+relationships between each leg of the triathlon.</p>
+<ol style="list-style-type: decimal">
+<li><p>Create scatterplots of swim times vs. bike times, bike times
+vs. run times, and swim times vs. run times. Save them as variables
+titled ‘plot.swim_bike’, etc.</p></li>
+<li><p>To compare the relationships between these three variables, we
+can plot all three plots in the same window, rather than having to
+scroll through each one individually. To do so, we use the
+<code>ggarrange</code> function within the <code>ggpubr</code> package.
+As arguments of the function, we select our three plots and can specify
+the number of rows and columns to be displayed.</p></li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co">#install.packages(&quot;ggpubr&quot;)</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">ggarrange</span>(plot.swim_bike, plot.bike_run, plot.swim_run, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="ps6_files/figure-html/pt1%20q2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Can you visually compare these associations by looking at the
+scatterplots? Which legs of the race seem to be more highly
+correlated?</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Another way to display three continuous variables at once is by
+creating a scatterplot for two of the variables and then coloring the
+points by the values of the third variable. Try doing so with different
+combinations of our variables to create plots like the one below.</li>
+</ol>
+<p><img src="ps6_files/figure-html/pt1%20q3%20solution-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ul>
+<li>From this one, we can see that the racers with faster swim and bike
+times tended to have faster run times; however, the specific
+relationship between Swim vs. Run and Bike vs. Run is less clear than in
+the individual scatter plots.</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>To numerically evaluate these relationships, compute the correlation
+between each of the variables (you should compute 3 different
+correlations).</li>
+</ol>
+<pre><code>## [1] 0.6379414</code></pre>
+<pre><code>## [1] 0.642096</code></pre>
+<pre><code>## [1] 0.4433809</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Now, let’s fit our linear model. Right now, we are doing simple
+linear regression, which involves one response variable and one
+predictor variable. So, let’s start by running a regression with Swim as
+our predictor and Bike as our response.</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>lm.swim_bike <span class="ot">&lt;-</span> <span class="fu">lm</span>( ... ) <span class="co"># fill this part in</span></span></code></pre></div>
+<ul>
+<li>We obtain the following slope and intercept for this
+regression.</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lm.swim_bike<span class="sc">$</span>coefficients</span></code></pre></div>
+<pre><code>## (Intercept)        Swim 
+##  179.129651    2.395295</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>We also want to add the regression line to our plot. Use
+<code>predict()</code> to generate predictions based on the model, and
+<code>mutate()</code> to add them to your data. Then, use
+<code>geom_line()</code> to add this predicted line to the plot. You may
+need to increase the size to increase the visibility of the line.</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>results_2017 <span class="ot">&lt;-</span> results_2017 <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">swim_bike_pred =</span> <span class="fu">predict</span>(lm.swim_bike))</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="fu">ggplot</span>(results_2017) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(Swim, Bike)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Swim, <span class="at">y =</span> swim_bike_pred), <span class="at">color =</span> <span class="st">&#39;lightcoral&#39;</span>, <span class="at">size =</span> <span class="fl">1.5</span>)</span></code></pre></div>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<p><img src="ps6_files/figure-html/pt1%20q6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ol start="7" style="list-style-type: decimal">
+<li>Repeat steps 5 and 6 for the two other combinations of the three
+race legs. Note that since we’re only investigating associations between
+variables (as opposed to causal relations) it doesn’t really matter
+which variable we choose to be our predictor and response; the resulting
+plots will be the same, except with flipped axes. If, instead, we were
+trying to determine causality, we would put the independent/predictor
+variable on the x-axis and the dependent/response variable on the
+y-axis.</li>
+</ol>
+</div>
+<div id="going-beyond-simple-linear-regression" class="section level2">
+<h2>Going beyond simple linear regression</h2>
+<p>In the following two lectures we will be looking at other forms of
+regression, namely logistic regression and multiple regression. Whereas
+simple linear regression deals with two continuous variables that share
+a linear relationship, we can extend our ideas of regression to more
+than two variables as well as variables that are binary or discrete in
+scale, or share nonlinear relationships.</p>
+<div id="nonlinear-regression" class="section level3">
+<h3>Nonlinear Regression</h3>
+<p>What if we had reason to believe the association between the
+finishing times of each leg of the triathlon was quadratic, rather than
+linear? For instance, imagine higher times on the run leg were
+associated with slightly higher times on the bike leg, but not linearly
+higher? This could be possible if we had reason to believe that the top
+racers in the Ironman are good on the bike but separate themselves with
+really fast run times, while the slower racers are equally slow on the
+bike and on the run.</p>
+<ol style="list-style-type: decimal">
+<li>First let’s start by running simple linear regression on Run
+vs. Bike, because it’s best to start with simple models before moving
+onto more complex models. Similarly as before, we want to draw this
+regression line on our plot. To do this, we create a grid with
+discretized Run values as the x values, and the predicted values from
+our linear model as the y values. Then, we draw a line through these
+points, which is our regression line.</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>lm.run_bike <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> results_2017, <span class="at">formula =</span> Bike <span class="sc">~</span> Run)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>lm.run_bike<span class="sc">$</span>coefficients</span></code></pre></div>
+<pre><code>## (Intercept)         Run 
+## 205.7610166   0.5147168</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>results_2017 <span class="ot">&lt;-</span> results_2017 <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">run_bike_pred =</span> <span class="fu">predict</span>(lm.run_bike))</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">ggplot</span>(results_2017) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(Run, Bike)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Run, <span class="at">y =</span> run_bike_pred), <span class="at">color =</span> <span class="st">&#39;lightcoral&#39;</span>)</span></code></pre></div>
+<p><img src="ps6_files/figure-html/pt2%20q1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Now, we can run the quadratic regression. To include the quadratic
+relation into our linear model, we will add a quadratic term as an
+additional predictor variable (which, in this case, is Run).</li>
+</ol>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>lm.run_bike2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> results_2017, <span class="at">formula =</span> Bike <span class="sc">~</span> Run <span class="sc">+</span> <span class="fu">I</span>(Run<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>lm.run_bike2<span class="sc">$</span>coefficients</span></code></pre></div>
+<pre><code>##  (Intercept)          Run     I(Run^2) 
+## 26.222478107  1.649746436 -0.001732342</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>To draw this regression line on our plot, we can take the grid of
+values used on our simple linear regression in step 1, and add another
+column with the predicted values from our new quadratic model. This new
+column contains the new y values of the regression line.</li>
+</ol>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>results_2017 <span class="ot">&lt;-</span> results_2017 <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">run_bike_pred2 =</span> <span class="fu">predict</span>(lm.run_bike2))</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">ggplot</span>(results_2017) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(Run, Bike)) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Run, <span class="at">y =</span> run_bike_pred), <span class="at">color =</span> <span class="st">&#39;lightcoral&#39;</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Run, <span class="at">y =</span> run_bike_pred2), <span class="at">color =</span> <span class="st">&#39;lightblue4&#39;</span>, <span class="at">size =</span> <span class="fl">1.5</span>)</span></code></pre></div>
+<p><img src="ps6_files/figure-html/pt2%20q3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Now, we can determine if our quadratic model fits the data better
+than our linear model. To do this, we can compute the RMSEs of both
+models (as discussed in <a href="lecture4.html">Lecture 4</a>) and see
+which is lower.</li>
+</ol>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">reframe</span>(results_2017,</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>          <span class="at">rmse.run_bike =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(lm.run_bike<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)),</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>          <span class="at">rmse.run_bike2 =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(lm.run_bike2<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 2
+##   rmse.run_bike rmse.run_bike2
+##           &lt;dbl&gt;          &lt;dbl&gt;
+## 1        37.266         36.524</code></pre>
+<ul>
+<li>In fact, it does appear that the quadratic model appears to fit our
+data better!</li>
+</ul>
+</div>
+<div id="regression-with-multiple-predictors" class="section level3">
+<h3>Regression with multiple predictors</h3>
+<p>Let’s start with our Run vs. Bike linear model again; what if we now
+want to add a gender effect? This would be the case if we think that the
+bike times differ depending on a racer’s gender.</p>
+<ol style="list-style-type: decimal">
+<li>We have already run the linear model without the gender effect. Now
+let’s add the gender effect in.</li>
+</ol>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>lm.run_bike_gender <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> results_2017, <span class="at">formula =</span> Bike <span class="sc">~</span> Run <span class="sc">+</span> Gender)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>lm.run_bike_gender<span class="sc">$</span>coefficients</span></code></pre></div>
+<pre><code>## (Intercept)         Run  GenderMale 
+##  229.316963    0.502562  -26.143851</code></pre>
+<ul>
+<li>To interpret these results, we can say that for every increase in
+one minute of run times, bike times increase by about half a minute.
+Moreover, being a male is associated with bike time that is on average
+26 minutes lower than the alternative (being a female).</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Now, let’s plot our regression. Note that there will be two separate
+regression lines: one for the association between running and biking for
+males, and one for the association between running and biking for
+females. Also note that since we now technically have two predictor
+variables to go on our x-axis, we need to create a new grid that spans
+the values of the Run variable as well as the Gender variable</li>
+</ol>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>results_2017 <span class="ot">&lt;-</span> results_2017 <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">run_bike_gender =</span> <span class="fu">predict</span>(lm.run_bike_gender))</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a><span class="fu">ggplot</span>(results_2017) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(Run, Bike)) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Run, <span class="at">y =</span> run_bike_pred), <span class="at">color =</span> <span class="st">&#39;lightcoral&#39;</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Run, <span class="at">y =</span> run_bike_gender, <span class="at">col =</span> Gender), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">Female=</span><span class="st">&quot;lightblue4&quot;</span>, <span class="at">Male=</span><span class="st">&quot;darkseagreen3&quot;</span>))</span></code></pre></div>
+<p><img src="ps6_files/figure-html/pt3%20q2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ul>
+<li>We can now clearly see that females have slower bike times than
+males. Note that the red line in the middle corresponds to our simple
+linear regression without the gender effect.</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>We can probably guess that the model with the gender effect fits the
+data better than our simple linear regression (i.e. knowing the gender
+of a racer and their run time allows us to better predict their bike
+time). But let’s verify this computationally.</li>
+</ol>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">reframe</span>(results_2017,</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>          <span class="at">rmse.run_bike =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(lm.run_bike<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)),</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>          <span class="at">rmse.run_bike_gender =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(lm.run_bike_gender<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)))</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 2
+##   rmse.run_bike rmse.run_bike_gender
+##           &lt;dbl&gt;                &lt;dbl&gt;
+## 1        37.266               35.511</code></pre>
+<ul>
+<li>Indeed! We will have lower residuals on average by making
+predictions from our gender-included model than with our simple linear
+regression.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
