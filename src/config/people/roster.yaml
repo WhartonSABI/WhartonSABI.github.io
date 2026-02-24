@@ -10,6 +10,7 @@ people:
     programs:
       - lab 2025 instructor
       - seminar 2025 organizer
+      - moneyball 2025 organizer
       - program: seminar
         year: 2024
         type: organizer
@@ -24,6 +25,7 @@ people:
     programs:
       - seminar 2025 organizer
       - seminar 2024 organizer
+      - moneyball 2025 organizer
 
   - name: Paul Sabin
     email: psabin88@wharton.upenn.edu
@@ -52,6 +54,9 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
       - program: seminar
         year: 2024
         role: sophomore
@@ -66,16 +71,22 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
 
   - name: Audrey Kuan
     email: kuanai@wharton.upenn.edu
-    role: participant
+    role: 1y Masters
     bio: Basketball, Track & Field, Badminton, Cycling.
     github: akuan16
     linkedin: https://www.linkedin.com/in/audrey-kuan-93b86918b/
     projects: [server-quality]
     programs:
       - lab 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
 
   - name: Chris Bugliosi
     email: bugliosi@wharton.upenn.edu
@@ -86,6 +97,9 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
       - program: seminar
         year: 2024
         role: sophomore
@@ -98,6 +112,9 @@ people:
     linkedin: https://www.linkedin.com/in/drew-bukasa/
     programs:
       - lab 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
 
   - name: Kenny Watts
     email: kenwatts@wharton.upenn.edu
@@ -109,6 +126,9 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
       - program: seminar
         year: 2024
         role: junior
@@ -122,6 +142,9 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
       - program: seminar
         year: 2024
         role: sophomore
@@ -136,6 +159,9 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
 
   - name: Noah Sonnenklar
     email: noahson@sas.upenn.edu
@@ -145,6 +171,9 @@ people:
     linkedin: https://www.linkedin.com/in/noah-sonnenklar-90b24a2b7/
     programs:
       - lab 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
 
   - name: Rita Balajee
     email: abalajee@sas.upenn.edu
@@ -156,6 +185,9 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
 
   - name: Tianshu Feng
     email: ftianshu@seas.upenn.edu
@@ -167,6 +199,9 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - program: moneyball
+        year: 2025
+        type: leadership
       - program: seminar
         year: 2024
         role: 1y Masters
@@ -181,6 +216,7 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - moneyball 2025 instructor
 
   # Seminar-only 2025
   - name: Adam Krasilovsky

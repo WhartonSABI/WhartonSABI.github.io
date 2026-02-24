@@ -1,0 +1,177 @@
+---
+title: "Problem Set 3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, fig.align = "center", include = FALSE) # set include = TRUE to see solutions in knitted RMarkdown
+library(tidyverse)
+```
+
+## Review Lecture 3 Notes
+
+Please spend a few minutes reading through the notes from [Lecture 3](tc_lecture3.html).  Like before, you should go through each code block with someone in your group and see if you can both explain to each other what all of the code does.
+
+## NBA Three-Point Efficiency
+
+In [Lecture 3](tc_lecture3.html) we saw that three-point shot rates have been increasing over time by creating visualizations of the distributions for each season. 
+
+Now, create the same visuals but use TPP as the continuous variable of interest. As players are attempting more three-pointers than ever before, are they also making them more?
+
+Discuss with other students in your group the meaning of these plots.
+
+```{r q1 solution}
+# solution
+
+# load data
+load("data/clean_nba_shooting.RData")
+
+# scatterplot of 3PT proportion by year
+nba_shooting %>%
+  ggplot(aes(x = SEASON, y = TPP)) +
+  geom_point(alpha = 0.25) +
+  labs(x = "Season",
+       y = "3PT proportion = TPM / TPA",
+       title = "Distribution of 3PT proportion each year")
+
+# add season_factor variable
+nba_shooting <- nba_shooting %>%
+  mutate(season_factor = as.factor(SEASON))
+
+# many histograms of 3PT proportion by year
+nba_shooting %>%
+  ggplot(aes(x = TPP)) +
+  geom_histogram(binwidth = 0.05) +
+  labs(x = "3PT propotion = TPM / TPA",
+       y = "Count",
+       title = "Distribution of 3PT proportion by season") +
+  facet_wrap(~season_factor, nrow = 3)
+
+# stacked histogram of 3PT proportion, colored by year
+nba_shooting %>%
+  ggplot(aes(x = TPP, fill = season_factor)) +
+  geom_histogram(binwidth = 0.05) +
+  labs(x = "3PT proportion = TPM / TPA",
+       y = "Count",
+       fill = "Season",
+       title = "Distribution of 3PT proportion by season") 
+
+# overlaid histograms of 3PT proportion, colored by year
+nba_shooting %>%
+  ggplot(aes(x = TPP, fill = season_factor)) +
+  geom_histogram(binwidth = 0.05, position = "identity", alpha = 0.1) +
+  labs(x = "3PT proportion = TPM / TPA",
+       y = "Count",
+       fill = "Season",
+       title = "Distribution of 3PT proportion by season") 
+
+# boxplots of 3PT proportion by year
+nba_shooting %>%
+  ggplot(aes(x = season_factor, y = TPP)) +
+  geom_boxplot() +
+  labs(x = "Season",
+       y = "3PT proportion = TPM / TPA",
+       title = "Comparison of 3PT proportion for each season with boxplots") 
+
+# violin plots of 3PT proportion by year
+nba_shooting %>%
+  ggplot(aes(x = season_factor, y = TPP)) +
+  geom_violin() +
+  # label!
+  labs(x = "Season",
+       y = "3PT proportion = TPM / TPA",
+       title = "Comparison of 3PT proportion for each season with violin plots") 
+
+# box/violin plots of 3PT proportion by year
+nba_shooting %>%
+  ggplot(aes(x = season_factor, y = TPP)) +
+  geom_violin() + 
+  geom_boxplot(width = 0.2) +
+  # label!
+  labs(x = "Season",
+       y = "3PT proportion = TPM / TPA",
+       title = "Comparison of 3PT proportion for each season with violin and boxplots") 
+
+# ridgeplots of 3PT proportion by year
+library(ggridges)
+nba_shooting %>%
+  ggplot(aes(x = TPP, y = season_factor)) +
+  geom_density_ridges() +
+  # label!
+  labs(y = "Season",
+       x = "3PT proportion = TPM / TPA",
+       title = "Comparison of 3PT proportion for each season with ridges") 
+
+# beeswarm plots of 3PT proportion by year
+library(ggbeeswarm)
+nba_shooting %>%
+  ggplot(aes(x = season_factor, y = TPP)) +
+  geom_quasirandom(size = 0.5) +
+  # label!
+  labs(x = "Season",
+       y = "3PT proportion = TPM / TPA",
+       title = "Comparison of 3PT proportion for each season with beeswarms") 
+
+# group the data by season_factor
+nba_shooting <- nba_shooting %>% 
+  group_by(season_factor)
+
+# compute average 3PT proportion for each season
+nba_shooting %>%
+  reframe(ave_TPP = mean(TPP))
+
+# new dataset with mean and SD of 3PT proportion each year
+nba_shooting_summary <- nba_shooting %>%
+  reframe(ave_TPP = mean(TPP),
+            sd_TPP = sd(TPP))
+
+# scatterplot of mean +/- SD for 3PT proportion each year 
+nba_shooting_summary %>%
+  ggplot(aes(x = season_factor)) +
+  geom_point(aes(y = ave_TPP)) +
+  geom_errorbar(aes(ymin = ave_TPP - sd_TPP,
+                    ymax = ave_TPP + sd_TPP)) +
+  labs(x = "Season",
+       y = "3PT proportion = TPM / TPA",
+       title = "Average 3PT proportion with +/- 1 standard deviation")
+
+# violin plot plus mean +/- SD for 3PT proportion each year
+ggplot() +
+  geom_violin(data = nba_shooting,
+              aes(x = season_factor, y = TPP)) +
+  geom_point(data = nba_shooting_summary,
+             aes(x = season_factor, y = ave_TPP),
+             color = "red") +
+  geom_errorbar(data = nba_shooting_summary,
+                aes(x = season_factor, 
+                    ymin = ave_TPP - sd_TPP,
+                    ymax = ave_TPP + sd_TPP),
+                color = "red") +
+  labs(x = "Season",
+       y = "3PT proportion = TPA / FGA",
+       title = "Distribution of 3PT proportion for each season",
+       subtitle = "Red points indicate average for each year with +/- 1 standard deviation")
+
+# beeswarm plot plus mean +/- SD for 3PT proportion each year
+ggplot() +
+  geom_quasirandom(data = nba_shooting,
+                   aes(x = season_factor, y = TPP),
+                   size = 0.5) +
+  geom_point(data = nba_shooting_summary,
+             aes(x = season_factor, y = ave_TPP),
+             color = "red") +
+  geom_errorbar(data = nba_shooting_summary,
+                aes(x = season_factor, 
+                    ymin = ave_TPP - sd_TPP,
+                    ymax = ave_TPP + sd_TPP),
+                color = "red") +
+  labs(x = "Season",
+       y = "3PT proportion = TPA / FGA",
+       title = "Distribution of 3PT proportion for each season",
+       subtitle = "Red points indicate average for each year with +/- 1 standard deviation")
+```
+
+
+## Other Data Sources
+
+As you start to brainstorm ideas for your projects, consider some of the R packages that provide interesting datasets from various sports and additional functions for working with that data. For more information, see the [Data Sources Lecture](tc_lecture_data_sources.html).

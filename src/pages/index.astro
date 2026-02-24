@@ -6,34 +6,56 @@ import { loadRepos } from '../lib/data';
 const repos = loadRepos();
 ---
 
-<Layout title="WSABI" description="Wharton Sports Analytics and Business Initiative – research seminar, summer lab, and Moneyball Academy.">
+<Layout title="WSABI Research Hub" description="People, projects, and programs.">
   <Nav />
   <main class="mx-auto max-w-5xl px-6 py-16">
-    <section class="text-center mb-20">
+    <section class="text-center mb-16">
       <h1 class="text-4xl font-bold text-penn-blue tracking-tight sm:text-5xl">
-        Sports Research Division
+        WSABI Research Hub
       </h1>
       <p class="mt-6 text-lg text-stone-600 max-w-2xl mx-auto">
-        Wharton Sports Analytics &amp; Business Initiative
+        Seminar • Summer Lab • Moneyball
       </p>
     </section>
 
-    <section class="grid sm:grid-cols-3 gap-8">
-      <a href="/seminar/projects" class="group rounded-xl border border-stone-200 bg-white p-8 shadow-sm transition-all hover:shadow-md hover:border-penn-red-light">
-        <h2 class="text-xl font-semibold text-penn-blue group-hover:text-penn-red transition-colors">Weekly Seminar</h2>
-        <p class="mt-2 text-stone-500">{repos.seminar.projects.length} projects</p>
-        <p class="mt-4 text-sm text-stone-600">Undergraduate research projects in sports analytics.</p>
-      </a>
-      <a href="/lab/projects" class="group rounded-xl border border-stone-200 bg-white p-8 shadow-sm transition-all hover:shadow-md hover:border-penn-red-light">
-        <h2 class="text-xl font-semibold text-penn-blue group-hover:text-penn-red transition-colors">Summer Lab</h2>
-        <p class="mt-2 text-stone-500">{repos.lab.projects.length} projects</p>
-        <p class="mt-4 text-sm text-stone-600">Intensive summer research with presentations and papers.</p>
-      </a>
-      <a href="/moneyball" class="group rounded-xl border border-stone-200 bg-white p-8 shadow-sm transition-all hover:shadow-md hover:border-penn-red-light">
-        <h2 class="text-xl font-semibold text-penn-blue group-hover:text-penn-red transition-colors">Moneyball Academy</h2>
-        <p class="mt-2 text-stone-500">{repos.moneyball.projects.length} projects</p>
-        <p class="mt-4 text-sm text-stone-600">High school summer program in sports statistics.</p>
-      </a>
+    <section class="space-y-16">
+      <article class="border-b border-stone-200 pb-12 last:border-0 last:pb-0">
+        <h2 class="text-2xl font-semibold text-penn-blue">Weekly Seminar</h2>
+        <p class="mt-3 text-stone-600 leading-relaxed">
+          Undergraduate students work in teams on semester-long sports analytics research projects—from modeling expected points in rugby to analyzing NHL tracking data. The seminar connects students with faculty mentors and culminates in presentations and deliverables.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <a href="/seminar/people" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">People</a>
+          <a href="/seminar/projects" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">Projects ({repos.seminar.projects.length})</a>
+          <a href="/seminar/data" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">Data</a>
+        </div>
+      </article>
+
+      <article class="border-b border-stone-200 pb-12 last:border-0 last:pb-0">
+        <h2 class="text-2xl font-semibold text-penn-blue">Summer Lab</h2>
+        <p class="mt-3 text-stone-600 leading-relaxed">
+          An intensive summer research program where students dive deep into sports analytics problems—building models, working with real data, and producing conference papers and presentations. Projects span football, basketball, soccer, and more.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <a href="/lab/people" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">People</a>
+          <a href="/lab/projects" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">Projects ({repos.lab.projects.length})</a>
+          <a href="/lab/data" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">Data</a>
+        </div>
+      </article>
+
+      <article class="border-b border-stone-200 pb-12 last:border-0 last:pb-0">
+        <h2 class="text-2xl font-semibold text-penn-blue">Moneyball</h2>
+        <p class="mt-3 text-stone-600 leading-relaxed">
+          A high school summer program in sports statistics. Students learn data analysis and modeling through hands-on projects, guided by Wharton faculty and researchers.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <a href="/moneyball/academy/index.html" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">Academy</a>
+          <a href="/moneyball/academy/tc_lecture1.html" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">Training Camp</a>
+          <a href="/moneyball/people" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">People</a>
+          <a href="/moneyball/projects" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">Projects ({repos.moneyball.projects.length})</a>
+          <a href="/moneyball/data" class="inline-flex items-center rounded-lg bg-penn-blue-light px-3 py-1.5 text-sm font-medium text-penn-blue hover:bg-penn-blue hover:text-white transition-colors">Data</a>
+        </div>
+      </article>
     </section>
   </main>
 </Layout>

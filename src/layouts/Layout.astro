@@ -6,7 +6,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Wharton Sports Analytics and Business Initiative â€“ research, projects, and people.' } = Astro.props;
+const { title, description = 'People, projects, and programs from the Wharton Sports Analytics and Business Initiative.' } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,7 +20,7 @@ const { title, description = 'Wharton Sports Analytics and Business Initiative â
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <title>{title === 'WSABI' || !title ? 'WSABI' : `${title} | WSABI`}</title>
+    <title>{title === 'WSABI' || title === 'WSABI Research Hub' || !title ? title || 'WSABI' : `${title} | WSABI`}</title>
   </head>
   <body class="bg-stone-50 text-penn-blue antialiased">
     <slot />

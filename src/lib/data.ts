@@ -55,13 +55,14 @@ export interface PeopleConfig {
   year: number;
   program: string;
   instructors?: Person[];  // optional – shown first per year
+  leadership?: Person[];   // optional – e.g. Head TAs, shown after instructors
   people: Person[];
 }
 
 interface ProgramEntry {
   program: string;
   year: number;
-  type?: 'instructor' | 'organizer';
+  type?: 'instructor' | 'organizer' | 'leadership';
   role?: string;
 }
 
@@ -88,7 +89,7 @@ function parseProgramEntry(entry: string | ProgramEntry): ProgramEntry {
   if (parts.length < 2) throw new Error(`Invalid program entry: ${entry}`);
   const program = parts[0];
   const year = parseInt(parts[1], 10);
-  const type = parts[2] === 'instructor' || parts[2] === 'organizer' ? parts[2] : undefined;
+  const type = parts[2] === 'instructor' || parts[2] === 'organizer' || parts[2] === 'leadership' ? parts[2] : undefined;
   return { program, year, type };
 }
 
@@ -134,10 +135,23 @@ export function loadPeople(): PeopleConfig[] {
       if (parsed.type === 'instructor' || parsed.type === 'organizer') {
         config.instructors = config.instructors || [];
         config.instructors.push(person);
+      } else if (parsed.type === 'leadership') {
+        config.leadership = config.leadership || [];
+        config.leadership.push(person);
       } else {
         config.people.push(person);
       }
     }
+  }
+
+  for (const config of configMap.values()) {
+    if (config.instructors) {
+      config.instructors.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if (config.leadership) {
+      config.leadership.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    config.people.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   const configs = Array.from(configMap.values());

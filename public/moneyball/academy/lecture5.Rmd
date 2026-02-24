@@ -1,0 +1,466 @@
+---
+title: 'Lecture 5: Advanced Visualization and Other Data Sources'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
+library(tidyverse)
+```
+
+In [Lecture 2](lecture2.html), we saw that visualization using ggplot could provide important insights into large datasets.
+Today, we will learn more about ggplot and use what we have learned to study the relationship between batting averages in consecutive seasons.
+
+
+## Visualizing the Diving Dataset
+
+In this course, we will be using the package ggplot2 for all of our data visualization. The `gg` stands for "grammar of graphics", a framework for data visualization. This framework separates the process of visualization into different components: data, aesthetic mappings, and geometric objects. These components are then added together (or layered) to produce the final graph. We're going to illustrate these components using the [diving dataset](data/diving.csv) from Prof. Wyner's lecture.
+
+```{r load diving, message=FALSE}
+library(tidyverse)
+diving <- read_csv("data/diving.csv")
+```
+
+
+### Components of a Plot
+
+The first step in any data visualization is to tell R which tbl the data we want to plot lives. This is done using the `ggplot()` function. Notice that we are *assigning* the plot to a new variable, `diving_hist`. Later, we will *add* layers to the plot using the `+` operator.
+
+```{r diving ggplot}
+diving_hist <- ggplot(data = diving)
+```
+
+Aesthetics map the data to the properties of the plot. Examples include:
+
+* `x`: the variable that will be on the x-axis
+* `y`: the variable that will be on the y-axis
+* `color`: the variable that categorizes data by color
+* `shape`: the variable that categorizes data by shape
+
+You can define the `aes` in the `ggplot` call, which will then be used for all later layers, or you can define the `aes` in the `geom` (see below), which will only apply to that `geom`. Geometric objects, or `geoms`, determine the type of plot that will be created. Examples include:
+
+* `geom_point()`: creates a scatterplot
+* `geom_histogram()`: creates a histogram
+* `geom_line()`: creates a line
+* `geom_boxplot()`: creates a boxplot
+
+
+### Putting it All Together
+
+Let's make a histogram of judge's scores.
+
+```{r diving hist}
+diving_hist <- 
+  diving_hist + 
+  geom_histogram(aes(x = JScore), binwidth = 0.25)
+diving_hist
+```
+
+In the code above, we first overwrote `diving_hist` so that is now a histogram of judges' scores where each bin had width 0.25. In the second line, we asked R to display this object. **For ggplot code it is very important that the `+` goes at the end of a line, just like the pipe `%>%`**
+
+Notice that the label for the x-axis is JScore, which is the column name from the tbl. We can change the label by *adding* a layer.
+
+```{r diving hist x label}
+diving_hist <- 
+  diving_hist + 
+  labs(x = "Judge Score")
+diving_hist
+```
+
+
+### Facets
+
+What if we want to separate the judges' scores by country? We can use *facets*. Facets allow you to separate graphs by category. We do not need to redo our above code for the histogram - we only need to add a *facet* layer to our graph `hist`. The first argument of `facet_wrap` is the column of our dataset that contains the category information. The second argument of `facet_wrap` specifies the number of rows for which to display the graphs.
+
+```{r facet_wrap}
+diving_hist <- 
+  diving_hist + 
+  facet_wrap("JCountry", nrow = 3)
+diving_hist
+```
+
+To get a sense of whether a particular country's judges are biased, it would be useful to add a reference line at the median score over all judges and countries to each facet. So, we must first calculate the overall median score, which we can do using the summarize function. Then, we can display this median on our plots this with `geom_vline()`, which adds a vertical line. We can also pass in a custom color argument to this line so that it will easily stand out from the rest of our values. This website provides a look at all the build-in color arguments to R: [R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf)
+
+```{r facet_wrap median}
+median_score <- diving %>% 
+  reframe(med = median(JScore)) %>%
+  pull(med)
+diving_hist <- 
+  diving_hist + 
+  geom_vline(xintercept = median_score, color = "lightcoral")
+diving_hist
+```
+
+Note that when calculating our `median_score`, the `reframe` function returns a tbl rather than a single value. To "pull" out the single median value from our tbl, we use the `pull` function.
+
+
+### Boxplots and violin plots
+
+Boxplots are also an important visualization tool. We now create boxplots of the judges' scores, separated by diving round. We can also color our boxplots according to the `Round` variable by including the `fill` argument within the `aes()` function. Note that if we included the `fill` argument outside of the `aes()` function, we would only be able to color all boxplots the same color (by putting `fill` inside of the aesthetic, we are able to "map" the variable `Round` to the fill color of the plot based on the values of `Round`).
+
+```{r boxplot fill}
+diving_box <- ggplot(data = diving) + 
+  geom_boxplot(aes(x = Round, y = JScore, fill = Round)) +
+  labs(title = "Diving scores by round", x = "", y = "Judge Score", fill = "Round")
+diving_box
+```
+
+We can also remove the unnecessary x-axis ticks and labels as the legend on the right is sufficient. We do so using the `theme` layer:
+
+```{r boxplot theme}
+diving_box <- diving_box + 
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+diving_box
+```
+
+We can also plot this data as violin plots, which takes in the same arguments as `geom_boxplot` but instead with `geom_violin`. We can also change the "look" of our plots by setting the theme. `theme_minimal()` is frequently used for a much cleaner look. 
+```{r}
+diving_violin <- ggplot(data = diving) + 
+  geom_violin(aes(x = Round, y = JScore, fill = Round)) +
+  labs(title = "Diving scores by round", x = "", y = "Judge Score", fill = "Round") +
+  theme_minimal()
+
+diving_violin
+```
+
+We can see that the boxplots provide more information about statistical features, such as the median and quartiles, but the violin plots provide a better sense of how the data is distributed. We can see the effect of smaller rounds having more binned scores, whereas they are spread much more evenly in the first round. 
+
+### Barplots
+
+We can also create barplots using `geom_bar`. By mapping `fill=JCountry` inside our `aes()`, we can map each bar's color to the country for that judge.
+
+```{r barplot}
+bar <- ggplot(data = diving) +
+  geom_bar(aes(x = JCountry, fill = JCountry)) + 
+  labs(x = "Judge Country") +
+  theme_minimal() +
+  theme(legend.position = "none") 
+bar
+```
+
+
+### Scatterplots
+
+Now let's turn back to scatterplots, which were introduced in [Lecture 2](lecture2.html). We plot judges' score versus rank of the diver. As we expect, the higher the divers' rank, the higher their score.
+```{r scatterplot}
+scatter_raw = ggplot(data = diving) +
+  geom_point(aes(x = Rank, y = JScore, color = Country)) +
+  labs(x = "Diver Rank", y = "Judge Score") + 
+  theme_minimal()
+
+scatter_raw
+```
+We can see that this plot is a little messy and hard to interpret, which may commonly happen with scatterplots when multiple rows correspond to the same thing, such as a diver. We can improve on this visual by grouping per diver and using `reframe()` to calculate the mean of the judge scores, ranks, and difficulties for each diver. We also want to save the country for visualizations, so we use the `first()` command within `reframe()`. 
+
+```{r group diving}
+diving_grouped <- diving %>% 
+  group_by(Diver) %>% 
+  reframe(JScore_mean = mean(JScore), 
+          Rank_mean = mean(Rank),
+          Difficulty_mean = mean(Difficulty),
+          Country = first(Country)) 
+
+head(diving_grouped)  
+```
+
+This will allow us to plot a single point per diver, which will make the plot much easier to interpret.
+
+```{r scatterplot grouped}
+
+scatter = ggplot(data = diving_grouped) +
+  geom_point(aes(x = Rank_mean, y = JScore_mean, color = Country), size = 2) +
+  labs(x = "Diver Rank", y = "Judge Score") + 
+  theme_minimal()
+
+scatter
+```
+We can see here the much clearer trend between judge score and diver rank.
+
+### Lines
+
+We can also add an `abline` to our scatterplot--that is, a line where we specify the y-intercept (`intercept`) and the slope (`slope`):
+
+```{r scatter abline}
+scatter <- scatter + 
+  geom_abline(intercept = 8.5, slope = -0.1, color = "red")
+scatter
+```
+
+*Note*: `geom_abline` is different from `geom_line`: `geom_line` "connects the dots" between your data and so doesn't have to be a straight line, whereas `geom_abline` draws a straight line with the specified slope and y-intercept. A common usage can be when comparing predictions to actual values, where a line with slope 1 and intercept 0 indicates perfect predictions.
+
+Other `geom` for lines are:
+
+* `geom_vline`: to add a vertical line to a plot
+* `geom_hline`: to add a horizontal line to a plot
+
+
+### Stats
+
+We can also specify a layer using `stat_`, which stands for statistical transformation. This is useful if we want to plot a summary statistic of our data, such as a mean or median. By using a `stat_` layer, we do not have to compute this summary statistic beforehand--`ggplot` will compute the summary statistic for us and then plot the result. 
+
+For example, suppose we want to plot the means of each judge's score and provide error bars of one standard deviation on either side of the mean. We could use `summarize` and `group_by` to find the mean and standard deviations for each judge, *or* we could just use a `stat_` layer!
+
+The layer `stat_summary()` computes and then plots a user-specified summary statistic. We choose the option `mean_se` to calculate the means and standard deviations of the scores of each judge.
+
+As always, we set up the plot by calling `ggplot`, specifying `data = diving` and then providing the `aes`. In this case, we want the judge on the `x`-axis and their scores on the `y`-axis. We then add our `stat_summary` layer.
+
+```{r stat_summary}
+judges <- ggplot(data = diving, aes(x = Judge, y = JScore)) + 
+  stat_summary(fun.data = mean_se) + 
+  labs(y = "Judge Score")
+judges
+```
+
+We can see that the judges' names are bunched together... we can make them much more readable by rotating the x-axis labels by 45 degrees using the `theme` layer:
+```{r}
+judges_rotate <- judges + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+judges_rotate
+```
+
+We can also completely flip the coordinates to make a horizontal plot!
+```{r coord_flip}
+judges <- judges + coord_flip()
+judges
+```
+
+### Scales
+
+Scales allow you to adjust the aesthetics or visual aspects of a plot.  We return to the scatter plot of the judges' scores vs rank of the divers. This time, we want to color the points by the difficulty of the dive.
+
+We use the layer `scale_color_distiller`. The second word, `color`, is the `aes` we want to change.  We can replace it with `x`, `y` or `fill`, depending on the `aes` we want to change. 
+
+The third word is `distiller`, which we use because our `color` variable, `Difficulty`, is continuous. If it were discrete, we would write `brewer` instead.
+
+```{r scales scatter}
+scatter <- ggplot(data = diving_grouped) +
+  geom_point(aes(x = Rank_mean, y = JScore_mean, color = Difficulty_mean)) +
+  scale_color_distiller(palette = "OrRd", direction = 1) 
+  
+scatter
+```
+
+Interestingly, it seems that some of the highest ranked divers perform most of the less difficult dives, but perform these easy dives very well. 
+
+To further investigate, we plot a 2D histogram of Rank vs Difficulty.
+
+```{r scales hist}
+hist <- ggplot(data = diving)  + 
+  geom_bin2d(aes(x = Rank, y = Difficulty), bins = 10) + 
+  scale_fill_distiller(palette = "Spectral")
+hist
+```
+
+Note that we use `fill` instead of `color` in `scale_fill_distiller` to control the fill of the histogram bins.
+
+From the 2D histogram, we can see that the higher ranked divers attempt both more difficult and less difficult dives, unlike the lower ranked divers who only attempt more difficult dives. 
+
+
+### ColorBrewer
+
+The palettes used in this module, including "OrRd" and "Spectral", come from [ColorBrewer](http://colorbrewer2.org/). You can take a look at the website and use some of these color palettes in your plots! 
+
+### External Links 
+
+This [ggplot guide](https://r-graph-gallery.com/ggplot2-package.html) is highly recommended to bookmark as a quick reference on how to plot virtually anything. It has multiple examples for each plot, each one going more in depth on specific ways to add information to a plot. 
+
+Additionally, you can access all the colors you've ever wanted with this [alphabetical color guide to R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf)!
+
+# Other Data Sources
+
+So far in this course you've worked with data that we had already prepared for you. It turns out that there are many R packages and tools that you can use to get data from a variety of different sources. Below, we will provide a brief walkthrough of just a few of these resources. 
+
+### `Lahman`
+
+The [Lahman Baseball Database](http://www.seanlahman.com/baseball-archive/statistics/) is a popular resource created by Sean Lahman with historical data going back to 1871. Rather than having to  access the database directly via complicated computing procedures, there is an R package we can install to access the data instead. The following code installs the package from the CRAN:
+```{r install Lahman, eval = FALSE}
+install.packages("Lahman")
+```
+
+Next we load the package, and check out what datasets are available:
+
+```{r load Lahman}
+library(Lahman)
+```
+
+```{r Lahman data, eval=FALSE}
+data(package = "Lahman")
+```
+
+There is an incredible amount of data here going up through the 2021 season (it updates following the end of each season). As an example, let's access the Teams dataset, use a `group_by` operation to calculate the number of strikeouts each year since 1871, and plot the line over time:
+
+```{r Lahman strikeouts year}
+Teams %>%
+  group_by(yearID) %>%
+  reframe(n_so = sum(SO, na.rm = TRUE)) %>%
+  ggplot() +
+  geom_line(aes(x = yearID, y = n_so)) +
+  labs(x = "Year", y = "Number of strikeouts",
+       title = "Total number of strikeouts in each baseball season since 1871",
+       caption = "Data courtesy of Lahman") +
+  theme_bw()
+```
+
+Note that rather than supplying the data as an argument to the `ggplot()` function, we can start with a dataset, make manipulations to it using pipes, and then pipe the new data into the `ggplot()` function. 
+
+We can see the increasing trend over time, but note some of the outliers like 2020 (pandemic-shortened season) and 1994 (strike-shortened season). How could this display be improved to handle these outliers, as well as the other gameplay-related changes that have taken place in baseball? 
+
+### `nflfastR`
+
+The [`nflfastR` package](https://www.nflfastr.com/) gives R users the ability to scrape play-by-play data from the NFL in real-time during games, also providing expected points and win probability estimates. [Here's a good tutorial](https://www.nflfastr.com/articles/nflfastR.html) on the main functions and data available within the package. To get started, we install the package below. Let's also install the `ggimage` package, which will allow us to plot the team logos for more intriguing visualizations.
+
+```{r install nflfastR ggimage, eval = FALSE}
+install.packages("nflfastR")
+install.packages("ggimage")
+```
+
+Next, we load these packages.
+
+```{r load nflfastR ggimage}
+library(nflfastR)
+library(ggimage)
+```
+
+Now we can use `nflfastR` to gather play-by-play data for the 2021 season.
+
+```{r load pbp_2021, warning = FALSE, message = FALSE}
+pbp_2021 <- load_pbp(2021)
+```
+
+With this data, we can summarize the performance of all NFL teams using the expected points added (EPA) per game on offense and defense. EPA tells us how much value the team provided relative to an average baseline. The more positive the better the offensive performance. This means the more negative the value the defensive performance, so in the code chunk below we multiply the defensive values by -1 so it's similar to offensive performance higher values meaning better performance. The following code uses this data to create offensive and defensive summaries that we will join together to plot:
+
+```{r epa}
+offense_epa_21 <- pbp_2021 %>%
+  filter(!is.na(posteam)) %>%
+  group_by(posteam) %>%
+  summarise(n_games = length(unique(game_id)), off_total_epa = sum(epa, na.rm = TRUE)) %>%
+  mutate(off_epa_per_game = off_total_epa / n_games)
+
+defense_epa_21 <- pbp_2021 %>%
+  filter(!is.na(defteam)) %>%
+  group_by(defteam) %>%
+  summarise(n_games = length(unique(game_id)), def_total_epa = sum(epa, na.rm = TRUE)) %>%
+  # This time multiply by -1, since negative values are better for defense:
+  mutate(def_epa_per_game = -1 * def_total_epa / n_games)
+```
+
+Next, we join together the offensive and defensive EPA datasets, then pass this new dataset into `ggplot`, where we make a plot of offensive EPA per game vs. defensive EPA per game for all teams in the 2021 season.
+
+```{r join epa plot}
+# Create the data frame to be used for all of the charts:
+offense_epa_21 %>%
+  inner_join(defense_epa_21, by = c("posteam" = "defteam")) %>%
+  left_join(teams_colors_logos, by = c("posteam" = "team_abbr")) %>%
+  ggplot(aes(x = off_epa_per_game, y = def_epa_per_game)) +
+  geom_image(aes(image = team_logo_espn), size = 0.05) +
+  labs(x = "Offensive EPA per game",
+       y = "Defensive EPA per game",
+       caption = "Data accessed via nflfastR",
+       title = "Offensive and defensive EPA per game for each team in the 2021 NFL season") +
+  # Add reference lines at 0
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed") +
+  theme_bw()
+```
+
+The top right displays the teams that excelled at both offense and defense, while the lower right shows teams that had the best offenses such as the Chiefs but performed poorly on defense. The lower left shows the worst overall teams, where the Jags, Jets, and Texans unsurprisingly stand out. 
+
+
+## Installing GitHub Packages
+
+While the vast majority of `R` packages you will commonly use are able to be installed using `install.packages()` because they are on the CRAN, there are a variety of popular `R` packages for accessing sports data that are currently only available through GitHub. In order to access these packages, we first need to install them using a package called `devtools`. The code below installs the `devtools` package:
+
+```{r install devtools, eval = FALSE}
+install.packages("devtools")
+```
+
+The `devtools` package has a function, `install_github` that we will use for installing the remaining packages used below.
+
+**An important note to keep in mind is that most of these resources are largely still in development, so you may face challenges with installation and use.**
+
+
+### `baseballr`
+
+Created by [Bill Petti, the `baseballr` package](http://billpetti.github.io/baseballr/) has become a popular resource for accessing baseball data from variety of resources, such as[FanGraphs](https://www.fangraphs.com/) and [Baseball-Reference](https://www.baseball-reference.com/) directly into `R`. One of the best features of the `baseballr` package is the functionality it provides us for directly accessing the publicly available pitch-by-pitch and Statcast data available from [baseball-savant](https://baseballsavant.mlb.com/).
+
+We first install the package using the `devtools` package explained above, and then load its functions:
+
+```{r install load baseballr, eval = FALSE}
+devtools::install_github("BillPetti/baseballr")
+library(baseballr)
+```
+
+Using the `baseballr` package we can access all pitches thrown to a hitter in the current season, giving us Statcast data like exit velocity and launch angle. We first use the `playerid_lookup` function to find the Statcast ID for Yankees star (and potential AL MVP) Aaron Judge:
+
+```{r lookup Judge, eval = FALSE}
+playerid_lookup(last_name = "Judge", first_name = "Aaron")
+```
+
+This will load up a look-up table with all identifiers joining various sources together (it may take a couple minutes to run and don't worry about the warning messages). We find that Aaron Judge's unique `mlbam_id` is 592450. Using this id, we can grab all pitches thrown to Judge in the current MLB season so far:
+
+```{r get Judge data, eval = FALSE}
+judge_statcast_data <- scrape_statcast_savant_batter(start_date = "2022-01-01", 
+                                                    end_date = "2022-12-31", 
+                                                    batterid = 592450)
+```
+
+
+```{r load Judge data, include = FALSE}
+#saveRDS(judge_statcast_data, file = 'data/judge_statcast_data_2022.RDS')
+judge_statcast_data <- readRDS("data/judge_statcast_data_2022.RDS")
+```
+
+This dataset contains many columns; for now we will look at the relationship  between the distance traveled of Aaron Judge's batted balls (denoted by `type == "X"`) and the launch angle (`launch_angle`) as well as the exit velocity (`launch_speed`):
+
+```{r Judge plot, warning=FALSE}
+judge_statcast_data %>%
+  filter(type == "X") %>%
+  ggplot(aes(x = launch_speed, y = launch_angle, 
+             color = hit_distance_sc)) +
+  geom_point() +
+  scale_color_viridis_c(option = "A") +
+  labs(x = "Exit velocity (MPH)", y = "Launch angle (degrees)", 
+       color = "Distance (feet)",
+       title = "Aaron Judge's launch angle, exit velocity, and distance traveled",
+       caption = "Data accessed via baseballr")
+```
+
+*Note that this plot has been updated through July 15th of the 2022 season. Pitches thrown to Judge after this date will not appear on the above plot.*
+
+This is just a single example of the type of data available using `baseballr`. See the package website for more [data acquisition functions](https://billpetti.github.io/baseballr/reference/index.html). Additionally, the [Exploring Baseball Data with R website by Jim Albert](https://baseballwithr.wordpress.com/) is an incredible resource with a variety of examples of learning R code all in the context of baseball data analysis.
+
+
+### `nbastatr`
+
+The [`nbastatr` package](http://asbcllc.com/nbastatR/) created by Alex Bresler is analogous to the `baseballr` package as it provides many different functions for accessing NBA data from a variety of websites. Again to be able to use the package you need to install it from GitHub:
+
+```{r install load nbastatR, eval = FALSE}
+devtools::install_github("abresler/nbastatR")
+library(nbastatR)
+```
+
+**There will likely be several messages that appear when installing this package, please let us know if you encounter any strange issues.** The code below demonstrates how to get all shot attempts by the 2022 NBA champions, the Golden State Warriors, in the past season using this package:
+
+```{r get Warriors shots, eval = FALSE}
+warriors_shots <- teams_shots(teams = "Golden State Warriors", 
+                             seasons = c(2022))
+```
+
+```{r load Warriors shots, include = FALSE}
+#saveRDS(warriors_shots, file = 'data/warriors_shots_2022.RDS')
+warriors_shots <- readRDS("data/warriors_shots_2022.RDS")
+```
+
+Using this shot data, we can view the all shot attempts by the Warriors throughout the season colored by whether or not they made the shot.
+
+```{r Warriors shots plot}
+warriors_shots %>%
+  ggplot(aes(x = locationX, y = locationY, color = isShotMade)) +
+  geom_point(alpha = 0.5) +
+  scale_color_manual(values = c("#FFC72C", "#1D428A")) +
+  theme_bw() +
+  labs(title = "Shot attempts by Golden State Warriors in 2021-22 NBA season",
+       caption = "Data accessed via nbastatR")
+```
+
+It's apparent from this chart the effect of the three-point line of their shot selection.

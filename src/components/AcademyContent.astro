@@ -1,0 +1,67 @@
+---
+interface Props {
+  content: string;
+}
+const { content } = Astro.props;
+---
+<div class="academy-content max-w-none">
+  <Fragment set:html={content} />
+</div>
+
+<style>
+  @reference "../styles/global.css";
+
+  .academy-content {
+    @apply text-stone-600;
+  }
+  .academy-content :global(h1) {
+    @apply text-3xl font-bold text-penn-blue mb-6;
+  }
+  .academy-content :global(h2) {
+    @apply text-2xl font-semibold text-penn-blue mt-10 mb-4;
+  }
+  .academy-content :global(h3) {
+    @apply text-xl font-semibold text-penn-blue mt-8 mb-3;
+  }
+  .academy-content :global(h4) {
+    @apply text-lg font-medium text-penn-blue mt-6 mb-2;
+  }
+  .academy-content :global(p) {
+    @apply mb-4 leading-relaxed;
+  }
+  .academy-content :global(a) {
+    @apply text-penn-red hover:underline;
+  }
+  .academy-content :global(ul), .academy-content :global(ol) {
+    @apply mb-4 pl-6 space-y-1;
+  }
+  .academy-content :global(ul) { list-style: disc; }
+  .academy-content :global(ol) { list-style: decimal; }
+  .academy-content :global(blockquote) {
+    @apply border-l-4 border-stone-300 pl-4 italic my-4;
+  }
+  .academy-content :global(pre) {
+    @apply bg-stone-100 rounded-lg p-4 overflow-x-auto text-sm my-4;
+  }
+  .academy-content :global(code) {
+    @apply bg-stone-100 px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+  .academy-content :global(pre code) {
+    @apply bg-transparent p-0;
+  }
+  .academy-content :global(table) {
+    @apply w-full border-collapse my-4;
+  }
+  .academy-content :global(th), .academy-content :global(td) {
+    @apply border border-stone-300 px-3 py-2 text-left;
+  }
+  .academy-content :global(th) {
+    @apply bg-stone-100 font-semibold;
+  }
+  .academy-content :global(img) {
+    @apply max-w-full h-auto my-4 rounded;
+  }
+  .academy-content :global(.section) {
+    @apply mb-8;
+  }
+</style>

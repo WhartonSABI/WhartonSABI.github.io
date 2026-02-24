@@ -1,0 +1,66 @@
+---
+title: "Wharton Moneyball Camps 2025"
+output: 
+  html_document:
+    code_folding: none
+---
+
+
+Welcome to the webpage for the 2025 Wharton Moneyball Academy / Training Camp course on data analysis in R. In this part of the course, you will learn the tools necessary to apply the concepts you learned in the morning lectures while analyzing real sports datasets using the R programming language. Please bookmark this site and check back regularly before the program starts for updates. Below, you will find important information about setting up your system and installing the necessary software, as well as a brief schedule for the course.
+
+
+### Prior to starting
+
+This summer, you'll be learning how to analyze data using R.
+R is a free, open-source software environment for statistical computing with several built-in functions for organizing, analyzing, and visualizing data. 
+What separates R from programs like Excel, JMP, STATA, and Minitab is the ability for programmers, scientists, and statisticians to extend R's basic functionality, and implement the latest algorithms and methods for analyzing massive and complex data. This extensibility has made R the de facto software standard in the academic statistics community and is driving the rapid adoption of R in the data analysis endeavors of several major corporations and government agencies like Bank of America, Facebook, the F.D.A., the New York Times, and Twitter.
+
+R uses a command line interface, which means that you interact with the software by typing in some commands and hitting Enter/Return to execute those commands.
+This is in marked contrast to most other software that you're probably accustomed to and makes learning R a little bit more challenging.
+To make our lives a bit easier, we will use an integrated development environment (IDE) for R, known as RStudio.
+
+**So that we can start analyzing data right away, we'd like you to install R and RStudio before the first day**
+Instructions for installing R and RStudio, as well as setting up your computer for the class are covered in [Lecture 0](lecture0.html).
+**Note: tablets and chromebooks may not have sufficient computing power to run R and RStudio. We highly recommend using a laptop or desktop**
+
+We know that you are very excited about the program and we're similarly excited to start working together.
+After completing Lecture 0, [Problem Set 0](ps0.html) contains a brief introduction to the R programming language with some simple exercises, and several questions that will motivate the concepts you'll be exploring in the morning lectures.
+Don't worry if you don't finish working your way through these exercises before the first day.
+On the first morning, you'll meet with your project team and TAs to discuss them. 
+As we approach the start of camp, please check back for periodic updates to the site. 
+
+
+### Daily Schedule
+
+Afternoons are devoted to the programming component of the camp. Each day, the instructors will be spend the first hour or so of class introducing new R functionality and programming concepts.
+The notes for each lecture will are available on this website (see the tabs for Academy and Training Camp in the menu at the top).
+These notes will contain worked out code examples and explanations.
+After the first hour of lecturing, you will have a chance to work on problem sets with your project team and TA that will review and reinforce the material presented in that day's lecture.
+
+
+### About the Instructors
+
+Professor Abraham (Adi) Wyner is Professor of Statistics and Data Science,  chair of the Statistics Undergraduate Program and Academic Director of the Wharton Sports Analytics and Business Initiative (WSABI).  Professor Wyner is an expert at Probability Models and Statistics, Information Theory and Applied Statistics and Machine Learning. He has published more than 50 articles in leading journals in many different fields, including Applied Statistics, Applied Probability, Finance, Information Theory, Computer Science and Bioinformatics. Professor Wyner has participated in numerous consulting projects in various businesses. He was one the earliest consultants for TiVo, Inc, where he helped to develop early personalization software. Professor Wyner created the University of Pennsylvania’s Undergraduate Minor in Statistics and oversaw the program’s growth from just a handful of graduates to hundreds. He also co-led the creation of the very popular Business Analytics major for Wharton MBAs and Wharton Undergraduates. In 2017, Professor Wyner created the Undergraduate Sports Research Group to encourage research by Penn undergraduates. Dr. Wyner’s pursuit of statistics as a career was fostered in childhood by his interest with Baseball. Professionally, he first engaged sports analytics in 2006 when he received a grant from ESPN The Magazine to study player evaluation in Major League Baseball. He is the founder of the Wharton MoneyBall Academy a 3-week summer program in sports statistics and computing for gifted high school juniors and seniors. Dr. Wyner is a co-host and co-creator of the Wharton MoneyBall radio show  and podcast which is aired on Sirius XM. 
+<!---
+Ryan Gross is a third year Ph.D. student in the Statistics Department at Wharton, interested in Bayesian statistics and sports analytics. Prior to Penn, he graduated from Rutgers University Honors College with a double major in Math and Statistics and minor in Economics, where he also ran cross country and track. Growing up in New Jersey, Ryan is a lifelong fan of the New York Jets, Knicks, and Yankees, along with Rutgers football and basketball. 
+--->
+<!---
+Ryan Brill is a fifth year Ph.D. student in the Applied Mathematics & Computational Science at Penn. Having grown up in Los Angeles, he graduated from UC Berkeley and roots for the Lakers and Dodgers. His academic interests span probability, statistics, and sports analytics, while also enjoying playing golf/tennis/basketball/snowboarding, poker, strategy games, and music.
+--->
+<!---
+Joey Rudoler is an second year Ph.D. student in Statistics and Data Science at Wharton. He previously studied Physics (B.A.) and Data Science (M.S.E.) at Penn. Joey studies machine learning and applications in computational neuroscience.
+--->
+
+Jonathan Pipping (JP) is a second-year Ph.D. student in Statistics and Data Science at Wharton. His research interests include causal inference, machine learning, and Bayesian modeling, with applications in economics, public health, and sports analytics. In his free time, he enjoys playing music, running, and watching sports.
+
+Victoria Lee is a rising senior in the VIPER program at Penn, studying Physics and Materials Science Engineering. Her research interests lie in the application of simulations and machine learning to fields such as materials science, chemistry, and sports. She's an avid football fan and also enjoys rock climbing as well as creating dance choreography.
+
+<!---
+Having also went to Penn for his undergrad and masters, and having grown up in Philly, he roots for the Eagles, Phillies, and Sixers.
+--->
+
+<!-- Eric Eager is the previous Vice President of Research and Development at Pro Football Focus (PFF), a worldwide leader in data analysis for American football.  In his role at PFF, Eric builds and uses mathematical models to help team and media clients, along with consumers, better understand the game of football.  He is the co-host of the PFF Forecast, a twice-weekly podcast living on the interface between football, math and media. Prior to joining PFF, Eric was a professor of mathematics at the University of Wisconsin - La Crosse, where he conducted research in applied mathematics, mathematical biology, mathematical sociology and the scholarship of teaching and learning, authoring over 20 papers and receiving two National Science Foundation grants from 2012 to 2018.  Football has always been a big part of Eric's life, and playing sports in general was a big driver in his interest in mathematics.  Prior to earning a PhD in mathematical biology in 2012, he played tight end for Minnesota State - Moorhead from 2004-2008, earning Academic All-American honors from ESPN.    -->
+
+<br> 
+
+![](figures/WSABI_logo.png)

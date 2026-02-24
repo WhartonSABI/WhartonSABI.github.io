@@ -22,12 +22,71 @@ const programs = [
   },
   {
     slug: 'moneyball',
-    label: 'Moneyball Academy',
+    label: 'Moneyball',
     items: [
-      { href: '/moneyball', label: 'Home' },
+      {
+        label: 'Academy',
+        section: '/moneyball/academy',
+        menu: [
+          { href: '/moneyball/academy', label: 'Home' },
+          {
+            label: 'Lectures',
+            menu: [
+              { href: '/moneyball/academy/lecture0', label: 'Lecture 0' },
+              { href: '/moneyball/academy/lecture1', label: 'Lecture 1' },
+              { href: '/moneyball/academy/lecture2', label: 'Lecture 2' },
+              { href: '/moneyball/academy/lecture3', label: 'Lecture 3' },
+              { href: '/moneyball/academy/lecture4', label: 'Lecture 4' },
+              { href: '/moneyball/academy/lecture5', label: 'Lecture 5' },
+              { href: '/moneyball/academy/lecture6', label: 'Lecture 6' },
+              { href: '/moneyball/academy/lecture7', label: 'Lecture 7' },
+              { href: '/moneyball/academy/lecture8', label: 'Lecture 8' },
+            ],
+          },
+          {
+            label: 'Problem Sets',
+            menu: [
+              { href: '/moneyball/academy/ps0', label: 'Problem Set 0' },
+              { href: '/moneyball/academy/ps1', label: 'Problem Set 1' },
+              { href: '/moneyball/academy/ps2', label: 'Problem Set 2' },
+              { href: '/moneyball/academy/ps3', label: 'Problem Set 3' },
+              { href: '/moneyball/academy/ps4', label: 'Problem Set 4' },
+              { href: '/moneyball/academy/ps5', label: 'Problem Set 5' },
+              { href: '/moneyball/academy/ps6', label: 'Problem Set 6' },
+              { href: '/moneyball/academy/ps7', label: 'Problem Set 7' },
+              { href: '/moneyball/academy/ps8', label: 'Problem Set 8' },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'Training Camp',
+        section: '/moneyball/tc',
+        menu: [
+          {
+            label: 'Lectures',
+            menu: [
+              { href: '/moneyball/academy/lecture0', label: 'Lecture 0' },
+              { href: '/moneyball/tc/lecture1', label: 'Lecture 1' },
+              { href: '/moneyball/tc/lecture2', label: 'Lecture 2' },
+              { href: '/moneyball/tc/lecture3', label: 'Lecture 3' },
+              { href: '/moneyball/tc/lecture4', label: 'Lecture 4' },
+              { href: '/moneyball/tc/lecture5', label: 'Lecture 5' },
+            ],
+          },
+          {
+            label: 'Problem Sets',
+            menu: [
+              { href: '/moneyball/tc/ps1', label: 'Problem Set 1' },
+              { href: '/moneyball/tc/ps2', label: 'Problem Set 2' },
+              { href: '/moneyball/tc/ps3', label: 'Problem Set 3' },
+            ],
+          },
+          { href: '/moneyball/tc/data-sources', label: 'Other Data' },
+        ],
+      },
       { href: '/moneyball/people', label: 'People' },
       { href: '/moneyball/projects', label: 'Projects' },
-      { href: '/moneyball/data', label: 'Data' },
     ],
   },
 ];
@@ -35,14 +94,24 @@ const programs = [
 const path = currentPath.replace(/\/$/, '') || '/';
 
 function isActive(href: string): boolean {
-  const h = href.replace(/\/$/, '');
-  return path === h || (h !== '/' && path.startsWith(h + '/'));
+  const h = href.replace(/\/$/, '') || '/';
+  return path === h;
 }
 
-function isItemActive(item: { href: string }): boolean {
-  const h = item.href.replace(/\/$/, '');
-  if (h === '/moneyball') return path === '/moneyball';
-  return isActive(item.href);
+function isItemActive(
+  item: { href?: string; label?: string; section?: string; menu?: { href?: string; menu?: unknown[] }[] },
+  parentSection?: string
+): boolean {
+  const section = 'section' in item && typeof item.section === 'string' ? item.section : parentSection;
+  const inSection = !section || path === section || path.startsWith(section + '/');
+  if (!inSection && section) return false;
+  if (item.href) return isActive(item.href) && (!section || inSection);
+  if (item.menu) {
+    return item.menu.some((m) =>
+      m.href ? isActive(m.href) && (!section || path.startsWith(section + '/') || path === section) : m.menu && isItemActive(m as { menu: { href?: string }[] }, section)
+    );
+  }
+  return false;
 }
 
 function programIsActive(slug: string): boolean {
@@ -73,18 +142,78 @@ function programIsActive(slug: string): boolean {
             </svg>
           </button>
           <div class="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-            <div class="bg-white rounded-lg shadow-lg border border-stone-200 py-1 min-w-[140px]">
-              {program.items.map((item) => (
-                <a
-                  href={item.href}
-                  class:list={[
-                    'block px-4 py-2 text-sm transition-colors',
-                    isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
-                  ]}
-                >
-                  {item.label}
-                </a>
-              ))}
+            <div class="bg-white rounded-lg shadow-lg border border-stone-200 py-1 w-fit min-w-[100px]">
+              <div class="py-1">
+                {program.items.map((item) =>
+                  'menu' in item && item.menu ? (
+                    <div class="relative group/submenu">
+                      <span
+                        class:list={[
+                          'flex items-center justify-between px-4 py-2 text-sm transition-colors',
+                          isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                        ]}
+                      >
+                        {item.label}
+                        <svg class="h-3 w-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                      </span>
+                      <div class="absolute left-full top-0 -ml-1 opacity-0 invisible group-hover/submenu:opacity-100 group-hover/submenu:visible transition-all z-10">
+                        <div class="bg-white rounded-lg shadow-lg border border-stone-200 py-1 min-w-[160px]">
+                          {item.menu.map((sub: { href?: string; label: string; menu?: { href: string; label: string }[] }) =>
+                            sub.menu ? (
+                              <div class="relative group/subsub">
+                                <span
+                                  class:list={[
+                                    'flex items-center justify-between px-4 py-2 text-sm transition-colors whitespace-nowrap',
+                                    isItemActive(sub) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                                  ]}
+                                >
+                                  {sub.label}
+                                  <svg class="h-3 w-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                </span>
+                                <div class="absolute left-full top-0 -ml-1 opacity-0 invisible group-hover/subsub:opacity-100 group-hover/subsub:visible transition-all z-20">
+                                  <div class="bg-white rounded-lg shadow-lg border border-stone-200 py-1 min-w-[180px]">
+                                    {sub.menu.map((leaf: { href: string; label: string }) => (
+                                      <a
+                                        href={leaf.href}
+                                        class:list={[
+                                          'block px-4 py-2 text-sm transition-colors whitespace-nowrap',
+                                          isActive(leaf.href) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                                        ]}
+                                      >
+                                        {leaf.label}
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <a
+                                href={sub.href!}
+                                class:list={[
+                                  'block px-4 py-2 text-sm transition-colors whitespace-nowrap',
+                                  isActive(sub.href!) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                                ]}
+                              >
+                                {sub.label}
+                              </a>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <a
+                      href={item.href}
+                      class:list={[
+                        'block px-4 py-2 text-sm transition-colors',
+                        isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                      ]}
+                    >
+                      {item.label}
+                    </a>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </div>
