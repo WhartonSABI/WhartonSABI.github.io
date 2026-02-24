@@ -1,9 +1,0 @@
-year: 2025
-program: lab
-people:
-  - name: Victoria Lee
-    role: undergraduate
-    image: null
-    bio: VIPER program, Physics and Materials Science. Research in simulations and ML for sports. Worked on NFL Elo project.
-    github: null
-    project: nfl-elo

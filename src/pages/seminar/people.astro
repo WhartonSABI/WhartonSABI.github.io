@@ -8,18 +8,18 @@ const allConfigs = loadPeople();
 const peopleConfigs = allConfigs.filter((c) => c.program === 'seminar');
 ---
 
-<Layout title="Sports Research Seminar – People" description="Seminar participants across the years.">
+<Layout title="People" description="Seminar participants across the years.">
   <Nav />
   <main class="mx-auto max-w-5xl px-6 py-16">
-    <h1 class="text-3xl font-bold text-stone-900">Sports Research Seminar</h1>
-    <p class="mt-2 text-stone-600">Seminar participants.</p>
+    <h1 class="text-3xl font-bold text-penn-blue">People</h1>
+    <p class="mt-2 text-stone-600">Organizers and participants by academic year.</p>
 
     <div class="mt-12 space-y-4">
       {peopleConfigs.map((config, i) => {
         const yearLabel = `${config.year}-${config.year + 1}`;
         return (
           <details class="group rounded-xl border border-stone-200 bg-white" {...(i === 0 ? { open: true } : {})}>
-            <summary class="flex cursor-pointer items-center justify-between px-6 py-4 text-xl font-semibold text-stone-900 list-none [&::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer items-center justify-between px-6 py-4 text-xl font-semibold text-penn-blue list-none [&::-webkit-details-marker]:hidden">
               {yearLabel}
               <svg class="h-5 w-5 shrink-0 text-stone-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -28,18 +28,23 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'seminar');
             <div class="border-t border-stone-200 px-6 py-6">
               {config.instructors && config.instructors.length > 0 && (
                 <div class="mb-8">
-                  <h3 class="text-sm font-medium text-stone-500 uppercase tracking-wide mb-3">Instructors</h3>
+                  <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Organizers</h3>
                   <div class="grid gap-4 sm:grid-cols-2">
                 {config.instructors.map((person) => {
                   const slugs = person.projects ?? (person.project ? [person.project] : []);
-                  const projectLinks = slugs.map((s) => getProjectLink(s)).filter(Boolean) as { href: string; display: string }[];
+                  const projectLinks = slugs
+                    .map((s) => getProjectLink(s))
+                    .filter(Boolean) as { href: string; display: string }[];
+                  projectLinks.sort((a, b) => a.display.localeCompare(b.display));
                   return (
                     <PersonCard
                       name={person.name}
                       role={person.role}
                       bio={person.bio}
                       image={person.image}
+                      email={person.email}
                       github={person.github}
+                      linkedin={person.linkedin}
                       projectLinks={projectLinks}
                     />
                   );
@@ -48,19 +53,24 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'seminar');
                 </div>
               )}
               {config.instructors && config.instructors.length > 0 && (
-                <h3 class="text-sm font-medium text-stone-500 uppercase tracking-wide mb-3">Participants</h3>
+                <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Students</h3>
               )}
               <div class="grid gap-4 sm:grid-cols-2">
                 {config.people.map((person) => {
                   const slugs = person.projects ?? (person.project ? [person.project] : []);
-                  const projectLinks = slugs.map((s) => getProjectLink(s)).filter(Boolean) as { href: string; display: string }[];
+                  const projectLinks = slugs
+                    .map((s) => getProjectLink(s))
+                    .filter(Boolean) as { href: string; display: string }[];
+                  projectLinks.sort((a, b) => a.display.localeCompare(b.display));
                   return (
                     <PersonCard
                       name={person.name}
                       role={person.role}
                       bio={person.bio}
                       image={person.image}
+                      email={person.email}
                       github={person.github}
+                      linkedin={person.linkedin}
                       projectLinks={projectLinks}
                     />
                   );
@@ -73,7 +83,7 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'seminar');
     </div>
 
     {peopleConfigs.length === 0 && (
-      <p class="mt-12 text-stone-500">No roster data yet. Add YAML files in <code>src/config/people/</code> (e.g. <code>seminar-2025.yaml</code>).</p>
+      <p class="mt-12 text-stone-600">No roster data yet. Add YAML files in <code>src/config/people/</code> (e.g. <code>seminar-2025.yaml</code>).</p>
     )}
   </main>
 </Layout>

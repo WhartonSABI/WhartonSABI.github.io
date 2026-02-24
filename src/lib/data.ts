@@ -15,6 +15,8 @@ export interface Project {
   repo: string;
   description: string;
   org_override?: string;
+  /** Optional external URL (e.g. arXiv, OSF) for preprint. */
+  preprint?: string;
   deliverables?: Deliverable[];
 }
 
@@ -40,7 +42,9 @@ export interface Person {
   role: string;
   bio: string;
   image?: string | null;
+  email?: string | null;
   github?: string | null;
+  linkedin?: string | null;
   /** @deprecated use projects */
   project?: string;
   /** Project repo slugs (only those on our site). Can be multiple. */
@@ -54,19 +58,90 @@ export interface PeopleConfig {
   people: Person[];
 }
 
-export function loadPeople(): PeopleConfig[] {
-  const peopleDir = path.join(configDir, 'people');
-  const files = fs.readdirSync(peopleDir).filter((f) => f.endsWith('.yaml'));
-  const configs: PeopleConfig[] = [];
-  for (const file of files) {
-    const content = fs.readFileSync(path.join(peopleDir, file), 'utf8');
-    configs.push(yaml.load(content) as PeopleConfig);
-  }
-  return configs.sort((a, b) => b.year - a.year);
+interface ProgramEntry {
+  program: string;
+  year: number;
+  type?: 'instructor' | 'organizer';
+  role?: string;
 }
 
-export function getRawUrl(org: string, repo: string, filePath: string): string {
-  return `https://github.com/${org}/${repo}/raw/main/${filePath}`;
+interface RosterPerson extends Omit<Person, 'projects'> {
+  programs: (string | ProgramEntry)[];
+  projects?: string[];
+}
+
+interface RosterConfig {
+  people: RosterPerson[];
+}
+
+function parseProgramEntry(entry: string | ProgramEntry): ProgramEntry {
+  if (typeof entry === 'object' && 'program' in entry) {
+    return {
+      program: entry.program,
+      year: entry.year,
+      type: entry.type,
+      role: entry.role,
+    };
+  }
+  const s = String(entry).trim();
+  const parts = s.split(/\s+/);
+  if (parts.length < 2) throw new Error(`Invalid program entry: ${entry}`);
+  const program = parts[0];
+  const year = parseInt(parts[1], 10);
+  const type = parts[2] === 'instructor' || parts[2] === 'organizer' ? parts[2] : undefined;
+  return { program, year, type };
+}
+
+export function loadPeople(): PeopleConfig[] {
+  const rosterPath = path.join(configDir, 'people', 'roster.yaml');
+  if (!fs.existsSync(rosterPath)) return [];
+  const content = fs.readFileSync(rosterPath, 'utf8');
+  const roster = yaml.load(content) as RosterConfig;
+  if (!roster?.people?.length) return [];
+
+  const configMap = new Map<string, PeopleConfig>();
+  const key = (program: string, year: number) => `${program}:${year}`;
+
+  for (const r of roster.people) {
+    const basePerson: Person = {
+      name: r.name,
+      role: r.role,
+      bio: r.bio ?? '',
+      image: r.image,
+      email: r.email,
+      github: r.github,
+      linkedin: r.linkedin,
+      projects: r.projects,
+    };
+
+    for (const entry of r.programs) {
+      const parsed = parseProgramEntry(entry);
+      const pk = key(parsed.program, parsed.year);
+      if (!configMap.has(pk)) {
+        configMap.set(pk, {
+          year: parsed.year,
+          program: parsed.program,
+          instructors: [],
+          people: [],
+        });
+      }
+      const config = configMap.get(pk)!;
+      const person: Person = {
+        ...basePerson,
+        role: parsed.role ?? basePerson.role,
+      };
+
+      if (parsed.type === 'instructor' || parsed.type === 'organizer') {
+        config.instructors = config.instructors || [];
+        config.instructors.push(person);
+      } else {
+        config.people.push(person);
+      }
+    }
+  }
+
+  const configs = Array.from(configMap.values());
+  return configs.sort((a, b) => b.year - a.year);
 }
 
 const PROJECT_LINKS: Record<string, { href: string; display: string }> = {

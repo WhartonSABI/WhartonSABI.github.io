@@ -4,11 +4,11 @@ const currentPath = Astro.url.pathname;
 const programs = [
   {
     slug: 'seminar',
-    label: 'Sports Research Seminar',
+    label: 'Weekly Seminar',
     items: [
       { href: '/seminar/people', label: 'People' },
       { href: '/seminar/projects', label: 'Projects' },
-      { href: '/data', label: 'Data' },
+      { href: '/seminar/data', label: 'Data' },
     ],
   },
   {
@@ -17,7 +17,7 @@ const programs = [
     items: [
       { href: '/lab/people', label: 'People' },
       { href: '/lab/projects', label: 'Projects' },
-      { href: '/data', label: 'Data' },
+      { href: '/lab/data', label: 'Data' },
     ],
   },
   {
@@ -27,25 +27,35 @@ const programs = [
       { href: '/moneyball', label: 'Home' },
       { href: '/moneyball/people', label: 'People' },
       { href: '/moneyball/projects', label: 'Projects' },
-      { href: '/data', label: 'Data' },
+      { href: '/moneyball/data', label: 'Data' },
     ],
   },
 ];
 
+const path = currentPath.replace(/\/$/, '') || '/';
+
 function isActive(href: string): boolean {
-  const path = currentPath.replace(/\/$/, '') || '/';
   const h = href.replace(/\/$/, '');
   return path === h || (h !== '/' && path.startsWith(h + '/'));
 }
 
+function isItemActive(item: { href: string }): boolean {
+  const h = item.href.replace(/\/$/, '');
+  if (h === '/moneyball') return path === '/moneyball';
+  return isActive(item.href);
+}
+
 function programIsActive(slug: string): boolean {
-  return currentPath.startsWith(`/${slug}`);
+  return path === `/${slug}` || path.startsWith(`/${slug}/`);
 }
 ---
 
 <header class="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
   <nav class="mx-auto max-w-5xl px-6 py-4 flex items-center gap-8">
-    <a href="/" class="text-xl font-semibold text-stone-900 tracking-tight shrink-0">WSABI</a>
+    <a href="/" class="flex items-center gap-2 shrink-0">
+      <img src="/images/wharton-logo.png" alt="" class="h-8 w-auto" />
+      <span class="text-xl font-semibold text-penn-blue tracking-tight">WSABI</span>
+    </a>
 
     <div class="flex gap-1">
       {programs.map((program) => (
@@ -54,7 +64,7 @@ function programIsActive(slug: string): boolean {
             type="button"
             class:list={[
               'flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-              programIsActive(program.slug) ? 'text-indigo-600 bg-indigo-50' : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+              programIsActive(program.slug) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
             ]}
           >
             {program.label}
@@ -69,7 +79,7 @@ function programIsActive(slug: string): boolean {
                   href={item.href}
                   class:list={[
                     'block px-4 py-2 text-sm transition-colors',
-                    isActive(item.href) ? 'text-indigo-600 bg-indigo-50' : 'text-stone-700 hover:bg-stone-50'
+                    isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
                   ]}
                 >
                   {item.label}

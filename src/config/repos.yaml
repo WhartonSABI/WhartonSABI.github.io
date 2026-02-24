@@ -1,5 +1,5 @@
 # WSABI Projects - Seminar, Lab, and Moneyball Academy (public repos only)
-# GitHub raw file URL: https://github.com/{org}/{repo}/raw/main/{path}
+# Deliverable links: https://github.com/{org}/{repo}/blob/main/{path}
 
 seminar:
   org: WhartonSABI
@@ -11,13 +11,14 @@ seminar:
         - label: Research Note
           path: research-note/article.pdf
         - label: CSAS 2026 Report
-          path: csas2026/writeup/report.pdf
+          path: writeup/report.pdf
     - name: Rugby Expected Points
       repo: rugby-ep
       description: Expected points model for rugby union.
+      preprint: https://arxiv.org/abs/2512.00312
       deliverables:
         - label: JQAS Article
-          path: jqas/cover.pdf
+          path: writeup/cover.pdf
     - name: Halo 2026
       repo: halo2026
       description: NHL tracking data analysis and modeling.
@@ -45,6 +46,7 @@ lab:
     - name: Server Quality
       repo: server-quality
       description: Tennis server quality modeling.
+      preprint: https://arxiv.org/abs/2602.08083
       deliverables:
         - label: Lab Presentation
           path: presentations/lab.pdf
@@ -55,6 +57,7 @@ lab:
     - name: xG+
       repo: xg-plus
       description: Probabilistic goalscoring framework for soccer.
+      preprint: https://arxiv.org/abs/2512.00203
       deliverables:
         - label: Paper
           path: paper/paper.pdf

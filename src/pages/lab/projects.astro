@@ -9,10 +9,10 @@ const config = repos.lab;
 const org = config.org;
 ---
 
-<Layout title="Summer Lab – Projects" description="Summer research lab projects with presentations and papers.">
+<Layout title="Projects" description="Summer research lab projects with presentations and papers.">
   <Nav />
   <main class="mx-auto max-w-5xl px-6 py-16">
-    <h1 class="text-3xl font-bold text-stone-900">Summer Lab</h1>
+    <h1 class="text-3xl font-bold text-penn-blue">Summer Lab</h1>
     <p class="mt-2 text-stone-600">Summer research lab projects with presentations and papers.</p>
 
     <div class="mt-12 grid gap-6 sm:grid-cols-2">
@@ -22,6 +22,7 @@ const org = config.org;
           description={p.description}
           org={p.org_override || org}
           repo={p.repo}
+          preprint={p.preprint}
           deliverables={p.deliverables}
         />
       ))}

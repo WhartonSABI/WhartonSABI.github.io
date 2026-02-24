@@ -1,0 +1,426 @@
+# Central roster. Add someone to a program by adding e.g. "seminar 2024" or "lab 2025 instructor".
+# Shorthand: "program year" or "program year instructor|organizer". Role override: use object form.
+people:
+  - name: Jonathan Pipping-Gamón
+    email: jpipping@wharton.upenn.edu
+    role: 2y PhD
+    bio: Football, Soccer, Formula 1, Baseball.
+    github: jdpipping
+    linkedin: https://www.linkedin.com/in/jdpipping/
+    programs:
+      - lab 2025 instructor
+      - seminar 2025 organizer
+      - program: seminar
+        year: 2024
+        type: organizer
+        role: 1y PhD
+
+  - name: Abraham J. Wyner
+    email: ajw@wharton.upenn.edu
+    role: Professor
+    bio: Baseball, Football, Basketball.
+    github: adiwyner
+    linkedin: https://www.linkedin.com/in/abraham-adi-wyner-25424/
+    programs:
+      - seminar 2025 organizer
+      - seminar 2024 organizer
+
+  - name: Paul Sabin
+    email: psabin88@wharton.upenn.edu
+    role: Sports Analytics Fellow
+    bio: Football, Soccer.
+    github: sabinanalytics
+    linkedin: https://www.linkedin.com/in/rpaulsabin/
+    programs:
+      - seminar 2025 organizer
+      - seminar 2024 organizer
+
+  - name: Ryan S. Bril
+    email: ryguy123@sas.upenn.edu
+    role: 5y PhD
+    bio: Football, Baseball, Basketball.
+    github: null
+    programs:
+      - seminar 2024 organizer
+
+  - name: Adam Kuechler
+    email: kuechler@wharton.upenn.edu
+    role: junior
+    bio: Soccer, Football, Basketball.
+    github: aakuechler
+    linkedin: https://www.linkedin.com/in/adam-kuechler-184555278/
+    programs:
+      - lab 2025
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: sophomore
+
+  - name: Aiwen Li
+    email: aiwenli@wharton.upenn.edu
+    role: junior
+    bio: Combat Sports, Tennis.
+    github: aiwenli123
+    linkedin: https://www.linkedin.com/in/aiwen-li/
+    projects: [server-quality]
+    programs:
+      - lab 2025
+      - seminar 2025
+
+  - name: Audrey Kuan
+    email: kuanai@wharton.upenn.edu
+    role: participant
+    bio: Basketball, Track & Field, Badminton, Cycling.
+    github: akuan16
+    linkedin: https://www.linkedin.com/in/audrey-kuan-93b86918b/
+    projects: [server-quality]
+    programs:
+      - lab 2025
+
+  - name: Chris Bugliosi
+    email: bugliosi@wharton.upenn.edu
+    role: junior
+    bio: Hockey, Baseball, Football, Soccer, Formula 1.
+    github: ChrisBugliosi
+    linkedin: https://www.linkedin.com/in/christopher-bugliosi/
+    programs:
+      - lab 2025
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: sophomore
+
+  - name: Drew Bukasa
+    email: dbukasa@sas.upenn.edu
+    role: senior
+    bio: Wrestling, Soccer, Betting.
+    github: dbukasa
+    linkedin: https://www.linkedin.com/in/drew-bukasa/
+    programs:
+      - lab 2025
+
+  - name: Kenny Watts
+    email: kenwatts@wharton.upenn.edu
+    role: senior
+    bio: Soccer, Rugby.
+    github: kennyws
+    linkedin: https://www.linkedin.com/in/kenny-watts-222810216/
+    projects: [rugby-ep, nfl-elo]
+    programs:
+      - lab 2025
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: junior
+
+  - name: Matthew Spivey
+    email: spiveym@wharton.upenn.edu
+    role: junior
+    bio: Football, Soccer, Poker, Betting.
+    github: hesitantsushi
+    linkedin: https://www.linkedin.com/in/matt-spivey/
+    programs:
+      - lab 2025
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: sophomore
+
+  - name: Maximilian Gebauer
+    email: gebauerm@sas.upenn.edu
+    role: 4y PhD
+    bio: Football, Basketball.
+    github: Gebauermj31
+    linkedin: https://www.linkedin.com/in/maximilian-gebauer-6b2a33365/
+    projects: [nfl-elo]
+    programs:
+      - lab 2025
+      - seminar 2025
+
+  - name: Noah Sonnenklar
+    email: noahson@sas.upenn.edu
+    role: participant
+    bio: Baseball.
+    github: Noahsonnenklar
+    linkedin: https://www.linkedin.com/in/noah-sonnenklar-90b24a2b7/
+    programs:
+      - lab 2025
+
+  - name: Rita Balajee
+    email: abalajee@sas.upenn.edu
+    role: sophomore
+    bio: Rowing, Track & Field.
+    github: abalajee
+    linkedin: https://www.linkedin.com/in/amrita-balajee-291497286/
+    projects: [server-quality]
+    programs:
+      - lab 2025
+      - seminar 2025
+
+  - name: Tianshu Feng
+    email: ftianshu@seas.upenn.edu
+    role: 2y Masters
+    bio: Soccer, Football, Hockey, Formula 1.
+    github: fts2001
+    linkedin: https://www.linkedin.com/in/tianshu-feng-41a843203/
+    projects: [xg-plus]
+    programs:
+      - lab 2025
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: 1y Masters
+
+  - name: Victoria Lee
+    email: torialee@seas.upenn.edu
+    role: senior
+    bio: Football.
+    github: victoriaslee
+    linkedin: https://www.linkedin.com/in/victoria-lee-b5283021a/
+    projects: [nfl-elo]
+    programs:
+      - lab 2025
+      - seminar 2025
+
+  # Seminar-only 2025
+  - name: Adam Krasilovsky
+    email: adamkras@seas.upenn.edu
+    role: junior
+    bio: Baseball, Hockey, Football, Basketball.
+    github: null
+    programs:
+      - seminar 2025
+      - seminar 2024
+
+  - name: Braden Eberhard
+    email: braden.eberhard@pennmedicine.upenn.edu
+    role: 1y PhD
+    bio: Ultimate Frisbee.
+    github: BradenEberhard
+    programs:
+      - seminar 2025
+
+  - name: Evan Harford
+    email: eharford@wharton.upenn.edu
+    role: sophomore
+    bio: Football, Baseball, Basketball, Tennis, Formula 1.
+    github: null
+    programs:
+      - seminar 2025
+
+  - name: Javier St. Remy
+    email: javierst@sas.upenn.edu
+    role: junior
+    bio: Basketball, Baseball, Track & Field.
+    github: null
+    programs:
+      - seminar 2025
+
+  - name: Kai Wang
+    email: kaiwang1@wharton.upenn.edu
+    role: senior
+    bio: Football, Basketball, Soccer.
+    github: kaiwang22
+    programs:
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: junior
+
+  - name: Lindsay Yao
+    email: lindsyao@wharton.upenn.edu
+    role: sophomore
+    bio: Golf, Baseball, Basketball, Football.
+    github: livvyj
+    programs:
+      - seminar 2025
+
+  - name: Lingxuan Gao
+    email: gao459@design.upenn.edu
+    role: 1y Masters
+    bio: Football.
+    github: LingxuanGao
+    programs:
+      - seminar 2025
+
+  - name: Lyev Pitram
+    email: lpitram@wharton.upenn.edu
+    role: freshman
+    bio: Baseball, Football.
+    github: lpitram-lab
+    programs:
+      - seminar 2025
+
+  - name: Michael Hegarty
+    email: hegarty1@wharton.upenn.edu
+    role: freshman
+    bio: Football, Baseball, Basketball.
+    github: null
+    programs:
+      - seminar 2025
+
+  - name: Sam Reiner
+    email: sreiner1@sas.upenn.edu
+    role: freshman
+    bio: Soccer, Baseball.
+    github: smule29
+    programs:
+      - seminar 2025
+
+  - name: Samen Hossain
+    email: samenh@sas.upenn.edu
+    role: junior
+    bio: Basketball, Football, Combat Sports.
+    github: SamenSHossain
+    projects: [curlers]
+    programs:
+      - seminar 2025
+
+  - name: Talia Gabin
+    email: tgabin@sas.upenn.edu
+    role: sophomore
+    bio: Baseball, Tennis.
+    github: tgabin8
+    programs:
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: freshman
+
+  - name: Trey Elder
+    email: telder3@seas.upenn.edu
+    role: 1y Masters
+    bio: Hockey.
+    github: treyelder3
+    projects: [curlers, halo2026]
+    programs:
+      - seminar 2025
+
+  - name: Val Tham
+    email: yunxint@wharton.upenn.edu
+    role: junior
+    bio: Badminton, Sports Betting.
+    github: null
+    programs:
+      - seminar 2025
+
+  - name: James Duong
+    email: duongja@wharton.upenn.edu
+    role: freshman
+    bio: Football, Soccer, Basketball.
+    github: jduongg17
+    programs:
+      - seminar 2025
+
+  - name: Justin Hughes
+    email: juhughes@wharton.upenn.edu
+    role: senior
+    bio: Basketball, Football.
+    github: justin22hughes
+    projects: [nba-lineups]
+    programs:
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: junior
+
+  - name: Kavya Venkatesan
+    email: kavyav@wharton.upenn.edu
+    role: sophomore
+    bio: Soccer, Golf, Tennis.
+    github: kayvcache
+    programs:
+      - seminar 2025
+      - program: seminar
+        year: 2024
+        role: freshman
+
+  - name: Timothy Kong
+    email: kong7@sas.upenn.edu
+    role: sophomore
+    bio: Football, Basketball, Tennis, Formula 1.
+    github: null
+    programs:
+      - seminar 2025
+
+  # Seminar-only 2024
+  - name: Bruno Basner
+    email: bbasner@wharton.upenn.edu
+    role: junior
+    bio: Soccer.
+    github: null
+    programs:
+      - seminar 2024
+
+  - name: Dylan Perlstein
+    email: dperl123@wharton.upenn.edu
+    role: junior
+    bio: Basketball, Football, Baseball.
+    github: null
+    programs:
+      - seminar 2024
+
+  - name: Elan Roth
+    email: elanroth@sas.upenn.edu
+    role: senior
+    bio: Basketball, Football, Soccer, Lacrosse.
+    github: null
+    programs:
+      - seminar 2024
+
+  - name: Juan Tejera
+    email: juanchi@sas.upenn.edu
+    role: senior
+    bio: Football, Soccer, Basketball, Baseball, Tennis.
+    github: null
+    programs:
+      - seminar 2024
+
+  - name: Jake Federman
+    email: jakefed@sas.upenn.edu
+    role: senior
+    bio: Baseball, Football.
+    github: null
+    programs:
+      - seminar 2024
+
+  - name: Kaishu
+    email: kaishu@wharton.upenn.edu
+    role: 5y PhD
+    bio: Soccer, Baseball.
+    github: null
+    programs:
+      - seminar 2024
+
+  - name: Katherine Comer
+    email: kcomer@wharton.upenn.edu
+    role: junior
+    bio: Baseball, Softball.
+    github: null
+    programs:
+      - seminar 2024
+
+  - name: Kyle Sullivan
+    email: kyle.sullivan27@gmail.com
+    role: senior
+    bio: ""
+    github: null
+    programs:
+      - seminar 2024
+
+  - name: Nathan Waldbaum
+    email: waldbaum@sas.upenn.edu
+    role: junior
+    bio: Basketball, Football.
+    github: null
+    projects: [nba-lineups]
+    programs:
+      - seminar 2024
+
+  - name: Yukun Zhao
+    email: zhaoyuk@sas.upenn.edu
+    role: 1y Masters
+    bio: ""
+    github: null
+    programs:
+      - seminar 2024

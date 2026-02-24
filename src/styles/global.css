@@ -2,6 +2,12 @@
 
 @theme {
   --font-sans: "DM Sans", system-ui, sans-serif;
+  /* UPenn brand colors */
+  --color-penn-red: #990000;
+  --color-penn-red-light: #fce8e8;
+  --color-penn-blue: #011F5B;
+  --color-penn-blue-muted: #2d4a8c;
+  --color-penn-blue-light: #e8eef8;
 }
 
 body {
