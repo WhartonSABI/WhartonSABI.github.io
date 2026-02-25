@@ -2,11 +2,15 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import favicons from 'astro-favicons';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://whartonsabi.github.io',
   integrations: [
+    favicons({
+      input: 'public/images/wharton-logo.png',
+    }),
     sitemap({
       lastmod: new Date(),
       namespaces: {
