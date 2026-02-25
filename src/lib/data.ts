@@ -175,3 +175,18 @@ const PROJECT_LINKS: Record<string, { href: string; display: string }> = {
 export function getProjectLink(repo: string): { href: string; display: string } | null {
   return PROJECT_LINKS[repo] || null;
 }
+
+/** GitHub usernames from roster – used as member allowlist for auth */
+export function getMemberGithubUsernames(): Set<string> {
+  const configs = loadPeople();
+  const usernames = new Set<string>();
+  for (const c of configs) {
+    const add = (p: { github?: string | null }) => {
+      if (p.github) usernames.add(String(p.github).toLowerCase());
+    };
+    c.instructors?.forEach(add);
+    c.leadership?.forEach(add);
+    c.people.forEach(add);
+  }
+  return usernames;
+}

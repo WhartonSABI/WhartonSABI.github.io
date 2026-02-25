@@ -1,15 +1,29 @@
 // @ts-check
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const websiteRoot = path.resolve(__dirname, '.');
+['.env', '.env.local', '.env.development'].forEach((f) => dotenv.config({ path: path.join(websiteRoot, f) }));
+
 import { defineConfig } from 'astro/config';
+import node from '@astrojs/node';
 
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  adapter: node({ mode: 'standalone' }),
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    envPrefix: ['GITHUB_', 'SESSION_'],
   },
   redirects: {
-    '/data': '/seminar/data',
+    '/data': '/members/data',
+    '/seminar/data': '/members/data',
+    '/lab/data': '/members/data',
+    '/moneyball/data': '/members/data',
     '/moneyball': '/moneyball/academy',
     '/moneyball/academy/tc/lecture1': '/moneyball/tc/lecture1',
     '/moneyball/academy/tc/lecture2': '/moneyball/tc/lecture2',

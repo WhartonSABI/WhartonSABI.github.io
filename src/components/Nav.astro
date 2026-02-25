@@ -4,11 +4,10 @@ const currentPath = Astro.url.pathname;
 const programs = [
   {
     slug: 'seminar',
-    label: 'Weekly Seminar',
+    label: 'Seminar',
     items: [
       { href: '/seminar/people', label: 'People' },
       { href: '/seminar/projects', label: 'Projects' },
-      { href: '/seminar/data', label: 'Data' },
     ],
   },
   {
@@ -17,7 +16,6 @@ const programs = [
     items: [
       { href: '/lab/people', label: 'People' },
       { href: '/lab/projects', label: 'Projects' },
-      { href: '/lab/data', label: 'Data' },
     ],
   },
   {
@@ -87,6 +85,14 @@ const programs = [
       },
       { href: '/moneyball/people', label: 'People' },
       { href: '/moneyball/projects', label: 'Projects' },
+    ],
+  },
+  {
+    slug: 'members',
+    label: 'Members',
+    items: [
+      { href: '/members', label: 'Home' },
+      { href: '/members/data', label: 'Data' },
     ],
   },
 ];
