@@ -6,7 +6,17 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://whartonsabi.github.io',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      lastmod: new Date(),
+      namespaces: {
+        news: false,
+        xhtml: false,
+        image: false,
+        video: false,
+      },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()]
   },

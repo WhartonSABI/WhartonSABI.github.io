@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://whartonsabi.github.io/sitemap-index.xml
+Sitemap: https://whartonsabi.github.io/sitemap.xml
