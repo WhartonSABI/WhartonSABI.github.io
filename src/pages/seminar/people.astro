@@ -14,7 +14,7 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'seminar');
     <h1 class="text-3xl font-bold text-penn-blue">People</h1>
     <p class="mt-2 text-stone-600">Organizers and members by year.</p>
 
-    <div class="mt-12 space-y-4">
+    <div class="mt-6 space-y-4">
       {peopleConfigs.map((config, i) => {
         const yearLabel = `${config.year}-${config.year + 1}`;
         return (
