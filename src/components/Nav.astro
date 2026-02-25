@@ -4,7 +4,7 @@ const currentPath = Astro.url.pathname;
 const programs = [
   {
     slug: 'seminar',
-    label: 'Seminar',
+    label: 'Weekly Seminar',
     items: [
       { href: '/seminar/people', label: 'People' },
       { href: '/seminar/projects', label: 'Projects' },
@@ -20,13 +20,14 @@ const programs = [
   },
   {
     slug: 'moneyball',
-    label: 'Moneyball',
+    label: 'Moneyball Programs',
     items: [
       {
         label: 'Academy',
         section: '/moneyball/academy',
         menu: [
           { href: '/moneyball/academy', label: 'Home' },
+          { href: '/moneyball/academy/people', label: 'People' },
           {
             label: 'Lectures',
             menu: [
@@ -59,40 +60,32 @@ const programs = [
       },
       {
         label: 'Training Camp',
-        section: '/moneyball/tc',
+        section: '/moneyball/training-camp',
         menu: [
+          { href: '/moneyball/training-camp/people', label: 'People' },
           {
             label: 'Lectures',
             menu: [
               { href: '/moneyball/academy/lecture0', label: 'Lecture 0' },
-              { href: '/moneyball/tc/lecture1', label: 'Lecture 1' },
-              { href: '/moneyball/tc/lecture2', label: 'Lecture 2' },
-              { href: '/moneyball/tc/lecture3', label: 'Lecture 3' },
-              { href: '/moneyball/tc/lecture4', label: 'Lecture 4' },
-              { href: '/moneyball/tc/lecture5', label: 'Lecture 5' },
+              { href: '/moneyball/training-camp/lecture1', label: 'Lecture 1' },
+              { href: '/moneyball/training-camp/lecture2', label: 'Lecture 2' },
+              { href: '/moneyball/training-camp/lecture3', label: 'Lecture 3' },
+              { href: '/moneyball/training-camp/lecture4', label: 'Lecture 4' },
+              { href: '/moneyball/training-camp/lecture5', label: 'Lecture 5' },
             ],
           },
           {
             label: 'Problem Sets',
             menu: [
-              { href: '/moneyball/tc/ps1', label: 'Problem Set 1' },
-              { href: '/moneyball/tc/ps2', label: 'Problem Set 2' },
-              { href: '/moneyball/tc/ps3', label: 'Problem Set 3' },
+              { href: '/moneyball/training-camp/ps1', label: 'Problem Set 1' },
+              { href: '/moneyball/training-camp/ps2', label: 'Problem Set 2' },
+              { href: '/moneyball/training-camp/ps3', label: 'Problem Set 3' },
             ],
           },
-          { href: '/moneyball/tc/data-sources', label: 'Other Data' },
+          { href: '/moneyball/training-camp/data-sources', label: 'Other Data' },
         ],
       },
-      { href: '/moneyball/people', label: 'People' },
       { href: '/moneyball/projects', label: 'Projects' },
-    ],
-  },
-  {
-    slug: 'members',
-    label: 'Members',
-    items: [
-      { href: '/members', label: 'Home' },
-      { href: '/members/data', label: 'Data' },
     ],
   },
 ];

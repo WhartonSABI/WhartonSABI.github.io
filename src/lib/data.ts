@@ -7,7 +7,12 @@ const configDir = path.join(process.cwd(), 'src/config');
 
 export interface Deliverable {
   label: string;
-  path: string;
+  /** GitHub blob path (builds https://github.com/{org}/{repo}/blob/main/{path}). Omit if url is set. */
+  path?: string;
+  /** External URL (e.g. Wharton Research Notes). Use instead of path for off-repo links. */
+  url?: string;
+  /** Icon: 'article' (doc with text), 'report' (doc with chart), 'presentation' (slides/screen). */
+  icon?: 'article' | 'report' | 'presentation';
 }
 
 export interface Project {
@@ -17,6 +22,8 @@ export interface Project {
   org_override?: string;
   /** Optional external URL (e.g. arXiv, OSF) for preprint. */
   preprint?: string;
+  /** Highlights: awards, publication status, etc. (e.g. "CSAS 2026 Finalist", "In review at JQAS"). */
+  highlights?: string[];
   deliverables?: Deliverable[];
 }
 
@@ -93,6 +100,17 @@ function parseProgramEntry(entry: string | ProgramEntry): ProgramEntry {
   return { program, year, type };
 }
 
+/** Extract first name for sorting. Strips titles (Dr., Prof., etc.). People are alphabetized by first name. */
+function firstNameSortKey(name: string): string {
+  const t = name.trim().replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.|Ms\.)\s+/i, '').trim();
+  const first = t.split(/\s+/)[0] ?? t;
+  return `${first.toLowerCase()}|${t}`;
+}
+
+export function sortPeopleByFirstName(people: { name: string }[]): void {
+  people.sort((a, b) => firstNameSortKey(a.name).localeCompare(firstNameSortKey(b.name)));
+}
+
 export function loadPeople(): PeopleConfig[] {
   const rosterPath = path.join(configDir, 'people', 'roster.yaml');
   if (!fs.existsSync(rosterPath)) return [];
@@ -145,13 +163,9 @@ export function loadPeople(): PeopleConfig[] {
   }
 
   for (const config of configMap.values()) {
-    if (config.instructors) {
-      config.instructors.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    if (config.leadership) {
-      config.leadership.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    config.people.sort((a, b) => a.name.localeCompare(b.name));
+    if (config.instructors) sortPeopleByFirstName(config.instructors);
+    if (config.leadership) sortPeopleByFirstName(config.leadership);
+    sortPeopleByFirstName(config.people);
   }
 
   const configs = Array.from(configMap.values());
@@ -174,6 +188,16 @@ const PROJECT_LINKS: Record<string, { href: string; display: string }> = {
 
 export function getProjectLink(repo: string): { href: string; display: string } | null {
   return PROJECT_LINKS[repo] || null;
+}
+
+/** Training Camp cohorts from unified roster. Programs: training-camp-june, training-camp-july. More recent first. */
+export function loadTrainingCampPeople(): PeopleConfig[] {
+  const all = loadPeople();
+  const tc = all.filter((c) => c.program.startsWith('training-camp-'));
+  return tc.sort((a, b) => {
+    if (a.year !== b.year) return b.year - a.year;
+    return (b.program === 'training-camp-july' ? 1 : 0) - (a.program === 'training-camp-july' ? 1 : 0);
+  });
 }
 
 /** GitHub usernames from roster – used as member allowlist for auth */

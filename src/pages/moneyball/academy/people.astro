@@ -1,8 +1,8 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Nav from '../../components/Nav.astro';
-import PersonCard from '../../components/PersonCard.astro';
-import { loadPeople, getProjectLink } from '../../lib/data';
+import Layout from '../../../layouts/Layout.astro';
+import Nav from '../../../components/Nav.astro';
+import PersonCard from '../../../components/PersonCard.astro';
+import { loadPeople, getProjectLink } from '../../../lib/data';
 
 const allConfigs = loadPeople();
 const peopleConfigs = allConfigs.filter((c) => c.program === 'moneyball');

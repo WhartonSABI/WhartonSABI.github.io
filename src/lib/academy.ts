@@ -5,7 +5,7 @@ import * as cheerio from 'cheerio';
 /** Academy HTML files live in the website repo for independent builds */
 const ACADEMY_SOURCE = path.join(process.cwd(), 'academy');
 const BASE_PATH = '/moneyball/academy';
-const TC_BASE_PATH = '/moneyball/tc';
+const TC_BASE_PATH = '/moneyball/training-camp';
 
 /** Maps our routes to source HTML files */
 export const ACADEMY_PAGES: Record<string, { file: string; title: string }> = {

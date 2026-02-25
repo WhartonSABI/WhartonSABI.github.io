@@ -1,83 +1,102 @@
 # WSABI Projects - Seminar, Lab, and Moneyball (public repos only)
-# Deliverable links: https://github.com/{org}/{repo}/blob/main/{path}
+# Deliverables: use path for GitHub blob, or url for external links (e.g. Wharton Research Notes)
 
 seminar:
   org: WhartonSABI
   projects:
-    - name: Curlers
+    - name: Curling Power Play Optimization
       repo: curlers
-      description: Mixed Doubles curling – end-level EP model, Power Play MDP policy, CSAS 2026 Data Challenge.
+      highlights: [CSAS 2026 Finalist]
+      description: A win-probability framework for power play deployment in mixed-doubles curling. Developed for the 2026 CSAS Data Challenge.
       deliverables:
-        - label: Research Note
-          path: research-note/article.pdf
+        - label: Article
+          url: https://wsb.wharton.upenn.edu/pulling-the-power-play-a-win-probability-strategy-for-mixed-doubles-curling/
         - label: CSAS 2026 Report
           path: writeup/report.pdf
+          icon: report
     - name: Rugby Expected Points
       repo: rugby-ep
-      description: Expected points model for rugby union.
+      highlights: [In Review at JQAS]
+      description: An expected-points framework for rugby union with applications to penalty decisions.
       preprint: https://arxiv.org/abs/2512.00312
-      deliverables:
-        - label: JQAS Article
-          path: writeup/cover.pdf
-    - name: Halo 2026
+    - name: "PRESS: A New Forechecking Metric for Hockey"
       repo: halo2026
-      description: NHL tracking data analysis and modeling.
+      description: Introduces a novel player-level forechecking metric for hockey. Developed for the 2026 HALO Hackathon.
       deliverables:
-        - label: Writeup
+        - label: HALO 2026 Report
           path: writeup/main.pdf
+          icon: report
 
 lab:
   org: WhartonSABI
   projects:
-    - name: NFL Elo
-      repo: nfl-elo
-      description: NFL pass rushing Elo ratings from Hudl IQ data.
-      deliverables:
-        - label: Lab Capstone
-          path: presentations/lab-capstone.pdf
-        - label: Results Summary
-          path: results/nflelo.pdf
-    - name: NBA Lineups
+    - name: Archetypal NBA Player Acquisition
       repo: nba-lineups
-      description: NBA lineup optimization and analysis.
+      description: An clustering approach to identify NBA player acquisition targets.
       deliverables:
-        - label: CMU Presentation
+        - label: CMSAC 2023
           path: presentations/cmu.pdf
-    - name: Server Quality
+          icon: presentation
+    - name: A Unified Server Quality Metric for Tennis
       repo: server-quality
-      description: Tennis server quality modeling.
+      description: Constructs a server quality metric from point-by-point data using mixed-effects models.
+      highlights: [In Review at JSA, 2025 CMSAC RRC Winner]
       preprint: https://arxiv.org/abs/2602.08083
       deliverables:
-        - label: Lab Presentation
-          path: presentations/lab.pdf
         - label: CMSAC 2025
           path: presentations/cmsac2025.pdf
-        - label: Paper
-          path: paper/main.pdf
+          icon: presentation
+    - name: NFL Pass Rush Elo
+      repo: nfl-elo
+      description: A dynamic rating system for NFL pass rushers and blockers derived from HUDL tracking data.
+      deliverables:
+        - label: NESSIS 2025
+          path: results/nflelo.pdf
+          icon: presentation
+        - label: WAIAI Talk
+          path: presentations/waiai.pdf
+          icon: presentation
     - name: xG+
       repo: xg-plus
-      description: Probabilistic goalscoring framework for soccer.
+      highlights: [In Review at JQAS]
+      description: A more complete probabilistic framework for chance creation and goalscoring in soccer.
       preprint: https://arxiv.org/abs/2512.00203
       deliverables:
-        - label: Paper
-          path: paper/paper.pdf
         - label: JSM 2025
           path: jsm2025/presentation.pdf
-        - label: ASI 2026
-          path: asi2026/presentation.pdf
+          icon: presentation
+        - label: ASIS 2026
+          path: asis2026/presentation.pdf
+          icon: presentation
 
 moneyball:
   org: Wharton-Moneyball
   projects:
-    - name: NBA Draft Lottery
+    - name: Is the NBA Draft Lottery Rigged?
       repo: nba-draft-lottery
-      description: NBA draft lottery probability analysis.
-    - name: QB Pressure
+      highlights: [Published in the Fall 2025 WSA Journal]
+      description: Conducts a permutation test to evaluate the fairness of the NBA draft lottery.
+      deliverables:
+        - label: Article
+          url: https://wsb.wharton.upenn.edu/wp-content/uploads/2025/12/ZHENG_NBA_Draft_Lottery.pdf
+    - name: "PRSS: A New Metric for QB Pocket Collapse"
       repo: qb-pressure
-      description: Quarterback pressure modeling.
-    - name: Serve Performance
+      highlights: [Published in the Fall 2025 WSA Journal]
+      description: Develops a new metric for pocket collapse in football from NFL tracking data.
+      deliverables:
+        - label: Article
+          url: https://wsb.wharton.upenn.edu/wp-content/uploads/2025/12/HAFIZ_PRSS-A-new-metric.pdf
+    - name: Investigating Serve Effectiveness in Men's Tennis
       repo: serve-performance
-      description: Tennis serve performance analysis.
-    - name: Stolen Base Leads
+      highlights: [Published in the Fall 2025 WSA Journal]
+      description: Examines the determinants of serve effectiveness in men's tennis from ATP point-by-point data.
+      deliverables:
+        - label: Article
+          url: https://wsb.wharton.upenn.edu/wp-content/uploads/2025/12/WIEAND-serve_performance.pdf
+    - name: Lead Distance Optimization in the MLB
       repo: stolen-base-leads
-      description: MLB stolen bases and optimal lead distance.
+      highlights: [Published in the Fall 2025 WSA Journal]
+      description: Develops a run expectancy approach to lead distance optimization in the MLB from pitch-by-pitch data.
+      deliverables:
+        - label: Article
+          url: https://wsb.wharton.upenn.edu/wp-content/uploads/2025/12/WHITNEY-EPSTEIN_Lead_Distance_Optimization.pdf

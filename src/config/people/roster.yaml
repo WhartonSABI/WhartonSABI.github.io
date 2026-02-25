@@ -11,6 +11,8 @@ people:
       - lab 2025 instructor
       - seminar 2025 organizer
       - moneyball 2025 organizer
+      - training-camp-june 2025 instructor
+      - training-camp-july 2025 instructor
       - program: seminar
         year: 2024
         type: organizer
@@ -26,6 +28,17 @@ people:
       - seminar 2025 organizer
       - seminar 2024 organizer
       - moneyball 2025 organizer
+      - training-camp-june 2025 instructor
+      - training-camp-july 2025 instructor
+
+  - name: Dr. Eric Eager
+    email: null
+    role: VP of Football Analytics, Carolina Panthers
+    bio: Football, Basketball.
+    github: ericeager
+    linkedin: https://www.linkedin.com/in/eric-eager-31a2a220/
+    programs:
+      - training-camp-june 2025 instructor
 
   - name: Paul Sabin
     email: psabin88@wharton.upenn.edu
@@ -37,13 +50,14 @@ people:
       - seminar 2025 organizer
       - seminar 2024 organizer
 
-  - name: Ryan S. Bril
+  - name: Ryan S. Brill
     email: ryguy123@sas.upenn.edu
     role: 5y PhD
     bio: Football, Baseball, Basketball.
     github: null
     programs:
       - seminar 2024 organizer
+      - training-camp-july 2025 instructor
 
   - name: Adam Kuechler
     email: kuechler@wharton.upenn.edu
@@ -74,6 +88,8 @@ people:
       - program: moneyball
         year: 2025
         type: leadership
+      - training-camp-june 2025 leadership
+      - training-camp-july 2025 leadership
 
   - name: Audrey Kuan
     email: kuanai@wharton.upenn.edu
@@ -103,6 +119,7 @@ people:
       - program: seminar
         year: 2024
         role: sophomore
+      - training-camp-july 2025 leadership
 
   - name: Drew Bukasa
     email: dbukasa@sas.upenn.edu
@@ -129,6 +146,7 @@ people:
       - program: moneyball
         year: 2025
         type: leadership
+      - training-camp-june 2025 leadership
       - program: seminar
         year: 2024
         role: junior
@@ -165,8 +183,8 @@ people:
 
   - name: Noah Sonnenklar
     email: noahson@sas.upenn.edu
-    role: participant
-    bio: Baseball.
+    role: junior
+    bio: Baseball, Basketball.
     github: Noahsonnenklar
     linkedin: https://www.linkedin.com/in/noah-sonnenklar-90b24a2b7/
     programs:
@@ -174,6 +192,37 @@ people:
       - program: moneyball
         year: 2025
         type: leadership
+      - training-camp-june 2025 leadership
+
+  - name: Devon Yau
+    email: devonyau@sas.upenn.edu
+    role: sophomore
+    bio: Basketball, Volleyball.
+    github: null
+    linkedin: https://www.linkedin.com/in/devonyau/
+    programs:
+      - training-camp-june 2025 leadership
+      - training-camp-july 2025 leadership
+
+  - name: Damodar Pai
+    email: damodarp@wharton.upenn.edu
+    role: student
+    bio: Basketball.
+    github: null
+    linkedin: https://www.linkedin.com/in/damodarpai314/
+    programs:
+      - training-camp-june 2025 leadership
+      - training-camp-july 2025 leadership
+
+  - name: Pion Pareyio
+    email: pareyio@sas.upenn.edu
+    role: junior
+    bio: Basketball, Soccer.
+    github: null
+    linkedin: https://www.linkedin.com/in/pion-pareyio/
+    programs:
+      - training-camp-june 2025 leadership
+      - training-camp-july 2025 leadership
 
   - name: Rita Balajee
     email: abalajee@sas.upenn.edu
@@ -202,6 +251,7 @@ people:
       - program: moneyball
         year: 2025
         type: leadership
+      - training-camp-july 2025 leadership
       - program: seminar
         year: 2024
         role: 1y Masters
@@ -420,7 +470,7 @@ people:
     programs:
       - seminar 2024
 
-  - name: Kaishu
+  - name: Kaishu Mason
     email: kaishu@wharton.upenn.edu
     role: 5y PhD
     bio: Soccer, Baseball.

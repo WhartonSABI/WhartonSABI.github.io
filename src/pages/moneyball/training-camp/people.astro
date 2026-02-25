@@ -1,0 +1,118 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Nav from '../../../components/Nav.astro';
+import PersonCard from '../../../components/PersonCard.astro';
+import { loadTrainingCampPeople, getProjectLink } from '../../../lib/data';
+
+const cohortConfigs = loadTrainingCampPeople();
+const cohortLabels: Record<string, string> = {
+  'training-camp-june': 'June',
+  'training-camp-july': 'July',
+};
+---
+
+<Layout title="People" description="Instructors and teaching assistants by cohort.">
+  <Nav />
+  <main class="mx-auto max-w-5xl px-6 py-16">
+    <h1 class="text-3xl font-bold text-penn-blue">People</h1>
+    <p class="mt-2 text-stone-600">Instructors and teaching assistants by cohort.</p>
+
+    <div class="mt-12 space-y-4">
+      {cohortConfigs.map((config, i) => {
+        const label = `${cohortLabels[config.program] ?? config.program} ${config.year}`;
+        return (
+          <details class="group rounded-xl border border-stone-200 bg-white" {...(i === 0 ? { open: true } : {})}>
+            <summary class="flex cursor-pointer items-center justify-between px-6 py-4 text-xl font-semibold text-penn-blue list-none [&::-webkit-details-marker]:hidden">
+              {label}
+              <svg class="h-5 w-5 shrink-0 text-stone-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </summary>
+            <div class="border-t border-stone-200 px-6 py-6">
+              {config.instructors && config.instructors.length > 0 && (
+                <div class="mb-8">
+                  <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Instructors</h3>
+                  <div class="grid gap-4 sm:grid-cols-2">
+                    {config.instructors.map((person) => {
+                      const slugs = person.projects ?? (person.project ? [person.project] : []);
+                      const projectLinks = slugs
+                        .map((s) => getProjectLink(s))
+                        .filter(Boolean) as { href: string; display: string }[];
+                      projectLinks.sort((a, b) => a.display.localeCompare(b.display));
+                      return (
+                        <PersonCard
+                          name={person.name}
+                          role={person.role}
+                          bio={person.bio}
+                          image={person.image}
+                          email={person.email}
+                          github={person.github}
+                          linkedin={person.linkedin}
+                          projectLinks={projectLinks}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {config.leadership && config.leadership.length > 0 && (
+                <div class="mb-8">
+                  <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Teaching Assistants</h3>
+                  <div class="grid gap-4 sm:grid-cols-2">
+                    {config.leadership.map((person) => {
+                      const slugs = person.projects ?? (person.project ? [person.project] : []);
+                      const projectLinks = slugs
+                        .map((s) => getProjectLink(s))
+                        .filter(Boolean) as { href: string; display: string }[];
+                      projectLinks.sort((a, b) => a.display.localeCompare(b.display));
+                      return (
+                        <PersonCard
+                          name={person.name}
+                          role={person.role}
+                          bio={person.bio}
+                          image={person.image}
+                          email={person.email}
+                          github={person.github}
+                          linkedin={person.linkedin}
+                          projectLinks={projectLinks}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {(config.instructors?.length || config.leadership?.length) && config.people.length > 0 && (
+                <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">People</h3>
+              )}
+              <div class="grid gap-4 sm:grid-cols-2">
+                {config.people.map((person) => {
+                  const slugs = person.projects ?? (person.project ? [person.project] : []);
+                  const projectLinks = slugs
+                    .map((s) => getProjectLink(s))
+                    .filter(Boolean) as { href: string; display: string }[];
+                  projectLinks.sort((a, b) => a.display.localeCompare(b.display));
+                  return (
+                    <PersonCard
+                      name={person.name}
+                      role={person.role}
+                      bio={person.bio}
+                      image={person.image}
+                      email={person.email}
+                      github={person.github}
+                      linkedin={person.linkedin}
+                      projectLinks={projectLinks}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          </details>
+        );
+      })}
+    </div>
+
+    {cohortConfigs.length === 0 && (
+      <p class="mt-12 text-stone-600">No roster entries yet. Add <code>training-camp-june 2025</code> or <code>training-camp-july 2025</code> to programs in <code>src/config/people/roster.yaml</code>.</p>
+    )}
+  </main>
+</Layout>

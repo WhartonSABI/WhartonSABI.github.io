@@ -1,18 +1,4 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
 import { createHmac, timingSafeEqual } from 'crypto';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const websiteRoot = path.resolve(__dirname, '../..');
-const envFiles = [
-  path.join(websiteRoot, '.env'),
-  path.join(websiteRoot, '.env.local'),
-  path.join(websiteRoot, '.env.development'),
-  path.join(process.cwd(), '.env'),
-  path.join(process.cwd(), 'website', '.env'),
-];
-envFiles.forEach((p) => dotenv.config({ path: p }));
 import { getMemberGithubUsernames } from './data';
 
 const SESSION_COOKIE = 'wsabi_session';
@@ -24,7 +10,7 @@ export interface Session {
 }
 
 function getSecret(): string {
-  const secret = process.env.SESSION_SECRET;
+  const secret = import.meta.env.SESSION_SECRET;
   if (!secret || secret.length < 32) {
     throw new Error('SESSION_SECRET must be set and at least 32 characters');
   }
@@ -82,10 +68,8 @@ const GITHUB_TOKEN_URL = 'https://github.com/login/oauth/access_token';
 const GITHUB_USER_URL = 'https://api.github.com/user';
 
 export function getGitHubAuthUrl(redirectUri: string, state: string): string {
-  const clientId = process.env.GITHUB_CLIENT_ID;
-  if (!clientId) {
-    throw new Error('GITHUB_CLIENT_ID must be set. Create a .env file in the website folder (see .env.example).');
-  }
+  const clientId = import.meta.env.GITHUB_CLIENT_ID;
+  if (!clientId) throw new Error('GITHUB_CLIENT_ID must be set');
   const params = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirectUri,
@@ -96,8 +80,8 @@ export function getGitHubAuthUrl(redirectUri: string, state: string): string {
 }
 
 export async function exchangeCodeForUser(code: string, redirectUri: string): Promise<{ login: string } | null> {
-  const clientId = process.env.GITHUB_CLIENT_ID;
-  const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+  const clientId = import.meta.env.GITHUB_CLIENT_ID;
+  const clientSecret = import.meta.env.GITHUB_CLIENT_SECRET;
   if (!clientId || !clientSecret) throw new Error('GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET must be set');
 
   const tokenRes = await fetch(GITHUB_TOKEN_URL, {

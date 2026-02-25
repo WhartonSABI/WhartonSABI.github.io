@@ -1,17 +1,17 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Nav from '../../components/Nav.astro';
-import { getSessionFromRequest } from '../../lib/auth';
+import Layout from '../../../../src/layouts/Layout.astro';
+import Nav from '../../../../src/components/Nav.astro';
+import { getSessionFromRequest } from '../../../../src/lib/auth';
 
 export const prerender = false;
 
 const session = getSessionFromRequest(Astro.request);
 ---
 
-<Layout title="Members" description="WSABI member resources.">
+<Layout title="Member Access" description="WSABI member resources.">
   <Nav />
   <main class="mx-auto max-w-5xl px-6 py-16">
-    <h1 class="text-3xl font-bold text-penn-blue">Members</h1>
+    <h1 class="text-3xl font-bold text-penn-blue">Member Access</h1>
 
     {session ? (
       <div class="mt-8 space-y-6">

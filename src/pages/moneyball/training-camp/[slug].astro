@@ -12,9 +12,9 @@ export function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-if (!slug) return Astro.redirect('/moneyball/people');
+if (!slug) return Astro.redirect('/moneyball/training-camp/people');
 const data = loadTcPage(slug);
-if (!data) return Astro.redirect('/moneyball/people');
+if (!data) return Astro.redirect('/moneyball/training-camp/people');
 ---
 <Layout title={data.title} description="Moneyball Training Camp – R programming and data analysis.">
   <Nav />
