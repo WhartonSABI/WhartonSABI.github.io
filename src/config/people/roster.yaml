@@ -54,7 +54,7 @@ people:
     email: ryguy123@sas.upenn.edu
     role: 5y PhD
     bio: Football, Baseball, Basketball.
-    github: null
+    github: snoopryan123
     programs:
       - seminar 2024 organizer
       - training-camp-july 2025 instructor
@@ -274,6 +274,7 @@ people:
     role: junior
     bio: Baseball, Hockey, Football, Basketball.
     github: null
+    linkedin: https://www.linkedin.com/in/adamkrasilovsky/
     programs:
       - seminar 2025
       - seminar 2024
@@ -283,6 +284,7 @@ people:
     role: 1y PhD
     bio: Ultimate Frisbee.
     github: BradenEberhard
+    linkedin: https://www.linkedin.com/in/braden-eberhard/
     programs:
       - seminar 2025
 
@@ -291,6 +293,7 @@ people:
     role: sophomore
     bio: Football, Baseball, Basketball, Tennis, Formula 1.
     github: null
+    linkedin: https://www.linkedin.com/in/evan-harford/
     programs:
       - seminar 2025
 
@@ -299,6 +302,7 @@ people:
     role: junior
     bio: Basketball, Baseball, Track & Field.
     github: null
+    linkedin: https://www.linkedin.com/in/javier-st-remy-068732327/
     programs:
       - seminar 2025
 
@@ -307,6 +311,7 @@ people:
     role: senior
     bio: Football, Basketball, Soccer.
     github: kaiwang22
+    linkedin: https://www.linkedin.com/in/kai-wang1/
     programs:
       - seminar 2025
       - program: seminar
@@ -318,6 +323,7 @@ people:
     role: sophomore
     bio: Golf, Baseball, Basketball, Football.
     github: livvyj
+    linkedin: https://www.linkedin.com/in/lindsayyao/
     programs:
       - seminar 2025
 
@@ -326,6 +332,7 @@ people:
     role: 1y Masters
     bio: Football.
     github: LingxuanGao
+    linkedin: https://www.linkedin.com/in/lingxuangao/
     programs:
       - seminar 2025
 
@@ -334,6 +341,7 @@ people:
     role: freshman
     bio: Baseball, Football.
     github: lpitram-lab
+    linkedin: https://www.linkedin.com/in/lyev-pitram-146aab382/
     programs:
       - seminar 2025
 
@@ -350,6 +358,7 @@ people:
     role: freshman
     bio: Soccer, Baseball.
     github: smule29
+    linkedin: https://www.linkedin.com/in/sam-reiner-9bb8152b9/
     programs:
       - seminar 2025
 
@@ -358,6 +367,7 @@ people:
     role: junior
     bio: Basketball, Football, Combat Sports.
     github: SamenSHossain
+    linkedin: https://www.linkedin.com/in/samenhossain/
     projects: [curlers]
     programs:
       - seminar 2025
@@ -367,6 +377,7 @@ people:
     role: sophomore
     bio: Baseball, Tennis.
     github: tgabin8
+    linkedin: https://www.linkedin.com/in/taliagabin/
     programs:
       - seminar 2025
       - program: seminar
@@ -378,6 +389,7 @@ people:
     role: 1y Masters
     bio: Hockey.
     github: treyelder3
+    linkedin: https://www.linkedin.com/in/treyelder7078/
     projects: [curlers, halo2026]
     programs:
       - seminar 2025
@@ -387,6 +399,7 @@ people:
     role: junior
     bio: Badminton, Sports Betting.
     github: null
+    linkedin: https://www.linkedin.com/in/val-tham/
     programs:
       - seminar 2025
 
@@ -395,6 +408,7 @@ people:
     role: freshman
     bio: Football, Soccer, Basketball.
     github: jduongg17
+    linkedin: https://www.linkedin.com/in/james-duong-0aa8492a6/
     programs:
       - seminar 2025
 
@@ -403,6 +417,7 @@ people:
     role: senior
     bio: Basketball, Football.
     github: justin22hughes
+    linkedin: https://www.linkedin.com/in/justin-hughes-wharton/
     projects: [nba-lineups]
     programs:
       - seminar 2025
@@ -415,6 +430,7 @@ people:
     role: sophomore
     bio: Soccer, Golf, Tennis.
     github: kayvcache
+    linkedin: https://www.linkedin.com/in/kavya-venkat/
     programs:
       - seminar 2025
       - program: seminar
@@ -426,6 +442,7 @@ people:
     role: sophomore
     bio: Football, Basketball, Tennis, Formula 1.
     github: null
+    linkedin: https://www.linkedin.com/in/timothykong07/
     programs:
       - seminar 2025
 
@@ -435,6 +452,7 @@ people:
     role: junior
     bio: Soccer.
     github: null
+    linkedin: https://www.linkedin.com/in/bruno-basner-5059bb24a/
     programs:
       - seminar 2024
 
@@ -443,6 +461,7 @@ people:
     role: junior
     bio: Basketball, Football, Baseball.
     github: null
+    linkedin: https://www.linkedin.com/in/dylan-perlstein/
     programs:
       - seminar 2024
 
@@ -451,6 +470,7 @@ people:
     role: senior
     bio: Basketball, Football, Soccer, Lacrosse.
     github: null
+    linkedin: https://www.linkedin.com/in/elanroth/
     programs:
       - seminar 2024
 
@@ -459,6 +479,7 @@ people:
     role: senior
     bio: Football, Soccer, Basketball, Baseball, Tennis.
     github: null
+    linkedin: https://www.linkedin.com/in/juan-ignacio-tejera/
     programs:
       - seminar 2024
 
@@ -467,6 +488,7 @@ people:
     role: senior
     bio: Baseball, Football.
     github: null
+    linkedin: https://www.linkedin.com/in/jake-federman/
     programs:
       - seminar 2024
 
@@ -474,7 +496,8 @@ people:
     email: kaishu@wharton.upenn.edu
     role: 5y PhD
     bio: Soccer, Baseball.
-    github: null
+    github: kaishumason
+    linkedin: https://www.linkedin.com/in/kaishu-mason-b45ba9158/
     programs:
       - seminar 2024
 
@@ -483,14 +506,16 @@ people:
     role: junior
     bio: Baseball, Softball.
     github: null
+    linkedin: https://www.linkedin.com/in/kcomer/
     programs:
       - seminar 2024
 
   - name: Kyle Sullivan
     email: kyle.sullivan27@gmail.com
-    role: senior
+    role: 2y Masters
     bio: ""
     github: null
+    linkedin: https://www.linkedin.com/in/kylemsullivan/
     programs:
       - seminar 2024
 
@@ -499,6 +524,7 @@ people:
     role: junior
     bio: Basketball, Football.
     github: null
+    linkedin: https://www.linkedin.com/in/nathanwaldbaum/
     projects: [nba-lineups]
     programs:
       - seminar 2024

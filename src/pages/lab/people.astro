@@ -10,7 +10,7 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'lab');
 
 <Layout title="People" description="Instructors and members by year.">
   <Nav />
-  <main class="mx-auto max-w-5xl px-6 py-16">
+  <main class="mx-auto max-w-5xl px-4 md:px-6 py-10 md:py-16">
     <h1 class="text-3xl font-bold text-penn-blue">People</h1>
     <p class="mt-2 text-stone-600">Instructors and members by year.</p>
 
@@ -19,13 +19,13 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'lab');
         const yearLabel = String(config.year);
         return (
           <details class="group rounded-xl border border-stone-200 bg-white" {...(i === 0 ? { open: true } : {})}>
-            <summary class="flex cursor-pointer items-center justify-between px-6 py-4 text-xl font-semibold text-penn-blue list-none [&::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer items-center justify-between px-4 md:px-6 py-4 text-xl font-semibold text-penn-blue list-none [&::-webkit-details-marker]:hidden">
               {yearLabel}
               <svg class="h-5 w-5 shrink-0 text-stone-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
             </summary>
-            <div class="border-t border-stone-200 px-6 py-6">
+            <div class="border-t border-stone-200 px-4 md:px-6 py-6">
               {config.instructors && config.instructors.length > 0 && (
                 <div class="mb-8">
                   <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Instructors</h3>

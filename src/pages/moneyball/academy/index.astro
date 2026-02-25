@@ -9,7 +9,7 @@ if (!data) throw new Error('Academy index not found');
 ---
 <Layout title={data.title} description="Moneyball Academy – R programming and data analysis.">
   <Nav />
-  <main class="mx-auto max-w-4xl px-6 py-12">
+  <main class="mx-auto max-w-4xl px-4 md:px-6 py-10 md:py-12">
     <AcademyContent content={data.content} />
   </main>
 </Layout>

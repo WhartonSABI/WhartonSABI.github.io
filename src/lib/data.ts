@@ -41,7 +41,11 @@ export interface ReposConfig {
 export function loadRepos(): ReposConfig {
   const file = path.join(configDir, 'repos.yaml');
   const content = fs.readFileSync(file, 'utf8');
-  return yaml.load(content) as ReposConfig;
+  const config = yaml.load(content) as ReposConfig;
+  for (const program of [config.seminar, config.lab, config.moneyball]) {
+    program.projects.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+  }
+  return config;
 }
 
 export interface Person {
@@ -173,11 +177,11 @@ export function loadPeople(): PeopleConfig[] {
 }
 
 const PROJECT_LINKS: Record<string, { href: string; display: string }> = {
-  curlers: { href: '/seminar/projects', display: 'Curlers' },
+  curlers: { href: '/seminar/projects', display: 'Curling Power Play' },
   'rugby-ep': { href: '/seminar/projects', display: 'Rugby Expected Points' },
-  halo2026: { href: '/seminar/projects', display: 'Halo 2026' },
-  'nba-lineups': { href: '/lab/projects', display: 'NBA Lineups' },
-  'nfl-elo': { href: '/lab/projects', display: 'NFL Elo' },
+  halo2026: { href: '/seminar/projects', display: 'Hockey Forechecking' },
+  'nba-lineups': { href: '/lab/projects', display: 'NBA Player Acquisition' },
+  'nfl-elo': { href: '/lab/projects', display: 'Pass Rush Elo' },
   'server-quality': { href: '/lab/projects', display: 'Server Quality' },
   'xg-plus': { href: '/lab/projects', display: 'xG+' },
   'nba-draft-lottery': { href: '/moneyball/projects', display: 'NBA Draft Lottery' },

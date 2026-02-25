@@ -119,13 +119,14 @@ function programIsActive(slug: string): boolean {
 ---
 
 <header class="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-  <nav class="mx-auto max-w-5xl px-6 py-4 flex items-center gap-8">
-    <a href="/" class="flex items-center gap-2 shrink-0">
-      <img src="/images/wharton-logo.png" alt="" class="h-8 w-auto" />
-      <span class="text-xl font-semibold text-penn-blue tracking-tight">WSABI</span>
-    </a>
-
-    <div class="flex gap-1">
+  <nav class="mx-auto max-w-5xl px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-6 md:gap-8">
+      <a href="/" class="flex items-center gap-2 shrink-0">
+        <img src="/images/wharton-logo.png" alt="" class="h-8 w-auto" />
+        <span class="text-xl font-semibold text-penn-blue tracking-tight">WSABI</span>
+      </a>
+      <!-- Desktop nav (hidden on mobile) -->
+      <div class="hidden md:flex items-center gap-1">
       {programs.map((program) => (
         <div class="relative group">
           <button
@@ -217,6 +218,134 @@ function programIsActive(slug: string): boolean {
           </div>
         </div>
       ))}
+      </div>
     </div>
+
+    <!-- Mobile hamburger -->
+    <button
+      type="button"
+      id="nav-mobile-toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="nav-mobile-menu"
+      class="md:hidden p-2 rounded-lg text-penn-blue hover:bg-penn-blue-light transition-colors"
+    >
+      <svg class="h-6 w-6 [.nav-open_&]:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+      <svg class="h-6 w-6 hidden [.nav-open_&]:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
   </nav>
+
+  <!-- Mobile menu overlay -->
+  <div
+    id="nav-mobile-menu"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Navigation menu"
+    class="fixed inset-0 top-[57px] z-40 md:hidden bg-white border-t border-stone-200 opacity-0 invisible transition-all duration-200 [.nav-open_&]:opacity-100 [.nav-open_&]:visible overscroll-contain overflow-y-auto"
+  >
+    <div class="mx-auto max-w-5xl px-4 py-4 space-y-1">
+      {programs.map((program) => (
+        <div class="border-b border-stone-100 last:border-0 pb-3 last:pb-0">
+          <p class="text-xs font-semibold uppercase tracking-wider text-stone-500 pt-2 first:pt-0 mb-2">{program.label}</p>
+          <div class="space-y-0.5">
+            {program.items.map((item) =>
+              'menu' in item && item.menu ? (
+                <details class="group/details">
+                  <summary
+                    class:list={[
+                      'flex items-center justify-between list-none cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium transition-colors',
+                      isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                    ]}
+                  >
+                    {item.label}
+                    <svg class="h-4 w-4 transition-transform group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                  </summary>
+                  <div class="pl-4 mt-1 space-y-0.5">
+                    {item.menu.map((sub: { href?: string; label: string; menu?: { href: string; label: string }[] }) =>
+                      sub.menu ? (
+                        <details class="group/sub">
+                          <summary
+                            class:list={[
+                              'flex items-center justify-between list-none cursor-pointer py-2 px-3 rounded-lg text-sm transition-colors',
+                              isItemActive(sub) ? 'text-penn-red bg-penn-red-light/70' : 'text-penn-blue hover:bg-penn-blue-light'
+                            ]}
+                          >
+                            {sub.label}
+                            <svg class="h-3.5 w-3.5 transition-transform group-open/sub:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                          </summary>
+                          <div class="pl-2 mt-0.5 space-y-0.5">
+                            {sub.menu.map((leaf: { href: string; label: string }) => (
+                              <a
+                                href={leaf.href}
+                                class:list={[
+                                  'block py-2 px-3 rounded-lg text-sm transition-colors',
+                                  isActive(leaf.href) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                                ]}
+                              >
+                                {leaf.label}
+                              </a>
+                            ))}
+                          </div>
+                        </details>
+                      ) : (
+                        <a
+                          href={sub.href!}
+                          class:list={[
+                            'block py-2 px-3 rounded-lg text-sm transition-colors',
+                            isActive(sub.href!) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                          ]}
+                        >
+                          {sub.label}
+                        </a>
+                      )
+                    )}
+                  </div>
+                </details>
+              ) : (
+                <a
+                  href={item.href}
+                  class:list={[
+                    'block py-2.5 px-3 rounded-lg text-sm font-medium transition-colors',
+                    isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                  ]}
+                >
+                  {item.label}
+                </a>
+              )
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
 </header>
+
+<script>
+  const toggle = document.getElementById('nav-mobile-toggle');
+  const menu = document.getElementById('nav-mobile-menu');
+  if (toggle && menu) {
+    const open = () => {
+      document.documentElement.classList.add('nav-open');
+      document.body.style.overflow = 'hidden';
+      toggle?.setAttribute('aria-expanded', 'true');
+      toggle?.setAttribute('aria-label', 'Close menu');
+    };
+    const close = () => {
+      document.documentElement.classList.remove('nav-open');
+      document.body.style.overflow = '';
+      toggle?.setAttribute('aria-expanded', 'false');
+      toggle?.setAttribute('aria-label', 'Open menu');
+    };
+    toggle.addEventListener('click', () => document.documentElement.classList.contains('nav-open') ? close() : open());
+    menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  }
+</script>
