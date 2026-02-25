@@ -9,7 +9,7 @@ export default defineConfig({
   site: 'https://whartonsabi.github.io',
   integrations: [
     favicons({
-      input: 'public/images/wharton-logo.png',
+      input: 'public/images/favicon-source.png',
     }),
     sitemap({
       lastmod: new Date(),
