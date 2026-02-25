@@ -8,6 +8,14 @@
   --color-penn-blue: #011F5B;
   --color-penn-blue-muted: #2d4a8c;
   --color-penn-blue-light: #e8eef8;
+  /* Warm neutrals (cream-tinted) */
+  --color-warm-50: #faf8f5;
+  --color-warm-100: #f5f2eb;
+  --color-warm-200: #e8e4dc;
+  --color-warm-300: #d9d4c9;
+  --color-warm-400: #b5ae9f;
+  --color-warm-500: #7d7668;
+  --color-warm-600: #5c564c;
 }
 
 body {

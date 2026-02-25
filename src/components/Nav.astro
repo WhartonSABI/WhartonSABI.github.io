@@ -118,7 +118,7 @@ function programIsActive(slug: string): boolean {
 }
 ---
 
-<header class="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+<header class="border-b border-warm-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
   <nav class="mx-auto max-w-5xl px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4">
     <div class="flex items-center gap-6 md:gap-8">
       <a href="/" class="flex items-center gap-2 shrink-0">
@@ -142,7 +142,7 @@ function programIsActive(slug: string): boolean {
             </svg>
           </button>
           <div class="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-            <div class="bg-white rounded-lg shadow-lg border border-stone-200 py-1 w-fit min-w-[100px]">
+            <div class="bg-white rounded-lg shadow-lg border border-warm-200 py-1 w-fit min-w-[100px]">
               <div class="py-1">
                 {program.items.map((item) =>
                   'menu' in item && item.menu ? (
@@ -157,7 +157,7 @@ function programIsActive(slug: string): boolean {
                         <svg class="h-3 w-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                       </span>
                       <div class="absolute left-full top-0 -ml-1 opacity-0 invisible group-hover/submenu:opacity-100 group-hover/submenu:visible transition-all z-10">
-                        <div class="bg-white rounded-lg shadow-lg border border-stone-200 py-1 min-w-[160px]">
+                        <div class="bg-white rounded-lg shadow-lg border border-warm-200 py-1 min-w-[160px]">
                           {item.menu.map((sub: { href?: string; label: string; menu?: { href: string; label: string }[] }) =>
                             sub.menu ? (
                               <div class="relative group/subsub">
@@ -171,7 +171,7 @@ function programIsActive(slug: string): boolean {
                                   <svg class="h-3 w-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                 </span>
                                 <div class="absolute left-full top-0 -ml-1 opacity-0 invisible group-hover/subsub:opacity-100 group-hover/subsub:visible transition-all z-20">
-                                  <div class="bg-white rounded-lg shadow-lg border border-stone-200 py-1 min-w-[180px]">
+                                  <div class="bg-white rounded-lg shadow-lg border border-warm-200 py-1 min-w-[180px]">
                                     {sub.menu.map((leaf: { href: string; label: string }) => (
                                       <a
                                         href={leaf.href}
@@ -246,12 +246,12 @@ function programIsActive(slug: string): boolean {
   role="dialog"
   aria-modal="true"
   aria-label="Navigation menu"
-  class="fixed inset-0 top-[57px] z-[60] md:hidden bg-white border-t border-stone-200 opacity-0 invisible transition-all duration-200 [.nav-open_&]:opacity-100 [.nav-open_&]:visible overscroll-contain overflow-y-auto"
+  class="fixed inset-0 top-[57px] z-[60] md:hidden bg-white border-t border-warm-200 opacity-0 invisible transition-all duration-200 [.nav-open_&]:opacity-100 [.nav-open_&]:visible overscroll-contain overflow-y-auto"
 >
     <div class="mx-auto max-w-5xl px-4 py-4 space-y-1">
       {programs.map((program) => (
-        <div class="border-b border-stone-100 last:border-0 pb-3 last:pb-0">
-          <p class="text-xs font-semibold uppercase tracking-wider text-stone-500 pt-2 first:pt-0 mb-2">{program.label}</p>
+        <div class="border-b border-warm-100 last:border-0 pb-3 last:pb-0">
+          <p class="text-xs font-semibold uppercase tracking-wider text-warm-500 pt-2 first:pt-0 mb-2">{program.label}</p>
           <div class="space-y-0.5">
             {program.items.map((item) =>
               'menu' in item && item.menu ? (
