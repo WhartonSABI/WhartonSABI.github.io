@@ -1,7 +1,7 @@
 # Central roster. Add someone to a program by adding e.g. "seminar 2024" or "lab 2025 instructor".
 # Shorthand: "program year" or "program year instructor|organizer". Role override: use object form.
 people:
-  - name: Jonathan Pipping-Gamón
+  - name: Jonathan Pipping
     email: jpipping@wharton.upenn.edu
     role: 2y PhD
     bio: Football, Soccer, Formula 1, Baseball.
