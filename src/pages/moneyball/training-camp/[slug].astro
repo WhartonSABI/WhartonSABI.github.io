@@ -16,7 +16,7 @@ if (!slug) return Astro.redirect('/moneyball/training-camp/people');
 const data = loadTcPage(slug);
 if (!data) return Astro.redirect('/moneyball/training-camp/people');
 ---
-<Layout title={`${data.title} | Training Camp`} description="Moneyball Training Camp – R programming and data analysis.">
+<Layout title={`${data.title} | Moneyball Training Camp`} description="Moneyball Training Camp – R programming and data analysis.">
   <Nav />
   <main class="mx-auto max-w-4xl px-4 md:px-6 py-10 md:py-12">
     <AcademyContent content={data.content} />
