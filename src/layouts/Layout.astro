@@ -7,19 +7,36 @@ interface Props {
 }
 
 const { title, description = 'People, projects, and programs from the Wharton Sports Analytics and Business Initiative.' } = Astro.props;
+
+const site = 'https://whartonsabi.github.io';
+const displayTitle = title === 'WSABI' || title === 'Wharton Sports Analytics Research Hub' || !title ? title || 'WSABI' : `${title} | WSABI`;
+const ogImage = `${site}/images/wharton-logo.png`;
+const pageUrl = new URL(Astro.url.pathname, site).href;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={displayTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="WSABI" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={displayTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <title>{title === 'WSABI' || title === 'Wharton Sports Analytics Research Hub' || !title ? title || 'WSABI' : `${title} | WSABI`}</title>
+    <title>{displayTitle}</title>
   </head>
   <body class="bg-warm-50 text-penn-blue antialiased">
     <slot />
