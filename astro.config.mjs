@@ -11,15 +11,7 @@ export default defineConfig({
     favicons({
       input: 'public/images/favicon-source.png',
     }),
-    sitemap({
-      lastmod: new Date(),
-      namespaces: {
-        news: false,
-        xhtml: false,
-        image: false,
-        video: false,
-      },
-    }),
+    sitemap(),
   ],
   vite: {
     plugins: [tailwindcss()]
