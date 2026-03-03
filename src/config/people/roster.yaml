@@ -70,7 +70,7 @@ people:
       - seminar 2025
       - program: moneyball
         year: 2025
-        type: leadership
+        type: head-ta
       - program: seminar
         year: 2024
         role: sophomore
@@ -162,7 +162,7 @@ people:
       - seminar 2025
       - program: moneyball
         year: 2025
-        type: leadership
+        type: head-ta
       - program: seminar
         year: 2024
         role: sophomore
@@ -266,7 +266,7 @@ people:
     programs:
       - lab 2025
       - seminar 2025
-      - moneyball 2025 instructor
+      - moneyball 2025 head-ta
 
   # Seminar-only 2025
   - name: Adam Krasilovsky

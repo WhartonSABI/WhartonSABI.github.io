@@ -52,6 +52,32 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'moneyball');
                   </div>
                 </div>
               )}
+              {config.headTAs && config.headTAs.length > 0 && (
+                <div class="mb-8">
+                  <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Head Teaching Assistants</h3>
+                  <div class="grid gap-4 sm:grid-cols-2">
+                    {config.headTAs.map((person) => {
+                      const slugs = person.projects ?? (person.project ? [person.project] : []);
+                      const projectLinks = slugs
+                        .map((s) => getProjectLink(s))
+                        .filter(Boolean) as { href: string; display: string }[];
+                      projectLinks.sort((a, b) => a.display.localeCompare(b.display));
+                      return (
+                        <PersonCard
+                          name={person.name}
+                          role={person.role}
+                          bio={person.bio}
+                          image={person.image}
+                          email={person.email}
+                          github={person.github}
+                          linkedin={person.linkedin}
+                          projectLinks={projectLinks}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               {config.leadership && config.leadership.length > 0 && (
                 <div class="mb-8">
                   <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Teaching Assistants</h3>
@@ -78,7 +104,7 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'moneyball');
                   </div>
                 </div>
               )}
-              {(config.instructors?.length || config.leadership?.length) && config.people.length > 0 && (
+              {(config.instructors?.length || config.headTAs?.length || config.leadership?.length) && config.people.length > 0 && (
                 <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">People</h3>
               )}
               <div class="grid gap-4 sm:grid-cols-2">

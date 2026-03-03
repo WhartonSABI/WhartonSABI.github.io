@@ -66,14 +66,15 @@ export interface PeopleConfig {
   year: number;
   program: string;
   instructors?: Person[];  // optional – shown first per year
-  leadership?: Person[];   // optional – e.g. Head TAs, shown after instructors
+  headTAs?: Person[];      // optional – Head Teaching Assistants, shown after instructors
+  leadership?: Person[];   // optional – Teaching Assistants, shown after headTAs
   people: Person[];
 }
 
 interface ProgramEntry {
   program: string;
   year: number;
-  type?: 'instructor' | 'organizer' | 'leadership';
+  type?: 'instructor' | 'organizer' | 'head-ta' | 'leadership';
   role?: string;
 }
 
@@ -100,7 +101,7 @@ function parseProgramEntry(entry: string | ProgramEntry): ProgramEntry {
   if (parts.length < 2) throw new Error(`Invalid program entry: ${entry}`);
   const program = parts[0];
   const year = parseInt(parts[1], 10);
-  const type = parts[2] === 'instructor' || parts[2] === 'organizer' || parts[2] === 'leadership' ? parts[2] : undefined;
+  const type = parts[2] === 'instructor' || parts[2] === 'organizer' || parts[2] === 'head-ta' || parts[2] === 'leadership' ? parts[2] : undefined;
   return { program, year, type };
 }
 
@@ -157,6 +158,9 @@ export function loadPeople(): PeopleConfig[] {
       if (parsed.type === 'instructor' || parsed.type === 'organizer') {
         config.instructors = config.instructors || [];
         config.instructors.push(person);
+      } else if (parsed.type === 'head-ta') {
+        config.headTAs = config.headTAs || [];
+        config.headTAs.push(person);
       } else if (parsed.type === 'leadership') {
         config.leadership = config.leadership || [];
         config.leadership.push(person);
@@ -168,6 +172,7 @@ export function loadPeople(): PeopleConfig[] {
 
   for (const config of configMap.values()) {
     if (config.instructors) sortPeopleByFirstName(config.instructors);
+    if (config.headTAs) sortPeopleByFirstName(config.headTAs);
     if (config.leadership) sortPeopleByFirstName(config.leadership);
     sortPeopleByFirstName(config.people);
   }
@@ -213,6 +218,7 @@ export function getMemberGithubUsernames(): Set<string> {
       if (p.github) usernames.add(String(p.github).toLowerCase());
     };
     c.instructors?.forEach(add);
+    c.headTAs?.forEach(add);
     c.leadership?.forEach(add);
     c.people.forEach(add);
   }
