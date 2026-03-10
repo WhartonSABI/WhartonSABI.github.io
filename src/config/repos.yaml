@@ -14,6 +14,9 @@ seminar:
         - label: CSAS 2026 Report
           path: writeup/report.pdf
           icon: report
+        - label: Interactive App
+          url: https://whartonsabi.github.io/curlers/
+          icon: app
     - name: Rugby Expected Points
       repo: rugby-ep
       highlights: [In Review at JQAS]

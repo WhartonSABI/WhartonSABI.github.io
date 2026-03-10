@@ -6,7 +6,7 @@ interface Props {
   repo: string;
   preprint?: string;
   highlights?: string[];
-  deliverables?: Array<{ label: string; path?: string; url?: string; icon?: 'article' | 'report' | 'presentation' }>;
+  deliverables?: Array<{ label: string; path?: string; url?: string; icon?: 'article' | 'report' | 'presentation' | 'app' }>;
 }
 
 const { name, description, org, repo, preprint, highlights = [], deliverables = [] } = Astro.props;
@@ -53,7 +53,9 @@ const afterCode = preprint ? deliverables : deliverables.slice(1);
               rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 rounded-lg bg-penn-red-light px-3 py-1.5 text-sm font-medium text-penn-red transition-colors hover:bg-penn-red hover:text-white"
             >
-              {d.icon === 'report' ? (
+              {d.icon === 'app' ? (
+                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+              ) : d.icon === 'report' ? (
                 <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 18v-3"/><path d="M12 18v-5"/><path d="M16 18v-7"/></svg>
               ) : d.icon === 'presentation' ? (
                 <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v14H3z"/><path d="M6 8h12"/><path d="M6 11h10"/><path d="M6 14h8"/></svg>
@@ -81,7 +83,9 @@ const afterCode = preprint ? deliverables : deliverables.slice(1);
           rel="noopener noreferrer"
           class="inline-flex items-center gap-1.5 rounded-lg bg-penn-red-light px-3 py-1.5 text-sm font-medium text-penn-red transition-colors hover:bg-penn-red hover:text-white"
         >
-          {d.icon === 'report' ? (
+          {d.icon === 'app' ? (
+            <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+          ) : d.icon === 'report' ? (
             <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 18v-3"/><path d="M12 18v-5"/><path d="M16 18v-7"/></svg>
           ) : d.icon === 'presentation' ? (
             <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 4h18v14H3z"/><path d="M6 8h12"/><path d="M6 11h10"/><path d="M6 14h8"/></svg>
