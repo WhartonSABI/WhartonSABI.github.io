@@ -18,7 +18,7 @@ seminar:
           path: writeup/report.pdf
           icon: report
         - label: Interactive App
-          url: https://whartonsabi.github.io/curlers/
+          url: /curlers/
           icon: app
     - name: Rugby Expected Points
       repo: rugby-ep

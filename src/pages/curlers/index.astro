@@ -1,0 +1,165 @@
+---
+import LayoutCurlers from '../../layouts/LayoutCurlers.astro';
+---
+<LayoutCurlers>
+  <header>
+    <h1>Power Play Recommender</h1>
+    <p>Wharton Sports Analytics &bull; UPenn</p>
+  </header>
+
+  <main>
+    <div id="loading">Loading model data&hellip;</div>
+
+    <div id="app" style="display:none">
+      <div class="desktop-layout">
+
+        <div class="controls-col">
+          <div class="card">
+            <div class="card-title">End</div>
+            <div class="seg-group" id="end-group"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Score Differential (You &minus; Opponent)</div>
+            <div class="stepper">
+              <button class="stepper-btn" id="sd-minus">&minus;</button>
+              <div class="stepper-val" id="sd-val">0</div>
+              <button class="stepper-btn" id="sd-plus">+</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="toggle-row">
+              <span class="toggle-label">Opponent PP available</span>
+              <button class="toggle on" id="opp-pp" aria-label="Toggle opponent PP"></button>
+            </div>
+            <div class="elo-section">
+              <div class="card-title" style="margin-top:0.4rem">Team strength (Elo gap)</div>
+              <div class="elo-row">
+                <span style="font-size:0.7rem;color:var(--muted)">Weaker</span>
+                <input type="range" class="elo-slider" id="elo" min="-200" max="200" step="10" value="0">
+                <span style="font-size:0.7rem;color:var(--muted)">Stronger</span>
+                <span class="elo-val" id="elo-val">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-col">
+          <div class="result-card" id="result-card">
+            <div class="rec-label">Recommendation</div>
+            <div class="rec-text" id="rec-text">&mdash;</div>
+            <div class="delta-row" id="delta-row">&nbsp;</div>
+            <div class="wp-bars">
+              <div class="wp-row">
+                <span class="wp-label">Use</span>
+                <div class="wp-track">
+                  <div class="wp-fill use-bar" id="bar-use" style="width:0%">
+                    <span class="wp-pct" id="pct-use"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="wp-row">
+                <span class="wp-label">Save</span>
+                <div class="wp-track">
+                  <div class="wp-fill save-bar" id="bar-save" style="width:0%">
+                    <span class="wp-pct" id="pct-save"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="https://github.com/WhartonSABI/curlers">github.com/WhartonSABI/curlers</a><br>
+      Elder &bull; Hossain &bull; Pipping &mdash; CSAS 2026 Data Challenge
+    </div>
+  </main>
+
+  <script>
+    let DATA = null;
+
+    let st = { end: 1, sd: 0, oppPP: 1, elo: 0 };
+
+    const endGroup = document.getElementById("end-group");
+    for (let e = 1; e <= 8; e++) {
+      const btn = document.createElement("button");
+      btn.className = "seg-btn" + (e === 1 ? " active" : "");
+      btn.textContent = e;
+      btn.dataset.val = e;
+      btn.addEventListener("click", () => {
+        st.end = e;
+        endGroup.querySelectorAll(".seg-btn").forEach(b => b.classList.toggle("active", +b.dataset.val === e));
+        update();
+      });
+      endGroup.appendChild(btn);
+    }
+
+    const sdVal = document.getElementById("sd-val");
+    document.getElementById("sd-minus").addEventListener("click", () => {
+      if (st.sd > -5) { st.sd--; sdVal.textContent = st.sd > 0 ? "+" + st.sd : st.sd; update(); }
+    });
+    document.getElementById("sd-plus").addEventListener("click", () => {
+      if (st.sd < 5) { st.sd++; sdVal.textContent = st.sd > 0 ? "+" + st.sd : st.sd; update(); }
+    });
+
+    const oppToggle = document.getElementById("opp-pp");
+    oppToggle.addEventListener("click", () => {
+      st.oppPP = st.oppPP ? 0 : 1;
+      oppToggle.classList.toggle("on", !!st.oppPP);
+      update();
+    });
+
+    const eloSlider = document.getElementById("elo");
+    const eloVal = document.getElementById("elo-val");
+    eloSlider.addEventListener("input", () => {
+      st.elo = +eloSlider.value;
+      eloVal.textContent = st.elo > 0 ? "+" + st.elo : st.elo;
+      update();
+    });
+
+    function update() {
+      if (!DATA) return;
+      const key = `${st.end}|${st.sd}|${st.oppPP}|${st.elo}`;
+      const entry = DATA[key];
+      if (!entry) return;
+
+      const wpUse = entry.u;
+      const wpSave = entry.s;
+      const delta = wpUse - wpSave;
+      const useNow = delta > 0;
+
+      const card = document.getElementById("result-card");
+      card.className = "result-card " + (useNow ? "use" : "save");
+
+      const recText = document.getElementById("rec-text");
+      recText.textContent = useNow ? "USE PP" : "SAVE PP";
+      recText.className = "rec-text " + (useNow ? "use" : "save");
+
+      const sign = delta > 0 ? "+" : "";
+      document.getElementById("delta-row").innerHTML =
+        `<span style="color:${useNow ? "var(--green)" : "var(--red)"}">${sign}${(delta * 100).toFixed(1)} pp</span> win probability`;
+
+      document.getElementById("bar-use").style.width = (wpUse * 100).toFixed(1) + "%";
+      document.getElementById("pct-use").textContent = (wpUse * 100).toFixed(1) + "%";
+      document.getElementById("bar-save").style.width = (wpSave * 100).toFixed(1) + "%";
+      document.getElementById("pct-save").textContent = (wpSave * 100).toFixed(1) + "%";
+    }
+
+    fetch("data.json")
+      .then(r => r.json())
+      .then(d => {
+        DATA = d;
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        update();
+      })
+      .catch(() => {
+        document.getElementById("loading").textContent = "Failed to load model data.";
+      });
+  </script>
+</LayoutCurlers>
