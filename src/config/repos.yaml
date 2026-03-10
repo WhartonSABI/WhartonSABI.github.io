@@ -11,12 +11,12 @@ seminar:
       deliverables:
         - label: Article
           url: https://wsb.wharton.upenn.edu/pulling-the-power-play-a-win-probability-strategy-for-mixed-doubles-curling/
-        - label: CSAS 2026 Report
-          path: writeup/report.pdf
-          icon: report
-        - label: CSAS 2026 Poster
+        - label: CSAS 2026
           path: poster/poster.pdf
           icon: presentation
+        - label: Project Report
+          path: writeup/report.pdf
+          icon: report
         - label: Interactive App
           url: https://whartonsabi.github.io/curlers/
           icon: app
@@ -29,7 +29,7 @@ seminar:
       repo: halo2026
       description: Introduces a novel player-level forechecking metric for hockey. Developed for the 2026 HALO Hackathon.
       deliverables:
-        - label: HALO 2026 Report
+        - label: Project Report
           path: writeup/main.pdf
           icon: report
 
