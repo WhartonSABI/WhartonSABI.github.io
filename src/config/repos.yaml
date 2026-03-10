@@ -14,6 +14,9 @@ seminar:
         - label: CSAS 2026 Report
           path: writeup/report.pdf
           icon: report
+        - label: CSAS 2026 Poster
+          path: poster/poster.pdf
+          icon: presentation
         - label: Interactive App
           url: https://whartonsabi.github.io/curlers/
           icon: app
