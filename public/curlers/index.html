@@ -32,7 +32,6 @@ header {
 }
 header h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
 header p { font-size: 0.75rem; opacity: 0.7; margin-top: 0.2rem; }
-.header-subtitle { display: none; }
 main { max-width: 420px; margin: 0 auto; padding: 0.75rem; }
 
 .desktop-layout { display: contents; }
@@ -231,17 +230,6 @@ main { max-width: 420px; margin: 0 auto; padding: 0.75rem; }
   color: white;
 }
 
-/* About section — desktop only */
-.about-card { display: none; }
-.about-card p {
-  font-size: 0.85rem;
-  line-height: 1.55;
-  color: var(--muted);
-  margin-bottom: 0.5rem;
-}
-.about-card p:last-child { margin-bottom: 0; }
-.about-card strong { color: var(--text); }
-
 .footer {
   text-align: center;
   padding: 0.8rem;
@@ -259,56 +247,50 @@ main { max-width: 420px; margin: 0 auto; padding: 0.75rem; }
 
 /* ── Desktop ── */
 @media (min-width: 720px) {
-  header { padding: 1.6rem 2rem 1.4rem; }
-  header h1 { font-size: 1.5rem; }
-  header p { font-size: 0.85rem; }
-  .header-subtitle {
-    display: block;
-    font-size: 0.8rem;
-    opacity: 0.6;
-    margin-top: 0.35rem;
-  }
+  header { padding: 1.8rem 2rem 1.6rem; }
+  header h1 { font-size: 1.6rem; }
+  header p { font-size: 0.9rem; }
 
   main {
-    max-width: 860px;
+    max-width: 960px;
     padding: 1.5rem 2rem;
   }
 
   .desktop-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 1.25rem;
     align-items: start;
   }
 
-  .controls-col { display: flex; flex-direction: column; gap: 0.6rem; }
+  .controls-col { display: flex; flex-direction: column; gap: 0.75rem; }
   .controls-col .card { margin-bottom: 0; }
-  .result-col { display: flex; flex-direction: column; gap: 0.6rem; }
+  .result-col { display: flex; flex-direction: column; gap: 0.75rem; }
   .result-col .result-card { margin-bottom: 0; }
 
-  .card { padding: 1.25rem; border-radius: 14px; }
-  .card-title { font-size: 0.75rem; }
-  .seg-btn { padding: 0.65rem 0; font-size: 1rem; border-radius: 10px; }
-  .stepper-val { font-size: 2.2rem; }
-  .toggle-label { font-size: 0.95rem; }
+  .card { padding: 1.5rem; border-radius: 14px; }
+  .card-title { font-size: 0.8rem; margin-bottom: 0.75rem; }
+  .seg-btn { padding: 0.75rem 0; font-size: 1.1rem; border-radius: 10px; }
+  .stepper-btn { width: 52px; height: 52px; font-size: 1.5rem; }
+  .stepper-val { font-size: 2.6rem; }
+  .toggle-label { font-size: 1rem; }
+  .toggle { width: 56px; height: 32px; }
+  .toggle::after { width: 26px; height: 26px; }
+  .toggle.on::after { transform: translateX(24px); }
 
   .result-card {
-    padding: 2rem 1.5rem;
+    padding: 2.5rem 2rem;
     border-radius: 16px;
+    border-width: 3px;
   }
-  .rec-text { font-size: 2.4rem; }
-  .delta-row { font-size: 1.2rem; }
-  .wp-track { height: 28px; border-radius: 8px; }
-  .wp-label { font-size: 0.85rem; width: 3.5rem; }
-  .wp-pct { font-size: 0.8rem; }
-
-  .about-card {
-    display: block;
-    background: var(--card);
-    border-radius: 14px;
-    padding: 1.25rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
+  .rec-label { font-size: 0.8rem; }
+  .rec-text { font-size: 3rem; }
+  .delta-row { font-size: 1.3rem; margin-top: 0.4rem; }
+  .wp-bars { margin-top: 1.2rem; }
+  .wp-row { margin-bottom: 0.6rem; }
+  .wp-track { height: 32px; border-radius: 8px; }
+  .wp-label { font-size: 0.9rem; width: 3.5rem; }
+  .wp-pct { font-size: 0.85rem; }
 
   .footer { font-size: 0.75rem; padding: 1.2rem; }
 }
@@ -319,7 +301,6 @@ main { max-width: 420px; margin: 0 auto; padding: 0.75rem; }
 <header>
   <h1>Power Play Recommender</h1>
   <p>Wharton Sports Analytics &bull; UPenn</p>
-  <p class="header-subtitle">When should you use your Power Play in mixed doubles curling?</p>
 </header>
 
 <main>
@@ -385,12 +366,6 @@ main { max-width: 420px; margin: 0 auto; padding: 0.75rem; }
           </div>
         </div>
 
-        <div class="about-card">
-          <div class="card-title">About</div>
-          <p>Each team gets <strong>one Power Play per game</strong> in mixed doubles curling. It shifts the pre-placed stones to create a scoring lane&mdash;but once used, it&rsquo;s gone.</p>
-          <p>This tool uses a <strong>finite-horizon MDP</strong> solved by backward induction to find the win-probability-optimal moment to deploy it. A distributional XGBoost model estimates end-outcome probabilities from 5,274 end-states across 344 games.</p>
-          <p>Built for the <strong>CSAS 2026 Data Challenge</strong> by Trey Elder, Samen Hossain, and Jonathan Pipping.</p>
-        </div>
       </div>
 
     </div>
