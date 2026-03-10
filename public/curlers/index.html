@@ -329,13 +329,13 @@ main { max-width: 420px; margin: 0 auto; padding: 0.75rem; }
 let DATA = null;
 
 // State
-let st = { end: 7, sd: 0, oppPP: 1, elo: 0 };
+let st = { end: 1, sd: 0, oppPP: 1, elo: 0 };
 
 // Build end buttons
 const endGroup = document.getElementById("end-group");
 for (let e = 1; e <= 8; e++) {
   const btn = document.createElement("button");
-  btn.className = "seg-btn" + (e === st.end ? " active" : "");
+  btn.className = "seg-btn" + (e === 1 ? " active" : "");
   btn.textContent = e;
   btn.dataset.val = e;
   btn.addEventListener("click", () => {
