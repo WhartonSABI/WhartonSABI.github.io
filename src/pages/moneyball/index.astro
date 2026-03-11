@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import AcademyContent from '../../components/AcademyContent.astro';
+import { loadAcademyPage } from '../../lib/academy';
+
+const data = loadAcademyPage('index');
+if (!data) throw new Error('Moneyball index not found');
+---
+<Layout title="Moneyball Programs" description="Wharton Moneyball Academy and Training Camp – R programming and data analysis.">
+  <Nav />
+  <main class="mx-auto max-w-4xl px-4 md:px-6 py-10 md:py-12">
+    <AcademyContent content={data.content} />
+  </main>
+</Layout>

@@ -17,7 +17,7 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
   redirects: {
-    '/moneyball': '/moneyball/academy',
+    '/moneyball/academy': '/moneyball',
     '/moneyball/people': '/moneyball/academy/people',
     '/moneyball/academy/tc/lecture1': '/moneyball/training-camp/lecture1',
     '/moneyball/academy/tc/lecture2': '/moneyball/training-camp/lecture2',
