@@ -7,6 +7,7 @@ import favicons from 'astro-favicons';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://whartonsabi.github.io',
+  trailingSlash: 'never',
   integrations: [
     favicons({
       input: 'public/images/favicon-source.png',
