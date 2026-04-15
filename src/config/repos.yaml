@@ -11,7 +11,7 @@ seminar:
       deliverables:
         - label: Article
           url: https://wsb.wharton.upenn.edu/pulling-the-power-play-a-win-probability-strategy-for-mixed-doubles-curling/
-        - label: Poster
+        - label: CSAS 2026
           path: poster/poster.pdf
           icon: presentation
         - label: Project Report
