@@ -30,6 +30,9 @@ seminar:
       highlights: [2026 HALO Hackathon Finalist]
       description: Introduces a novel player-level forechecking metric for hockey. Developed for the 2026 HALO Hackathon.
       deliverables:
+        - label: HALO 2026
+          path: writeup/presentation.pdf
+          icon: presentation
         - label: Project Report
           path: writeup/main.pdf
           icon: report
