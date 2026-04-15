@@ -54,16 +54,14 @@ lab:
         - label: CMSAC 2025
           path: presentations/cmsac2025.pdf
           icon: presentation
-    - name: Dynamic NFL Pass Rush Ratings
+    - name: NFL Pass Rush Bradley-Terry
       repo: nfl-elo
-      description: A dynamic rating system for NFL pass rushers and blockers derived from HUDL tracking data.
+      description: Opponent-adjusted ratings for NFL pass rushers and blockers derived from HUDL tracking data.
       highlights: [In Review at JQAS, Presented at NESSIS 2025]
+      preprint: https://arxiv.org/abs/2604.01491
       deliverables:
         - label: NESSIS 2025
           path: results/nflelo.pdf
-          icon: presentation
-        - label: WAIAI Talk
-          path: presentations/waiai.pdf
           icon: presentation
     - name: xG+
       repo: xg-plus
