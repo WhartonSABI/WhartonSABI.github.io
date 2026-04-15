@@ -6,19 +6,19 @@ seminar:
   projects:
     - name: Curling Power Play Optimization
       repo: curlers
-      highlights: [CSAS 2026 Finalist]
+      highlights: [2026 CSAS Data Challenge Winner]
       description: A win-probability framework for power play deployment in mixed-doubles curling. Developed for the 2026 CSAS Data Challenge.
       deliverables:
         - label: Article
           url: https://wsb.wharton.upenn.edu/pulling-the-power-play-a-win-probability-strategy-for-mixed-doubles-curling/
-        - label: CSAS 2026
+        - label: Poster
           path: poster/poster.pdf
           icon: presentation
         - label: Project Report
           path: writeup/report.pdf
           icon: report
         - label: Interactive App
-          url: /curlers/
+          url: /curlers
           icon: app
     - name: Rugby Expected Points
       repo: rugby-ep
@@ -27,6 +27,7 @@ seminar:
       preprint: https://arxiv.org/abs/2512.00312
     - name: "PRESS: A New Forechecking Metric for Hockey"
       repo: halo2026
+      highlights: [2026 HALO Hackathon Finalist]
       description: Introduces a novel player-level forechecking metric for hockey. Developed for the 2026 HALO Hackathon.
       deliverables:
         - label: Project Report
@@ -38,6 +39,7 @@ lab:
   projects:
     - name: Archetypal NBA Player Acquisition
       repo: nba-lineups
+      highlights: [Presented at CMSAC 2023]
       description: An clustering approach to identify NBA player acquisition targets.
       deliverables:
         - label: CMSAC 2023
@@ -46,15 +48,16 @@ lab:
     - name: A Unified Server Quality Metric for Tennis
       repo: server-quality
       description: Constructs a server quality metric from point-by-point data using mixed-effects models.
-      highlights: [In Review at JSA, 2025 CMSAC RRC Winner]
+      highlights: [Published in JSA, 2025 CMSAC RRC Winner]
       preprint: https://arxiv.org/abs/2602.08083
       deliverables:
         - label: CMSAC 2025
           path: presentations/cmsac2025.pdf
           icon: presentation
-    - name: NFL Pass Rush Elo
+    - name: Dynamic NFL Pass Rush Ratings
       repo: nfl-elo
       description: A dynamic rating system for NFL pass rushers and blockers derived from HUDL tracking data.
+      highlights: [In Review at JQAS, Presented at NESSIS 2025]
       deliverables:
         - label: NESSIS 2025
           path: results/nflelo.pdf
@@ -64,7 +67,7 @@ lab:
           icon: presentation
     - name: xG+
       repo: xg-plus
-      highlights: [In Review at JQAS]
+      highlights: [In Review at JQAS, Presented at JSM 2025 & ASIS 2026]
       description: A more complete probabilistic framework for chance creation and goalscoring in soccer.
       preprint: https://arxiv.org/abs/2512.00203
       deliverables:

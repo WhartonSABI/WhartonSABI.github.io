@@ -1,5 +1,7 @@
 ---
 import LayoutCurlers from '../../layouts/LayoutCurlers.astro';
+
+const dataUrl = `${import.meta.env.BASE_URL}curlers/data.json`;
 ---
 <LayoutCurlers>
   <header>
@@ -80,7 +82,7 @@ import LayoutCurlers from '../../layouts/LayoutCurlers.astro';
     </div>
   </main>
 
-  <script>
+  <script define:vars={{ dataUrl }}>
     let DATA = null;
 
     let st = { end: 1, sd: 0, oppPP: 1, elo: 0 };
@@ -150,7 +152,7 @@ import LayoutCurlers from '../../layouts/LayoutCurlers.astro';
       document.getElementById("pct-save").textContent = (wpSave * 100).toFixed(1) + "%";
     }
 
-    fetch("data.json")
+    fetch(dataUrl)
       .then(r => r.json())
       .then(d => {
         DATA = d;
