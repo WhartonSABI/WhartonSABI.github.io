@@ -57,7 +57,7 @@ lab:
         - label: CMSAC 2025
           path: presentations/cmsac2025.pdf
           icon: presentation
-    - name: NFL Pass Rush B-T
+    - name: NFL Pass Rush Ratings
       repo: nfl-elo
       description: Opponent-adjusted ratings for NFL pass rushers and blockers derived from HUDL tracking data.
       highlights: [In Review at JQAS, Presented at NESSIS 2025]

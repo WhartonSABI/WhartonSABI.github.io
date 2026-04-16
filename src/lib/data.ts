@@ -186,7 +186,7 @@ const PROJECT_LINKS: Record<string, { href: string; display: string }> = {
   'rugby-ep': { href: '/seminar/projects', display: 'Rugby Expected Points' },
   halo2026: { href: '/seminar/projects', display: 'Hockey Forechecking' },
   'nba-lineups': { href: '/lab/projects', display: 'NBA Player Acquisition' },
-  'nfl-elo': { href: '/lab/projects', display: 'Pass Rush Elo' },
+  'nfl-elo': { href: '/lab/projects', display: 'Pass Rush Ratings' },
   'server-quality': { href: '/lab/projects', display: 'Server Quality' },
   'xg-plus': { href: '/lab/projects', display: 'xG+' },
   'nba-draft-lottery': { href: '/moneyball/projects', display: 'NBA Draft Lottery' },
