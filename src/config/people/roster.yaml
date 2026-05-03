@@ -81,7 +81,6 @@ people:
     bio: Combat Sports, Tennis.
     github: aiwenli123
     linkedin: https://www.linkedin.com/in/aiwen-li/
-    projects: [server-quality]
     programs:
       - lab 2025
       - seminar 2025
@@ -112,7 +111,6 @@ people:
     linkedin: https://www.linkedin.com/in/christopher-bugliosi/
     programs:
       - lab 2025
-      - seminar 2025
       - program: moneyball
         year: 2025
         type: leadership
@@ -230,7 +228,6 @@ people:
     bio: Rowing, Track & Field.
     github: abalajee
     linkedin: https://www.linkedin.com/in/amrita-balajee-291497286/
-    projects: [server-quality]
     programs:
       - lab 2025
       - seminar 2025
@@ -256,7 +253,7 @@ people:
         year: 2024
         role: 1y Masters
 
-  - name: Victoria Lee
+  - name: Victoria "Mog" Lee
     email: torialee@seas.upenn.edu
     role: senior
     bio: Football.
@@ -276,7 +273,6 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/adamkrasilovsky/
     programs:
-      - seminar 2025
       - seminar 2024
 
   - name: Braden Eberhard
@@ -297,6 +293,42 @@ people:
     programs:
       - seminar 2025
 
+  - name: Amrah Rasheed-Rahji
+    email: amraher@seas.upenn.edu
+    role: freshman
+    bio: Soccer, Formula 1, NASCAR.
+    github: null
+    linkedin: https://www.linkedin.com/in/amrah-rasheed-rahji-ba1391242/
+    programs:
+      - seminar 2025
+
+  - name: Andreea Rusu
+    email: arusu@seas.upenn.edu
+    role: sophomore
+    bio: Soccer, Gymnastics, Volleyball, Skiing.
+    github: andreea-rusu
+    linkedin: https://www.linkedin.com/in/andreea-rusu-0b2665239/
+    programs:
+      - seminar 2025
+
+  - name: Henry Gaudet
+    email: hgaudet@sas.upenn.edu
+    role: sophomore
+    bio: Soccer, Football, Formula 1.
+    github: null
+    linkedin: https://www.linkedin.com/in/henry-gaudet-73a625338/
+    programs:
+      - seminar 2025
+
+  - name: Jacob Glazer
+    email: jacobgla@sas.upenn.edu
+    role: junior
+    bio: Basketball, Football, Lacrosse, Golf.
+    github: null
+    linkedin: https://www.linkedin.com/in/jacob-glazer-9632481a6/
+    programs:
+      - seminar 2025
+
   - name: Javier St. Remy
     email: javierst@sas.upenn.edu
     role: junior
@@ -304,7 +336,6 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/javier-st-remy-068732327/
     programs:
-      - seminar 2025
 
   - name: Kai Wang
     email: kaiwang1@wharton.upenn.edu
@@ -313,7 +344,6 @@ people:
     github: kaiwang22
     linkedin: https://www.linkedin.com/in/kai-wang1/
     programs:
-      - seminar 2025
       - program: seminar
         year: 2024
         role: junior
@@ -345,11 +375,30 @@ people:
     programs:
       - seminar 2025
 
+  - name: Mackenzie Buckner
+    email: bucknerm@sas.upenn.edu
+    role: sophomore
+    bio: Soccer, Lacrosse, Basketball, Cross Country.
+    github: null
+    linkedin: https://www.linkedin.com/in/mackenzie-buckner-070680324/
+    programs:
+      - seminar 2025
+
+  - name: Max Gotuaco
+    email: gotuacom@sas.upenn.edu
+    role: sophomore
+    bio: Basketball, Soccer, Golf, Football.
+    github: maxgotuaco1
+    linkedin: https://www.linkedin.com/in/max-gotuaco-b3424a322/
+    programs:
+      - seminar 2025
+
   - name: Michael Hegarty
     email: hegarty1@wharton.upenn.edu
     role: freshman
     bio: Football, Baseball, Basketball.
     github: null
+    linkedin: https://www.linkedin.com/in/hegarty-michael/
     programs:
       - seminar 2025
 
@@ -394,6 +443,15 @@ people:
     programs:
       - seminar 2025
 
+  - name: Seth Rothbaum
+    email: sethroth@wharton.upenn.edu
+    role: junior
+    bio: Soccer, Hockey.
+    github: null
+    linkedin: https://www.linkedin.com/in/seth-rothbaum/
+    programs:
+      - seminar 2025
+
   - name: Val Tham
     email: yunxint@wharton.upenn.edu
     role: junior
@@ -401,7 +459,6 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/val-tham/
     programs:
-      - seminar 2025
 
   - name: James Duong
     email: duongja@wharton.upenn.edu
@@ -420,7 +477,6 @@ people:
     linkedin: https://www.linkedin.com/in/justin-hughes-wharton/
     projects: [nba-lineups]
     programs:
-      - seminar 2025
       - program: seminar
         year: 2024
         role: junior
@@ -432,7 +488,6 @@ people:
     github: kayvcache
     linkedin: https://www.linkedin.com/in/kavya-venkat/
     programs:
-      - seminar 2025
       - program: seminar
         year: 2024
         role: freshman
@@ -444,7 +499,6 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/timothykong07/
     programs:
-      - seminar 2025
 
   # Seminar-only 2024
   - name: Bruno Basner
