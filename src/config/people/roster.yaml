@@ -329,14 +329,6 @@ people:
     programs:
       - seminar 2025
 
-  - name: Javier St. Remy
-    email: javierst@sas.upenn.edu
-    role: junior
-    bio: Basketball, Baseball, Track & Field.
-    github: null
-    linkedin: https://www.linkedin.com/in/javier-st-remy-068732327/
-    programs:
-
   - name: Kai Wang
     email: kaiwang1@wharton.upenn.edu
     role: senior
@@ -452,14 +444,6 @@ people:
     programs:
       - seminar 2025
 
-  - name: Val Tham
-    email: yunxint@wharton.upenn.edu
-    role: junior
-    bio: Badminton, Sports Betting.
-    github: null
-    linkedin: https://www.linkedin.com/in/val-tham/
-    programs:
-
   - name: James Duong
     email: duongja@wharton.upenn.edu
     role: freshman
@@ -491,14 +475,6 @@ people:
       - program: seminar
         year: 2024
         role: freshman
-
-  - name: Timothy Kong
-    email: kong7@sas.upenn.edu
-    role: sophomore
-    bio: Football, Basketball, Tennis, Formula 1.
-    github: null
-    linkedin: https://www.linkedin.com/in/timothykong07/
-    programs:
 
   # Seminar-only 2024
   - name: Bruno Basner
