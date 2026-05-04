@@ -1,0 +1,447 @@
+---
+import LayoutServerQuality from '../../layouts/LayoutServerQuality.astro';
+
+const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
+---
+
+<LayoutServerQuality>
+  <header class="hero">
+    <h1>NFL Pass Rush Ratings</h1>
+    <p>Interactive player trajectories from our dynamic pass rush rating model.</p>
+  </header>
+
+  <main class="app">
+    <div id="loading">Loading NFL ELO data...</div>
+
+    <div id="app" class="sq-app" style="display:none;">
+      <div class="controls-row">
+        <div class="control-card">
+          <div class="label">Outcome</div>
+          <div class="sq-seg" id="model-seg"></div>
+        </div>
+        <div class="control-card">
+          <div class="label">Role</div>
+          <div class="sq-seg" id="role-seg"></div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <svg id="chart" viewBox="0 0 1020 500" aria-label="NFL ELO chart"></svg>
+        <div class="sq-chart-footnote">Dot size indicates snaps in that game.</div>
+      </div>
+
+      <div class="controls-grid">
+        <div class="panel">
+          <div class="panel-title">Visible Players (<span id="visible-count">0</span>/10)</div>
+          <div class="sq-chip-row" id="selected-chips"></div>
+          <div class="sq-sub-label">Presets</div>
+          <div class="sq-btn-row">
+            <button id="btn-top5" class="sq-btn">Top 5</button>
+            <button id="btn-bottom5" class="sq-btn">Bottom 5</button>
+            <button id="btn-risers" class="sq-btn">Top 5 Climbers</button>
+            <button id="btn-fallers" class="sq-btn">Top 5 Sliders</button>
+            <button id="btn-random5" class="sq-btn">Random 5</button>
+            <button id="btn-clear" class="sq-btn ghost">Clear All</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Add Players</div>
+          <input id="player-search" type="text" placeholder="Search player..." class="search" />
+          <div class="list" id="player-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script define:vars={{ dataUrl }}>
+    const palette = [
+      '#0B3C5D', '#B51F1F', '#1E7A73', '#8A5A00', '#5D3A9B',
+      '#B04670', '#2F5E1D', '#6B2E2E', '#0A6FAE', '#4E4E4E',
+      '#A83A0E', '#1D4A8F',
+    ];
+
+    let DATA = null;
+    const maxLines = 10;
+
+    const state = {
+      model: 'win',
+      role: 'Rusher',
+      selected: new Set(),
+      selectedPreset: 'top5',
+      randomPresetKey: '',
+      search: '',
+    };
+
+    const el = {
+      loading: document.getElementById('loading'),
+      app: document.getElementById('app'),
+      modelSeg: document.getElementById('model-seg'),
+      roleSeg: document.getElementById('role-seg'),
+      chart: document.getElementById('chart'),
+      visibleCount: document.getElementById('visible-count'),
+      selectedChips: document.getElementById('selected-chips'),
+      top5: document.getElementById('btn-top5'),
+      bottom5: document.getElementById('btn-bottom5'),
+      random5: document.getElementById('btn-random5'),
+      risers: document.getElementById('btn-risers'),
+      fallers: document.getElementById('btn-fallers'),
+      clear: document.getElementById('btn-clear'),
+      search: document.getElementById('player-search'),
+      playerList: document.getElementById('player-list'),
+    };
+
+    function currentGroup() {
+      return DATA.models[state.model].roles[state.role];
+    }
+
+    function setupSeg(container, options, value, onSelect) {
+      container.innerHTML = '';
+      options.forEach((o) => {
+        const b = document.createElement('button');
+        b.className = `sq-seg-btn ${o.value === value ? 'active' : ''}`;
+        b.textContent = o.label;
+        b.addEventListener('click', () => onSelect(o.value));
+        container.appendChild(b);
+      });
+    }
+
+    function selectionKey(names) {
+      return [...new Set(names)].sort((a, b) => a.localeCompare(b)).join('|');
+    }
+
+    function recurringPlayers() {
+      return currentGroup().players.filter((p) => p.gamesPlayedFinal >= 8);
+    }
+
+    function endSeasonScore(player) {
+      const played = (player.series || []).filter((s) => s.playedThisWeek);
+      if (!played.length) return Number.NEGATIVE_INFINITY;
+      return played[played.length - 1].score;
+    }
+
+    function computePresetSets() {
+      const recurring = recurringPlayers();
+      const top5 = [...recurring].sort((a, b) => endSeasonScore(b) - endSeasonScore(a)).slice(0, 5).map((p) => p.name);
+      const bottom5 = [...recurring].sort((a, b) => endSeasonScore(a) - endSeasonScore(b)).slice(0, 5).map((p) => p.name);
+      const top5Climbers = [...recurring]
+        .map((p) => {
+          const played = (p.series || []).filter((s) => s.playedThisWeek);
+          if (played.length < 2) return null;
+          const sorted = [...played].sort((a, b) => a.weekNum - b.weekNum);
+          const mid = sorted[Math.floor((sorted.length - 1) / 2)];
+          const last = sorted[sorted.length - 1];
+          return { name: p.name, delta: last.score - mid.score };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.delta - a.delta)
+        .slice(0, 5)
+        .map((p) => p.name);
+      const top5Sliders = [...recurring]
+        .map((p) => {
+          const played = (p.series || []).filter((s) => s.playedThisWeek);
+          if (played.length < 2) return null;
+          const sorted = [...played].sort((a, b) => a.weekNum - b.weekNum);
+          const mid = sorted[Math.floor((sorted.length - 1) / 2)];
+          const last = sorted[sorted.length - 1];
+          return { name: p.name, delta: last.score - mid.score };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.delta - b.delta)
+        .slice(0, 5)
+        .map((p) => p.name);
+      return { top5, bottom5, top5Climbers, top5Sliders };
+    }
+
+    function detectPreset() {
+      const currentKey = selectionKey([...state.selected]);
+      const preset = computePresetSets();
+      if (currentKey === selectionKey(preset.top5)) return 'top5';
+      if (currentKey === selectionKey(preset.bottom5)) return 'bottom5';
+      if (currentKey === selectionKey(preset.top5Climbers)) return 'risers';
+      if (currentKey === selectionKey(preset.top5Sliders)) return 'fallers';
+      if (state.randomPresetKey && currentKey === state.randomPresetKey) return 'random5';
+      return '';
+    }
+
+    function renderPresetButtons() {
+      const map = {
+        top5: el.top5,
+        bottom5: el.bottom5,
+        risers: el.risers,
+        fallers: el.fallers,
+        random5: el.random5,
+      };
+      Object.entries(map).forEach(([id, node]) => node.classList.toggle('active', id === state.selectedPreset));
+    }
+
+    function applySelection(names, presetId = '') {
+      state.selected = new Set(names.slice(0, maxLines));
+      state.selectedPreset = presetId;
+      render();
+    }
+
+    function resetToTop5() {
+      applySelection(computePresetSets().top5, 'top5');
+    }
+
+    function setBottom5() {
+      applySelection(computePresetSets().bottom5, 'bottom5');
+    }
+
+    function setRandom5() {
+      const candidates = [...recurringPlayers()].map((p) => p.name);
+      for (let i = candidates.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+      }
+      const selection = candidates.slice(0, 5);
+      state.randomPresetKey = selectionKey(selection);
+      applySelection(selection, 'random5');
+    }
+
+    function setClimbers(desc = true) {
+      const preset = computePresetSets();
+      applySelection(desc ? preset.top5Climbers : preset.top5Sliders, desc ? 'risers' : 'fallers');
+    }
+
+    function pickNiceStep(target, candidates) {
+      for (const c of candidates) {
+        if (c >= target) return c;
+      }
+      return candidates[candidates.length - 1];
+    }
+
+    function buildTicks(minVal, maxVal) {
+      const span = Math.max(1e-6, maxVal - minVal);
+      const targetStep = span / 6;
+      const steps = [0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 1];
+      const step = pickNiceStep(targetStep, steps);
+      const tickMin = Math.floor(minVal / step) * step;
+      const tickMax = Math.ceil(maxVal / step) * step;
+      const ticks = [];
+
+      for (let y = tickMin; y <= tickMax + step * 0.001; y += step) {
+        ticks.push(Number(y.toFixed(6)));
+      }
+
+      return { ticks };
+    }
+
+    function selectedPlayers() {
+      const byName = new Map(currentGroup().players.map((p) => [p.name, p]));
+      return [...state.selected].map((n) => byName.get(n)).filter(Boolean);
+    }
+
+    function drawChart(players) {
+      const svg = el.chart;
+      const W = 1020;
+      const H = 500;
+      const m = { t: 30, r: 30, b: 64, l: 72 };
+      const iw = W - m.l - m.r;
+      const ih = H - m.t - m.b;
+
+      const points = players.flatMap((p) =>
+        p.series.filter((s) => s.playedThisWeek).map((s) => ({ ...s, player: p.name })),
+      );
+      if (!points.length) {
+        svg.innerHTML = `<text x="510" y="260" text-anchor="middle" fill="#5d6470" font-size="20">Add players to draw trajectories</text>`;
+        return;
+      }
+
+      const xs = points.map((p) => p.gamesPlayed);
+      const ys = points.map((p) => p.score);
+      const xMin = Math.min(...xs);
+      const xMax = Math.max(...xs);
+      let yMin = Math.min(...ys);
+      let yMax = Math.max(...ys);
+      const pad = (yMax - yMin || 1) * 0.08;
+      yMin -= pad;
+      yMax += pad;
+      const { ticks } = buildTicks(yMin, yMax);
+      const visibleTicks = ticks.filter((y) => y >= yMin - 1e-9 && y <= yMax + 1e-9);
+
+      const sx = (x) => m.l + ((x - xMin) / Math.max(1, xMax - xMin)) * iw;
+      const sy = (y) => m.t + (1 - ((y - yMin) / Math.max(1e-6, yMax - yMin))) * ih;
+
+      const axis = [];
+      for (const y of visibleTicks) {
+        const py = sy(y);
+        axis.push(`<line x1="${m.l}" y1="${py}" x2="${W - m.r}" y2="${py}" stroke="#e7ebf3" />`);
+        axis.push(`<text x="${m.l - 10}" y="${py + 4}" text-anchor="end" fill="#4a5464" font-size="12">${y.toFixed(2)}</text>`);
+      }
+
+      const xTicks = [...new Set(points.map((p) => p.gamesPlayed))].sort((a, b) => a - b);
+      const xAxis = xTicks.map((x) => `<text x="${sx(x)}" y="${H - m.b + 24}" text-anchor="middle" fill="#4a5464" font-size="12">${x}</text>`);
+
+      const lines = players.map((p, idx) => {
+        const color = palette[idx % palette.length];
+        const sorted = [...p.series]
+          .filter((s) => s.playedThisWeek)
+          .sort((a, b) => a.gamesPlayed - b.gamesPlayed);
+        if (!sorted.length) return '';
+        const d = sorted.map((s, i) => `${i === 0 ? 'M' : 'L'} ${sx(s.gamesPlayed)} ${sy(s.score)}`).join(' ');
+        const circles = sorted.map((s) => {
+          const r = Math.max(3, Math.min(11, 2 + Math.sqrt(Math.max(0, s.snapsInGame || 0)) * 0.6));
+          const label = `${p.name} | Games ${s.gamesPlayed} | Snaps ${s.snapsInGame || 0} | Score ${s.score.toFixed(3)}`;
+          return `<circle cx="${sx(s.gamesPlayed)}" cy="${sy(s.score)}" r="${r}" fill="${color}" opacity="0.9"><title>${label}</title></circle>`;
+        }).join('');
+        return `<path d="${d}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" />${circles}`;
+      });
+
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${W}" height="${H}" fill="#ffffff" rx="14" />
+        ${axis.join('')}
+        <line x1="${m.l}" y1="${H - m.b}" x2="${W - m.r}" y2="${H - m.b}" stroke="#bfc9db" />
+        <line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${H - m.b}" stroke="#bfc9db" />
+        ${xAxis.join('')}
+        ${lines.join('')}
+      `;
+    }
+
+    function renderSelectedChips() {
+      const players = selectedPlayers().sort((a, b) => a.name.localeCompare(b.name));
+      el.visibleCount.textContent = String(players.length);
+      el.selectedChips.innerHTML = '';
+      players.forEach((p) => {
+        const chip = document.createElement('button');
+        chip.className = 'sq-chip';
+        const color = palette[players.indexOf(p) % palette.length];
+        chip.style.borderColor = `${color}66`;
+        chip.style.backgroundColor = `${color}22`;
+        chip.style.color = color;
+        chip.innerHTML = `<span class="sq-swatch" style="background:${color}"></span><span class="sq-chip-name">${p.name}</span><span class="sq-chip-x">×</span>`;
+        chip.addEventListener('click', () => {
+          state.selected.delete(p.name);
+          render();
+        });
+        el.selectedChips.appendChild(chip);
+      });
+    }
+
+    function renderPlayerList() {
+      const q = state.search.trim().toLowerCase();
+      const rows = [...currentGroup().players]
+        .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+        .filter((p) => !state.selected.has(p.name))
+        .filter((p) => !q || p.name.toLowerCase().includes(q));
+
+      el.playerList.innerHTML = '';
+      rows.forEach((p) => {
+        const row = document.createElement('div');
+        row.className = 'player-row';
+
+        const info = document.createElement('div');
+        info.className = 'player-info';
+        info.innerHTML = `<strong>${p.name}</strong><span>${p.gamesPlayedFinal} games · score ${p.meanScore.toFixed(3)}</span>`;
+
+        const add = document.createElement('button');
+        add.className = 'sq-add-btn';
+        add.textContent = 'Add';
+        add.disabled = state.selected.size >= maxLines;
+        add.addEventListener('click', () => {
+          if (state.selected.size >= maxLines) return;
+          state.selected.add(p.name);
+          render();
+        });
+
+        row.append(info, add);
+        el.playerList.appendChild(row);
+      });
+    }
+
+    function renderSegs() {
+      setupSeg(el.modelSeg, [
+        { value: 'win', label: 'Pass Block Win/Loss' },
+        { value: 'severity', label: 'Outcome Severity' },
+      ], state.model, (next) => {
+        if (state.model === next) return;
+        state.model = next;
+        resetToTop5();
+      });
+
+      setupSeg(el.roleSeg, [
+        { value: 'Blocker', label: 'Blockers' },
+        { value: 'Rusher', label: 'Rushers' },
+      ], state.role, (next) => {
+        if (state.role === next) return;
+        state.role = next;
+        resetToTop5();
+      });
+    }
+
+    function render() {
+      state.selectedPreset = detectPreset();
+      renderSegs();
+      renderPresetButtons();
+      renderSelectedChips();
+      renderPlayerList();
+      drawChart(selectedPlayers());
+    }
+
+    el.top5.addEventListener('click', () => resetToTop5());
+    el.bottom5.addEventListener('click', () => setBottom5());
+    el.random5.addEventListener('click', () => setRandom5());
+    el.risers.addEventListener('click', () => setClimbers(true));
+    el.fallers.addEventListener('click', () => setClimbers(false));
+    el.clear.addEventListener('click', () => {
+      state.selected.clear();
+      render();
+    });
+    el.search.addEventListener('input', () => {
+      state.search = el.search.value || '';
+      renderPlayerList();
+    });
+
+    fetch(dataUrl)
+      .then((r) => r.json())
+      .then((data) => {
+        DATA = data;
+        resetToTop5();
+        el.loading.style.display = 'none';
+        el.app.style.display = 'block';
+      })
+      .catch(() => {
+        el.loading.textContent = 'Failed to load NFL ELO data.';
+      });
+  </script>
+
+  <style is:global>
+    #loading { text-align: center; color: #5d6470; padding: 3rem 1rem; font-size: 1rem; }
+    .sq-app { --sq-font: "Avenir Next", "Segoe UI", sans-serif; font-family: var(--sq-font); font-size: 0.92rem; color: #132b4a; }
+    .sq-app button, .sq-app input, .sq-app p, .sq-app span, .sq-app strong, .sq-app div { font-family: var(--sq-font); }
+    .controls-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+    .control-card, .panel, .chart-wrap { border: 1px solid #dce3ef; border-radius: 14px; background: #fff; box-shadow: 0 8px 18px rgba(12, 35, 66, 0.06); }
+    .control-card { padding: 0.72rem; }
+    .chart-wrap { padding: 0.8rem; }
+    .panel { padding: 0.7rem; }
+    .label { color: #4d5768; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.01em; margin-bottom: 0.5rem; }
+    .sq-seg { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .sq-seg-btn { border: 1px solid #cdd7e8; background: linear-gradient(180deg, #ffffff, #edf3ff); color: #10345d; border-radius: 999px; padding: 0.48rem 0.82rem; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+    .sq-seg-btn.active { background: linear-gradient(180deg, #17457a, #12365e); color: #fff; border-color: #12365e; }
+    .chart-wrap { margin-top: 0.8rem; }
+    #chart { width: 100%; height: auto; border-radius: 12px; border: 1px solid #eef1f7; background: #fff; }
+    .sq-chart-footnote { margin-top: 0.38rem; font-size: 0.77rem; font-weight: 600; color: #5a667a; }
+    .controls-grid { margin-top: 0.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .panel-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.55rem; color: #122f54; }
+    .sq-sub-label { margin-top: 0.72rem; margin-bottom: 0.42rem; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #5b6880; }
+    .sq-chip-row { min-height: 2.2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .sq-chip { border: 1px solid #d9e0ee; background: #f6f9ff; color: #1f3e67; border-radius: 999px; padding: 0.34rem 0.55rem; font-size: 0.77rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.42rem; max-width: 100%; }
+    .sq-swatch { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; border: 1px solid rgba(0, 0, 0, 0.1); }
+    .sq-chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+    .sq-chip-x { font-weight: 900; line-height: 1; }
+    .sq-btn-row { margin-top: 0.65rem; display: flex; column-gap: 0.55rem; row-gap: 0.55rem; flex-wrap: wrap; align-items: center; }
+    .sq-btn { border: 1px solid #d6dde8; background: linear-gradient(180deg, #ffffff, #f6f8fc); color: #3f4f65; border-radius: 999px; padding: 0.48rem 0.82rem; font-size: 0.77rem; font-weight: 700; cursor: pointer; }
+    .sq-btn.active { border-color: #10365f; background: linear-gradient(180deg, #17457a, #12365e); color: #fff; }
+    .sq-btn.ghost { border: 1px solid #d8dfea; background: #fff; color: #244469; }
+    .search { width: 100%; border: 1px solid #cfd7e7; border-radius: 9px; padding: 0.48rem 0.58rem; margin-bottom: 0.5rem; font-size: 0.84rem; }
+    .list { max-height: 240px; overflow: auto; display: grid; gap: 0.34rem; }
+    .player-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 0.55rem; border: 1px solid #e3e8f3; border-radius: 9px; padding: 0.42rem 0.5rem; }
+    .player-info { min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; overflow: hidden; }
+    .player-info strong { font-size: 0.82rem; line-height: 1.2; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .player-info span { color: #5a6476; font-size: 0.74rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sq-add-btn { border: none; border-radius: 8px; background: #b51f1f; color: #fff; padding: 0.36rem 0.52rem; font-size: 0.74rem; font-weight: 700; cursor: pointer; min-width: 48px; white-space: nowrap; }
+    .sq-add-btn:disabled { opacity: 0.45; cursor: default; }
+    @media (max-width: 900px) { .controls-row, .controls-grid { grid-template-columns: 1fr; } }
+  </style>
+</LayoutServerQuality>

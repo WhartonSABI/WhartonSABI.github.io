@@ -29,34 +29,32 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
         </div>
       </div>
 
-      <div class="sq-main-grid">
-        <div class="chart-wrap">
-          <div class="chart-head">
+      <div class="chart-wrap">
+        <div class="chart-head">
+        </div>
+        <svg id="chart" viewBox="0 0 1020 500" aria-label="SQS chart"></svg>
+        <div class="sq-chart-footnote">Dot size indicates sample size.</div>
+      </div>
+
+      <div class="controls-grid">
+        <div class="panel">
+          <div class="panel-title">Visible Players (<span id="visible-count">0</span>/10)</div>
+          <div class="sq-chip-row" id="selected-chips"></div>
+          <div class="sq-sub-label">Presets</div>
+          <div class="sq-btn-row">
+            <button id="btn-top5" class="sq-btn">Top 5</button>
+            <button id="btn-bottom5" class="sq-btn">Bottom 5</button>
+            <button id="btn-risers" class="sq-btn">Top 5 Climbers</button>
+            <button id="btn-fallers" class="sq-btn">Top 5 Sliders</button>
+            <button id="btn-random5" class="sq-btn">Random 5</button>
+            <button id="btn-clear" class="sq-btn ghost">Clear All</button>
           </div>
-          <svg id="chart" viewBox="0 0 1020 500" aria-label="SQS chart"></svg>
-          <div class="sq-chart-footnote">Dot size indicates sample size.</div>
         </div>
 
-        <div class="controls-grid">
-          <div class="panel">
-            <div class="panel-title">Visible Players (<span id="visible-count">0</span>/10)</div>
-            <div class="sq-chip-row" id="selected-chips"></div>
-            <div class="sq-sub-label">Presets</div>
-            <div class="sq-btn-row">
-              <button id="btn-top5" class="sq-btn">Top 5</button>
-              <button id="btn-bottom5" class="sq-btn">Bottom 5</button>
-              <button id="btn-random5" class="sq-btn">Random 5</button>
-              <button id="btn-risers" class="sq-btn">Top 5 Climbers</button>
-              <button id="btn-fallers" class="sq-btn">Top 5 Sliders</button>
-              <button id="btn-clear" class="sq-btn ghost">Clear All</button>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-title">Add Players</div>
-            <input id="player-search" type="text" placeholder="Search player..." class="search" />
-            <div class="list" id="player-list"></div>
-          </div>
+        <div class="panel">
+          <div class="panel-title">Add Players</div>
+          <input id="player-search" type="text" placeholder="Search player..." class="search" />
+          <div class="list" id="player-list"></div>
         </div>
       </div>
     </div>
@@ -350,10 +348,10 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
     function renderPlayerList() {
       const group = currentGroup();
       const q = state.search.trim().toLowerCase();
-      const rows = group.players
+      const rows = [...group.players]
+        .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
         .filter((p) => !state.selected.has(p.name))
-        .filter((p) => !q || p.name.toLowerCase().includes(q))
-        .slice(0, 25);
+        .filter((p) => !q || p.name.toLowerCase().includes(q));
 
       el.playerList.innerHTML = '';
 
@@ -549,18 +547,10 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
     }
 
     .controls-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.8rem;
-      align-content: start;
-    }
-
-    .sq-main-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr);
-      gap: 0.8rem;
       margin-top: 0.8rem;
-      align-items: start;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
     }
 
     .panel {
@@ -751,8 +741,7 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
 
     @media (max-width: 900px) {
       .controls-row,
-      .controls-grid,
-      .sq-main-grid {
+      .controls-grid {
         grid-template-columns: 1fr;
       }
 

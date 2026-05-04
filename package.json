@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "generate:server-quality-data": "node scripts/generate-server-quality-data.mjs",
+    "generate:nfl-elo-data": "node scripts/generate-nfl-elo-data.mjs",
     "build": "node scripts/generate-favicon-source.mjs && astro build && cp dist/sitemap-0.xml dist/sitemap.xml",
     "preview": "astro preview",
     "astro": "astro"

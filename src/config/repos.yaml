@@ -53,14 +53,14 @@ lab:
       description: Constructs a server quality metric from point-by-point data using mixed-effects models.
       highlights: [Published in JSA, 2025 CMSAC RRC Winner]
       deliverables:
-        - label: Interactive App
-          url: /server-quality
-          icon: app
         - label: Paper
           url: https://journals.sagepub.com/doi/10.1177/22150218261444537
         - label: CMSAC 2025
           path: presentations/cmsac2025.pdf
           icon: presentation
+        - label: Interactive App
+          url: /server-quality
+          icon: app
     - name: NFL Pass Rush Ratings
       repo: nfl-elo
       description: Opponent-adjusted ratings for NFL pass rushers and blockers derived from HUDL tracking data.
@@ -70,6 +70,9 @@ lab:
         - label: NESSIS 2025
           path: results/nflelo.pdf
           icon: presentation
+        - label: Interactive App
+          url: /nfl-elo
+          icon: app
     - name: xG+
       repo: xg-plus
       highlights: [In Review at JQAS, Presented at JSM 2025 & ASIS 2026]
