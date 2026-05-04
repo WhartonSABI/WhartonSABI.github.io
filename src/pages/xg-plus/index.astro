@@ -258,8 +258,9 @@ const baseUrl = `${import.meta.env.BASE_URL}`;
     }
 
     function colorByName(entities) {
+      const ordered = [...entities].sort((a, b) => a.name.localeCompare(b.name));
       const map = new Map();
-      entities.forEach((p, idx) => map.set(p.name, palette[idx % palette.length]));
+      ordered.forEach((p, idx) => map.set(p.name, palette[idx % palette.length]));
       return map;
     }
 

@@ -109,6 +109,13 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
       return [...state.selected].map((n) => byName.get(n)).filter(Boolean);
     }
 
+    function colorByName(players) {
+      const ordered = [...players].sort((a, b) => a.name.localeCompare(b.name));
+      const map = new Map();
+      ordered.forEach((p, idx) => map.set(p.name, palette[idx % palette.length]));
+      return map;
+    }
+
     function numberFmt(x) {
       return state.metric === 'percentile' ? `${x.toFixed(1)} pct` : x.toFixed(3);
     }
@@ -298,8 +305,9 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
 
       const xAxis = years.map((yr) => `<text x="${sx(yr)}" y="${H - m.b + 24}" text-anchor="middle" fill="#4a5464" font-size="12">${yr}</text>`);
 
-      const lines = players.map((p, idx) => {
-        const color = palette[idx % palette.length];
+      const colors = colorByName(players);
+      const lines = players.map((p) => {
+        const color = colors.get(p.name) || palette[0];
         const sorted = [...p.series].sort((a, b) => a.year - b.year);
         const d = sorted.map((s, i) => `${i === 0 ? 'M' : 'L'} ${sx(s.year)} ${sy(yValue(s))}`).join(' ');
         const circles = sorted.map((s) => {
@@ -325,14 +333,16 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
     }
 
     function renderSelectedChips() {
-      const players = selectedPlayers().sort((a, b) => a.name.localeCompare(b.name));
+      const selected = selectedPlayers();
+      const colors = colorByName(selected);
+      const players = [...selected].sort((a, b) => a.name.localeCompare(b.name));
       el.visibleCount.textContent = String(players.length);
       el.selectedChips.innerHTML = '';
 
       players.forEach((p) => {
         const chip = document.createElement('button');
         chip.className = 'sq-chip';
-        const color = palette[players.indexOf(p) % palette.length];
+        const color = colors.get(p.name) || palette[0];
         chip.style.borderColor = `${color}66`;
         chip.style.backgroundColor = `${color}22`;
         chip.style.color = color;

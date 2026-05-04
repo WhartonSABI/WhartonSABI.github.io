@@ -231,6 +231,13 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
       return [...state.selected].map((n) => byName.get(n)).filter(Boolean);
     }
 
+    function colorByName(players) {
+      const ordered = [...players].sort((a, b) => a.name.localeCompare(b.name));
+      const map = new Map();
+      ordered.forEach((p, idx) => map.set(p.name, palette[idx % palette.length]));
+      return map;
+    }
+
     function gameLabel(n) {
       return `${n} ${n === 1 ? 'game' : 'games'}`;
     }
@@ -276,8 +283,9 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
       const xTicks = [...new Set(points.map((p) => p.gamesPlayed))].sort((a, b) => a - b);
       const xAxis = xTicks.map((x) => `<text x="${sx(x)}" y="${H - m.b + 24}" text-anchor="middle" fill="#4a5464" font-size="12">${x}</text>`);
 
-      const lines = players.map((p, idx) => {
-        const color = palette[idx % palette.length];
+      const colors = colorByName(players);
+      const lines = players.map((p) => {
+        const color = colors.get(p.name) || palette[0];
         const sorted = [...p.series]
           .filter((s) => s.playedThisWeek)
           .sort((a, b) => a.gamesPlayed - b.gamesPlayed);
@@ -302,13 +310,15 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
     }
 
     function renderSelectedChips() {
-      const players = selectedPlayers().sort((a, b) => a.name.localeCompare(b.name));
+      const selected = selectedPlayers();
+      const colors = colorByName(selected);
+      const players = [...selected].sort((a, b) => a.name.localeCompare(b.name));
       el.visibleCount.textContent = String(players.length);
       el.selectedChips.innerHTML = '';
       players.forEach((p) => {
         const chip = document.createElement('button');
         chip.className = 'sq-chip';
-        const color = palette[players.indexOf(p) % palette.length];
+        const color = colors.get(p.name) || palette[0];
         chip.style.borderColor = `${color}66`;
         chip.style.backgroundColor = `${color}22`;
         chip.style.color = color;
