@@ -6,7 +6,7 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
 
 <LayoutServerQuality>
   <header class="hero">
-    <h1>Server Quality Score Trajectories</h1>
+    <h1>Server Quality Visualizer</h1>
     <p>Interactive trajectories for servers across Wimbledon and the US Open.</p>
   </header>
 
@@ -29,33 +29,34 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
         </div>
       </div>
 
-      <div class="chart-wrap">
-        <div class="chart-head">
-          <h2 id="chart-title"></h2>
-          <p>Model-based server quality centered within each year/tournament. Dot size indicates sample size.</p>
-        </div>
-        <svg id="chart" viewBox="0 0 1020 560" aria-label="SQS chart"></svg>
-      </div>
-
-      <div class="controls-grid">
-        <div class="panel">
-          <div class="panel-title">Visible Players (<span id="visible-count">0</span>/10)</div>
-          <div class="sq-chip-row" id="selected-chips"></div>
-          <div class="sq-sub-label">Presets</div>
-          <div class="sq-btn-row">
-            <button id="btn-top5" class="sq-btn">Top 5</button>
-            <button id="btn-bottom5" class="sq-btn">Bottom 5</button>
-            <button id="btn-random5" class="sq-btn">Random 5</button>
-            <button id="btn-risers" class="sq-btn">Top 5 Climbers</button>
-            <button id="btn-fallers" class="sq-btn">Top 5 Sliders</button>
-            <button id="btn-clear" class="sq-btn ghost">Clear All</button>
+      <div class="sq-main-grid">
+        <div class="chart-wrap">
+          <div class="chart-head">
           </div>
+          <svg id="chart" viewBox="0 0 1020 500" aria-label="SQS chart"></svg>
+          <div class="sq-chart-footnote">Dot size indicates sample size.</div>
         </div>
 
-        <div class="panel">
-          <div class="panel-title">Add Players</div>
-          <input id="player-search" type="text" placeholder="Search player..." class="search" />
-          <div class="list" id="player-list"></div>
+        <div class="controls-grid">
+          <div class="panel">
+            <div class="panel-title">Visible Players (<span id="visible-count">0</span>/10)</div>
+            <div class="sq-chip-row" id="selected-chips"></div>
+            <div class="sq-sub-label">Presets</div>
+            <div class="sq-btn-row">
+              <button id="btn-top5" class="sq-btn">Top 5</button>
+              <button id="btn-bottom5" class="sq-btn">Bottom 5</button>
+              <button id="btn-random5" class="sq-btn">Random 5</button>
+              <button id="btn-risers" class="sq-btn">Top 5 Climbers</button>
+              <button id="btn-fallers" class="sq-btn">Top 5 Sliders</button>
+              <button id="btn-clear" class="sq-btn ghost">Clear All</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">Add Players</div>
+            <input id="player-search" type="text" placeholder="Search player..." class="search" />
+            <div class="list" id="player-list"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -87,7 +88,6 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
       tournamentSeg: document.getElementById('tournament-seg'),
       genderSeg: document.getElementById('gender-seg'),
       metricSeg: document.getElementById('metric-seg'),
-      chartTitle: document.getElementById('chart-title'),
       chart: document.getElementById('chart'),
       selectedChips: document.getElementById('selected-chips'),
       visibleCount: document.getElementById('visible-count'),
@@ -263,7 +263,7 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
     function drawChart(players) {
       const svg = el.chart;
       const W = 1020;
-      const H = 560;
+      const H = 500;
       const m = { t: 30, r: 30, b: 64, l: 72 };
       const iw = W - m.l - m.r;
       const ih = H - m.t - m.b;
@@ -408,16 +408,9 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
       });
     }
 
-    function renderHeader() {
-      const t = DATA.tournaments[state.tournament].label;
-      const g = currentGroup().label;
-      el.chartTitle.textContent = `${t} ${g}: Server Quality Over Time`;
-    }
-
     function render() {
       state.selectedPreset = detectPreset();
       renderSegs();
-      renderHeader();
       renderPresetButtons();
       renderSelectedChips();
       renderPlayerList();
@@ -540,18 +533,11 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
       padding: 0.8rem;
     }
 
-    .chart-head h2 {
-      margin: 0;
-      font-size: 1.08rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-
-    .chart-head p {
-      margin: 0.3rem 0 0.65rem;
-      font-size: 0.86rem;
+    .sq-chart-footnote {
+      margin-top: 0.38rem;
+      font-size: 0.77rem;
       font-weight: 600;
-      color: #4f5c70;
+      color: #5a667a;
     }
 
     #chart {
@@ -563,10 +549,18 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
     }
 
     .controls-grid {
-      margin-top: 0.8rem;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 0.8rem;
+      align-content: start;
+    }
+
+    .sq-main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr);
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+      align-items: start;
     }
 
     .panel {
@@ -757,7 +751,8 @@ const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
 
     @media (max-width: 900px) {
       .controls-row,
-      .controls-grid {
+      .controls-grid,
+      .sq-main-grid {
         grid-template-columns: 1fr;
       }
 
