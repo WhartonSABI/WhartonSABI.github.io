@@ -1,0 +1,487 @@
+---
+import LayoutCurlers from '../../layouts/LayoutCurlers.astro';
+
+const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
+---
+
+<LayoutCurlers>
+  <header>
+    <h1>Rugby Decision Dashboard</h1>
+    <p>Expected points with uncertainty for kick vs touch.</p>
+  </header>
+
+  <main>
+    <div id="loading">Loading model data&hellip;</div>
+
+    <div id="app" style="display:none">
+      <div class="desktop-layout">
+        <div class="controls-col">
+          <div class="card">
+            <div class="card-title">Teams</div>
+            <div class="field-group">
+              <label class="field-label" for="attack-team">Team in possession</label>
+              <select id="attack-team" class="select-input"></select>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="defense-team">Opponent</label>
+              <select id="defense-team" class="select-input"></select>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Game State</div>
+
+            <div class="field-group">
+              <label class="field-label">Lateral position x</label>
+              <div class="stepper">
+                <button class="stepper-btn" id="x-minus">&minus;</button>
+                <div class="stepper-val"><span class="band">(</span><span id="x-val">35</span><span class="band">)</span></div>
+                <button class="stepper-btn" id="x-plus">+</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Distance from try line y</label>
+              <div class="stepper">
+                <button class="stepper-btn" id="y-minus">&minus;</button>
+                <div class="stepper-val"><span class="band">(</span><span id="y-val">40</span><span class="band">)</span></div>
+                <button class="stepper-btn" id="y-plus">+</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Meters gained to touch</label>
+              <div class="stepper">
+                <button class="stepper-btn" id="d-touch-minus">&minus;</button>
+                <div class="stepper-val"><span class="band">(</span><span id="d-touch-val">20</span><span class="band">)</span></div>
+                <button class="stepper-btn" id="d-touch-plus">+</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Card differential (opp - own)</label>
+              <div class="stepper">
+                <button class="stepper-btn" id="card-minus">&minus;</button>
+                <div class="stepper-val"><span class="band">(</span><span id="card-val">0</span><span class="band">)</span></div>
+                <button class="stepper-btn" id="card-plus">+</button>
+              </div>
+            </div>
+
+            <div class="toggle-row">
+              <span class="toggle-label">Under 2 minutes in half</span>
+              <button class="toggle" id="l2m-toggle" aria-label="Toggle under 2 minutes"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-col">
+          <div class="result-card" id="result-card">
+            <div class="rec-label">Recommendation</div>
+            <div class="rec-text" id="rec-text">&mdash;</div>
+            <div class="delta-row" id="delta-row">&nbsp;</div>
+            <div class="delta-row subtle" id="delta-ci-row">&nbsp;</div>
+            <div class="delta-row subtle" id="prob-row">&nbsp;</div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Decision EP Plot</div>
+            <svg id="ep-plot" viewBox="0 0 640 220" class="ep-plot" aria-label="Expected points by decision with uncertainty"></svg>
+            <div class="plot-note">Bars show expected points. Whiskers show 95% uncertainty intervals.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script define:vars={{ dataUrl }}>
+    let DATA = null;
+    const state = {
+      attackTeam: '',
+      defenseTeam: '',
+      x: 35,
+      y: 40,
+      dTouch: 20,
+      cardDiff: 0,
+      lessThan2Min: 0,
+    };
+
+    const el = {
+      loading: document.getElementById('loading'),
+      app: document.getElementById('app'),
+      attackTeam: document.getElementById('attack-team'),
+      defenseTeam: document.getElementById('defense-team'),
+      xMinus: document.getElementById('x-minus'),
+      xPlus: document.getElementById('x-plus'),
+      yMinus: document.getElementById('y-minus'),
+      yPlus: document.getElementById('y-plus'),
+      dTouchMinus: document.getElementById('d-touch-minus'),
+      dTouchPlus: document.getElementById('d-touch-plus'),
+      cardMinus: document.getElementById('card-minus'),
+      cardPlus: document.getElementById('card-plus'),
+      xVal: document.getElementById('x-val'),
+      yVal: document.getElementById('y-val'),
+      dTouchVal: document.getElementById('d-touch-val'),
+      cardVal: document.getElementById('card-val'),
+      l2mToggle: document.getElementById('l2m-toggle'),
+      resultCard: document.getElementById('result-card'),
+      recText: document.getElementById('rec-text'),
+      deltaRow: document.getElementById('delta-row'),
+      deltaCIRow: document.getElementById('delta-ci-row'),
+      probRow: document.getElementById('prob-row'),
+      epPlot: document.getElementById('ep-plot'),
+    };
+
+    let teamStrength = new Map();
+    let kickNormalDraws = [];
+
+    function logistic(z) { return 1 / (1 + Math.exp(-z)); }
+    function dot(a, b) { let s = 0; for (let i = 0; i < a.length; i += 1) s += a[i] * b[i]; return s; }
+    function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+
+    function quantile(xs, q) {
+      const arr = [...xs].sort((a, b) => a - b);
+      if (!arr.length) return 0;
+      const pos = (arr.length - 1) * q;
+      const lo = Math.floor(pos);
+      const hi = Math.ceil(pos);
+      if (lo === hi) return arr[lo];
+      const w = pos - lo;
+      return arr[lo] * (1 - w) + arr[hi] * w;
+    }
+
+    function fmtSigned(x, digits = 2) { const sign = x > 0 ? '+' : ''; return `${sign}${x.toFixed(digits)}`; }
+    function prc(x, digits = 1) { return `${(x * 100).toFixed(digits)}%`; }
+
+    function buildTeamStrengthMap() {
+      teamStrength = new Map((DATA.teams || []).map((t) => [t.name, t.strength]));
+    }
+
+    function winPctDiff() {
+      return (teamStrength.get(state.attackTeam) ?? 0.5) - (teamStrength.get(state.defenseTeam) ?? 0.5);
+    }
+
+    function yAfterShift() {
+      const yRaw = state.y - state.dTouch;
+      const meters = DATA.lineout.meterLevels;
+      return clamp(yRaw, meters[0], meters[meters.length - 1]);
+    }
+
+    function stateVectorForMeter(meter) {
+      const names = DATA.lineout.coefNames;
+      const x = new Array(names.length).fill(0);
+      const mName = `meter_line_factor${meter}`;
+      const wDiff = winPctDiff();
+
+      for (let i = 0; i < names.length; i += 1) {
+        const n = names[i];
+        if (n === '(Intercept)') x[i] = 1;
+        else if (n === 'Card_Diff') x[i] = state.cardDiff;
+        else if (n === 'WinPct_Diff') x[i] = wDiff;
+        else if (n === 'Less_Than_2_Min') x[i] = state.lessThan2Min;
+        else if (n === mName) x[i] = 1;
+      }
+      return x;
+    }
+
+    function epFromCoefMatrix(matrix, stateVec) {
+      const pointLevels = DATA.lineout.pointLevels;
+      const logits = [0];
+      for (let r = 0; r < matrix.length; r += 1) logits.push(dot(matrix[r], stateVec));
+      const exps = logits.map((z) => Math.exp(z));
+      const denom = exps.reduce((a, b) => a + b, 0);
+      const probs = exps.map((v) => v / denom);
+      let ep = 0;
+      for (let i = 0; i < probs.length; i += 1) ep += probs[i] * pointLevels[i];
+      return ep;
+    }
+
+    function interpolateLinear(xs, ys, x) {
+      if (x <= xs[0]) return ys[0];
+      if (x >= xs[xs.length - 1]) return ys[ys.length - 1];
+      for (let i = 0; i < xs.length - 1; i += 1) {
+        if (x >= xs[i] && x <= xs[i + 1]) {
+          const t = (x - xs[i]) / (xs[i + 1] - xs[i]);
+          return ys[i] + t * (ys[i + 1] - ys[i]);
+        }
+      }
+      return ys[ys.length - 1];
+    }
+
+    function lineoutPointAndSamples() {
+      const meters = DATA.lineout.meterLevels;
+      const yLineout = yAfterShift();
+      const pointPerMeter = meters.map((m) => epFromCoefMatrix(DATA.lineout.coefPoint, stateVectorForMeter(m)));
+      const point = interpolateLinear(meters, pointPerMeter, yLineout);
+
+      const boot = DATA.lineout.coefBootstrap || [];
+      const samples = boot.map((draw) => {
+        const epByMeter = meters.map((m) => epFromCoefMatrix(draw, stateVectorForMeter(m)));
+        return interpolateLinear(meters, epByMeter, yLineout);
+      });
+
+      return { point, samples, yLineout };
+    }
+
+    function kickMissEP(y) {
+      const zones = DATA.kick.missLookup || [];
+      for (const z of zones) {
+        if (y >= z.yMin && y <= z.yMax) return z.avgEp;
+      }
+      return DATA.kick.missOverall ?? 0;
+    }
+
+    function kickPointAndSamples() {
+      const x = state.x;
+      const y = state.y;
+      const angle = Math.atan2(Math.abs(x - 35), y) * (180 / Math.PI);
+      const distance = Math.sqrt((x - 35) ** 2 + y ** 2);
+      const v = [1, angle, distance];
+      const beta = DATA.kick.coef;
+      const vcov = DATA.kick.vcov;
+      const missEP = kickMissEP(y);
+
+      const logit = dot(beta, v);
+      const p = logistic(logit);
+      const point = 3 * p + (1 - p) * missEP;
+
+      let varLogit = 0;
+      for (let i = 0; i < v.length; i += 1) {
+        for (let j = 0; j < v.length; j += 1) {
+          varLogit += v[i] * vcov[i][j] * v[j];
+        }
+      }
+      const se = Math.sqrt(Math.max(1e-12, varLogit));
+      const samples = kickNormalDraws.map((z) => {
+        const pz = logistic(logit + z * se);
+        return 3 * pz + (1 - pz) * missEP;
+      });
+
+      return { point, samples };
+    }
+
+    function makeNormalDraws(n) {
+      const out = [];
+      let seed = 20260504;
+      const rand = () => {
+        seed = (1664525 * seed + 1013904223) % 4294967296;
+        return seed / 4294967296;
+      };
+      while (out.length < n) {
+        const u1 = Math.max(1e-9, rand());
+        const u2 = rand();
+        const r = Math.sqrt(-2 * Math.log(u1));
+        const t = 2 * Math.PI * u2;
+        out.push(r * Math.cos(t));
+        if (out.length < n) out.push(r * Math.sin(t));
+      }
+      return out;
+    }
+
+    function updateControlsUI() {
+      el.xVal.textContent = String(state.x);
+      el.yVal.textContent = String(state.y);
+      el.dTouchVal.textContent = String(state.dTouch);
+      el.cardVal.textContent = String(state.cardDiff);
+      el.l2mToggle.classList.toggle('on', state.lessThan2Min === 1);
+    }
+
+    function drawEPPlot(lineoutStats, kickStats) {
+      const svg = el.epPlot;
+      const W = 640;
+      const H = 220;
+      const m = { t: 24, r: 20, b: 38, l: 120 };
+      const iw = W - m.l - m.r;
+
+      const allVals = [lineoutStats.lo, lineoutStats.mean, lineoutStats.hi, kickStats.lo, kickStats.mean, kickStats.hi];
+      let xMin = Math.min(...allVals);
+      let xMax = Math.max(...allVals);
+      const pad = (xMax - xMin || 1) * 0.12;
+      xMin -= pad;
+      xMax += pad;
+
+      const sx = (x) => m.l + ((x - xMin) / Math.max(1e-6, xMax - xMin)) * iw;
+      const yLineout = 78;
+      const yKick = 152;
+
+      const ticks = [];
+      for (let i = 0; i <= 5; i += 1) ticks.push(xMin + (i / 5) * (xMax - xMin));
+
+      const axis = ticks.map((t) => `
+        <line x1="${sx(t)}" y1="${m.t}" x2="${sx(t)}" y2="${H - m.b}" stroke="#e9edf5" />
+        <text x="${sx(t)}" y="${H - 12}" text-anchor="middle" fill="#667085" font-size="12">${t.toFixed(2)}</text>
+      `).join('');
+
+      const row = (label, y, stat, color) => `
+        <text x="${m.l - 12}" y="${y + 5}" text-anchor="end" fill="#1f2937" font-size="13" font-weight="600">${label}</text>
+        <line x1="${sx(stat.lo)}" y1="${y}" x2="${sx(stat.hi)}" y2="${y}" stroke="${color}" stroke-width="3" />
+        <line x1="${sx(stat.lo)}" y1="${y - 9}" x2="${sx(stat.lo)}" y2="${y + 9}" stroke="${color}" stroke-width="2" />
+        <line x1="${sx(stat.hi)}" y1="${y - 9}" x2="${sx(stat.hi)}" y2="${y + 9}" stroke="${color}" stroke-width="2" />
+        <circle cx="${sx(stat.mean)}" cy="${y}" r="6" fill="${color}" />
+        <text x="${sx(stat.mean) + 10}" y="${y - 10}" fill="${color}" font-size="12">${stat.mean.toFixed(2)}</text>
+      `;
+
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${W}" height="${H}" fill="#fff" rx="10" />
+        ${axis}
+        <line x1="${m.l}" y1="${H - m.b}" x2="${W - m.r}" y2="${H - m.b}" stroke="#cbd5e1" />
+        ${row('Lineout', yLineout, lineoutStats, '#2e7d32')}
+        ${row('Kick', yKick, kickStats, '#011F5B')}
+      `;
+    }
+
+    function renderResults() {
+      const lineout = lineoutPointAndSamples();
+      const kick = kickPointAndSamples();
+      const n = Math.min(lineout.samples.length, kick.samples.length);
+      const deltaSamples = [];
+      for (let i = 0; i < n; i += 1) deltaSamples.push(lineout.samples[i] - kick.samples[i]);
+
+      const lineoutStats = { mean: lineout.point, lo: quantile(lineout.samples, 0.025), hi: quantile(lineout.samples, 0.975) };
+      const kickStats = { mean: kick.point, lo: quantile(kick.samples, 0.025), hi: quantile(kick.samples, 0.975) };
+
+      const deltaMean = lineout.point - kick.point;
+      const deltaLo = quantile(deltaSamples, 0.025);
+      const deltaHi = quantile(deltaSamples, 0.975);
+      const prBetter = n ? deltaSamples.filter((d) => d > 0).length / n : (deltaMean > 0 ? 1 : 0);
+
+      const goLineout = deltaMean > 0;
+      el.resultCard.className = `result-card ${goLineout ? 'use' : 'save'}`;
+      el.recText.className = `rec-text ${goLineout ? 'use' : 'save'}`;
+      el.recText.textContent = goLineout ? 'GO FOR TOUCH' : 'KICK AT GOAL';
+
+      el.deltaRow.innerHTML = `Lineout EP <strong>${lineout.point.toFixed(2)}</strong> &middot; Kick EP <strong>${kick.point.toFixed(2)}</strong>`;
+      el.deltaCIRow.textContent = `Delta (Lineout - Kick): ${fmtSigned(deltaMean)} | 95% CI ${fmtSigned(deltaLo)} to ${fmtSigned(deltaHi)}`;
+      el.probRow.textContent = `Pr(Lineout better): ${prc(prBetter)} | WinPct diff: ${fmtSigned(winPctDiff(), 3)} | Lineout y: ${lineout.yLineout.toFixed(1)}m`;
+
+      drawEPPlot(lineoutStats, kickStats);
+    }
+
+    function bumpValue(key, delta, min, max) {
+      state[key] = clamp(state[key] + delta, min, max);
+      updateControlsUI();
+      renderResults();
+    }
+
+    function bindEvents() {
+      el.attackTeam.addEventListener('change', () => {
+        state.attackTeam = el.attackTeam.value;
+        if (state.attackTeam === state.defenseTeam) {
+          const next = [...teamStrength.keys()].find((t) => t !== state.attackTeam);
+          if (next) {
+            state.defenseTeam = next;
+            el.defenseTeam.value = next;
+          }
+        }
+        renderResults();
+      });
+
+      el.defenseTeam.addEventListener('change', () => {
+        state.defenseTeam = el.defenseTeam.value;
+        if (state.attackTeam === state.defenseTeam) {
+          const next = [...teamStrength.keys()].find((t) => t !== state.defenseTeam);
+          if (next) {
+            state.attackTeam = next;
+            el.attackTeam.value = next;
+          }
+        }
+        renderResults();
+      });
+
+      el.xMinus.addEventListener('click', () => bumpValue('x', -1, DATA.controls?.x?.min ?? 0, DATA.controls?.x?.max ?? 70));
+      el.xPlus.addEventListener('click', () => bumpValue('x', 1, DATA.controls?.x?.min ?? 0, DATA.controls?.x?.max ?? 70));
+      el.yMinus.addEventListener('click', () => bumpValue('y', -1, DATA.controls?.y?.min ?? 5, DATA.controls?.y?.max ?? 95));
+      el.yPlus.addEventListener('click', () => bumpValue('y', 1, DATA.controls?.y?.min ?? 5, DATA.controls?.y?.max ?? 95));
+      el.dTouchMinus.addEventListener('click', () => bumpValue('dTouch', -1, DATA.controls?.dTouch?.min ?? 0, DATA.controls?.dTouch?.max ?? 30));
+      el.dTouchPlus.addEventListener('click', () => bumpValue('dTouch', 1, DATA.controls?.dTouch?.min ?? 0, DATA.controls?.dTouch?.max ?? 30));
+      el.cardMinus.addEventListener('click', () => bumpValue('cardDiff', -1, DATA.controls?.cardDiff?.min ?? -2, DATA.controls?.cardDiff?.max ?? 2));
+      el.cardPlus.addEventListener('click', () => bumpValue('cardDiff', 1, DATA.controls?.cardDiff?.min ?? -2, DATA.controls?.cardDiff?.max ?? 2));
+
+      el.l2mToggle.addEventListener('click', () => {
+        state.lessThan2Min = state.lessThan2Min ? 0 : 1;
+        updateControlsUI();
+        renderResults();
+      });
+    }
+
+    function initFromData() {
+      buildTeamStrengthMap();
+      kickNormalDraws = makeNormalDraws((DATA.lineout.coefBootstrap || []).length || 400);
+
+      const teams = [...teamStrength.keys()];
+      el.attackTeam.innerHTML = teams.map((t) => `<option value="${t}">${t}</option>`).join('');
+      el.defenseTeam.innerHTML = teams.map((t) => `<option value="${t}">${t}</option>`).join('');
+
+      state.attackTeam = DATA.defaults?.attackTeam && teamStrength.has(DATA.defaults.attackTeam) ? DATA.defaults.attackTeam : teams[0];
+      state.defenseTeam = DATA.defaults?.defenseTeam && teamStrength.has(DATA.defaults.defenseTeam) ? DATA.defaults.defenseTeam : teams[1];
+      if (state.attackTeam === state.defenseTeam) state.defenseTeam = teams.find((t) => t !== state.attackTeam) || teams[0];
+      el.attackTeam.value = state.attackTeam;
+      el.defenseTeam.value = state.defenseTeam;
+
+      state.x = Number(DATA.defaults?.x ?? 35);
+      state.y = Number(DATA.defaults?.y ?? 40);
+      state.dTouch = Number(DATA.defaults?.dTouch ?? 20);
+      state.cardDiff = Number(DATA.defaults?.cardDiff ?? 0);
+      state.lessThan2Min = Number(DATA.defaults?.lessThan2Min ?? 0);
+
+      updateControlsUI();
+      bindEvents();
+      renderResults();
+    }
+
+    fetch(dataUrl, { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => {
+        DATA = data;
+        initFromData();
+        el.loading.style.display = 'none';
+        el.app.style.display = 'block';
+      })
+      .catch(() => {
+        el.loading.textContent = 'Failed to load model data.';
+      });
+  </script>
+
+  <style is:global>
+    .field-group { margin-bottom: 0.75rem; }
+    .field-label { display: block; font-size: 0.78rem; color: #475569; font-weight: 600; margin-bottom: 0.25rem; }
+    .select-input {
+      width: 100%;
+      border: 1px solid #d3dae6;
+      border-radius: 8px;
+      padding: 0.5rem 0.55rem;
+      font-size: 0.9rem;
+      background: #fff;
+      color: #1f2937;
+    }
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    .stepper-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      min-width: 5rem;
+      text-align: center;
+      color: #0f172a;
+    }
+    .stepper-val .band {
+      color: #94a3b8;
+      font-weight: 500;
+      margin: 0 0.2rem;
+    }
+    .delta-row.subtle { font-size: 0.86rem; color: #4b5563; }
+    .ep-plot {
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .plot-note {
+      margin-top: 0.35rem;
+      font-size: 0.74rem;
+      color: #6b7280;
+    }
+  </style>
+</LayoutCurlers>

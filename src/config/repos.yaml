@@ -25,6 +25,10 @@ seminar:
       highlights: [In Review at JQAS]
       description: An expected-points framework for rugby union with applications to penalty decisions.
       preprint: https://arxiv.org/abs/2512.00312
+      deliverables:
+        - label: Interactive App
+          url: /rugby-ep
+          icon: app
     - name: "PRESS: A New Forechecking Metric for Hockey"
       repo: halo2026
       highlights: [2026 HALO Hackathon Finalist]

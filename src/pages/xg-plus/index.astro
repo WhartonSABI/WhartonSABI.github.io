@@ -136,26 +136,32 @@ const baseUrl = `${import.meta.env.BASE_URL}`;
       return point.forRate ?? point.raw;
     }
 
-    function averageEntityMetric(entity) {
-      const vals = (entity.series || [])
-        .map((s) => seriesMetricValue(s))
-        .filter((v) => Number.isFinite(v));
-      if (!vals.length) return null;
-      return vals.reduce((acc, v) => acc + v, 0) / vals.length;
+    function seriesMetricValueForPreset(point) {
+      if (state.mode === 'teams') {
+        return point.diffRate ?? point.raw;
+      }
+      return seriesMetricValue(point);
+    }
+
+    function latestEntityMetric(entity) {
+      const sorted = [...(entity.series || [])].sort((a, b) => a.year - b.year);
+      if (!sorted.length) return null;
+      const latest = seriesMetricValueForPreset(sorted[sorted.length - 1]);
+      return Number.isFinite(latest) ? latest : null;
     }
 
     function computePresetSets() {
       const recurring = recurringEntities();
       const scoredRecurring = recurring
-        .map((p) => ({ name: p.name, avg: averageEntityMetric(p), series: p.series }))
-        .filter((p) => Number.isFinite(p.avg));
+        .map((p) => ({ name: p.name, score: latestEntityMetric(p), series: p.series }))
+        .filter((p) => Number.isFinite(p.score));
 
       const top5 = [...scoredRecurring]
-        .sort((a, b) => b.avg - a.avg)
+        .sort((a, b) => b.score - a.score)
         .slice(0, 5)
         .map((p) => p.name);
       const bottom5 = [...scoredRecurring]
-        .sort((a, b) => a.avg - b.avg)
+        .sort((a, b) => a.score - b.score)
         .slice(0, 5)
         .map((p) => p.name);
       const biggestRisers = [...recurring]
@@ -164,8 +170,8 @@ const baseUrl = `${import.meta.env.BASE_URL}`;
           const sorted = [...p.series].sort((a, b) => a.year - b.year);
           const first = sorted[0];
           const last = sorted[sorted.length - 1];
-          const firstVal = seriesMetricValue(first);
-          const lastVal = seriesMetricValue(last);
+          const firstVal = seriesMetricValueForPreset(first);
+          const lastVal = seriesMetricValueForPreset(last);
           if (!Number.isFinite(firstVal) || !Number.isFinite(lastVal)) return null;
           const years = Math.max(1, last.year - first.year);
           return { name: p.name, slope: (lastVal - firstVal) / years };
@@ -180,8 +186,8 @@ const baseUrl = `${import.meta.env.BASE_URL}`;
           const sorted = [...p.series].sort((a, b) => a.year - b.year);
           const first = sorted[0];
           const last = sorted[sorted.length - 1];
-          const firstVal = seriesMetricValue(first);
-          const lastVal = seriesMetricValue(last);
+          const firstVal = seriesMetricValueForPreset(first);
+          const lastVal = seriesMetricValueForPreset(last);
           if (!Number.isFinite(firstVal) || !Number.isFinite(lastVal)) return null;
           const years = Math.max(1, last.year - first.year);
           return { name: p.name, slope: (lastVal - firstVal) / years };
@@ -255,6 +261,12 @@ const baseUrl = `${import.meta.env.BASE_URL}`;
       const map = new Map();
       entities.forEach((p, idx) => map.set(p.name, palette[idx % palette.length]));
       return map;
+    }
+
+    function alphaNameSort(a, b) {
+      const an = (a?.name || '').trim().toLowerCase();
+      const bn = (b?.name || '').trim().toLowerCase();
+      return an.localeCompare(bn, undefined, { sensitivity: 'base' });
     }
 
     function ensureMetricValid() {
@@ -393,7 +405,8 @@ const baseUrl = `${import.meta.env.BASE_URL}`;
     }
 
     function renderSelectedChips() {
-      const players = selectedEntities();
+      const players = selectedEntities()
+        .sort(alphaNameSort);
       const colors = colorByName(players);
       el.visibleCount.textContent = String(players.length);
       el.selectedChips.innerHTML = '';
@@ -467,8 +480,9 @@ const baseUrl = `${import.meta.env.BASE_URL}`;
           ];
 
       setupSeg(el.metricSeg, metricOptions, state.metric, (next) => {
+        if (state.metric === next) return;
         state.metric = next;
-        render();
+        resetToTop5();
       });
     }
 
