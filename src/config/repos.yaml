@@ -85,6 +85,9 @@ lab:
         - label: ASIS 2026
           path: asis2026/presentation.pdf
           icon: presentation
+        - label: Interactive App
+          url: /xg-plus
+          icon: app
 
 moneyball:
   org: Wharton-Moneyball

@@ -1,0 +1,577 @@
+---
+import LayoutServerQuality from '../../layouts/LayoutServerQuality.astro';
+
+const dataUrl = `${import.meta.env.BASE_URL}xg-plus/data.json`;
+const baseUrl = `${import.meta.env.BASE_URL}`;
+---
+
+<LayoutServerQuality>
+  <header class="hero">
+    <h1>xG+ Visualizer</h1>
+    <p>Interactive trajectories across EPL seasons for teams and attackers.</p>
+  </header>
+
+  <main class="app">
+    <div id="loading">Loading xG+ trajectory data...</div>
+
+    <div id="app" class="sq-app" style="display:none;">
+      <div class="controls-row">
+        <div class="control-card">
+          <div class="label">Group</div>
+          <div class="sq-seg" id="mode-seg"></div>
+        </div>
+        <div class="control-card">
+          <div class="label">Metric</div>
+          <div class="sq-seg" id="metric-seg"></div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <svg id="chart" viewBox="0 0 1020 460" aria-label="xG+ trajectory chart"></svg>
+        <div class="sq-chart-footnote">Point size indicates chance volume.</div>
+      </div>
+
+      <div class="controls-grid">
+        <div class="panel">
+          <div class="panel-title">Visible <span id="group-label">Entities</span> (<span id="visible-count">0</span>/10)</div>
+          <div class="sq-chip-row" id="selected-chips"></div>
+          <div class="sq-sub-label">Presets</div>
+          <div class="sq-btn-row">
+            <button id="btn-top5" class="sq-btn">Top 5</button>
+            <button id="btn-bottom5" class="sq-btn">Bottom 5</button>
+            <button id="btn-risers" class="sq-btn">Biggest Risers</button>
+            <button id="btn-fallers" class="sq-btn">Biggest Fallers</button>
+            <button id="btn-random5" class="sq-btn">Random 5</button>
+            <button id="btn-clear" class="sq-btn ghost">Clear All</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Add <span id="group-label-add">Entities</span></div>
+          <input id="entity-search" type="text" placeholder="Search..." class="search" />
+          <div class="list" id="entity-list"></div>
+        </div>
+      </div>
+
+      <div class="panel insights-panel">
+        <div class="panel-title">Model Video Visualizations</div>
+        <div id="gif-grid" class="gif-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <script define:vars={{ dataUrl, baseUrl }}>
+    const palette = [
+      '#0B3C5D', '#B51F1F', '#1E7A73', '#8A5A00', '#5D3A9B',
+      '#B04670', '#2F5E1D', '#6B2E2E', '#0A6FAE', '#4E4E4E',
+      '#A83A0E', '#1D4A8F',
+    ];
+
+    let DATA = null;
+    const maxLines = 10;
+
+    const state = {
+      mode: 'teams',
+      metric: 'teams_for_against',
+      selected: new Set(),
+      selectedPreset: 'top5',
+      randomPresetKey: '',
+      search: '',
+    };
+
+    const el = {
+      loading: document.getElementById('loading'),
+      app: document.getElementById('app'),
+      modeSeg: document.getElementById('mode-seg'),
+      metricSeg: document.getElementById('metric-seg'),
+      chart: document.getElementById('chart'),
+      visibleCount: document.getElementById('visible-count'),
+      groupLabel: document.getElementById('group-label'),
+      groupLabelAdd: document.getElementById('group-label-add'),
+      selectedChips: document.getElementById('selected-chips'),
+      top5: document.getElementById('btn-top5'),
+      bottom5: document.getElementById('btn-bottom5'),
+      random5: document.getElementById('btn-random5'),
+      risers: document.getElementById('btn-risers'),
+      fallers: document.getElementById('btn-fallers'),
+      clear: document.getElementById('btn-clear'),
+      search: document.getElementById('entity-search'),
+      entityList: document.getElementById('entity-list'),
+      gifGrid: document.getElementById('gif-grid'),
+    };
+
+    function currentGroup() {
+      return DATA.modes[state.mode];
+    }
+
+    function setupSeg(container, options, value, onSelect) {
+      container.innerHTML = '';
+      options.forEach((o) => {
+        const b = document.createElement('button');
+        b.className = `sq-seg-btn ${o.value === value ? 'active' : ''}`;
+        b.textContent = o.label;
+        b.addEventListener('click', () => onSelect(o.value));
+        container.appendChild(b);
+      });
+    }
+
+    function selectionKey(names) {
+      return [...new Set(names)].sort((a, b) => a.localeCompare(b)).join('|');
+    }
+
+    function recurringEntities() {
+      return currentGroup().players.filter((p) => p.seasonsPresent >= 2);
+    }
+
+    function seriesMetricValue(point) {
+      if (state.mode === 'teams') {
+        if (state.metric === 'teams_diff') return point.diffRate ?? point.raw;
+        return point.forRate ?? point.raw;
+      }
+      if (state.metric === 'attackers_goe') {
+        const goals = Number.isFinite(point.goals) ? point.goals : 0;
+        const expected = point.forRate ?? point.raw ?? 0;
+        return goals - expected;
+      }
+      return point.forRate ?? point.raw;
+    }
+
+    function averageEntityMetric(entity) {
+      const vals = (entity.series || [])
+        .map((s) => seriesMetricValue(s))
+        .filter((v) => Number.isFinite(v));
+      if (!vals.length) return null;
+      return vals.reduce((acc, v) => acc + v, 0) / vals.length;
+    }
+
+    function computePresetSets() {
+      const recurring = recurringEntities();
+      const scoredRecurring = recurring
+        .map((p) => ({ name: p.name, avg: averageEntityMetric(p), series: p.series }))
+        .filter((p) => Number.isFinite(p.avg));
+
+      const top5 = [...scoredRecurring]
+        .sort((a, b) => b.avg - a.avg)
+        .slice(0, 5)
+        .map((p) => p.name);
+      const bottom5 = [...scoredRecurring]
+        .sort((a, b) => a.avg - b.avg)
+        .slice(0, 5)
+        .map((p) => p.name);
+      const biggestRisers = [...recurring]
+        .map((p) => {
+          if (!p.series || p.series.length < 2) return null;
+          const sorted = [...p.series].sort((a, b) => a.year - b.year);
+          const first = sorted[0];
+          const last = sorted[sorted.length - 1];
+          const firstVal = seriesMetricValue(first);
+          const lastVal = seriesMetricValue(last);
+          if (!Number.isFinite(firstVal) || !Number.isFinite(lastVal)) return null;
+          const years = Math.max(1, last.year - first.year);
+          return { name: p.name, slope: (lastVal - firstVal) / years };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.slope - a.slope)
+        .slice(0, 5)
+        .map((p) => p.name);
+      const biggestFallers = [...recurring]
+        .map((p) => {
+          if (!p.series || p.series.length < 2) return null;
+          const sorted = [...p.series].sort((a, b) => a.year - b.year);
+          const first = sorted[0];
+          const last = sorted[sorted.length - 1];
+          const firstVal = seriesMetricValue(first);
+          const lastVal = seriesMetricValue(last);
+          if (!Number.isFinite(firstVal) || !Number.isFinite(lastVal)) return null;
+          const years = Math.max(1, last.year - first.year);
+          return { name: p.name, slope: (lastVal - firstVal) / years };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.slope - b.slope)
+        .slice(0, 5)
+        .map((p) => p.name);
+
+      return { top5, bottom5, biggestRisers, biggestFallers };
+    }
+
+    function detectPreset() {
+      const currentKey = selectionKey([...state.selected]);
+      const preset = computePresetSets();
+      if (currentKey === selectionKey(preset.top5)) return 'top5';
+      if (currentKey === selectionKey(preset.bottom5)) return 'bottom5';
+      if (currentKey === selectionKey(preset.biggestRisers)) return 'risers';
+      if (currentKey === selectionKey(preset.biggestFallers)) return 'fallers';
+      if (state.randomPresetKey && currentKey === state.randomPresetKey) return 'random5';
+      return '';
+    }
+
+    function renderPresetButtons() {
+      const map = {
+        top5: el.top5,
+        bottom5: el.bottom5,
+        risers: el.risers,
+        fallers: el.fallers,
+        random5: el.random5,
+      };
+      Object.entries(map).forEach(([id, node]) => node.classList.toggle('active', id === state.selectedPreset));
+    }
+
+    function applySelection(names, presetId = '') {
+      state.selected = new Set(names.slice(0, maxLines));
+      state.selectedPreset = presetId;
+      render();
+    }
+
+    function resetToTop5() {
+      applySelection(computePresetSets().top5, 'top5');
+    }
+
+    function setBottom5() {
+      applySelection(computePresetSets().bottom5, 'bottom5');
+    }
+
+    function setRandom5() {
+      const candidates = [...recurringEntities()].map((p) => p.name);
+      for (let i = candidates.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+      }
+      const selection = candidates.slice(0, 5);
+      state.randomPresetKey = selectionKey(selection);
+      applySelection(selection, 'random5');
+    }
+
+    function setRisers(desc = true) {
+      const preset = computePresetSets();
+      applySelection(desc ? preset.biggestRisers : preset.biggestFallers, desc ? 'risers' : 'fallers');
+    }
+
+    function selectedEntities() {
+      const byName = new Map(currentGroup().players.map((p) => [p.name, p]));
+      return [...state.selected].map((n) => byName.get(n)).filter(Boolean);
+    }
+
+    function colorByName(entities) {
+      const map = new Map();
+      entities.forEach((p, idx) => map.set(p.name, palette[idx % palette.length]));
+      return map;
+    }
+
+    function ensureMetricValid() {
+      if (state.mode === 'teams' && !['teams_for_against', 'teams_diff'].includes(state.metric)) {
+        state.metric = 'teams_for_against';
+      }
+      if (state.mode === 'attackers' && !['attackers_for', 'attackers_goe'].includes(state.metric)) {
+        state.metric = 'attackers_for';
+      }
+    }
+
+    function metricValue(point) {
+      return seriesMetricValue(point);
+    }
+
+    function pickNiceStep(target, candidates) {
+      for (const c of candidates) {
+        if (c >= target) return c;
+      }
+      return candidates[candidates.length - 1];
+    }
+
+    function buildTicks(minVal, maxVal) {
+      const span = Math.max(1e-6, maxVal - minVal);
+      const targetStep = span / 6;
+      const steps = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50];
+      const step = pickNiceStep(targetStep, steps);
+
+      const tickMin = Math.floor(minVal / step) * step;
+      const tickMax = Math.ceil(maxVal / step) * step;
+      const ticks = [];
+      for (let y = tickMin; y <= tickMax + step * 0.001; y += step) {
+        ticks.push(Number(y.toFixed(6)));
+      }
+      return { ticks, step };
+    }
+
+    function formatTickValue(y, step) {
+      const decimals = step >= 1 ? 0 : step >= 0.1 ? 1 : 2;
+      return Number(y.toFixed(decimals)).toString();
+    }
+
+    function drawChart(entities) {
+      const svg = el.chart;
+      const W = 1020;
+      const H = 460;
+      const m = { t: 28, r: 28, b: 64, l: 76 };
+      const iw = W - m.l - m.r;
+      const ih = H - m.t - m.b;
+
+      const points = entities.flatMap((p) => p.series.map((s) => ({ ...s, entity: p.name })));
+      if (!points.length) {
+        svg.innerHTML = `<text x="510" y="250" text-anchor="middle" fill="#5d6470" font-size="20">Add entities to draw trajectories</text>`;
+        return;
+      }
+
+      const years = [...new Set(points.map((p) => p.year))].sort((a, b) => a - b);
+      const seasonLabelByYear = new Map();
+      points.forEach((p) => {
+        if (!seasonLabelByYear.has(p.year)) seasonLabelByYear.set(p.year, p.season);
+      });
+      const xMin = years[0];
+      const xMax = years[years.length - 1];
+      const ys = points.flatMap((p) => {
+        if (state.mode === 'teams' && state.metric === 'teams_for_against') {
+          return [p.forRate, p.againstRate].filter((v) => Number.isFinite(v));
+        }
+        return [metricValue(p)];
+      });
+      let yMin = Math.min(...ys);
+      let yMax = Math.max(...ys);
+      const pad = (yMax - yMin || 1) * 0.08;
+      yMin -= pad;
+      yMax += pad;
+
+      const { ticks, step } = buildTicks(yMin, yMax);
+      const visibleTicks = ticks.filter((y) => y >= yMin - 1e-9 && y <= yMax + 1e-9);
+
+      const sx = (x) => m.l + ((x - xMin) / Math.max(1, xMax - xMin)) * iw;
+      const sy = (y) => m.t + (1 - ((y - yMin) / Math.max(1e-6, yMax - yMin))) * ih;
+
+      const axis = [];
+      for (const y of visibleTicks) {
+        const py = sy(y);
+        axis.push(`<line x1="${m.l}" y1="${py}" x2="${W - m.r}" y2="${py}" stroke="#e7ebf3" />`);
+        axis.push(`<text x="${m.l - 10}" y="${py + 4}" text-anchor="end" fill="#4a5464" font-size="12">${formatTickValue(y, step)}</text>`);
+      }
+
+      const xAxis = years.map((yr) => {
+        const full = seasonLabelByYear.get(yr) || String(yr);
+        const short = full.includes('-') ? `${full.slice(2, 4)}-${full.slice(7, 9)}` : String(yr);
+        return `<text x="${sx(yr)}" y="${H - m.b + 24}" text-anchor="middle" fill="#4a5464" font-size="12">${short}</text>`;
+      });
+
+      const colors = colorByName(entities);
+      const lines = entities.map((p) => {
+        const color = colors.get(p.name) || palette[0];
+        const sorted = [...p.series].sort((a, b) => a.year - b.year);
+        const rForShots = sorted.map((s) => Math.max(3, Math.min(11, 2 + Math.sqrt(Math.max(0, s.shots)) * 0.32)));
+
+        if (state.mode === 'teams' && state.metric === 'teams_for_against') {
+          const dFor = sorted.map((s, i) => `${i === 0 ? 'M' : 'L'} ${sx(s.year)} ${sy(s.forRate ?? 0)}`).join(' ');
+          const dAgainst = sorted.map((s, i) => `${i === 0 ? 'M' : 'L'} ${sx(s.year)} ${sy(s.againstRate ?? 0)}`).join(' ');
+          const circlesFor = sorted.map((s, i) => {
+            const label = `${p.name} | ${s.season} | For ${(s.forRate ?? 0).toFixed(4)} | Chances ${s.shots}`;
+            return `<circle cx="${sx(s.year)}" cy="${sy(s.forRate ?? 0)}" r="${rForShots[i]}" fill="${color}" opacity="0.9"><title>${label}</title></circle>`;
+          }).join('');
+          const circlesAgainst = sorted.map((s, i) => {
+            const label = `${p.name} | ${s.season} | Against ${(s.againstRate ?? 0).toFixed(4)} | Chances ${s.shots}`;
+            return `<circle cx="${sx(s.year)}" cy="${sy(s.againstRate ?? 0)}" r="${Math.max(2.6, rForShots[i] - 0.5)}" fill="${color}" opacity="0.75"><title>${label}</title></circle>`;
+          }).join('');
+          return `
+            <path d="${dFor}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" />
+            <path d="${dAgainst}" fill="none" stroke="${color}" stroke-width="2.2" stroke-dasharray="8 5" stroke-linecap="round" opacity="0.9" />
+            ${circlesFor}
+            ${circlesAgainst}
+          `;
+        }
+
+        const d = sorted.map((s, i) => `${i === 0 ? 'M' : 'L'} ${sx(s.year)} ${sy(metricValue(s))}`).join(' ');
+        const circles = sorted.map((s, i) => {
+          const label = `${p.name} | ${s.season} | ${(metricValue(s)).toFixed(4)} | Chances ${s.shots}`;
+          return `<circle cx="${sx(s.year)}" cy="${sy(metricValue(s))}" r="${rForShots[i]}" fill="${color}" opacity="0.9"><title>${label}</title></circle>`;
+        }).join('');
+        return `<path d="${d}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" />${circles}`;
+      });
+
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${W}" height="${H}" fill="#ffffff" rx="14" />
+        ${axis.join('')}
+        <line x1="${m.l}" y1="${H - m.b}" x2="${W - m.r}" y2="${H - m.b}" stroke="#bfc9db" />
+        <line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${H - m.b}" stroke="#bfc9db" />
+        ${xAxis.join('')}
+        ${lines.join('')}
+      `;
+    }
+
+    function renderSelectedChips() {
+      const players = selectedEntities();
+      const colors = colorByName(players);
+      el.visibleCount.textContent = String(players.length);
+      el.selectedChips.innerHTML = '';
+
+      players.forEach((p) => {
+        const chip = document.createElement('button');
+        chip.className = 'sq-chip';
+        const color = colors.get(p.name) || palette[0];
+        chip.style.borderColor = `${color}66`;
+        chip.style.backgroundColor = `${color}22`;
+        chip.style.color = color;
+        chip.innerHTML = `<span class="sq-swatch" style="background:${color}"></span><span class="sq-chip-name">${p.name}</span><span class="sq-chip-x">×</span>`;
+        chip.addEventListener('click', () => {
+          state.selected.delete(p.name);
+          render();
+        });
+        el.selectedChips.appendChild(chip);
+      });
+    }
+
+    function renderEntityList() {
+      const q = state.search.trim().toLowerCase();
+      const rows = [...currentGroup().players]
+        .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+        .filter((p) => !state.selected.has(p.name))
+        .filter((p) => !q || p.name.toLowerCase().includes(q));
+
+      el.entityList.innerHTML = '';
+      rows.forEach((p) => {
+        const row = document.createElement('div');
+        row.className = 'player-row';
+
+        const info = document.createElement('div');
+        info.className = 'player-info';
+        const teamsText = p.teams && p.teams.length ? ` · ${p.teams.slice(0, 2).join(', ')}${p.teams.length > 2 ? ' +' : ''}` : '';
+        info.innerHTML = `<strong>${p.name}</strong><span>${p.seasonsPresent} seasons · ${p.totalShots} chances${teamsText}</span>`;
+
+        const add = document.createElement('button');
+        add.className = 'sq-add-btn';
+        add.textContent = 'Add';
+        add.disabled = state.selected.size >= maxLines;
+        add.addEventListener('click', () => {
+          if (state.selected.size >= maxLines) return;
+          state.selected.add(p.name);
+          render();
+        });
+
+        row.append(info, add);
+        el.entityList.appendChild(row);
+      });
+    }
+
+    function renderSegs() {
+      setupSeg(el.modeSeg, [
+        { value: 'teams', label: 'Teams' },
+        { value: 'attackers', label: 'Attackers' },
+      ], state.mode, (next) => {
+        if (state.mode === next) return;
+        state.mode = next;
+        resetToTop5();
+      });
+
+      const metricOptions = state.mode === 'teams'
+        ? [
+            { value: 'teams_for_against', label: 'xG+ For/Against' },
+            { value: 'teams_diff', label: 'xG+ Diff' },
+          ]
+        : [
+            { value: 'attackers_for', label: 'xG+ For' },
+            { value: 'attackers_goe', label: 'GoE+ (Goals - xG+)' },
+          ];
+
+      setupSeg(el.metricSeg, metricOptions, state.metric, (next) => {
+        state.metric = next;
+        render();
+      });
+    }
+
+    function renderGroupLabels() {
+      const label = currentGroup().label;
+      el.groupLabel.textContent = label;
+      el.groupLabelAdd.textContent = label;
+    }
+
+    function renderGifs() {
+      el.gifGrid.innerHTML = '';
+      (DATA.gifs || []).forEach((gif) => {
+        const card = document.createElement('article');
+        card.className = 'gif-card';
+        card.innerHTML = `
+          <img src="${baseUrl}${gif.src}" alt="${gif.file}" loading="lazy" />
+          <p>${gif.caption}</p>
+        `;
+        el.gifGrid.appendChild(card);
+      });
+    }
+
+    function render() {
+      ensureMetricValid();
+      state.selectedPreset = detectPreset();
+      renderSegs();
+      renderGroupLabels();
+      renderPresetButtons();
+      renderSelectedChips();
+      renderEntityList();
+      drawChart(selectedEntities());
+    }
+
+    el.top5.addEventListener('click', () => resetToTop5());
+    el.bottom5.addEventListener('click', () => setBottom5());
+    el.random5.addEventListener('click', () => setRandom5());
+    el.risers.addEventListener('click', () => setRisers(true));
+    el.fallers.addEventListener('click', () => setRisers(false));
+    el.clear.addEventListener('click', () => {
+      state.selected.clear();
+      render();
+    });
+    el.search.addEventListener('input', () => {
+      state.search = el.search.value || '';
+      renderEntityList();
+    });
+
+    fetch(dataUrl, { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => {
+        DATA = data;
+        resetToTop5();
+        renderGifs();
+        el.loading.style.display = 'none';
+        el.app.style.display = 'block';
+      })
+      .catch(() => {
+        el.loading.textContent = 'Failed to load xG+ data.';
+      });
+  </script>
+
+  <style is:global>
+    #loading { text-align: center; color: #5d6470; padding: 3rem 1rem; font-size: 1rem; }
+    .sq-app { --sq-font: "Avenir Next", "Segoe UI", sans-serif; font-family: var(--sq-font); font-size: 0.92rem; color: #132b4a; }
+    .sq-app button, .sq-app input, .sq-app p, .sq-app span, .sq-app strong, .sq-app div { font-family: var(--sq-font); }
+    .controls-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+    .control-card, .panel, .chart-wrap { border: 1px solid #dce3ef; border-radius: 14px; background: #fff; box-shadow: 0 8px 18px rgba(12, 35, 66, 0.06); }
+    .control-card { padding: 0.72rem; }
+    .chart-wrap { margin-top: 0.8rem; padding: 0.8rem; }
+    .panel { padding: 0.7rem; }
+    .label { color: #4d5768; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.01em; margin-bottom: 0.5rem; }
+    .sq-seg { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .sq-seg-btn { border: 1px solid #cdd7e8; background: linear-gradient(180deg, #ffffff, #edf3ff); color: #10345d; border-radius: 999px; padding: 0.48rem 0.82rem; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+    .sq-seg-btn.active { background: linear-gradient(180deg, #17457a, #12365e); color: #fff; border-color: #12365e; }
+    #chart { width: 100%; height: auto; border-radius: 12px; border: 1px solid #eef1f7; background: #fff; }
+    .sq-chart-footnote { margin-top: 0.38rem; font-size: 0.77rem; font-weight: 600; color: #5a667a; }
+    .controls-grid { margin-top: 0.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .panel-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.55rem; color: #122f54; }
+    .sq-sub-label { margin-top: 0.72rem; margin-bottom: 0.42rem; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #5b6880; }
+    .sq-chip-row { min-height: 2.2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .sq-chip { border: 1px solid #d9e0ee; background: #f6f9ff; color: #1f3e67; border-radius: 999px; padding: 0.34rem 0.55rem; font-size: 0.77rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.42rem; max-width: 100%; }
+    .sq-swatch { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; border: 1px solid rgba(0, 0, 0, 0.1); }
+    .sq-chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+    .sq-chip-x { font-weight: 900; line-height: 1; }
+    .sq-btn-row { margin-top: 0.65rem; display: flex; column-gap: 0.55rem; row-gap: 0.55rem; flex-wrap: wrap; align-items: center; }
+    .sq-btn { border: 1px solid #d6dde8; background: linear-gradient(180deg, #ffffff, #f6f8fc); color: #3f4f65; border-radius: 999px; padding: 0.48rem 0.82rem; font-size: 0.77rem; font-weight: 700; cursor: pointer; }
+    .sq-btn.active { border-color: #10365f; background: linear-gradient(180deg, #17457a, #12365e); color: #fff; }
+    .sq-btn.ghost { border: 1px solid #d8dfea; background: #fff; color: #244469; }
+    .search { width: 100%; border: 1px solid #cfd7e7; border-radius: 9px; padding: 0.48rem 0.58rem; margin-bottom: 0.5rem; font-size: 0.84rem; }
+    .list { max-height: 240px; overflow: auto; display: grid; gap: 0.34rem; }
+    .player-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 0.55rem; border: 1px solid #e3e8f3; border-radius: 9px; padding: 0.42rem 0.5rem; }
+    .player-info { min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; overflow: hidden; }
+    .player-info strong { font-size: 0.82rem; line-height: 1.2; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .player-info span { color: #5a6476; font-size: 0.74rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sq-add-btn { border: none; border-radius: 8px; background: #b51f1f; color: #fff; padding: 0.36rem 0.52rem; font-size: 0.74rem; font-weight: 700; cursor: pointer; min-width: 48px; white-space: nowrap; }
+    .sq-add-btn:disabled { opacity: 0.45; cursor: default; }
+    .insights-panel { margin-top: 0.8rem; }
+    .gif-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.72rem; }
+    .gif-card { border: 1px solid #e3e8f3; border-radius: 10px; background: #fcfdff; padding: 0.5rem; }
+    .gif-card img { width: 100%; display: block; border-radius: 8px; border: 1px solid #e8edf7; }
+    .gif-card p { margin: 0.42rem 0 0; font-size: 0.78rem; color: #2b3f5a; line-height: 1.35; }
+    @media (max-width: 980px) {
+      .controls-row, .controls-grid, .gif-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</LayoutServerQuality>

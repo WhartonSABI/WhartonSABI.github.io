@@ -16,7 +16,7 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
     <div id="app" class="sq-app" style="display:none;">
       <div class="controls-row">
         <div class="control-card">
-          <div class="label">Outcome</div>
+          <div class="label">Model</div>
           <div class="sq-seg" id="model-seg"></div>
         </div>
         <div class="control-card">
@@ -126,11 +126,11 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
       const bottom5 = [...recurring].sort((a, b) => endSeasonScore(a) - endSeasonScore(b)).slice(0, 5).map((p) => p.name);
       const top5Climbers = [...recurring]
         .map((p) => {
-          const series = p.series || [];
-          const wk8 = series.find((s) => s.weekNum === 8);
-          const end = series.find((s) => s.weekNum === 18);
-          if (!wk8 || !end) return null;
-          return { name: p.name, delta: end.score - wk8.score };
+          const played = (p.series || []).filter((s) => s.playedThisWeek);
+          const game8 = played.find((s) => s.gamesPlayed === 8);
+          const end = played[played.length - 1];
+          if (!game8 || !end) return null;
+          return { name: p.name, delta: end.score - game8.score };
         })
         .filter(Boolean)
         .sort((a, b) => b.delta - a.delta)
@@ -138,11 +138,11 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
         .map((p) => p.name);
       const top5Sliders = [...recurring]
         .map((p) => {
-          const series = p.series || [];
-          const wk8 = series.find((s) => s.weekNum === 8);
-          const end = series.find((s) => s.weekNum === 18);
-          if (!wk8 || !end) return null;
-          return { name: p.name, delta: end.score - wk8.score };
+          const played = (p.series || []).filter((s) => s.playedThisWeek);
+          const game8 = played.find((s) => s.gamesPlayed === 8);
+          const end = played[played.length - 1];
+          if (!game8 || !end) return null;
+          return { name: p.name, delta: end.score - game8.score };
         })
         .filter(Boolean)
         .sort((a, b) => a.delta - b.delta)
