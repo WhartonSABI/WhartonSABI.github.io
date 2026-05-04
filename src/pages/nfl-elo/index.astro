@@ -231,6 +231,10 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
       return [...state.selected].map((n) => byName.get(n)).filter(Boolean);
     }
 
+    function gameLabel(n) {
+      return `${n} ${n === 1 ? 'game' : 'games'}`;
+    }
+
     function drawChart(players) {
       const svg = el.chart;
       const W = 1020;
@@ -331,7 +335,8 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
 
         const info = document.createElement('div');
         info.className = 'player-info';
-        info.innerHTML = `<strong>${p.name}</strong><span>${p.gamesPlayedFinal} games · score ${p.meanScore.toFixed(3)}</span>`;
+        const totalSnaps = (p.series || []).reduce((sum, s) => sum + (s.snapsInGame || 0), 0);
+        info.innerHTML = `<strong>${p.name}</strong><span>${gameLabel(p.gamesPlayedFinal)} · ${totalSnaps} snaps</span>`;
 
         const add = document.createElement('button');
         add.className = 'sq-add-btn';
