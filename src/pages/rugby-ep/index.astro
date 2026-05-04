@@ -32,39 +32,27 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
             <div class="card-title">Game State</div>
 
             <div class="field-group">
-              <label class="field-label">Lateral position x</label>
-              <div class="stepper">
-                <button class="stepper-btn" id="x-minus">&minus;</button>
-                <div class="stepper-val"><span class="band">(</span><span id="x-val">35</span><span class="band">)</span></div>
-                <button class="stepper-btn" id="x-plus">+</button>
-              </div>
+              <label class="field-label" for="x-slider">Lateral position x</label>
+              <input id="x-slider" class="state-slider" type="range" min="0" max="70" step="1" value="35" />
+              <div class="slider-meta"><span>0</span><strong id="x-val">35</strong><span>70</span></div>
             </div>
 
             <div class="field-group">
-              <label class="field-label">Distance from try line y</label>
-              <div class="stepper">
-                <button class="stepper-btn" id="y-minus">&minus;</button>
-                <div class="stepper-val"><span class="band">(</span><span id="y-val">40</span><span class="band">)</span></div>
-                <button class="stepper-btn" id="y-plus">+</button>
-              </div>
+              <label class="field-label" for="y-slider">Distance from try line y</label>
+              <input id="y-slider" class="state-slider" type="range" min="5" max="95" step="1" value="40" />
+              <div class="slider-meta"><span>5</span><strong id="y-val">40</strong><span>95</span></div>
             </div>
 
             <div class="field-group">
-              <label class="field-label">Meters gained to touch</label>
-              <div class="stepper">
-                <button class="stepper-btn" id="d-touch-minus">&minus;</button>
-                <div class="stepper-val"><span class="band">(</span><span id="d-touch-val">20</span><span class="band">)</span></div>
-                <button class="stepper-btn" id="d-touch-plus">+</button>
-              </div>
+              <label class="field-label" for="d-touch-slider">Meters gained to touch</label>
+              <input id="d-touch-slider" class="state-slider" type="range" min="0" max="30" step="1" value="20" />
+              <div class="slider-meta"><span>0</span><strong id="d-touch-val">20</strong><span>30</span></div>
             </div>
 
             <div class="field-group">
-              <label class="field-label">Card differential (opp - own)</label>
-              <div class="stepper">
-                <button class="stepper-btn" id="card-minus">&minus;</button>
-                <div class="stepper-val"><span class="band">(</span><span id="card-val">0</span><span class="band">)</span></div>
-                <button class="stepper-btn" id="card-plus">+</button>
-              </div>
+              <label class="field-label" for="card-slider">Card differential (opp - own)</label>
+              <input id="card-slider" class="state-slider" type="range" min="-2" max="2" step="1" value="0" />
+              <div class="slider-meta"><span>-2</span><strong id="card-val">0</strong><span>2</span></div>
             </div>
 
             <div class="toggle-row">
@@ -85,8 +73,27 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
 
           <div class="card">
             <div class="card-title">Decision EP Plot</div>
-            <svg id="ep-plot" viewBox="0 0 640 220" class="ep-plot" aria-label="Expected points by decision with uncertainty"></svg>
-            <div class="plot-note">Bars show expected points. Whiskers show 95% uncertainty intervals.</div>
+            <div class="wp-bars ep-bars">
+              <div class="wp-row">
+                <span class="wp-label">Lineout</span>
+                <div class="wp-track">
+                  <div class="wp-fill use-bar" id="bar-lineout" style="width:0%">
+                    <span class="wp-pct" id="pct-lineout"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="ci-note" id="ci-lineout"></div>
+              <div class="wp-row">
+                <span class="wp-label">Kick</span>
+                <div class="wp-track">
+                  <div class="wp-fill save-bar" id="bar-kick" style="width:0%">
+                    <span class="wp-pct" id="pct-kick"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="ci-note" id="ci-kick"></div>
+            </div>
+            <div class="plot-note">Bar length is scaled within the two decisions for the current state.</div>
           </div>
         </div>
       </div>
@@ -110,14 +117,10 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
       app: document.getElementById('app'),
       attackTeam: document.getElementById('attack-team'),
       defenseTeam: document.getElementById('defense-team'),
-      xMinus: document.getElementById('x-minus'),
-      xPlus: document.getElementById('x-plus'),
-      yMinus: document.getElementById('y-minus'),
-      yPlus: document.getElementById('y-plus'),
-      dTouchMinus: document.getElementById('d-touch-minus'),
-      dTouchPlus: document.getElementById('d-touch-plus'),
-      cardMinus: document.getElementById('card-minus'),
-      cardPlus: document.getElementById('card-plus'),
+      xSlider: document.getElementById('x-slider'),
+      ySlider: document.getElementById('y-slider'),
+      dTouchSlider: document.getElementById('d-touch-slider'),
+      cardSlider: document.getElementById('card-slider'),
       xVal: document.getElementById('x-val'),
       yVal: document.getElementById('y-val'),
       dTouchVal: document.getElementById('d-touch-val'),
@@ -128,7 +131,12 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
       deltaRow: document.getElementById('delta-row'),
       deltaCIRow: document.getElementById('delta-ci-row'),
       probRow: document.getElementById('prob-row'),
-      epPlot: document.getElementById('ep-plot'),
+      barLineout: document.getElementById('bar-lineout'),
+      barKick: document.getElementById('bar-kick'),
+      pctLineout: document.getElementById('pct-lineout'),
+      pctKick: document.getElementById('pct-kick'),
+      ciLineout: document.getElementById('ci-lineout'),
+      ciKick: document.getElementById('ci-kick'),
     };
 
     let teamStrength = new Map();
@@ -286,47 +294,18 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
     }
 
     function drawEPPlot(lineoutStats, kickStats) {
-      const svg = el.epPlot;
-      const W = 640;
-      const H = 220;
-      const m = { t: 24, r: 20, b: 38, l: 120 };
-      const iw = W - m.l - m.r;
+      const lo = Math.min(lineoutStats.lo, kickStats.lo);
+      const hi = Math.max(lineoutStats.hi, kickStats.hi);
+      const span = Math.max(1e-6, hi - lo);
+      const lineoutPct = ((lineoutStats.mean - lo) / span) * 100;
+      const kickPct = ((kickStats.mean - lo) / span) * 100;
 
-      const allVals = [lineoutStats.lo, lineoutStats.mean, lineoutStats.hi, kickStats.lo, kickStats.mean, kickStats.hi];
-      let xMin = Math.min(...allVals);
-      let xMax = Math.max(...allVals);
-      const pad = (xMax - xMin || 1) * 0.12;
-      xMin -= pad;
-      xMax += pad;
-
-      const sx = (x) => m.l + ((x - xMin) / Math.max(1e-6, xMax - xMin)) * iw;
-      const yLineout = 78;
-      const yKick = 152;
-
-      const ticks = [];
-      for (let i = 0; i <= 5; i += 1) ticks.push(xMin + (i / 5) * (xMax - xMin));
-
-      const axis = ticks.map((t) => `
-        <line x1="${sx(t)}" y1="${m.t}" x2="${sx(t)}" y2="${H - m.b}" stroke="#e9edf5" />
-        <text x="${sx(t)}" y="${H - 12}" text-anchor="middle" fill="#667085" font-size="12">${t.toFixed(2)}</text>
-      `).join('');
-
-      const row = (label, y, stat, color) => `
-        <text x="${m.l - 12}" y="${y + 5}" text-anchor="end" fill="#1f2937" font-size="13" font-weight="600">${label}</text>
-        <line x1="${sx(stat.lo)}" y1="${y}" x2="${sx(stat.hi)}" y2="${y}" stroke="${color}" stroke-width="3" />
-        <line x1="${sx(stat.lo)}" y1="${y - 9}" x2="${sx(stat.lo)}" y2="${y + 9}" stroke="${color}" stroke-width="2" />
-        <line x1="${sx(stat.hi)}" y1="${y - 9}" x2="${sx(stat.hi)}" y2="${y + 9}" stroke="${color}" stroke-width="2" />
-        <circle cx="${sx(stat.mean)}" cy="${y}" r="6" fill="${color}" />
-        <text x="${sx(stat.mean) + 10}" y="${y - 10}" fill="${color}" font-size="12">${stat.mean.toFixed(2)}</text>
-      `;
-
-      svg.innerHTML = `
-        <rect x="0" y="0" width="${W}" height="${H}" fill="#fff" rx="10" />
-        ${axis}
-        <line x1="${m.l}" y1="${H - m.b}" x2="${W - m.r}" y2="${H - m.b}" stroke="#cbd5e1" />
-        ${row('Lineout', yLineout, lineoutStats, '#2e7d32')}
-        ${row('Kick', yKick, kickStats, '#011F5B')}
-      `;
+      el.barLineout.style.width = `${lineoutPct.toFixed(1)}%`;
+      el.barKick.style.width = `${kickPct.toFixed(1)}%`;
+      el.pctLineout.textContent = lineoutStats.mean.toFixed(2);
+      el.pctKick.textContent = kickStats.mean.toFixed(2);
+      el.ciLineout.textContent = `95% CI: ${lineoutStats.lo.toFixed(2)} to ${lineoutStats.hi.toFixed(2)}`;
+      el.ciKick.textContent = `95% CI: ${kickStats.lo.toFixed(2)} to ${kickStats.hi.toFixed(2)}`;
     }
 
     function renderResults() {
@@ -356,12 +335,6 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
       drawEPPlot(lineoutStats, kickStats);
     }
 
-    function bumpValue(key, delta, min, max) {
-      state[key] = clamp(state[key] + delta, min, max);
-      updateControlsUI();
-      renderResults();
-    }
-
     function bindEvents() {
       el.attackTeam.addEventListener('change', () => {
         state.attackTeam = el.attackTeam.value;
@@ -387,14 +360,10 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
         renderResults();
       });
 
-      el.xMinus.addEventListener('click', () => bumpValue('x', -1, DATA.controls?.x?.min ?? 0, DATA.controls?.x?.max ?? 70));
-      el.xPlus.addEventListener('click', () => bumpValue('x', 1, DATA.controls?.x?.min ?? 0, DATA.controls?.x?.max ?? 70));
-      el.yMinus.addEventListener('click', () => bumpValue('y', -1, DATA.controls?.y?.min ?? 5, DATA.controls?.y?.max ?? 95));
-      el.yPlus.addEventListener('click', () => bumpValue('y', 1, DATA.controls?.y?.min ?? 5, DATA.controls?.y?.max ?? 95));
-      el.dTouchMinus.addEventListener('click', () => bumpValue('dTouch', -1, DATA.controls?.dTouch?.min ?? 0, DATA.controls?.dTouch?.max ?? 30));
-      el.dTouchPlus.addEventListener('click', () => bumpValue('dTouch', 1, DATA.controls?.dTouch?.min ?? 0, DATA.controls?.dTouch?.max ?? 30));
-      el.cardMinus.addEventListener('click', () => bumpValue('cardDiff', -1, DATA.controls?.cardDiff?.min ?? -2, DATA.controls?.cardDiff?.max ?? 2));
-      el.cardPlus.addEventListener('click', () => bumpValue('cardDiff', 1, DATA.controls?.cardDiff?.min ?? -2, DATA.controls?.cardDiff?.max ?? 2));
+      el.xSlider.addEventListener('input', () => { state.x = Number(el.xSlider.value); updateControlsUI(); renderResults(); });
+      el.ySlider.addEventListener('input', () => { state.y = Number(el.ySlider.value); updateControlsUI(); renderResults(); });
+      el.dTouchSlider.addEventListener('input', () => { state.dTouch = Number(el.dTouchSlider.value); updateControlsUI(); renderResults(); });
+      el.cardSlider.addEventListener('input', () => { state.cardDiff = Number(el.cardSlider.value); updateControlsUI(); renderResults(); });
 
       el.l2mToggle.addEventListener('click', () => {
         state.lessThan2Min = state.lessThan2Min ? 0 : 1;
@@ -422,6 +391,25 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
       state.dTouch = Number(DATA.defaults?.dTouch ?? 20);
       state.cardDiff = Number(DATA.defaults?.cardDiff ?? 0);
       state.lessThan2Min = Number(DATA.defaults?.lessThan2Min ?? 0);
+
+      const c = DATA.controls || {};
+      el.xSlider.min = String(c.x?.min ?? 0);
+      el.xSlider.max = String(c.x?.max ?? 70);
+      el.xSlider.step = String(c.x?.step ?? 1);
+      el.ySlider.min = String(c.y?.min ?? 5);
+      el.ySlider.max = String(c.y?.max ?? 95);
+      el.ySlider.step = String(c.y?.step ?? 1);
+      el.dTouchSlider.min = String(c.dTouch?.min ?? 0);
+      el.dTouchSlider.max = String(c.dTouch?.max ?? 30);
+      el.dTouchSlider.step = String(c.dTouch?.step ?? 1);
+      el.cardSlider.min = String(c.cardDiff?.min ?? -2);
+      el.cardSlider.max = String(c.cardDiff?.max ?? 2);
+      el.cardSlider.step = String(c.cardDiff?.step ?? 1);
+
+      el.xSlider.value = String(state.x);
+      el.ySlider.value = String(state.y);
+      el.dTouchSlider.value = String(state.dTouch);
+      el.cardSlider.value = String(state.cardDiff);
 
       updateControlsUI();
       bindEvents();
@@ -453,30 +441,21 @@ const dataUrl = `${import.meta.env.BASE_URL}rugby-ep/data.json`;
       background: #fff;
       color: #1f2937;
     }
-    .stepper {
+    .state-slider { width: 100%; accent-color: var(--penn-blue); }
+    .slider-meta {
+      margin-top: 0.2rem;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: #64748b;
     }
-    .stepper-val {
-      font-size: 1.4rem;
-      font-weight: 700;
-      min-width: 5rem;
-      text-align: center;
-      color: #0f172a;
-    }
-    .stepper-val .band {
-      color: #94a3b8;
-      font-weight: 500;
-      margin: 0 0.2rem;
-    }
+    .slider-meta strong { color: #0f172a; }
     .delta-row.subtle { font-size: 0.86rem; color: #4b5563; }
-    .ep-plot {
-      width: 100%;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      background: #fff;
+    .ep-bars .wp-track { height: 26px; }
+    .ci-note {
+      font-size: 0.72rem;
+      color: #6b7280;
+      margin: -0.2rem 0 0.45rem 3.7rem;
     }
     .plot-note {
       margin-top: 0.35rem;
