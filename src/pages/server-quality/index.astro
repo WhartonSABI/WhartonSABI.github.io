@@ -1,0 +1,773 @@
+---
+import LayoutServerQuality from '../../layouts/LayoutServerQuality.astro';
+
+const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
+---
+
+<LayoutServerQuality>
+  <header class="hero">
+    <h1>Server Quality Score Trajectories</h1>
+    <p>Interactive trajectories for servers across Wimbledon and the US Open.</p>
+  </header>
+
+  <main class="app">
+    <div id="loading">Loading SQS data...</div>
+
+    <div id="app" class="sq-app" style="display:none;">
+      <div class="controls-row">
+        <div class="control-card">
+          <div class="label">Tournament</div>
+          <div class="sq-seg" id="tournament-seg"></div>
+        </div>
+        <div class="control-card">
+          <div class="label">Field</div>
+          <div class="sq-seg" id="gender-seg"></div>
+        </div>
+        <div class="control-card">
+          <div class="label">Metric</div>
+          <div class="sq-seg" id="metric-seg"></div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-head">
+          <h2 id="chart-title"></h2>
+          <p>Model-based server quality centered within each year/tournament. Dot size indicates sample size.</p>
+        </div>
+        <svg id="chart" viewBox="0 0 1020 560" aria-label="SQS chart"></svg>
+      </div>
+
+      <div class="controls-grid">
+        <div class="panel">
+          <div class="panel-title">Visible Players (<span id="visible-count">0</span>/10)</div>
+          <div class="sq-chip-row" id="selected-chips"></div>
+          <div class="sq-sub-label">Presets</div>
+          <div class="sq-btn-row">
+            <button id="btn-top5" class="sq-btn">Top 5</button>
+            <button id="btn-bottom5" class="sq-btn">Bottom 5</button>
+            <button id="btn-random5" class="sq-btn">Random 5</button>
+            <button id="btn-risers" class="sq-btn">Top 5 Climbers</button>
+            <button id="btn-fallers" class="sq-btn">Top 5 Sliders</button>
+            <button id="btn-clear" class="sq-btn ghost">Clear All</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Add Players</div>
+          <input id="player-search" type="text" placeholder="Search player..." class="search" />
+          <div class="list" id="player-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script define:vars={{ dataUrl }}>
+    const palette = [
+      '#0B3C5D', '#B51F1F', '#1E7A73', '#8A5A00', '#5D3A9B',
+      '#B04670', '#2F5E1D', '#6B2E2E', '#0A6FAE', '#4E4E4E',
+      '#A83A0E', '#1D4A8F',
+    ];
+
+    const maxLines = 10;
+    let DATA = null;
+
+    const state = {
+      tournament: 'wimb',
+      gender: 'men',
+      metric: 'centered',
+      selected: new Set(),
+      search: '',
+      selectedPreset: 'top5',
+      randomPresetKey: '',
+    };
+
+    const el = {
+      loading: document.getElementById('loading'),
+      app: document.getElementById('app'),
+      tournamentSeg: document.getElementById('tournament-seg'),
+      genderSeg: document.getElementById('gender-seg'),
+      metricSeg: document.getElementById('metric-seg'),
+      chartTitle: document.getElementById('chart-title'),
+      chart: document.getElementById('chart'),
+      selectedChips: document.getElementById('selected-chips'),
+      visibleCount: document.getElementById('visible-count'),
+      top5: document.getElementById('btn-top5'),
+      bottom5: document.getElementById('btn-bottom5'),
+      random5: document.getElementById('btn-random5'),
+      risers: document.getElementById('btn-risers'),
+      fallers: document.getElementById('btn-fallers'),
+      clear: document.getElementById('btn-clear'),
+      search: document.getElementById('player-search'),
+      playerList: document.getElementById('player-list'),
+    };
+
+    function currentGroup() {
+      return DATA.tournaments[state.tournament].genders[state.gender];
+    }
+
+    function selectedPlayers() {
+      const group = currentGroup();
+      const byName = new Map(group.players.map((p) => [p.name, p]));
+      return [...state.selected].map((n) => byName.get(n)).filter(Boolean);
+    }
+
+    function numberFmt(x) {
+      return state.metric === 'percentile' ? `${x.toFixed(1)} pct` : x.toFixed(3);
+    }
+
+    function recurringPlayers() {
+      return currentGroup().players.filter((p) => p.yearsPresent >= 5);
+    }
+
+    function selectionKey(names) {
+      return [...new Set(names)].sort((a, b) => a.localeCompare(b)).join('|');
+    }
+
+    function computePresetSets() {
+      const recurring = recurringPlayers();
+      const top5 = currentGroup().defaultPlayers.slice(0, 5);
+      const bottom5 = [...recurring]
+        .sort((a, b) => a.meanCentered - b.meanCentered)
+        .slice(0, 5)
+        .map((p) => p.name);
+      const top5Climbers = [...recurring]
+        .map((p) => {
+          if (!p.series || p.series.length < 2) return null;
+          const sorted = [...p.series].sort((a, b) => a.year - b.year);
+          const first = sorted[0];
+          const last = sorted[sorted.length - 1];
+          const years = Math.max(1, last.year - first.year);
+          return { name: p.name, slope: (last.centered - first.centered) / years };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.slope - a.slope)
+        .slice(0, 5)
+        .map((p) => p.name);
+      const top5Sliders = [...recurring]
+        .map((p) => {
+          if (!p.series || p.series.length < 2) return null;
+          const sorted = [...p.series].sort((a, b) => a.year - b.year);
+          const first = sorted[0];
+          const last = sorted[sorted.length - 1];
+          const years = Math.max(1, last.year - first.year);
+          return { name: p.name, slope: (last.centered - first.centered) / years };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.slope - b.slope)
+        .slice(0, 5)
+        .map((p) => p.name);
+
+      return { top5, bottom5, top5Climbers, top5Sliders };
+    }
+
+    function detectPreset() {
+      const currentKey = selectionKey([...state.selected]);
+      const preset = computePresetSets();
+
+      if (currentKey === selectionKey(preset.top5)) return 'top5';
+      if (currentKey === selectionKey(preset.bottom5)) return 'bottom5';
+      if (currentKey === selectionKey(preset.top5Climbers)) return 'risers';
+      if (currentKey === selectionKey(preset.top5Sliders)) return 'fallers';
+      if (state.randomPresetKey && currentKey === state.randomPresetKey) return 'random5';
+      return 'custom';
+    }
+
+    function renderPresetButtons() {
+      const map = {
+        top5: el.top5,
+        bottom5: el.bottom5,
+        random5: el.random5,
+        risers: el.risers,
+        fallers: el.fallers,
+      };
+
+      Object.entries(map).forEach(([id, node]) => {
+        node.classList.toggle('active', id === state.selectedPreset);
+      });
+    }
+
+    function applySelection(names, presetId = null) {
+      state.selected = new Set(names.slice(0, maxLines));
+      state.selectedPreset = presetId || 'custom';
+      render();
+    }
+
+    function resetToTop5() {
+      const preset = computePresetSets();
+      applySelection(preset.top5, 'top5');
+    }
+
+    function setBottom5() {
+      const preset = computePresetSets();
+      applySelection(preset.bottom5, 'bottom5');
+    }
+
+    function setRandom5() {
+      const candidates = [...recurringPlayers()].map((p) => p.name);
+      for (let i = candidates.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+      }
+      const selection = candidates.slice(0, 5);
+      state.randomPresetKey = selectionKey(selection);
+      applySelection(selection, 'random5');
+    }
+
+    function setClimbers(desc = true) {
+      const preset = computePresetSets();
+      applySelection(desc ? preset.top5Climbers : preset.top5Sliders, desc ? 'risers' : 'fallers');
+    }
+
+    function setupSeg(container, options, value, onSelect) {
+      container.innerHTML = '';
+      options.forEach((o) => {
+        const b = document.createElement('button');
+        b.className = `sq-seg-btn ${o.value === value ? 'active' : ''}`;
+        b.textContent = o.label;
+        b.addEventListener('click', () => onSelect(o.value));
+        container.appendChild(b);
+      });
+    }
+
+    function yValue(pt) {
+      return state.metric === 'percentile' ? pt.percentile : pt.centered;
+    }
+
+    function pickNiceStep(target, candidates) {
+      for (const c of candidates) {
+        if (c >= target) return c;
+      }
+      return candidates[candidates.length - 1];
+    }
+
+    function buildTicks(minVal, maxVal) {
+      const span = Math.max(1e-6, maxVal - minVal);
+      const targetStep = span / 6;
+      const centeredSteps = [0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 1];
+      const percentileSteps = [2, 5, 10, 20];
+      const step = state.metric === 'percentile'
+        ? pickNiceStep(targetStep, percentileSteps)
+        : pickNiceStep(targetStep, centeredSteps);
+
+      const tickMin = Math.floor(minVal / step) * step;
+      const tickMax = Math.ceil(maxVal / step) * step;
+      const ticks = [];
+
+      for (let y = tickMin; y <= tickMax + step * 0.001; y += step) {
+        ticks.push(Number(y.toFixed(6)));
+      }
+
+      return { step, tickMin, tickMax, ticks };
+    }
+
+    function drawChart(players) {
+      const svg = el.chart;
+      const W = 1020;
+      const H = 560;
+      const m = { t: 30, r: 30, b: 64, l: 72 };
+      const iw = W - m.l - m.r;
+      const ih = H - m.t - m.b;
+
+      const points = players.flatMap((p) => p.series.map((s) => ({ ...s, player: p.name })));
+      if (!points.length) {
+        svg.innerHTML = `<text x="510" y="280" text-anchor="middle" fill="#5d6470" font-size="20">Add players to draw trajectories</text>`;
+        return;
+      }
+
+      const years = [...new Set(points.map((p) => p.year))].sort((a, b) => a - b);
+      const xMin = years[0];
+      const xMax = years[years.length - 1];
+      const ys = points.map((p) => yValue(p));
+      let yMin = Math.min(...ys);
+      let yMax = Math.max(...ys);
+      const pad = (yMax - yMin || 1) * 0.08;
+      yMin -= pad;
+      yMax += pad;
+
+      const { ticks } = buildTicks(yMin, yMax);
+      const visibleTicks = ticks.filter((y) => y >= yMin - 1e-9 && y <= yMax + 1e-9);
+
+      const sx = (x) => m.l + ((x - xMin) / Math.max(1, (xMax - xMin))) * iw;
+      const sy = (y) => m.t + (1 - ((y - yMin) / Math.max(1e-6, (yMax - yMin)))) * ih;
+
+      const axis = [];
+
+      for (const y of visibleTicks) {
+        const py = sy(y);
+        axis.push(`<line x1="${m.l}" y1="${py}" x2="${W - m.r}" y2="${py}" stroke="#e7ebf3" />`);
+        axis.push(`<text x="${m.l - 10}" y="${py + 4}" text-anchor="end" fill="#4a5464" font-size="12">${state.metric === 'percentile' ? y.toFixed(0) : y.toFixed(2)}</text>`);
+      }
+
+      const xAxis = years.map((yr) => `<text x="${sx(yr)}" y="${H - m.b + 24}" text-anchor="middle" fill="#4a5464" font-size="12">${yr}</text>`);
+
+      const lines = players.map((p, idx) => {
+        const color = palette[idx % palette.length];
+        const sorted = [...p.series].sort((a, b) => a.year - b.year);
+        const d = sorted.map((s, i) => `${i === 0 ? 'M' : 'L'} ${sx(s.year)} ${sy(yValue(s))}`).join(' ');
+        const circles = sorted.map((s) => {
+          const r = Math.max(3, Math.min(11, Math.sqrt(s.serves) / 1.8));
+          const label = `${p.name} (${s.year}) | ${state.metric === 'percentile' ? 'Percentile' : 'Centered SQS'} ${numberFmt(yValue(s))} | Serves ${s.serves}`;
+          return `<circle cx="${sx(s.year)}" cy="${sy(yValue(s))}" r="${r}" fill="${color}" opacity="0.9"><title>${label}</title></circle>`;
+        }).join('');
+
+        return `
+          <path d="${d}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" />
+          ${circles}
+        `;
+      });
+
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${W}" height="${H}" fill="#ffffff" rx="14" />
+        ${axis.join('')}
+        <line x1="${m.l}" y1="${H - m.b}" x2="${W - m.r}" y2="${H - m.b}" stroke="#bfc9db" />
+        <line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${H - m.b}" stroke="#bfc9db" />
+        ${xAxis.join('')}
+        ${lines.join('')}
+      `;
+    }
+
+    function renderSelectedChips() {
+      const players = selectedPlayers().sort((a, b) => a.name.localeCompare(b.name));
+      el.visibleCount.textContent = String(players.length);
+      el.selectedChips.innerHTML = '';
+
+      players.forEach((p) => {
+        const chip = document.createElement('button');
+        chip.className = 'sq-chip';
+        const color = palette[players.indexOf(p) % palette.length];
+        chip.style.borderColor = `${color}66`;
+        chip.style.backgroundColor = `${color}22`;
+        chip.style.color = color;
+        chip.innerHTML = `<span class="sq-swatch" style="background:${color}"></span><span class="sq-chip-name">${p.name}</span><span class="sq-chip-x">×</span>`;
+        chip.addEventListener('click', () => {
+          state.selected.delete(p.name);
+          render();
+        });
+        el.selectedChips.appendChild(chip);
+      });
+    }
+
+    function renderPlayerList() {
+      const group = currentGroup();
+      const q = state.search.trim().toLowerCase();
+      const rows = group.players
+        .filter((p) => !state.selected.has(p.name))
+        .filter((p) => !q || p.name.toLowerCase().includes(q))
+        .slice(0, 25);
+
+      el.playerList.innerHTML = '';
+
+      rows.forEach((p) => {
+        const row = document.createElement('div');
+        row.className = 'player-row';
+
+        const info = document.createElement('div');
+        info.className = 'player-info';
+        info.innerHTML = `<strong>${p.name}</strong><span>${p.yearsPresent} years · ${p.totalServes} serves</span>`;
+
+        const add = document.createElement('button');
+        add.className = 'sq-add-btn';
+        add.textContent = 'Add';
+        add.disabled = state.selected.size >= maxLines;
+        add.addEventListener('click', () => {
+          if (state.selected.size >= maxLines) return;
+          state.selected.add(p.name);
+          render();
+        });
+
+        row.append(info, add);
+        el.playerList.appendChild(row);
+      });
+    }
+
+    function renderSegs() {
+      setupSeg(el.tournamentSeg, [
+        { value: 'wimb', label: 'Wimbledon' },
+        { value: 'us', label: 'US Open' },
+      ], state.tournament, (next) => {
+        if (state.tournament === next) return;
+        state.tournament = next;
+        resetToTop5();
+      });
+
+      setupSeg(el.genderSeg, [
+        { value: 'men', label: 'Men' },
+        { value: 'women', label: 'Women' },
+      ], state.gender, (next) => {
+        if (state.gender === next) return;
+        state.gender = next;
+        resetToTop5();
+      });
+
+      setupSeg(el.metricSeg, [
+        { value: 'centered', label: 'Centered SQS' },
+        { value: 'percentile', label: 'Percentile' },
+      ], state.metric, (next) => {
+        state.metric = next;
+        render();
+      });
+    }
+
+    function renderHeader() {
+      const t = DATA.tournaments[state.tournament].label;
+      const g = currentGroup().label;
+      el.chartTitle.textContent = `${t} ${g}: Server Quality Over Time`;
+    }
+
+    function render() {
+      state.selectedPreset = detectPreset();
+      renderSegs();
+      renderHeader();
+      renderPresetButtons();
+      renderSelectedChips();
+      renderPlayerList();
+      const players = selectedPlayers();
+      drawChart(players);
+    }
+
+    el.top5.addEventListener('click', () => resetToTop5());
+    el.bottom5.addEventListener('click', () => setBottom5());
+    el.random5.addEventListener('click', () => setRandom5());
+    el.risers.addEventListener('click', () => setClimbers(true));
+    el.fallers.addEventListener('click', () => setClimbers(false));
+    el.clear.addEventListener('click', () => {
+      state.selected.clear();
+      render();
+    });
+    el.search.addEventListener('input', () => {
+      state.search = el.search.value || '';
+      renderPlayerList();
+    });
+
+    fetch(dataUrl)
+      .then((r) => r.json())
+      .then((data) => {
+        DATA = data;
+        resetToTop5();
+        el.loading.style.display = 'none';
+        el.app.style.display = 'block';
+      })
+      .catch(() => {
+        el.loading.textContent = 'Failed to load SQS data.';
+      });
+  </script>
+
+  <style is:global>
+    #loading {
+      text-align: center;
+      color: #5d6470;
+      padding: 3rem 1rem;
+      font-size: 1rem;
+    }
+
+    .sq-app {
+      --sq-font: "Avenir Next", "Segoe UI", sans-serif;
+      font-family: var(--sq-font);
+      font-size: 0.92rem;
+      color: #132b4a;
+    }
+
+    .sq-app button,
+    .sq-app input,
+    .sq-app h2,
+    .sq-app p,
+    .sq-app span,
+    .sq-app strong,
+    .sq-app div {
+      font-family: var(--sq-font);
+    }
+
+    .controls-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .control-card {
+      border: 1px solid #dce3ef;
+      border-radius: 16px;
+      padding: 0.72rem;
+      background: #ffffff;
+      box-shadow: 0 8px 18px rgba(12, 35, 66, 0.06);
+    }
+
+    .label {
+      color: #4d5768;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    .sq-seg {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .sq-seg-btn {
+      border: 1px solid #cdd7e8;
+      background: linear-gradient(180deg, #ffffff, #edf3ff);
+      color: #10345d;
+      border-radius: 999px;
+      padding: 0.48rem 0.82rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 6px rgba(13, 35, 64, 0.07);
+      transition: transform 0.15s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .sq-seg-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(10, 30, 58, 0.14);
+      border-color: #9eb0cc;
+    }
+
+    .sq-seg-btn.active {
+      background: linear-gradient(180deg, #17457a, #12365e);
+      color: #fff;
+      border-color: #12365e;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 9px 18px rgba(17, 48, 84, 0.36);
+    }
+
+    .chart-wrap {
+      margin-top: 0.8rem;
+      border: 1px solid #dce3ef;
+      border-radius: 14px;
+      background: #fff;
+      padding: 0.8rem;
+    }
+
+    .chart-head h2 {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .chart-head p {
+      margin: 0.3rem 0 0.65rem;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #4f5c70;
+    }
+
+    #chart {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid #eef1f7;
+      background: #fff;
+    }
+
+    .controls-grid {
+      margin-top: 0.8rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    .panel {
+      border: 1px solid #dce3ef;
+      border-radius: 16px;
+      background: #fff;
+      padding: 0.7rem;
+      box-shadow: 0 8px 18px rgba(12, 35, 66, 0.06);
+    }
+
+    .panel-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.55rem;
+      color: #122f54;
+    }
+
+    .sq-sub-label {
+      margin-top: 0.72rem;
+      margin-bottom: 0.42rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #5b6880;
+    }
+
+    .sq-chip-row {
+      min-height: 2.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .sq-chip {
+      border: 1px solid #d9e0ee;
+      background: #f6f9ff;
+      color: #1f3e67;
+      border-radius: 999px;
+      padding: 0.34rem 0.55rem;
+      font-size: 0.77rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      max-width: 100%;
+      transition: transform 0.14s ease, box-shadow 0.16s ease;
+    }
+
+    .sq-chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 14px rgba(20, 38, 68, 0.16);
+    }
+
+    .sq-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .sq-chip-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 180px;
+    }
+
+    .sq-chip-x {
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .sq-btn-row {
+      margin-top: 0.65rem;
+      display: flex;
+      column-gap: 0.55rem;
+      row-gap: 0.55rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .sq-btn {
+      border: 1px solid #d6dde8;
+      background: linear-gradient(180deg, #ffffff, #f6f8fc);
+      color: #3f4f65;
+      border-radius: 999px;
+      padding: 0.48rem 0.82rem;
+      font-size: 0.77rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 4px 10px rgba(16, 47, 84, 0.12);
+      transition: transform 0.14s ease, box-shadow 0.16s ease, background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+    }
+
+    .sq-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 7px 14px rgba(16, 47, 84, 0.18);
+      border-color: #b8c2d2;
+    }
+
+    .sq-btn.active {
+      border-color: #10365f;
+      background: linear-gradient(180deg, #17457a, #12365e);
+      color: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 16px rgba(16, 47, 84, 0.28);
+    }
+
+    .sq-btn.ghost {
+      border: 1px solid #d8dfea;
+      background: #fff;
+      color: #244469;
+      box-shadow: none;
+    }
+
+    .search {
+      width: 100%;
+      border: 1px solid #cfd7e7;
+      border-radius: 9px;
+      padding: 0.48rem 0.58rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.84rem;
+    }
+
+    .list {
+      max-height: 200px;
+      overflow: auto;
+      display: grid;
+      gap: 0.34rem;
+    }
+
+    .player-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: 0.55rem;
+      border: 1px solid #e3e8f3;
+      border-radius: 9px;
+      padding: 0.42rem 0.5rem;
+    }
+
+    .player-info {
+      min-width: 0;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      overflow: hidden;
+    }
+
+    .player-info strong {
+      font-size: 0.82rem;
+      line-height: 1.2;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-info span {
+      color: #5a6476;
+      font-size: 0.74rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sq-add-btn {
+      border: none;
+      border-radius: 8px;
+      background: #b51f1f;
+      color: #fff;
+      padding: 0.36rem 0.52rem;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      min-width: 48px;
+      white-space: nowrap;
+    }
+
+    .sq-add-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    @media (max-width: 900px) {
+      .controls-row,
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-wrap {
+        padding: 0.55rem;
+      }
+
+      .chart-head p {
+        margin-bottom: 0.5rem;
+      }
+    }
+  </style>
+</LayoutServerQuality>

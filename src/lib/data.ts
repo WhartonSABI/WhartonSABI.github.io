@@ -11,8 +11,8 @@ export interface Deliverable {
   path?: string;
   /** External URL (e.g. Wharton Research Notes). Use instead of path for off-repo links. */
   url?: string;
-  /** Icon: 'article' (doc with text), 'report' (doc with chart), 'presentation' (slides/screen). */
-  icon?: 'article' | 'report' | 'presentation';
+  /** Icon: 'article' (doc with text), 'report' (doc with chart), 'presentation' (slides/screen), 'app' (interactive). */
+  icon?: 'article' | 'report' | 'presentation' | 'app';
 }
 
 export interface Project {

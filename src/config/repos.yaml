@@ -53,6 +53,9 @@ lab:
       description: Constructs a server quality metric from point-by-point data using mixed-effects models.
       highlights: [Published in JSA, 2025 CMSAC RRC Winner]
       deliverables:
+        - label: Interactive App
+          url: /server-quality
+          icon: app
         - label: Paper
           url: https://journals.sagepub.com/doi/10.1177/22150218261444537
         - label: CMSAC 2025
