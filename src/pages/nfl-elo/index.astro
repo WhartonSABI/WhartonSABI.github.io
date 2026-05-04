@@ -126,12 +126,11 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
       const bottom5 = [...recurring].sort((a, b) => endSeasonScore(a) - endSeasonScore(b)).slice(0, 5).map((p) => p.name);
       const top5Climbers = [...recurring]
         .map((p) => {
-          const played = (p.series || []).filter((s) => s.playedThisWeek);
-          if (played.length < 2) return null;
-          const sorted = [...played].sort((a, b) => a.weekNum - b.weekNum);
-          const mid = sorted[Math.floor((sorted.length - 1) / 2)];
-          const last = sorted[sorted.length - 1];
-          return { name: p.name, delta: last.score - mid.score };
+          const series = p.series || [];
+          const wk8 = series.find((s) => s.weekNum === 8);
+          const end = series.find((s) => s.weekNum === 18);
+          if (!wk8 || !end) return null;
+          return { name: p.name, delta: end.score - wk8.score };
         })
         .filter(Boolean)
         .sort((a, b) => b.delta - a.delta)
@@ -139,12 +138,11 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
         .map((p) => p.name);
       const top5Sliders = [...recurring]
         .map((p) => {
-          const played = (p.series || []).filter((s) => s.playedThisWeek);
-          if (played.length < 2) return null;
-          const sorted = [...played].sort((a, b) => a.weekNum - b.weekNum);
-          const mid = sorted[Math.floor((sorted.length - 1) / 2)];
-          const last = sorted[sorted.length - 1];
-          return { name: p.name, delta: last.score - mid.score };
+          const series = p.series || [];
+          const wk8 = series.find((s) => s.weekNum === 8);
+          const end = series.find((s) => s.weekNum === 18);
+          if (!wk8 || !end) return null;
+          return { name: p.name, delta: end.score - wk8.score };
         })
         .filter(Boolean)
         .sort((a, b) => a.delta - b.delta)
