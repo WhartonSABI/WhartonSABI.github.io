@@ -6,11 +6,11 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
 
 <LayoutServerQuality
   title="NFL Pass Rush Ratings"
-  description="Interactive data-year trajectories for NFL pass rushers and blockers from our dynamic rating model."
+  description="Interactive rating trajectories for data-year NFL pass rushers and blockers."
 >
   <header class="hero">
     <h1>NFL Pass Rush Ratings</h1>
-    <p id="subtitle">Interactive data-year trajectories for NFL pass rushers and blockers from our dynamic rating model.</p>
+    <p id="subtitle">Interactive rating trajectories for data-year NFL pass rushers and blockers.</p>
   </header>
 
   <main class="app">
@@ -98,7 +98,7 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
     function updateSubtitle() {
       const season = DATA?.season;
       const yearText = season ? `${season}` : 'data-year';
-      el.subtitle.textContent = `Interactive ${yearText} trajectories for NFL pass rushers and blockers from our dynamic rating model.`;
+      el.subtitle.textContent = `Interactive rating trajectories for ${yearText} NFL pass rushers and blockers.`;
     }
 
     function currentGroup() {
