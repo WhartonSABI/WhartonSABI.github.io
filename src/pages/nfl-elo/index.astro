@@ -4,7 +4,10 @@ import LayoutServerQuality from '../../layouts/LayoutServerQuality.astro';
 const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
 ---
 
-<LayoutServerQuality>
+<LayoutServerQuality
+  title="NFL Pass Rush Ratings"
+  description="Interactive trajectories from our dynamic rating model."
+>
   <header class="hero">
     <h1>NFL Pass Rush Ratings</h1>
     <p>Interactive trajectories from our dynamic rating model.</p>

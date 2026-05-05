@@ -4,7 +4,10 @@ import LayoutServerQuality from '../../layouts/LayoutServerQuality.astro';
 const dataUrl = `${import.meta.env.BASE_URL}server-quality/data.json`;
 ---
 
-<LayoutServerQuality>
+<LayoutServerQuality
+  title="Server Quality Visualizer"
+  description="Interactive trajectories for servers across Wimbledon and the US Open."
+>
   <header class="hero">
     <h1>Server Quality Visualizer</h1>
     <p>Interactive trajectories for servers across Wimbledon and the US Open.</p>
