@@ -6,11 +6,11 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
 
 <LayoutServerQuality
   title="NFL Pass Rush Ratings"
-  description="Interactive trajectories from our dynamic rating model."
+  description="Interactive data-year trajectories for NFL pass rushers and blockers from our dynamic rating model."
 >
   <header class="hero">
     <h1>NFL Pass Rush Ratings</h1>
-    <p>Interactive trajectories from our dynamic rating model.</p>
+    <p id="subtitle">Interactive data-year trajectories for NFL pass rushers and blockers from our dynamic rating model.</p>
   </header>
 
   <main class="app">
@@ -92,7 +92,14 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
       clear: document.getElementById('btn-clear'),
       search: document.getElementById('player-search'),
       playerList: document.getElementById('player-list'),
+      subtitle: document.getElementById('subtitle'),
     };
+
+    function updateSubtitle() {
+      const season = DATA?.season;
+      const yearText = season ? `${season}` : 'data-year';
+      el.subtitle.textContent = `Interactive ${yearText} trajectories for NFL pass rushers and blockers from our dynamic rating model.`;
+    }
 
     function currentGroup() {
       return DATA.models[state.model].roles[state.role];
@@ -413,6 +420,7 @@ const dataUrl = `${import.meta.env.BASE_URL}nfl-elo/data.json`;
       .then((r) => r.json())
       .then((data) => {
         DATA = data;
+        updateSubtitle();
         resetToTop5();
         el.loading.style.display = 'none';
         el.app.style.display = 'block';
