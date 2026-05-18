@@ -1,0 +1,78 @@
+---
+title: "Lecture 0: Installation and Setting up Workspace"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
+```
+
+## Installing R and R Studio on computer:
+
+So that we can jump right into working with data on the first day, we'd like for you to install R and RStudio onto your computer prior to the start of camp. 
+
+
+#### For Windows Users:
+
+**To Install R:**
+
+Open an internet browser and go to www.r-project.org.
+Click the "download R" link in the middle of the page under "Getting Started."
+Select a CRAN location (a mirror site) and click the corresponding link.
+Click on the "Download R for Windows" link at the top of the page.
+Click on the "install R for the first time" link at the top of the page.
+Click "Download R for Windows" and save the executable file somewhere on your computer. Run the .exe file and follow the installation instructions.
+Now that R is installed, you need to download and install RStudio. 
+
+**To Install RStudio:**
+
+Go to www.rstudio.com and click on the "Download RStudio" button.
+Click on "Download RStudio Desktop."
+Click on the version recommended for your system, or the latest Windows version, and save the executable file.
+Run the .exe file and follow the installation instructions.
+
+
+#### For Mac Users:
+
+**To Install R:**
+
+Open an internet browser and go to www.r-project.org.
+Click the "download R" link in the middle of the page under "Getting Started."
+Select a CRAN location (a mirror site) and click the corresponding link.
+Click on the "Download R for (Mac) OS X" link at the top of the page.
+Click on the file containing the latest version of R under "Files."
+Save the .pkg file, double-click it to open, and follow the installation instructions.
+Now that R is installed, you need to download and install RStudio. 
+
+**To Install RStudio:**
+
+Go to www.posit.co/download/rstudio-desktop/ and click on "Download RStudio Desktop."
+Click on the version recommended for your system, or the latest Mac version, save the .dmg file on your computer, double-click it to open, and then drag and drop it to your applications folder.
+
+
+## Creating a Working Directory
+
+During this course, you will be writing code to analyze different data sets as well as generating lots of output. 
+The working directory is the place where R will save any output you generate.
+For the purpose of this course, you should keep all of your work in one place.
+So that everyone is on the same page, go to your Desktop and create a new folder called Moneyball.
+Then inside that folder, create a new folder named 'data', and a separate folder named 'scripts'. You can do this either from your desktop or directly in RStudio with the 'New Folder' button in the bottom right pane.
+
+
+## Downloading data and saving into Moneyball/data folder
+
+After you get the folders ready, download the following files, and move them into your "data" folder created above: 
+
+* [nba_shooting_small.csv](data/nba_shooting_small.csv)
+* [nba_shooting.csv](data/nba_shooting.csv)
+* [mlb_relative_payrolls.csv](data/mlb_relative_payrolls.csv)
+
+We will be working with these datasets in the first two Lectures and Problem Sets.
+
+## Getting Started With R
+
+We'll come back to these sports datasets later in Lecture 1.
+For now, let's practice with some of the basic functions in R. 
+We've put together a really short problem set ([Problem Set 0](ps0.html)) that will give you a brief introduction to R and contains a few exercises and discussion questions.
+If you can work your way through Problem Set 0 before you get to camp, great!
+But don't worry if you can't -- there will be time once you get here to go over them with your TA and Breakout Groups. 

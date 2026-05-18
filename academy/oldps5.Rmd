@@ -1,0 +1,114 @@
+---
+title: "Problem Set 5"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, fig.align = "center", include = FALSE) # set include = TRUE to see solutions in knitted RMarkdown
+library(tidyverse)
+```
+
+## Recreate a Graph
+
+There are many types of visualizations you can explore with ggplot. Sometimes the most difficult part is choosing the type of graph and designing a layout that will best communicate your thoughts. A great place to find inspiration is by looking at visualizations from other sources.
+
+For instance, let's take an example from Neil Paine. Neil is a writer for Five Thirty Eight, a leader in "data journalism" for sports and politics. Many organizations like these have separate teams of visualization experts who work on designing and coding graphics for popular articles. 
+
+Let's try to recreate one of Neil's graphics from his article on the top fight songs of college teams. Start by reading Neil's [original article](https://projects.fivethirtyeight.com/college-fight-song-lyrics/). Then, download the data file used to make this article from [here](data/fight-songs.csv), and save it to your "data" folder.
+
+```{r load fight_songs, include=TRUE}
+fight_songs <- read.csv('data/fight-songs.csv')
+```
+
+The data contains information on fight songs from all schools in the ACC, the Big Ten, the Big 12, Pac-12, and SEC, plus Notre Dame. Start by inspecting the structure of the dataset using the `str()` function. It is important to identify the "type of each variable as you create graphics. In this case, the two variables that we will be using as the x and the y axis, the duration and bpm, are already identified as integer variables.
+
+```{r view fight_songs, include=TRUE}
+str(fight_songs)
+```
+
+To visualize the data, use a geom point and place your x and y axes on the graph. 
+
+```{r plot fight_songs, include=TRUE}
+ggplot(fight_songs, aes(x = sec_duration, y = bpm)) +
+  geom_point()
+```
+
+Next, color by school name (we omit the legend as it would be too large and confusing with labels for all 65 schools).
+
+```{r color plot fight_songs, include=TRUE}
+ggplot(fight_songs, aes(x = sec_duration, y = bpm, color = school)) +
+  geom_point() +
+  theme(legend.position = "none")
+```
+
+Use ggplot arguments to make the following changes to the graph to recreate Neil's original graph:
+
+1. Use alpha and size arguments to match the original graph.
+2. Add a title, x label, and y label that match the labels on the original graph
+4. Add a black point to the graph to mark Notre Dame
+5. Label the Notre Dame point with text
+6. Use geom_vline and geom_hline to create an axis at the x and y intercept for the averages
+
+The final plot should look as follows.
+
+```{r fight_songs solution, include=TRUE, echo=FALSE}
+# solution
+fight_songs_plot <- ggplot(data = fight_songs, aes(x = sec_duration, y = bpm, color = school)) +
+  geom_point(size = 4, alpha = .4) +
+  geom_hline(yintercept = mean(fight_songs$bpm), linetype = "dashed") +
+  geom_vline(xintercept =  mean(fight_songs$sec_duration), linetype = "dashed") +
+  geom_point(data = fight_songs %>% filter(school == "Notre Dame"), 
+             aes(x = sec_duration, y = bpm), color = 'black', size = 6) +
+  geom_text(aes(label = ifelse(school == "Notre Dame", as.character(school),''), hjust = .2, vjust = -2)) +
+  labs(title = "How Notre Dame's fight song stacks up") +
+  xlab("Duration") +
+  ylab("Beats per Minute") +
+  theme(legend.position = "none") +
+  theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (15)))
+fight_songs_plot
+```
+
+## Make it Interactive
+
+You may have noticed a lot more interactive data visualization pieces on the internet over the last few years. The goal of these graphics is to allow the user to explore specific parts of the data and increase engagement. The [COVID-19 Dashboard](https://coronavirus.jhu.edu/map.html) put together by the Center for Systems Science and Engineering at Johns Hopkins University is a good example.
+
+Plotly is one package that can be used in R to make interactive visualizations. Once you have your graph saved as a new object, install the `plotly` package and run the function `ggplotly` on the graph in order to add interactive elements. It will look as follows (place your mouse over the points to see how it's interactive).
+
+```{r interactive plot, include=TRUE, echo=FALSE, warning=FALSE}
+library(plotly)
+ggplotly(fight_songs_plot)
+```
+
+
+## Work with new data to create a graph
+
+Choose from the plots on Five Thirty Eight and recreate a graph using ggplot. Try to match the style and format of the graph, or use new tools like `plotly` to make the graph interactive. Perhaps you find a graph that you think would be better visualized in another way. See if you can use the data to think of a better approach.
+
+You can find data and code behind some of the articles [here](https://data.fivethirtyeight.com/).
+
+Alternatively, you can work with the graph we have recreated from this article on [Fatal Collisions](https://fivethirtyeight.com/features/which-state-has-the-worst-drivers/). See if you can turn this into a stacked bar chart and replicate the other graphs in the article. The data can be downloaded [here](data/bad-drivers.csv).
+
+```{r drivers plot, include=TRUE}
+# load data
+drivers<-read.csv('data/bad-drivers.csv')
+
+# rename columns
+drivers <- drivers %>% 
+  rename(total_collisions = Number.of.drivers.involved.in.fatal.collisions.per.billion.miles,
+         non_distracted = Percentage.Of.Drivers.Involved.In.Fatal.Collisions.Who.Were.Not.Distracted)
+
+# mutate data
+drivers <- drivers %>%
+  mutate(non_distracted_per = (non_distracted/100) * total_collisions) %>%
+  arrange((State))
+
+# plot data
+ggplot(data = drivers, aes(x = as.factor(State), y = non_distracted_per)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Drivers Involved in Fatal Collisions Who Were Not Distracted",
+       subtitle = "As a share of the number of fatal collisions per billion miles, 2021") +
+  theme(axis.title.x = element_blank()) +
+  theme(axis.title.y = element_blank())
+```
+

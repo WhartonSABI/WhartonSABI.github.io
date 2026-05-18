@@ -1,0 +1,86 @@
+name: "Wharton Moneyball 2022"
+output_dir: "."
+navbar:
+  title: "<img id=\"logo\" style=\"width: 200px;\" src=\"figures/WMA_logo.png\" />" 
+  #type: inverse
+  left:
+    - text: "Home"
+      icon: fa-home
+      href: index.html
+    - text: "Get Started"
+      icon: fa-sign-in
+      menu:
+        - text: "Lecture 0"
+          href: lecture0.html    
+        - text: "Problem Set 0"
+          href: ps0.html  
+    - text: "Academy"
+      icon: fa-institution
+      menu:
+        - text: "Lecture 1"
+          href: lecture1.html
+        - text: "Lecture 2"
+          href: lecture2.html
+        - text: "Lecture 3"
+          href: lecture3.html
+        - text: "Lecture 4"
+          href: lecture4.html
+        - text: "Lecture 5"
+          href: lecture5.html
+        # - text: "Lecture 5a"
+        #   href: lecture5a.html
+        - text: "Lecture 6"
+          href: lecture6.html
+        - text: "Lecture 7"
+          href: lecture7.html
+        - text: "Lecture 8"
+          href: lecture8.html
+        - text: "---"
+        - text: "Problem Set 1"
+          href: ps1.html
+        - text: "Problem Set 2"
+          href: ps2.html
+        - text: "Problem Set 3"
+          href: ps3.html
+        - text: "Problem Set 4"
+          href: ps4.html
+        - text: "Problem Set 5"
+          href: ps5.html
+        - text: "Problem Set 6"
+          href: ps6.html
+        - text: "Problem Set 7"
+          href: ps7.html 
+        - text: "Problem Set 8"
+          href: ps8.html
+        # - text: "---"
+        # - text: "nflfastR Lecture"
+        #   href: lecture_nflfastR.html
+        # - text: "Problem Set X"
+        #   href: psX.html
+    - text: "Training Camp"
+      icon: fa-dribbble
+      menu:
+        - text: "Lecture 1"
+          href: tc_lecture1.html
+        - text: "Lecture 2"
+          href: tc_lecture2.html
+        - text: "Lecture 3"
+          href: tc_lecture3.html
+        - text: "Lecture 4"
+          href: tc_lecture4.html
+        - text: "Lecture 5"
+          href: tc_lecture5.html
+        - text: "---"
+        - text: "Problem Set 1"
+          href: tc_ps1.html
+        - text: "Problem Set 2"
+          href: tc_ps2.html
+        - text: "Problem Set 3"
+          href: tc_ps3.html
+        - text: "---"
+        - text: "Data Sources Lecture"
+          href: tc_lecture_data_sources.html
+output:
+  html_document:
+    theme: cerulean
+    highlight: tango

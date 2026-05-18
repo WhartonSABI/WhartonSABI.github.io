@@ -2,14 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import * as cheerio from 'cheerio';
 
-/** Academy HTML files live in the website repo for independent builds */
+/** Academy source and rendered HTML live in academy/; runtime assets are synced to public/moneyball/academy */
 const ACADEMY_SOURCE = path.join(process.cwd(), 'academy');
 const BASE_PATH = '/moneyball/academy';
 const TC_BASE_PATH = '/moneyball/training-camp';
 
 /** Maps our routes to source HTML files */
 export const ACADEMY_PAGES: Record<string, { file: string; title: string }> = {
-  index: { file: 'index.html', title: 'Wharton Moneyball Camps 2025' },
+  index: { file: 'index.html', title: 'Wharton Moneyball Camps 2026' },
   lecture0: { file: 'lecture0.html', title: 'Lecture 0' },
   ps0: { file: 'ps0.html', title: 'Problem Set 0' },
   lecture1: { file: 'lecture1.html', title: 'Lecture 1' },
@@ -121,12 +121,12 @@ export function extractAcademyContent(htmlPath: string, slug: string): { title: 
 
   let content = $content.html() || '';
   if (slug === 'index') {
-    // The Academy landing page is for the 2025 camp; ensure the intro copy matches.
+    // The Academy landing page is for the 2026 camp; ensure the intro copy matches.
     content = content.replace(
       /the webpage for the\s+2024\s+Wharton Moneyball Academy\s*\/\s*Training Camp/gi,
-      'the webpage for the 2025 Wharton Moneyball Academy / Training Camp'
+      'the webpage for the 2026 Wharton Moneyball Academy / Training Camp'
     );
-    content = content.replace(/\b2024\s+Wharton Moneyball Academy\b/g, '2025 Wharton Moneyball Academy');
+    content = content.replace(/\b2024\s+Wharton Moneyball Academy\b/g, '2026 Wharton Moneyball Academy');
   }
 
   return { title, content };
