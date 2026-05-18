@@ -20,6 +20,12 @@ seminar:
         - label: Interactive App
           url: /curlers
           icon: app
+    - name: Payroll and Premier League Performance
+      repo: epl-payroll
+      description: Analyzes whether higher wage bills translate into more Premier League points, both across clubs and within clubs over time.
+      deliverables:
+        - label: Article
+          path: article/main.pdf
     - name: Rugby Expected Points
       repo: rugby-ep
       highlights: [In Review at JQAS]
