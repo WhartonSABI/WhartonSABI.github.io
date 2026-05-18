@@ -183,7 +183,7 @@ export function loadPeople(): PeopleConfig[] {
 
 const PROJECT_LINKS: Record<string, { href: string; display: string }> = {
   curlers: { href: '/seminar/projects', display: 'Curling Power Play' },
-  'epl-payroll': { href: '/seminar/projects', display: 'Payroll and Premier League Performance' },
+  'epl-payroll': { href: '/seminar/projects', display: 'EPL Payroll' },
   'rugby-ep': { href: '/seminar/projects', display: 'Rugby Expected Points' },
   halo2026: { href: '/seminar/projects', display: 'Hockey Forechecking' },
   'nba-lineups': { href: '/lab/projects', display: 'NBA Player Acquisition' },
