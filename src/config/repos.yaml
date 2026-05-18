@@ -22,6 +22,7 @@ seminar:
           icon: app
     - name: Payroll and Premier League Performance
       repo: epl-payroll
+      highlights: [Developed from Seminar Discussion]
       description: Analyzes whether higher wage bills translate into more Premier League points, both across clubs and within clubs over time.
       deliverables:
         - label: Article
