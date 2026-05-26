@@ -18,7 +18,7 @@ seminar:
           path: writeup/report.pdf
           icon: report
         - label: Interactive App
-          url: /curlers
+          url: /seminar/projects/curlers
           icon: app
     - name: Payroll and Premier League Performance
       repo: epl-payroll
@@ -34,7 +34,7 @@ seminar:
       preprint: https://arxiv.org/abs/2512.00312
       deliverables:
         - label: Interactive App
-          url: /rugby-ep
+          url: /seminar/projects/rugby-ep
           icon: app
     - name: "PRESS: A New Forechecking Metric for Hockey"
       repo: halo2026
@@ -70,7 +70,7 @@ lab:
           path: presentations/cmsac2025.pdf
           icon: presentation
         - label: Interactive App
-          url: /server-quality
+          url: /lab/projects/server-quality
           icon: app
     - name: NFL Pass Rush Ratings
       repo: nfl-elo
@@ -82,7 +82,7 @@ lab:
           path: results/nflelo.pdf
           icon: presentation
         - label: Interactive App
-          url: /nfl-elo
+          url: /lab/projects/nfl-elo
           icon: app
     - name: xG+
       repo: xg-plus
@@ -97,7 +97,7 @@ lab:
           path: asis2026/presentation.pdf
           icon: presentation
         - label: Interactive App
-          url: /xg-plus
+          url: /lab/projects/xg-plus
           icon: app
 
 moneyball:
