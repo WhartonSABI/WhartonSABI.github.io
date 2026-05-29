@@ -1,0 +1,80 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Nav from '../../../components/Nav.astro';
+import { getLabCourseYear, listLabCourseYears } from '../../../lib/lab-course';
+
+export function getStaticPaths() {
+  return listLabCourseYears().map((year) => ({
+    params: { year: String(year) },
+  }));
+}
+
+const yearParam = Astro.params.year;
+const year = parseInt(String(yearParam), 10);
+const courseYear = getLabCourseYear(year);
+
+if (!courseYear) {
+  return Astro.redirect('/lab/course', 302);
+}
+---
+
+<Layout title={`${courseYear.year} Course Schedule | Summer Lab`} description={courseYear.description}>
+  <Nav />
+  <main class="mx-auto max-w-5xl px-4 md:px-6 py-10 md:py-16">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-penn-blue">{courseYear.year} Course Schedule</h1>
+      </div>
+      <a href="/lab/course" class="text-sm font-medium text-penn-blue hover:underline">All Course Years</a>
+    </div>
+
+    <div class="mt-6 overflow-x-auto rounded-xl border border-warm-200 bg-white">
+      <table class="min-w-full text-left text-sm">
+        <thead class="bg-warm-100 text-penn-blue">
+          <tr>
+            <th class="px-4 py-3 font-semibold">Date</th>
+            <th class="px-4 py-3 font-semibold">Lecture</th>
+            <th class="px-4 py-3 font-semibold">Lab</th>
+            <th class="px-4 py-3 font-semibold">Additional Readings</th>
+          </tr>
+        </thead>
+        <tbody>
+          {courseYear.days.map((entry) => (
+            <tr class="border-t border-warm-200 align-top">
+              <td class="px-4 py-3 text-warm-700">{entry.displayDate}{entry.isNoClass ? ' (No class)' : ''}</td>
+              <td class="px-4 py-3">
+                {entry.lecture.url ? (
+                  <a href={entry.lecture.url} class="text-penn-blue hover:underline" target="_blank" rel="noopener noreferrer">{entry.lecture.label}</a>
+                ) : (
+                  <span class="text-warm-700">{entry.lecture.label}</span>
+                )}
+              </td>
+              <td class="px-4 py-3">
+                {entry.lab.url ? (
+                  <a href={entry.lab.url} class="text-penn-blue hover:underline" target="_blank" rel="noopener noreferrer">{entry.lab.label}</a>
+                ) : (
+                  <span class="text-warm-700">{entry.lab.label}</span>
+                )}
+              </td>
+              <td class="px-4 py-3">
+                {entry.additionalReadings.length > 0 ? (
+                  <div class="flex flex-col gap-1">
+                    {entry.additionalReadings.map((reading) => (
+                      reading.url ? (
+                        <a href={reading.url} class="text-penn-blue hover:underline" target="_blank" rel="noopener noreferrer">{reading.label}</a>
+                      ) : (
+                        <span class="text-warm-700">{reading.label}</span>
+                      )
+                    ))}
+                  </div>
+                ) : (
+                  <span class="text-warm-500">—</span>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</Layout>
