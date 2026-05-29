@@ -1,7 +1,7 @@
 # Central roster. Add someone to a program by adding e.g. "seminar 2024" or "lab 2025 instructor".
 # Shorthand: "program year" or "program year instructor|organizer". Role override: use object form.
 people:
-  - name: Jonathan Pipping
+  - name: Jonathan Pipping-Gamón
     email: jpipping@wharton.upenn.edu
     role: 2y PhD
     bio: Football, Soccer, Formula 1, Baseball.
@@ -9,6 +9,7 @@ people:
     linkedin: https://www.linkedin.com/in/jdpipping/
     programs:
       - lab 2025 instructor
+      - lab 2026 instructor
       - seminar 2025 organizer
       - moneyball 2025 organizer
       - training-camp-june 2025 instructor
@@ -151,13 +152,16 @@ people:
 
   - name: Matthew Spivey
     email: spiveym@wharton.upenn.edu
-    role: junior
-    bio: Football, Soccer, Poker, Betting.
+    role: senior
+    bio: Soccer, Football, Hockey.
     github: hesitantsushi
     linkedin: https://www.linkedin.com/in/matt-spivey/
     programs:
       - lab 2025
-      - seminar 2025
+      - lab 2026
+      - program: seminar
+        year: 2025
+        role: junior
       - program: moneyball
         year: 2025
         type: head-ta
@@ -313,12 +317,33 @@ people:
 
   - name: Henry Gaudet
     email: hgaudet@sas.upenn.edu
-    role: sophomore
-    bio: Soccer, Football, Formula 1.
-    github: null
+    role: junior
+    bio: Football, Soccer, Formula 1.
+    github: h-gaudet
     linkedin: https://www.linkedin.com/in/henry-gaudet-73a625338/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        role: sophomore
+      - lab 2026
+
+  - name: Henry Huang
+    email: hyhuang@sas.upenn.edu
+    role: junior
+    bio: Basketball, Esports, Swimming.
+    github: Henry1145141919810
+    linkedin: https://www.linkedin.com/in/henryhuang06/
+    programs:
+      - lab 2026
+
+  - name: Isaac Hernandez
+    email: hernan07@seas.upenn.edu
+    role: sophomore
+    bio: Soccer, Football, Basketball.
+    github: null
+    linkedin: https://www.linkedin.com/in/isaac-hernandez-5881a6300/
+    programs:
+      - lab 2026
 
   - name: Jacob Glazer
     email: jacobgla@sas.upenn.edu
@@ -342,12 +367,14 @@ people:
 
   - name: Lindsay Yao
     email: lindsyao@wharton.upenn.edu
-    role: sophomore
+    role: junior
     bio: Golf, Baseball, Basketball, Football.
     github: livvyj
     linkedin: https://www.linkedin.com/in/lindsayyao/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        role: sophomore
 
   - name: Lingxuan Gao
     email: gao459@design.upenn.edu
@@ -360,39 +387,104 @@ people:
 
   - name: Lyev Pitram
     email: lpitram@wharton.upenn.edu
-    role: freshman
-    bio: Baseball, Football.
-    github: lpitram-lab
+    role: sophomore
+    bio: Baseball, Football, Soccer.
+    github: null
     linkedin: https://www.linkedin.com/in/lyev-pitram-146aab382/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        role: freshman
+      - lab 2026
+
+  - name: Lucas Zhang
+    email: zhanglucas009@gmail.com
+    role: sophomore
+    bio: Football, Basketball, Golf.
+    github: null
+    linkedin: https://www.linkedin.com/in/lucas-zhang-52086a2ba/
+    programs:
+      - lab 2026
 
   - name: Mackenzie Buckner
     email: bucknerm@sas.upenn.edu
-    role: sophomore
-    bio: Soccer, Lacrosse, Basketball, Cross Country.
+    role: junior
+    bio: Soccer, Basketball, Lacrosse.
     github: null
     linkedin: https://www.linkedin.com/in/mackenzie-buckner-070680324/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        role: sophomore
+      - lab 2026
 
   - name: Max Gotuaco
     email: gotuacom@sas.upenn.edu
-    role: sophomore
-    bio: Basketball, Soccer, Golf, Football.
+    role: junior
+    bio: Basketball, Soccer, Golf.
     github: maxgotuaco1
     linkedin: https://www.linkedin.com/in/max-gotuaco-b3424a322/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        role: sophomore
+      - lab 2026
 
   - name: Michael Hegarty
-    email: hegarty1@wharton.upenn.edu
-    role: freshman
+    email: michaelheg13@gmail.com
+    role: sophomore
     bio: Football, Baseball, Basketball.
     github: null
     linkedin: https://www.linkedin.com/in/hegarty-michael/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        role: freshman
+
+  - name: Arnab Chaudhuri
+    email: arnabch@wharton.upenn.edu
+    role: junior
+    bio: Hockey, Football, Soccer.
+    github: arnabch28
+    linkedin: https://www.linkedin.com/in/arnab-chaudhuri-988aa7365/
+    programs:
+      - lab 2026
+
+  - name: Dawei Sun
+    email: dwsun@sas.upenn.edu
+    role: junior
+    bio: Soccer, Football, Basketball.
+    github: null
+    linkedin: https://www.linkedin.com/in/dawei-sun-169718263/
+    programs:
+      - lab 2026
+
+  - name: Harith Menon
+    email: jhmenon1@wharton.upenn.edu
+    role: sophomore
+    bio: Basketball, Mixed Martial Arts, Soccer.
+    github: null
+    linkedin: null
+    programs:
+      - lab 2026
+
+  - name: Nawshin Ahana
+    email: ahana.nawshin@gmail.com
+    role: senior
+    bio: Formula 1, Soccer, Cricket.
+    github: null
+    linkedin: https://www.linkedin.com/in/nawshin-ahana
+    programs:
+      - lab 2026
+
+  - name: Tasnim Chelbi
+    email: tasnimch@sas.upenn.edu
+    role: senior
+    bio: Soccer, Basketball, Football.
+    github: null
+    linkedin: null
+    programs:
+      - lab 2026
 
   - name: Sam Reiner
     email: sreiner1@sas.upenn.edu
@@ -428,13 +520,15 @@ people:
 
   - name: Trey Elder
     email: telder3@seas.upenn.edu
-    role: 1y Masters
+    role: senior
     bio: Hockey.
     github: treyelder3
     linkedin: https://www.linkedin.com/in/treyelder7078/
     projects: [curlers, halo2026]
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        role: 1y Masters
 
   - name: Seth Rothbaum
     email: sethroth@wharton.upenn.edu
@@ -447,13 +541,15 @@ people:
 
   - name: James Duong
     email: duongja@wharton.upenn.edu
-    role: freshman
+    role: sophomore
     bio: Football, Soccer, Basketball.
     github: jduongg17
     linkedin: https://www.linkedin.com/in/james-duong-0aa8492a6/
     projects: [epl-payroll]
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        role: freshman
 
   - name: Justin Hughes
     email: juhughes@wharton.upenn.edu
