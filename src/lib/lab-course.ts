@@ -84,10 +84,6 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         ],
         additionalReadings: [
           {
-            label: 'The Research Process',
-            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/research-process.pdf',
-          },
-          {
             label: 'dplyr Cheat Sheet',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/supplementary/coding/cheat-sheets/dplyr.pdf',
           },
@@ -120,7 +116,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: 'NCAA Games',
+            label: 'NCAAB Games',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/02_ncaa-games.csv',
           },
           {
@@ -142,6 +138,12 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           {
             label: 'Punts',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/02_punts.csv',
+          },
+        ],
+        additionalReadings: [
+          {
+            label: 'The Research Process',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/research-process.pdf',
           },
         ],
       },
