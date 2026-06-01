@@ -84,8 +84,28 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         ],
         additionalReadings: [
           {
-            label: 'Research Process',
+            label: 'The Research Process',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/research-process.pdf',
+          },
+          {
+            label: 'dplyr Cheat Sheet',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/supplementary/coding/cheat-sheets/dplyr.pdf',
+          },
+          {
+            label: 'ggplot2 Cheat Sheet',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/supplementary/coding/cheat-sheets/ggplot2.pdf',
+          },
+          {
+            label: 'R Markdown Cheat Sheet',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/supplementary/coding/cheat-sheets/r-markdown.pdf',
+          },
+          {
+            label: 'readr Cheat Sheet',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/supplementary/coding/cheat-sheets/readr.pdf',
+          },
+          {
+            label: 'tidyr Cheat Sheet',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/supplementary/coding/cheat-sheets/tidyr.pdf',
           },
         ],
       },
