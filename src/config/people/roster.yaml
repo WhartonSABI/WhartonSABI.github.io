@@ -340,7 +340,7 @@ people:
     email: hernan07@seas.upenn.edu
     role: sophomore
     bio: Soccer, Football, Basketball.
-    github: null
+    github: IsaacH407
     linkedin: https://www.linkedin.com/in/isaac-hernandez-5881a6300/
     programs:
       - lab 2026
@@ -389,7 +389,7 @@ people:
     email: lpitram@wharton.upenn.edu
     role: sophomore
     bio: Baseball, Football, Soccer.
-    github: null
+    github: lpitram-lab
     linkedin: https://www.linkedin.com/in/lyev-pitram-146aab382/
     programs:
       - program: seminar
@@ -401,7 +401,7 @@ people:
     email: zhanglucas009@gmail.com
     role: sophomore
     bio: Football, Basketball, Golf.
-    github: null
+    github: lucaszhang123
     linkedin: https://www.linkedin.com/in/lucas-zhang-52086a2ba/
     programs:
       - lab 2026
@@ -410,7 +410,7 @@ people:
     email: bucknerm@sas.upenn.edu
     role: junior
     bio: Soccer, Basketball, Lacrosse.
-    github: null
+    github: bucknerm28
     linkedin: https://www.linkedin.com/in/mackenzie-buckner-070680324/
     programs:
       - program: seminar
@@ -434,12 +434,13 @@ people:
     email: michaelheg13@gmail.com
     role: sophomore
     bio: Football, Baseball, Basketball.
-    github: null
+    github: michaelheg13
     linkedin: https://www.linkedin.com/in/hegarty-michael/
     programs:
       - program: seminar
         year: 2025
         role: freshman
+      - lab 2026
 
   - name: Arnab Chaudhuri
     email: arnabch@wharton.upenn.edu
@@ -454,7 +455,7 @@ people:
     email: dwsun@sas.upenn.edu
     role: junior
     bio: Soccer, Football, Basketball.
-    github: null
+    github: sundwdavid
     linkedin: https://www.linkedin.com/in/dawei-sun-169718263/
     programs:
       - lab 2026
@@ -463,7 +464,7 @@ people:
     email: jhmenon1@wharton.upenn.edu
     role: sophomore
     bio: Basketball, Mixed Martial Arts, Soccer.
-    github: null
+    github: jhmenon
     linkedin: null
     programs:
       - lab 2026
@@ -472,7 +473,7 @@ people:
     email: ahana.nawshin@gmail.com
     role: senior
     bio: Formula 1, Soccer, Cricket.
-    github: null
+    github: xahana
     linkedin: https://www.linkedin.com/in/nawshin-ahana
     programs:
       - lab 2026
