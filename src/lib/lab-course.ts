@@ -109,6 +109,42 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-02': {
+        lecture: {
+          label: 'Multivariable Linear Regression',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/02_multivariable-linear-regression.pdf',
+        },
+        lab: {
+          label: 'Lab 2',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/02_multivariable-linear-regression.pdf',
+        },
+        data: [
+          {
+            label: 'NCAA Games',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/02_ncaa-games.csv',
+          },
+          {
+            label: 'NFL Draft Second Contracts',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/02_nfl-draft-second-contracts.csv',
+          },
+          {
+            label: 'Punts Quadratic',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/02_punts-quadratic.csv',
+          },
+          {
+            label: 'Expected Points',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/02_expected-points.csv',
+          },
+          {
+            label: 'NBA Four Factors',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/02_nba-four-factors.csv',
+          },
+          {
+            label: 'Punts',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/02_punts.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
@@ -201,6 +237,7 @@ function toTitleFromFile(fileName: string): string {
     mlb: 'MLB',
     nba: 'NBA',
     nfl: 'NFL',
+    ncaa: 'NCAA',
     ncaab: 'NCAAB',
     ba: 'BA',
     ipba: 'IPBA',
