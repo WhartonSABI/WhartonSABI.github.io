@@ -14,7 +14,16 @@ const programs = [
     slug: 'lab',
     label: 'Summer Lab',
     items: [
-      { href: '/lab/course', label: 'Course' },
+      {
+        href: '/lab/course',
+        label: 'Course',
+        section: '/lab/course',
+        menu: [
+          { href: '/lab/course', label: 'Overview' },
+          { href: '/lab/course/2025', label: '2025' },
+          { href: '/lab/course/2026', label: '2026' },
+        ],
+      },
       { href: '/lab/people', label: 'People' },
       { href: '/lab/projects', label: 'Projects' },
     ],
@@ -148,15 +157,28 @@ function programIsActive(slug: string): boolean {
                 {program.items.map((item) =>
                   'menu' in item && item.menu ? (
                     <div class="relative group/submenu">
-                      <span
-                        class:list={[
-                          'flex items-center justify-between px-4 py-2 text-sm transition-colors',
-                          isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
-                        ]}
-                      >
-                        {item.label}
-                        <svg class="h-3 w-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                      </span>
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          class:list={[
+                            'flex items-center justify-between px-4 py-2 text-sm transition-colors',
+                            isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                          ]}
+                        >
+                          {item.label}
+                          <svg class="h-3 w-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                      ) : (
+                        <span
+                          class:list={[
+                            'flex items-center justify-between px-4 py-2 text-sm transition-colors',
+                            isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
+                          ]}
+                        >
+                          {item.label}
+                          <svg class="h-3 w-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </span>
+                      )}
                       <div class="absolute left-full top-0 -ml-1 opacity-0 invisible group-hover/submenu:opacity-100 group-hover/submenu:visible transition-all z-10">
                         <div class="bg-white rounded-lg shadow-lg border border-warm-200 py-1 min-w-[160px]">
                           {item.menu.map((sub: { href?: string; label: string; menu?: { href: string; label: string }[] }) =>
@@ -263,7 +285,11 @@ function programIsActive(slug: string): boolean {
                       isItemActive(item) ? 'text-penn-red bg-penn-red-light' : 'text-penn-blue hover:bg-penn-blue-light'
                     ]}
                   >
-                    {item.label}
+                    {item.href ? (
+                      <a href={item.href} class="flex-1">{item.label}</a>
+                    ) : (
+                      <span>{item.label}</span>
+                    )}
                     <svg class="h-4 w-4 transition-transform group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
