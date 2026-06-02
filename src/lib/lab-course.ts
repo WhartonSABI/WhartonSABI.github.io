@@ -124,10 +124,6 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/02_nfl-draft-second-contracts.csv',
           },
           {
-            label: 'Punts Quadratic',
-            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/02_punts-quadratic.csv',
-          },
-          {
             label: 'Expected Points',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/02_expected-points.csv',
           },
