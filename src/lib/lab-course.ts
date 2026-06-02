@@ -143,6 +143,38 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-03': {
+        lecture: {
+          label: 'Logistic Regression',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/03_logistic-regression.pdf',
+        },
+        lab: {
+          label: 'Lab 3',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/03_logistic-regression.pdf',
+        },
+        data: [
+          {
+            label: 'First Putts',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/03_first-putts.csv',
+          },
+          {
+            label: 'First Putts Clean',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/03_first-putts-clean.csv',
+          },
+          {
+            label: 'Field Goals',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/03_field-goals.csv',
+          },
+          {
+            label: 'NCAAB Results',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/03_ncaab-results.csv',
+          },
+          {
+            label: 'NCAAB Teams',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/03_ncaab-teams.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
@@ -252,6 +284,16 @@ function toTitleFromFile(fileName: string): string {
     .join(' ');
 }
 
+function dedupeCourseLinks(links: CourseLink[]): CourseLink[] {
+  const seen = new Set<string>();
+  return links.filter((link) => {
+    const key = (link.url ?? link.label).trim().toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function parseIsoDate(isoDate: string): Date {
   const [year, month, day] = isoDate.split('-').map((v) => parseInt(v, 10));
   return new Date(year, month - 1, day);
@@ -343,7 +385,9 @@ function buildDays(config: CourseYearConfig): CourseDay[] {
         ? [{ label: '-' }]
         : isNoLabDay
           ? [{ label: '-' }]
-          : (overrides?.data ?? (dataDefaults.length > 0 ? dataDefaults : [{ label: '-' }])),
+          : dedupeCourseLinks(
+              overrides?.data ?? (dataDefaults.length > 0 ? dataDefaults : [{ label: '-' }]),
+            ),
       additionalReadings: isNoClass ? [{ label: '-' }] : (overrides?.additionalReadings ?? []),
     });
     if (!isNoClass) {
