@@ -154,10 +154,6 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: 'First Putts',
-            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/03_first-putts.csv',
-          },
-          {
             label: 'First Putts Clean',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/03_first-putts-clean.csv',
           },
