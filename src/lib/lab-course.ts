@@ -170,6 +170,12 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/03_ncaab-teams.csv',
           },
         ],
+        additionalReadings: [
+          {
+            label: 'Beyond xG',
+            url: '/lab/projects/xg-plus',
+          },
+        ],
       },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
