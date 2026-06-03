@@ -173,7 +173,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         additionalReadings: [
           {
             label: 'Beyond xG',
-            url: '/lab/projects/xg-plus',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/beyond-xg.pptx',
           },
         ],
       },
