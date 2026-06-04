@@ -175,6 +175,40 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
             label: 'Beyond xG',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/beyond-xg.pptx',
           },
+          {
+            label: 'Pass Rush Ratings',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/pass-rush-bt.pdf',
+          },
+        ],
+      },
+      '2026-06-04': {
+        lecture: {
+          label: 'GLM and GAM',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/04_glm-and-gam.pdf',
+        },
+        lab: {
+          label: 'Lab 4',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/04_glm-and-gam.pdf',
+        },
+        data: [
+          {
+            label: 'BA 2020 2021',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/04_ba-2020-2021.csv',
+          },
+          {
+            label: 'Field Goals',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/04_field-goals.csv',
+          },
+        ],
+        additionalReadings: [
+          {
+            label: 'Max WP Loser',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/max-wp-loser.pdf',
+          },
+          {
+            label: 'Max WP Note',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/max-wp-note.pdf',
+          },
         ],
       },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
