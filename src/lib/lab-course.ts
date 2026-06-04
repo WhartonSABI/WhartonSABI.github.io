@@ -183,7 +183,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
       },
       '2026-06-04': {
         lecture: {
-          label: 'GLM and GAM',
+          label: 'GLMs and GAMs',
           url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/04_glm-and-gam.pdf',
         },
         lab: {
@@ -191,6 +191,10 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/04_glm-and-gam.pdf',
         },
         data: [
+          {
+            label: 'NFL Draft Second Contracts',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/data/04_nfl-draft-second-contracts.csv',
+          },
           {
             label: 'BA 2020 2021',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/04_ba-2020-2021.csv',
