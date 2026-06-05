@@ -213,6 +213,34 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
             label: 'Max WP Note',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/max-wp-note.pdf',
           },
+          {
+            label: "The Loser's Curse",
+            url: 'https://faculty.wharton.upenn.edu/wp-content/uploads/2013/08/massey---thaler---losers-curse---management-science-july-2013.pdf',
+          },
+          {
+            label: 'NFL Draft Utility Function',
+            url: 'https://arxiv.org/abs/2411.10400',
+          },
+        ],
+      },
+      '2026-06-05': {
+        lecture: {
+          label: "Models Do What They're Told",
+          url: "https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/05_models-do-what-they're-told.pdf",
+        },
+        lab: {
+          label: 'Lab 5',
+          url: "https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/05_models-do-what-they're-told.pdf",
+        },
+        data: [
+          {
+            label: '3TTOP',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/data/05_ttop-starter-pa.csv',
+          },
+          {
+            label: 'Expected Points',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/05_expected-points.csv',
+          },
         ],
       },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
