@@ -234,7 +234,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: '3TTOP',
+            label: 'Time Through the Order Penalty',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/data/05_ttop-starter-pa.csv',
           },
           {
@@ -262,7 +262,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/06_diving.csv',
           },
           {
-            label: 'TTO',
+            label: 'Time Through the Order Penalty',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/06_tto.csv',
           },
         ],
