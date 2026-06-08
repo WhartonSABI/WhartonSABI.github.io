@@ -243,6 +243,30 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-08': {
+        lecture: {
+          label: 'Statistical Inference',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/06_statistical-inference.pdf',
+        },
+        lab: {
+          label: 'Lab 6',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/06_statistical-inference.pdf',
+        },
+        data: [
+          {
+            label: 'Diving',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/data/06_diving.csv',
+          },
+          {
+            label: 'Diving',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/06_diving.csv',
+          },
+          {
+            label: 'TTO',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/06_tto.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
@@ -355,7 +379,7 @@ function toTitleFromFile(fileName: string): string {
 function dedupeCourseLinks(links: CourseLink[]): CourseLink[] {
   const seen = new Set<string>();
   return links.filter((link) => {
-    const key = (link.url ?? link.label).trim().toLowerCase();
+    const key = link.label.trim().toLowerCase();
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
