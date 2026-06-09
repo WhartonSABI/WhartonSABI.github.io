@@ -267,6 +267,22 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-09': {
+        lecture: {
+          label: 'Causal Inference',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/07_causal-inference.pdf',
+        },
+        lab: {
+          label: 'Lab 7',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/07_causal-inference.pdf',
+        },
+        data: [
+          {
+            label: 'NBA PBP 2021-2026',
+            url: 'https://github.com/sportsdataverse/hoopR',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
