@@ -283,6 +283,22 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-10': {
+        lecture: {
+          label: 'Large Sample Inference',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/08_large-sample-inference.pdf',
+        },
+        lab: {
+          label: 'Lab 8',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/08_large-sample-inference.pdf',
+        },
+        data: [
+          {
+            label: 'NBA Free Throws',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/08_nba-free-throws.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
