@@ -299,6 +299,26 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-11': {
+        lecture: {
+          label: 'The Bootstrap',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/09_the-bootstrap.pdf',
+        },
+        lab: {
+          label: 'Lab 9',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/09_the-bootstrap.pdf',
+        },
+        data: [
+          {
+            label: 'NBA Free Throws',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/09_nba-free-throws.csv',
+          },
+          {
+            label: 'Expected Points',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/09_expected-points.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
