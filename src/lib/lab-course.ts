@@ -310,14 +310,25 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: 'NBA Free Throws',
-            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/09_nba-free-throws.csv',
-          },
-          {
             label: 'Expected Points',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/09_expected-points.csv',
           },
+          {
+            label: 'NBA Free Throws',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/09_nba-free-throws.csv',
+          },
         ],
+      },
+      '2026-06-12': {
+        lecture: {
+          label: 'Sports Betting',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/10_sports-betting.pdf',
+        },
+        lab: {
+          label: 'Lab 10',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/10_sports-betting.pdf',
+        },
+        data: [],
       },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
