@@ -332,8 +332,8 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
       },
       '2026-06-15': {
         lecture: {
-          label: 'Priors and Fake Data',
-          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/11_priors-and-fake-data.pdf',
+          label: 'Priors as Fake Data',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/11_priors-as-fake-data.pdf',
         },
         lab: {
           label: 'Lab 11',
