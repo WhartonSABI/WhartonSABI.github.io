@@ -330,6 +330,22 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [],
       },
+      '2026-06-15': {
+        lecture: {
+          label: 'Priors and Fake Data',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/11_priors-and-fake-data.pdf',
+        },
+        lab: {
+          label: 'Lab 11',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/11_priors-as-fake-data.pdf',
+        },
+        data: [
+          {
+            label: 'NBA Free Throws',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/11_nba-free-throws.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
