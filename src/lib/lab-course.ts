@@ -346,6 +346,26 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-16': {
+        lecture: {
+          label: 'Empirical Bayes',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/12_empirical-bayes.pdf',
+        },
+        lab: {
+          label: 'Lab 12',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/12_empirical-bayes.pdf',
+        },
+        data: [
+          {
+            label: 'BA 2020 2021',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/12_ba-2020-2021.csv',
+          },
+          {
+            label: 'Field Goals',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/12_field-goals.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
