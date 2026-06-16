@@ -366,6 +366,26 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-17': {
+        lecture: {
+          label: 'Shrinkage Estimation',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/13_shrinkage-estimation.pdf',
+        },
+        lab: {
+          label: 'Lab 13',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/13_shrinkage-estimation.pdf',
+        },
+        data: [
+          {
+            label: 'Putts Test',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/13_putts-test.csv',
+          },
+          {
+            label: 'Putts Train',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/13_putts-train.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
