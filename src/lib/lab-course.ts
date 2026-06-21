@@ -278,8 +278,8 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: 'NBA PBP 2021-2026',
-            url: 'https://github.com/sportsdataverse/hoopR',
+            label: 'Timeout Opportunities',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/07_timeout-opportunities.csv',
           },
         ],
       },
@@ -399,6 +399,22 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           {
             label: 'NFL Games',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/14_nfl-games.csv',
+          },
+        ],
+      },
+      '2026-06-22': {
+        lecture: {
+          label: 'Regularization and Ridge',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/15_regularization-and-ridge.pdf',
+        },
+        lab: {
+          label: 'Lab 15',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/15_regularization-and-ridge.pdf',
+        },
+        data: [
+          {
+            label: 'NBA Lineups',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/15_nba-lineups.rds',
           },
         ],
       },
