@@ -404,7 +404,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
       },
       '2026-06-22': {
         lecture: {
-          label: 'Regularization and Ridge',
+          label: 'Regularization and Ridge Regression',
           url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/15_regularization-and-ridge.pdf',
         },
         lab: {
