@@ -418,6 +418,17 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-23': {
+        lecture: {
+          label: 'Tree-Based Models',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/16_tree-models.pdf',
+        },
+        lab: {
+          label: 'Lab 16',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/16_tree-models.pdf',
+        },
+        data: [],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
