@@ -434,6 +434,38 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-24': {
+        lecture: {
+          label: 'Neural Networks',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/17_neural-networks.pdf',
+        },
+        lab: {
+          label: 'Lab 17',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/17_neural-networks.pdf',
+        },
+        data: [
+          {
+            label: '2022 NFL Features',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/data/17_bdb-static-features.csv',
+          },
+          {
+            label: '2022 NFL Plays',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/data/17_bdb-static-plays.csv',
+          },
+          {
+            label: '2022 NFL Snaps',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/data/17_bdb-static-snap.csv',
+          },
+          {
+            label: 'Play Action Vs Run',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/17_play-action-vs-run.csv',
+          },
+          {
+            label: 'Snap Examples',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/17_snap-examples.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
