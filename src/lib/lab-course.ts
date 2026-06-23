@@ -429,7 +429,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: 'Win Probability',
+            label: 'NFL Win Probability',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/16_win-probability.csv',
           },
         ],
