@@ -427,7 +427,12 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           label: 'Lab 16',
           url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/16_tree-models.pdf',
         },
-        data: [],
+        data: [
+          {
+            label: 'Win Probability',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/16_win-probability.csv',
+          },
+        ],
       },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
