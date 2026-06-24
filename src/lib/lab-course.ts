@@ -466,6 +466,22 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
+      '2026-06-25': {
+        lecture: {
+          label: 'Unsupervised Learning',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/18_unsupervised-learning.pdf',
+        },
+        lab: {
+          label: 'Lab 18',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/18_unsupervised-learning.pdf',
+        },
+        data: [
+          {
+            label: 'NBA Clusters',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/18_unsupervised-learning-nba-clusters.csv',
+          },
+        ],
+      },
       '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
