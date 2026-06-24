@@ -477,8 +477,8 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: 'NBA Clusters',
-            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/18_unsupervised-learning-nba-clusters.csv',
+            label: 'NBA Player Seasons',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/18_nba-clusters.csv',
           },
         ],
       },
