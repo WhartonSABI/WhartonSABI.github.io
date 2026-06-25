@@ -66,7 +66,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: 'BA 2020 2021',
+            label: 'MLB BA 2020-2021',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/data/01_ba-2020-2021.csv',
           },
           {
@@ -196,7 +196,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/data/04_nfl-draft-second-contracts.csv',
           },
           {
-            label: 'BA 2020 2021',
+            label: 'MLB BA 2020-2021',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/04_ba-2020-2021.csv',
           },
           {
@@ -357,7 +357,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         },
         data: [
           {
-            label: 'BA 2020 2021',
+            label: 'MLB BA 2020-2021',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/12_ba-2020-2021.csv',
           },
           {
@@ -479,6 +479,22 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           {
             label: 'NBA Player Seasons',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/18_nba-clusters.csv',
+          },
+        ],
+      },
+      '2026-06-26': {
+        lecture: {
+          label: 'Kernel Methods',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/19_kernel-methods.pdf',
+        },
+        lab: {
+          label: 'Lab 19',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/19_kernel-methods.pdf',
+        },
+        data: [
+          {
+            label: 'EPL Shots 2024-2025',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/data/19_shots.csv',
           },
         ],
       },
