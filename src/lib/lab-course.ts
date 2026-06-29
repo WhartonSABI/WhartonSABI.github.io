@@ -498,7 +498,18 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           },
         ],
       },
-      '2026-06-29': { lecture: { label: 'Requested Lecture 1' } },
+      '2026-06-29': {
+        lecture: {
+          label: 'Statistical Claims',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/20_statistical-claims.pdf',
+        },
+        data: [
+          {
+            label: 'NFL Win Probability',
+            url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/20_nfl-wp.csv',
+          },
+        ],
+      },
       '2026-06-30': { lecture: { label: 'Requested Lecture 2' } },
       '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
       '2026-07-02': { lecture: { label: 'Requested Lecture 4' } },
@@ -706,11 +717,10 @@ function buildDays(config: CourseYearConfig): CourseDay[] {
         : (overrides?.lab ?? { label: labDefault, url: labPdfUrl }),
       data: isNoClass
         ? [{ label: '-' }]
-        : isNoLabDay
-          ? [{ label: '-' }]
-          : dedupeCourseLinks(
-              overrides?.data ?? (dataDefaults.length > 0 ? dataDefaults : [{ label: '-' }]),
-            ),
+        : dedupeCourseLinks(
+            overrides?.data ??
+              (isNoLabDay ? [{ label: '-' }] : dataDefaults.length > 0 ? dataDefaults : [{ label: '-' }]),
+          ),
       additionalReadings: isNoClass ? [{ label: '-' }] : (overrides?.additionalReadings ?? []),
     });
     if (!isNoClass) {
