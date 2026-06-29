@@ -53,7 +53,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
     startDate: '2026-06-01',
     endDate: '2026-07-02',
     noClassDates: ['2026-06-19', '2026-07-04'],
-    noLabDates: ['2026-06-29', '2026-06-30', '2026-07-01', '2026-07-02'],
+    noLabDates: ['2026-06-30', '2026-07-01', '2026-07-02'],
     overrides: {
       '2026-06-01': {
         lecture: {
@@ -502,6 +502,10 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
         lecture: {
           label: 'Statistical Claims',
           url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/20_statistical-claims.pdf',
+        },
+        lab: {
+          label: 'Lab 20',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/20_statistical-claims.pdf',
         },
         data: [
           {
