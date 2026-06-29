@@ -500,7 +500,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
       },
       '2026-06-29': {
         lecture: {
-          label: 'Statistical Claims',
+          label: 'Making Statistical Claims',
           url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/20_statistical-claims.pdf',
         },
         lab: {
