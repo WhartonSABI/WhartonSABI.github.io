@@ -524,7 +524,12 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/labs/21_game-theory.pdf',
         },
       },
-      '2026-07-01': { lecture: { label: 'Requested Lecture 3' } },
+      '2026-07-01': {
+        lecture: {
+          label: 'Time Series',
+          url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/22_time-series.pdf',
+        },
+      },
       '2026-07-02': { lecture: { label: 'Requested Lecture 4' } },
     },
   },
