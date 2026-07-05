@@ -1,9 +1,12 @@
 # Central roster. Add someone to a program by adding e.g. "seminar 2024" or "lab 2025 instructor".
 # Shorthand: "program year" or "program year instructor|organizer". Role override: use object form.
+# Optional: set `roleYear` to anchor a class-year role (e.g. `junior`, `2y PhD`) to a specific academic year.
+# Then the site will shift that role automatically across program years unless a program entry overrides `role`.
 people:
   - name: Jonathan Pipping-Gamón
     email: jpipping@wharton.upenn.edu
-    role: 2y PhD
+    role: 3y PhD
+    roleYear: 2026
     bio: Football, Soccer, Formula 1, Baseball.
     github: jdpipping
     linkedin: https://www.linkedin.com/in/jdpipping/
@@ -56,6 +59,7 @@ people:
   - name: Ryan S. Brill
     email: ryguy123@sas.upenn.edu
     role: 5y PhD
+    roleYear: 2025
     bio: Football, Baseball, Basketball.
     github: snoopryan123
     programs:
@@ -65,6 +69,7 @@ people:
   - name: Adam Kuechler
     email: kuechler@wharton.upenn.edu
     role: junior
+    roleYear: 2025
     bio: Soccer, Football, Basketball.
     github: aakuechler
     linkedin: https://www.linkedin.com/in/adam-kuechler-184555278/
@@ -81,6 +86,7 @@ people:
   - name: Aiwen Li
     email: aiwenli@wharton.upenn.edu
     role: junior
+    roleYear: 2025
     bio: Combat Sports, Tennis.
     github: aiwenli123
     linkedin: https://www.linkedin.com/in/aiwen-li/
@@ -96,6 +102,7 @@ people:
   - name: Audrey Kuan
     email: kuanai@wharton.upenn.edu
     role: 1y Masters
+    roleYear: 2025
     bio: Basketball, Track & Field, Badminton, Cycling.
     github: akuan16
     linkedin: https://www.linkedin.com/in/audrey-kuan-93b86918b/
@@ -109,6 +116,7 @@ people:
   - name: Chris Bugliosi
     email: bugliosi@wharton.upenn.edu
     role: junior
+    roleYear: 2025
     bio: Hockey, Baseball, Football, Soccer, Formula 1.
     github: ChrisBugliosi
     linkedin: https://www.linkedin.com/in/christopher-bugliosi/
@@ -125,6 +133,7 @@ people:
   - name: Drew Bukasa
     email: dbukasa@sas.upenn.edu
     role: senior
+    roleYear: 2025
     bio: Wrestling, Soccer, Betting.
     github: dbukasa
     linkedin: https://www.linkedin.com/in/drew-bukasa/
@@ -137,6 +146,7 @@ people:
   - name: Kenny Watts
     email: kenwatts@wharton.upenn.edu
     role: senior
+    roleYear: 2025
     bio: Soccer, Rugby.
     github: kennyws
     linkedin: https://www.linkedin.com/in/kenny-watts-222810216/
@@ -155,6 +165,7 @@ people:
   - name: Matthew Spivey
     email: spiveym@wharton.upenn.edu
     role: senior
+    roleYear: 2026
     bio: Soccer, Football, Hockey.
     github: hesitantsushi
     linkedin: https://www.linkedin.com/in/matt-spivey/
@@ -177,6 +188,7 @@ people:
   - name: Maximilian Gebauer
     email: gebauerm@sas.upenn.edu
     role: 4y PhD
+    roleYear: 2025
     bio: Football, Basketball.
     github: Gebauermj31
     linkedin: https://www.linkedin.com/in/maximilian-gebauer-6b2a33365/
@@ -191,6 +203,7 @@ people:
   - name: Noah Sonnenklar
     email: noahson@sas.upenn.edu
     role: junior
+    roleYear: 2025
     bio: Baseball, Basketball.
     github: Noahsonnenklar
     linkedin: https://www.linkedin.com/in/noah-sonnenklar-90b24a2b7/
@@ -204,6 +217,7 @@ people:
   - name: Devon Yau
     email: devonyau@sas.upenn.edu
     role: sophomore
+    roleYear: 2025
     bio: Basketball, Volleyball.
     github: null
     linkedin: https://www.linkedin.com/in/devonyau/
@@ -224,6 +238,7 @@ people:
   - name: Pion Pareyio
     email: pareyio@sas.upenn.edu
     role: junior
+    roleYear: 2025
     bio: Basketball, Soccer.
     github: null
     linkedin: https://www.linkedin.com/in/pion-pareyio/
@@ -234,6 +249,7 @@ people:
   - name: Rita Balajee
     email: abalajee@sas.upenn.edu
     role: sophomore
+    roleYear: 2025
     bio: Rowing, Track & Field.
     github: abalajee
     linkedin: https://www.linkedin.com/in/amrita-balajee-291497286/
@@ -247,6 +263,7 @@ people:
   - name: Tianshu Feng
     email: ftianshu@seas.upenn.edu
     role: 2y Masters
+    roleYear: 2025
     bio: Soccer, Football, Hockey, Formula 1.
     github: fts2001
     linkedin: https://www.linkedin.com/in/tianshu-feng-41a843203/
@@ -265,6 +282,7 @@ people:
   - name: Victoria Lee
     email: torialee@seas.upenn.edu
     role: senior
+    roleYear: 2025
     bio: Football.
     github: victoriaslee
     linkedin: https://www.linkedin.com/in/victoria-lee-b5283021a/
@@ -278,6 +296,7 @@ people:
   - name: Adam Krasilovsky
     email: adamkras@seas.upenn.edu
     role: junior
+    roleYear: 2024
     bio: Baseball, Hockey, Football, Basketball.
     github: null
     linkedin: https://www.linkedin.com/in/adamkrasilovsky/
@@ -287,6 +306,7 @@ people:
   - name: Braden Eberhard
     email: braden.eberhard@pennmedicine.upenn.edu
     role: 1y PhD
+    roleYear: 2025
     bio: Ultimate Frisbee.
     github: BradenEberhard
     linkedin: https://www.linkedin.com/in/braden-eberhard/
@@ -296,6 +316,7 @@ people:
   - name: Evan Harford
     email: eharford@wharton.upenn.edu
     role: sophomore
+    roleYear: 2025
     bio: Football, Baseball, Basketball, Tennis, Formula 1.
     github: null
     linkedin: https://www.linkedin.com/in/evan-harford/
@@ -305,6 +326,7 @@ people:
   - name: Amrah Rasheed-Rahji
     email: amraher@seas.upenn.edu
     role: freshman
+    roleYear: 2025
     bio: Soccer, Formula 1, NASCAR.
     github: null
     linkedin: https://www.linkedin.com/in/amrah-rasheed-rahji-ba1391242/
@@ -314,6 +336,7 @@ people:
   - name: Andreea Rusu
     email: arusu@seas.upenn.edu
     role: sophomore
+    roleYear: 2025
     bio: Soccer, Gymnastics, Volleyball, Skiing.
     github: andreea-rusu
     linkedin: https://www.linkedin.com/in/andreea-rusu-0b2665239/
@@ -323,6 +346,7 @@ people:
   - name: Henry Gaudet
     email: hgaudet@sas.upenn.edu
     role: junior
+    roleYear: 2026
     bio: Football, Soccer, Formula 1.
     github: h-gaudet
     linkedin: https://www.linkedin.com/in/henry-gaudet-73a625338/
@@ -336,6 +360,7 @@ people:
   - name: Isaac Hernandez
     email: hernan07@seas.upenn.edu
     role: sophomore
+    roleYear: 2026
     bio: Soccer, Football, Basketball.
     github: IsaacH407
     linkedin: https://www.linkedin.com/in/isaac-hernandez-5881a6300/
@@ -346,6 +371,7 @@ people:
   - name: Jacob Glazer
     email: jacobgla@sas.upenn.edu
     role: junior
+    roleYear: 2025
     bio: Basketball, Football, Lacrosse, Golf.
     github: null
     linkedin: https://www.linkedin.com/in/jacob-glazer-9632481a6/
@@ -355,6 +381,7 @@ people:
   - name: Kai Wang
     email: kaiwang1@wharton.upenn.edu
     role: senior
+    roleYear: 2025
     bio: Football, Basketball, Soccer.
     github: kaiwang22
     linkedin: https://www.linkedin.com/in/kai-wang1/
@@ -366,6 +393,7 @@ people:
   - name: Lindsay Yao
     email: lindsyao@wharton.upenn.edu
     role: junior
+    roleYear: 2026
     bio: Golf, Baseball, Basketball, Football.
     github: livvyj
     linkedin: https://www.linkedin.com/in/lindsayyao/
@@ -377,6 +405,7 @@ people:
   - name: Lingxuan Gao
     email: gao459@design.upenn.edu
     role: 1y Masters
+    roleYear: 2025
     bio: Football.
     github: geolexxx
     linkedin: https://www.linkedin.com/in/lingxuangao/
@@ -386,6 +415,7 @@ people:
   - name: Lyev Pitram
     email: lpitram@wharton.upenn.edu
     role: sophomore
+    roleYear: 2026
     bio: Baseball, Football, Soccer.
     github: lpitram-lab
     linkedin: https://www.linkedin.com/in/lyev-pitram-146aab382/
@@ -399,6 +429,7 @@ people:
   - name: Lucas Zhang
     email: zhanglucas009@gmail.com
     role: sophomore
+    roleYear: 2026
     bio: Football, Basketball, Golf.
     github: lucaszhang123
     linkedin: https://www.linkedin.com/in/lucas-zhang-52086a2ba/
@@ -409,6 +440,7 @@ people:
   - name: Mackenzie Buckner
     email: bucknerm@sas.upenn.edu
     role: junior
+    roleYear: 2026
     bio: Soccer, Basketball, Lacrosse.
     github: bucknerm28
     linkedin: https://www.linkedin.com/in/mackenzie-buckner-070680324/
@@ -422,6 +454,7 @@ people:
   - name: Max Gotuaco
     email: gotuacom@sas.upenn.edu
     role: junior
+    roleYear: 2026
     bio: Basketball, Soccer, Golf.
     github: maxgotuaco1
     linkedin: https://www.linkedin.com/in/max-gotuaco-b3424a322/
@@ -435,6 +468,7 @@ people:
   - name: Michael Hegarty
     email: hegarty1@wharton.upenn.edu
     role: sophomore
+    roleYear: 2026
     bio: Football, Baseball, Basketball.
     github: michaelheg13
     linkedin: https://www.linkedin.com/in/hegarty-michael/
@@ -448,6 +482,7 @@ people:
   - name: Arnab Chaudhuri
     email: arnabch@wharton.upenn.edu
     role: junior
+    roleYear: 2026
     bio: Hockey, Football, Soccer.
     github: arnabch28
     linkedin: https://www.linkedin.com/in/arnab-chaudhuri-988aa7365/
@@ -458,6 +493,7 @@ people:
   - name: Dawei Sun
     email: dwsun@sas.upenn.edu
     role: junior
+    roleYear: 2026
     bio: Soccer, Football, Basketball.
     github: sundwdavid
     linkedin: https://www.linkedin.com/in/dawei-sun-169718263/
@@ -468,6 +504,7 @@ people:
   - name: Harith Menon
     email: jhmenon1@wharton.upenn.edu
     role: sophomore
+    roleYear: 2026
     bio: Basketball, Mixed Martial Arts, Soccer.
     github: jhmenon
     linkedin: null
@@ -478,6 +515,7 @@ people:
   - name: Nawshin Ahana
     email: ahana.nawshin@gmail.com
     role: senior
+    roleYear: 2026
     bio: Formula 1, Soccer, Cricket.
     github: xahana
     linkedin: https://www.linkedin.com/in/nawshin-ahana
@@ -488,6 +526,7 @@ people:
   - name: Tasnim Chelbi
     email: tasnimch@sas.upenn.edu
     role: senior
+    roleYear: 2026
     bio: Soccer, Basketball, Football.
     github: null
     linkedin: null
@@ -498,6 +537,7 @@ people:
   - name: Sam Reiner
     email: sreiner1@sas.upenn.edu
     role: freshman
+    roleYear: 2025
     bio: Soccer, Baseball.
     github: smule29
     linkedin: https://www.linkedin.com/in/sam-reiner-9bb8152b9/
@@ -508,6 +548,7 @@ people:
   - name: Samen Hossain
     email: samenh@sas.upenn.edu
     role: junior
+    roleYear: 2025
     bio: Basketball, Football, Combat Sports.
     github: SamenSHossain
     linkedin: https://www.linkedin.com/in/samenhossain/
@@ -518,6 +559,7 @@ people:
   - name: Talia Gabin
     email: tgabin@sas.upenn.edu
     role: sophomore
+    roleYear: 2025
     bio: Baseball, Tennis.
     github: tgabin8
     linkedin: https://www.linkedin.com/in/taliagabin/
@@ -530,6 +572,7 @@ people:
   - name: Trey Elder
     email: telder3@seas.upenn.edu
     role: senior
+    roleYear: 2025
     bio: Hockey.
     github: treyelder3
     linkedin: https://www.linkedin.com/in/treyelder7078/
@@ -542,6 +585,7 @@ people:
   - name: Seth Rothbaum
     email: sethroth@wharton.upenn.edu
     role: junior
+    roleYear: 2025
     bio: Soccer, Hockey.
     github: null
     linkedin: https://www.linkedin.com/in/seth-rothbaum/
@@ -551,6 +595,7 @@ people:
   - name: James Duong
     email: duongja@wharton.upenn.edu
     role: sophomore
+    roleYear: 2026
     bio: Football, Soccer, Basketball.
     github: jduongg17
     linkedin: https://www.linkedin.com/in/james-duong-0aa8492a6/
@@ -563,6 +608,7 @@ people:
   - name: Justin Hughes
     email: juhughes@wharton.upenn.edu
     role: senior
+    roleYear: 2025
     bio: Basketball, Football.
     github: justin22hughes
     linkedin: https://www.linkedin.com/in/justin-hughes-wharton/
@@ -575,6 +621,7 @@ people:
   - name: Kavya Venkatesan
     email: kavyav@wharton.upenn.edu
     role: sophomore
+    roleYear: 2025
     bio: Soccer, Golf, Tennis.
     github: kayvcache
     linkedin: https://www.linkedin.com/in/kavya-venkat/
@@ -587,6 +634,7 @@ people:
   - name: Bruno Basner
     email: bbasner@wharton.upenn.edu
     role: junior
+    roleYear: 2024
     bio: Soccer.
     github: null
     linkedin: https://www.linkedin.com/in/bruno-basner-5059bb24a/
@@ -596,6 +644,7 @@ people:
   - name: Dylan Perlstein
     email: dperl123@wharton.upenn.edu
     role: junior
+    roleYear: 2024
     bio: Basketball, Football, Baseball.
     github: null
     linkedin: https://www.linkedin.com/in/dylan-perlstein/
@@ -605,6 +654,7 @@ people:
   - name: Elan Roth
     email: elanroth@sas.upenn.edu
     role: senior
+    roleYear: 2024
     bio: Basketball, Football, Soccer, Lacrosse.
     github: null
     linkedin: https://www.linkedin.com/in/elanroth/
@@ -614,6 +664,7 @@ people:
   - name: Juan Tejera
     email: juanchi@sas.upenn.edu
     role: senior
+    roleYear: 2024
     bio: Football, Soccer, Basketball, Baseball, Tennis.
     github: null
     linkedin: https://www.linkedin.com/in/juan-ignacio-tejera/
@@ -623,6 +674,7 @@ people:
   - name: Jake Federman
     email: jakefed@sas.upenn.edu
     role: senior
+    roleYear: 2024
     bio: Baseball, Football.
     github: null
     linkedin: https://www.linkedin.com/in/jake-federman/
@@ -632,6 +684,7 @@ people:
   - name: Kaishu Mason
     email: kaishu@wharton.upenn.edu
     role: 5y PhD
+    roleYear: 2024
     bio: Soccer, Baseball.
     github: kaishumason
     linkedin: https://www.linkedin.com/in/kaishu-mason-b45ba9158/
@@ -641,6 +694,7 @@ people:
   - name: Nathan Waldbaum
     email: waldbaum@sas.upenn.edu
     role: junior
+    roleYear: 2024
     bio: Basketball, Football.
     github: null
     linkedin: https://www.linkedin.com/in/nathanwaldbaum/
@@ -651,6 +705,7 @@ people:
   - name: Yukun Zhao
     email: zhaoyuk@sas.upenn.edu
     role: 1y Masters
+    roleYear: 2024
     bio: ""
     github: null
     programs:

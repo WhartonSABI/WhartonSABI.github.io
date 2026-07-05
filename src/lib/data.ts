@@ -79,6 +79,7 @@ interface ProgramEntry {
 }
 
 interface RosterPerson extends Omit<Person, 'projects'> {
+  roleYear?: number;
   programs: (string | ProgramEntry)[];
   projects?: string[];
 }
@@ -105,6 +106,78 @@ function parseProgramEntry(entry: string | ProgramEntry): ProgramEntry {
   return { program, year, type };
 }
 
+const UNDERGRAD_ROLES = ['freshman', 'sophomore', 'junior', 'senior'] as const;
+
+interface ParsedAcademicRole {
+  track: 'undergrad' | 'masters' | 'phd';
+  year: number;
+}
+
+function parseAcademicRole(role: string): ParsedAcademicRole | null {
+  const normalized = role.trim();
+  const undergradIndex = UNDERGRAD_ROLES.indexOf(normalized.toLowerCase() as typeof UNDERGRAD_ROLES[number]);
+  if (undergradIndex !== -1) {
+    return { track: 'undergrad', year: undergradIndex + 1 };
+  }
+
+  const match = normalized.match(/^(\d+)y\s+(PhD|Masters)$/i);
+  if (!match) return null;
+
+  return {
+    track: match[2].toLowerCase() === 'phd' ? 'phd' : 'masters',
+    year: parseInt(match[1], 10),
+  };
+}
+
+function formatAcademicRole(role: ParsedAcademicRole, year: number): string | null {
+  if (year < 1) return null;
+
+  if (role.track === 'undergrad') {
+    return UNDERGRAD_ROLES[year - 1] ?? null;
+  }
+
+  return `${year}y ${role.track === 'phd' ? 'PhD' : 'Masters'}`;
+}
+
+function shiftAcademicRole(role: string, fromYear: number, toYear: number): string {
+  const parsed = parseAcademicRole(role);
+  if (!parsed) return role;
+
+  const shifted = formatAcademicRole(parsed, parsed.year + (toYear - fromYear));
+  return shifted ?? role;
+}
+
+function inferRoleYear(person: RosterPerson, programs: ProgramEntry[]): number | null {
+  if (person.roleYear != null) return person.roleYear;
+
+  const baseRole = parseAcademicRole(person.role);
+  if (!baseRole) return null;
+
+  const inferredYears = programs.flatMap((program) => {
+    if (!program.role) return [];
+    const overriddenRole = parseAcademicRole(program.role);
+    if (!overriddenRole || overriddenRole.track !== baseRole.track) return [];
+    return [program.year + (baseRole.year - overriddenRole.year)];
+  });
+
+  if (inferredYears.length > 0) {
+    const uniqueYears = [...new Set(inferredYears)];
+    if (uniqueYears.length > 1) {
+      console.warn(`[people] Inconsistent role year inference for ${person.name}; using ${Math.max(...uniqueYears)}.`);
+    }
+    return Math.max(...uniqueYears);
+  }
+
+  const latestProgramYear = Math.max(...programs.map((program) => program.year));
+  return Number.isFinite(latestProgramYear) ? latestProgramYear : null;
+}
+
+function resolveProgramRole(baseRole: string, program: ProgramEntry, roleYear: number | null): string {
+  if (program.role) return program.role;
+  if (roleYear == null) return baseRole;
+  return shiftAcademicRole(baseRole, roleYear, program.year);
+}
+
 /** Extract first name for sorting. Strips titles (Dr., Prof., etc.). People are alphabetized by first name. */
 function firstNameSortKey(name: string): string {
   const t = name.trim().replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.|Ms\.)\s+/i, '').trim();
@@ -127,6 +200,8 @@ export function loadPeople(): PeopleConfig[] {
   const key = (program: string, year: number) => `${program}:${year}`;
 
   for (const r of roster.people) {
+    const parsedPrograms = r.programs.map(parseProgramEntry);
+    const roleYear = inferRoleYear(r, parsedPrograms);
     const basePerson: Person = {
       name: r.name,
       role: r.role,
@@ -138,8 +213,7 @@ export function loadPeople(): PeopleConfig[] {
       projects: r.projects,
     };
 
-    for (const entry of r.programs) {
-      const parsed = parseProgramEntry(entry);
+    for (const parsed of parsedPrograms) {
       const pk = key(parsed.program, parsed.year);
       if (!configMap.has(pk)) {
         configMap.set(pk, {
@@ -152,7 +226,7 @@ export function loadPeople(): PeopleConfig[] {
       const config = configMap.get(pk)!;
       const person: Person = {
         ...basePerson,
-        role: parsed.role ?? basePerson.role,
+        role: resolveProgramRole(basePerson.role, parsed, roleYear),
       };
 
       if (parsed.type === 'instructor' || parsed.type === 'organizer') {
