@@ -38,7 +38,7 @@ head(batting_2014_2015)
 
 When we print out `batting_2014_2015`, we notice that it is easier to read in this proper "tidy" format. Moreover, many of the `tidyverse` functions that we've covered and will continue to learn are much simpler to implement when used on data of this form. We'll continue to see examples of how to "tidy" up our data as we go through the lectures and problem sets.
 
-It can also be helpful to work with the original, "long" format of the data when making visualizations. We can easily revert back to this form with pivot longer, which will take the compact version and unpack it back into one row per year. `cols` represents the column titles that are instead being converted into a new column - in this case `BA_2014` and `BA_2015`. The `names_to` argument indicates the name of the new column that will contain these values, and the `values_to` argument indicates the name of the new column that will contain the values themselves. We can then mutate to remove the `BA_` prefix and then see that our table looks like our original data. 
+It can also be helpful to work with the original, "long" format of the data when making visualizations. We can easily revert back to this form with `pivot_longer()`, which will take the compact version and unpack it back into one row per year. `cols` represents the column titles that are being converted into a new column, in this case `BA_2014` and `BA_2015`. The `names_to` argument indicates the name of the new column that will contain these values, and the `values_to` argument indicates the name of the new column that will contain the values themselves. We can then `mutate()` to remove the `BA_` prefix and see that our table looks like our original data. 
 ```{r pivot_longer batting_2014_2015}
 batting_2014_2015_long <- batting_2014_2015 %>%
   pivot_longer(
@@ -54,7 +54,7 @@ head(batting_2014_2015_long)
 We can use this `batting_2014_2015_long` tbl to make a bar plot with `geom_col` which shows the batting averages of each player in 2014 and 2015.
 ```{r}
 batting_2014_2015_slice <- batting_2014_2015_long %>%
-  slice_head(n=20) #take the first 10 players alphabetically 
+  slice_head(n = 20) # take the first 20 players alphabetically 
 
 ggplot(batting_2014_2015_slice, aes(x = playerID, y = BA, fill = yearID)) +
   geom_col(position = "dodge", color = "black", alpha = 0.8) +
@@ -112,7 +112,7 @@ batting_2014_2015 <-
 batting_2014_2015
 ```
 
-When we run this code and print out our tbl, we see that there is a new column called "yhat_1" that contains our new predictions. Before proceeding, we should talk a bit about the syntax use in `cut()`. The first argument is the variable we want to discretize. The next argument, `breaks = ` is a vector that tells R where the endpoints of these intervals are. These are often called "cut points" In this particular case, we wanted to divide the players into those with below average batting averages in 2014 and above average batting averages in 2015. The first element of the cut point vector, 0.15 is much less than the smallest BA_2014 value, whereas the second elements, 0.272, is the overall mean of the BA_2014 values. The last element, 0.40 is much greater than the largest BA_2014 value.
+When we run this code and print out our tbl, we see that there is a new column called "yhat_1" that contains our new predictions. Before proceeding, we should talk a bit about the syntax used in `cut()`. The first argument is the variable we want to discretize. The next argument, `breaks =`, is a vector that tells R where the endpoints of these intervals are. These are often called "cut points." In this particular case, we wanted to divide the players into those with below-average batting averages in 2014 and above-average batting averages in 2014. The first element of the cut point vector, 0.15, is much less than the smallest BA_2014 value, whereas the second element, 0.272, is the overall mean of the BA_2014 values. The last element, 0.40, is much greater than the largest BA_2014 value.
 
 Now that we have two different ways of predicting 2015 batting averages, let us see how they compare, visually.
 
@@ -199,6 +199,6 @@ reframe(batting_2014_2015,
           rmse_4 = sqrt(mean((BA_2015 - yhat_4)^2)))
 ```
  
-We see that the the orange predictions have the lowest RMSE, followed by the purple, blue, green, and red predictions. This tells us that the predictions formed by binning into smaller intervals fit the data better than the predictions formed by binning into larger intervals, confirming what we could see visually. 
+We see that the orange predictions have the lowest RMSE, followed by the pink, green, blue, and red predictions. This tells us that the predictions formed by binning into smaller intervals fit the data better than the predictions formed by binning into larger intervals, confirming what we could see visually. 
 
-Now, what if we continued this process, and formed bins that are infinitesimally small? Should we expect our predictions to be even better? However, think about the potential issues of doing so: most of the bins (an infinite number of them, in fact) would contain no data points. How could we remedy this issue? Perhaps, we could impose a constraint that our predictions must lie along a straight line, thus allowing the bins with data to help make predictions for the bins without data. You'll have some time to think about this concept, and then in [Lecture 6](lecture6.html) we will introduce linear regression which addresses this exact issue. 
+Now, what if we continued this process and formed bins that are infinitesimally small? Should we expect our predictions to be even better? But think about the potential issues of doing so: most of the bins (an infinite number of them, in fact) would contain no data points. How could we remedy this issue? Perhaps we could impose a constraint that our predictions must lie along a straight line, thus allowing the bins with data to help make predictions for the bins without data. You'll have some time to think about this concept, and then in [Lecture 6](lecture6.html) we will introduce linear regression, which addresses this exact issue. 

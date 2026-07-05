@@ -37,7 +37,7 @@ We did all that with Base R. However, the functionality provided by a fresh inst
 
 
 ## Packages
-So far we have seen only the most basic of R's functionality. Arguably, one of the things that makes R so powerful is the ease with which users are able to define their own functions and release them to the public.As [Hadley Wickham](http://hadley.nz) defines them, "[R] packages are fundamental units of reproducible code. They include reusable R functions, the documentation that describes how to use them, and sample data." As of June 18, 2020, there are 15,805 packages available from the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org). The scope of these packages is vast: there are some designed for scraping data from the web, pre-processing data to get it into an analyzable format, performing standard and specialized statistical analyses, and to publish your results. People have also released packages tailored to very specific applications like analyzing baseball data. There are also some more whimsical packages, like one that allow you to display your favorite [XKCD](https://xkcd.com) comic strip! 
+So far we have seen only the most basic of R's functionality. Arguably, one of the things that makes R so powerful is the ease with which users are able to define their own functions and release them to the public. As [Hadley Wickham](http://hadley.nz) defines them, "[R] packages are fundamental units of reproducible code. They include reusable R functions, the documentation that describes how to use them, and sample data." As of June 18, 2020, there are 15,805 packages available from the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org). The scope of these packages is vast: there are some designed for scraping data from the web, pre-processing data to get it into an analyzable format, performing standard and specialized statistical analyses, and publishing your results. People have also released packages tailored to very specific applications, like analyzing baseball data. There are also some more whimsical packages, like one that allows you to display your favorite [XKCD](https://xkcd.com) comic strip! 
 
 We can install packages in several ways:  
 
@@ -57,7 +57,7 @@ After installing a package, we have to load the package before using it. Again, 
 For the rest of the course, we will be working within the [tidyverse](https://www.tidyverse.org/), which consists of several R packages for data manipulation, exploration, and visualization. 
 They are all based on a common design philosophy, mostly developed by Hadley Wickham (whose name you will encounter a lot as you gain more experience with R). 
 
-To access tidyverse, first we first need to install the tidyverse package:
+To access tidyverse, first we need to install the tidyverse package:
 ```{r install tidyverse, eval = FALSE}
 install.packages("tidyverse")
 ```
@@ -67,7 +67,7 @@ Now with the `tidyverse` suite of packages installed, we can load them with the 
 ```{r load tidyverse, eval=FALSE}
 library(tidyverse)
 ```
-When you do that, you'll see a lot of output to the console, most of which you can safely ignore for now. **Note you only need to install the package once. However, each time you open up a new R session and want to use the tidyverse, you will need to run line** `library(tidyverse)` **at the start.**
+When you do that, you'll see a lot of output to the console, most of which you can safely ignore for now. **Note that you only need to install the package once. However, each time you open up a new R session and want to use the tidyverse, you will need to run the line** `library(tidyverse)` **at the start.**
 
 
 ## Reading in tabular data
@@ -101,7 +101,7 @@ Within the tidyverse, we can use the function `read_csv()` to read in a csv file
 nba_shooting_small <- read_csv(file = "data/nba_shooting_small.csv")
 ```
 
-Before proceeding, let us parse the syntax `nba_shooting_small <- read_csv(...)` The first thing to notice is that we're using the assignment operator that we saw in [Problem Set 0](ps0.html). This tells R that we want it to evalaute whatever is on the right-hand side (in this case `read_csv(file = "data/nba_shooting_small.csv")`) and assign the resulting evaluation to a new object called `nba_shooting_small` (which R will create). We called the function `read_csv()` with one argument `file`. This argument is the *relative path* of the CSV file that we want to read into R. Basically, R starts in the working directory and first looks for a folder called "data." If it finds such a folder, it looks inside it for a file called "nba_shooting_small.csv." If it finds the file, it creates a tbl called `nba_shooting_small` that contains all of the data.
+Before proceeding, let us parse the syntax `nba_shooting_small <- read_csv(...)`. The first thing to notice is that we're using the assignment operator that we saw in [Problem Set 0](ps0.html). This tells R that we want it to evaluate whatever is on the right-hand side (in this case `read_csv(file = "data/nba_shooting_small.csv")`) and assign the resulting evaluation to a new object called `nba_shooting_small` (which R will create). We called the function `read_csv()` with one argument, `file`. This argument is the *relative path* of the CSV file that we want to read into R. Basically, R starts in the working directory and first looks for a folder called "data." If it finds such a folder, it looks inside it for a file called "nba_shooting_small.csv." If it finds the file, it creates a tbl called `nba_shooting_small` that contains all of the data.
 
 When we type in the command and hit <kbd>Enter</kbd> or <kbd>Return</kbd>, we see some output printed to the console.
 This is `read_csv` telling us that it (a) found the file, (b) read it in successfully, and (c) identified the type of data stored in each column. We see, for instance, that the column named "PLAYER" contains *character strings*, and is parsed as `col_character()`. Similarly, the number of field goals made ("FGM") is parsed as integer data.
@@ -114,7 +114,7 @@ nba_shooting_small
 
 ## Wrangling Data
 
-Now that we have read in our dataset, we're ready to begin our analysis. Very often, our analysis will involve some type of manipulation or *wrangling* of the data contained in the tbl. For instance, we may want to compute some new summary statistic based on the data in the table. In our NBA example, we could compute, say, each player's field goal percentage. Alternatively, we could subset our data to find all players who took at least 100 three point shots and made at least 80% of their free throws. The package `dplyr()` contains five main functions corresponding to the most common things that you'll end up doing to your data. Over the next two days, we will learn each of these
+Now that we have read in our dataset, we're ready to begin our analysis. Very often, our analysis will involve some type of manipulation or *wrangling* of the data contained in the tbl. For instance, we may want to compute some new summary statistic based on the data in the table. In our NBA example, we could compute, say, each player's field goal percentage. Alternatively, we could subset our data to find all players who took at least 100 three-point shots and made at least 80% of their free throws. The `dplyr` package contains five main functions corresponding to the most common things that you'll end up doing to your data. Over the next two days, we will learn each of these:
 
 - Reorder the rows with `arrange()`
 - Creating new variables that are functions of existing variables with `mutate()`
@@ -137,7 +137,7 @@ The code above takes our tbl and sorts the rows in ascending order of FGA. We se
 arrange(nba_shooting_small, desc(FGA))
 ```
 
-In this small dataset, no two players attempted the same number of field goals. In larger datasets (like the one you'll see in [Problem Set1](ps1.html)), it can be the case that there are multiple rows with the same value in a given column. When arranging the rows of a tbl, to break ties, we can specify more than column. For instance, the code below sorts the players first by the number of field goal attempts and then by the number of three point attempts.
+In this small dataset, no two players attempted the same number of field goals. In larger datasets (like the one you'll see in [Problem Set 1](ps1.html)), it can be the case that there are multiple rows with the same value in a given column. When arranging the rows of a tbl, to break ties, we can specify more than one column. For instance, the code below sorts the players first by the number of field goal attempts and then by the number of three-point attempts.
 
 ```{r arrange fga tpa}
 arrange(nba_shooting_small, FGA, TPA)
@@ -150,7 +150,7 @@ arrange(nba_shooting_small, PLAYER)
 nba_shooting_small
 ```
 
-In the first line, we've sorted the players in alphabet order of their first name. But when we print out our tbl, `nba_shooting_small`, we see that the players are no longer sorted. This is because dplyr (and most other R) functions **never** modify their input but work by creating a copy and modifying that copy. If we wanted to preserve the new ordering, we would have to *overwrite* `nba_shooting_small` using a combination of the assignment operator and `arrange()`.
+In the first line, we've sorted the players in alphabetical order by first name. But when we print out our tbl, `nba_shooting_small`, we see that the players are no longer sorted. This is because `dplyr` (and most other R) functions **never** modify their input, but instead work by creating a copy and modifying that copy. If we wanted to preserve the new ordering, we would have to *overwrite* `nba_shooting_small` using a combination of the assignment operator and `arrange()`.
 
 ```{r arrange assign}
 nba_shooting_small <- arrange(nba_shooting_small, PLAYER)
@@ -177,15 +177,15 @@ mutate(nba_shooting_small, FGP = FGM/FGA, TPP = TPM/TPA, FTP = FTM/FTA)
 
 ## A quick digression: R Scripts
 
-Up to this point, we have been working strictly within the R console, proceeding line-by-line. In the previous code block, we tried to add three columns to our tbl and the mutate call got a little bit overwhelming. Imagine trying to add five or six more columns simultaneously! As our commands become more and more complex, you'll find that using the console can get pretty cramped. And if you make a mistake in entering your code, you'll get an error and have to start all over again. Plus, when we start a new session of R Studio, the console is cleared.  How can we save the commands we typed into R? We do so using an **R Script**. 
+Up to this point, we have been working strictly within the R console, proceeding line-by-line. In the previous code block, we tried to add three columns to our tbl and the `mutate()` call got a little bit overwhelming. Imagine trying to add five or six more columns simultaneously! As our commands become more and more complex, you'll find that using the console can get pretty cramped. And if you make a mistake in entering your code, you'll get an error and have to start all over again. Plus, when we start a new session of RStudio, the console is cleared. How can we save the commands we typed into R? We do so using an **R Script**. 
 
 An R Script is a file type which R recognizes as storing R commands and is saved as a .R file.  R Scripts are useful as we can edit our code before sending it to be run in the console. 
 
-We can start a new R Script by clicking on the top left symbol in R Studio and selecting "R Script".
+We can start a new R Script by clicking on the top-left symbol in RStudio and selecting "R Script".
 
 ![](figures/lecture1_fig1.png)
 
-The untitled R Script will then appear in the top left hand box of R Studio.
+The untitled R Script will then appear in the top-left box of RStudio.
 
 ![](figures/lecture1_fig2.png)
 
@@ -198,7 +198,7 @@ sqrt(x)
 ```
 
 
-Now our code is just sitting in the R Script. To run the code (that is, evaluate it in the console) we click the "Run" button in the top right of the script. This will run one line of code at a time - whichever line the cursor is on. Place your cursor on the first line and click "Run". Observe how `2 * 3` now appears in the console, as well as the output `6`.
+Now our code is just sitting in the R Script. To run the code (that is, evaluate it in the console), we click the "Run" button in the top right of the script. This will run one line of code at a time: whichever line the cursor is on. Place your cursor on the first line and click "Run". Observe how `2 * 3` now appears in the console, as well as the output `6`.
 
 ![](figures/lecture1_fig3.png)
 
@@ -211,14 +211,14 @@ Note in the above that we had to run `x <- 4` before `sqrt(x)`. We need to defin
 One very nice thing about RStudio's script editor is that it will highlight syntax errors with a red squiggly line and a red cross in the sidebar.
 If you move your mouse over the line, a pop-up will appear that can help you diagnose the potential problem.
 
-Another advantage of R scripts is that you can add comments to your code, which are preceded by the pound sign / hash sign #. 
+Another advantage of R scripts is that you can add comments to your code, which are preceded by the pound sign or hash sign `#`. 
 Comments are useful because they allow you to explain what your code is doing.
 **Throughout the rest of this course, we will be working almost exclusively with R scripts rather than directly entering commands into the console.** For the sake of organization, you should save all of your scripts into the 'scripts' folder we created within the 'Moneyball' working directory.
 
 
 ## Back to the NBA data
 
-One huge advantage with working with R script is the ability to separate commands onto multiple lines. For instance, to add columns for FGP, FTP, and TPP to our tbl, we can write the following in our script window.
+One huge advantage of working with an R script is the ability to separate commands across multiple lines. For instance, to add columns for FGP, FTP, and TPP to our tbl, we can write the following in our script window.
 
 ```{r script multiple lines}
 nba_shooting_small <-

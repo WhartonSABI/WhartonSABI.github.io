@@ -1,5 +1,5 @@
 ---
-title: "Lecture 0: Installation and Setting up Workspace"
+title: "Lecture 0: Installation and Setting Up Workspace"
 output: html_document
 ---
 
@@ -7,9 +7,9 @@ output: html_document
 knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 ```
 
-## Installing R and R Studio on computer:
+## Installing R and RStudio on Your Computer
 
-So that we can jump right into working with data on the first day, we'd like for you to install R and RStudio onto your computer prior to the start of camp. 
+So that we can jump right into working with data on the first day, we'd like you to install R and RStudio on your computer prior to the start of camp. 
 
 
 #### For Windows Users:
@@ -56,7 +56,7 @@ During this course, you will be writing code to analyze different data sets as w
 The working directory is the place where R will save any output you generate.
 For the purpose of this course, you should keep all of your work in one place.
 So that everyone is on the same page, go to your Desktop and create a new folder called Moneyball.
-Then inside that folder, create a new folder named 'data', and a separate folder named 'scripts'. You can do this either from your desktop or directly in RStudio with the 'New Folder' button in the bottom right pane.
+Then, inside that folder, create a new folder named 'data' and a separate folder named 'scripts'. You can do this either from your desktop or directly in RStudio with the 'New Folder' button in the bottom-right pane.
 
 
 ## Downloading data and saving into Moneyball/data folder
@@ -67,7 +67,7 @@ After you get the folders ready, download the following files, and move them int
 * [nba_shooting.csv](data/nba_shooting.csv)
 * [mlb_relative_payrolls.csv](data/mlb_relative_payrolls.csv)
 
-We will be working with these datasets in the first two Lectures and Problem Sets.
+We will be working with these datasets in the first two lectures and problem sets.
 
 ## Getting Started With R
 

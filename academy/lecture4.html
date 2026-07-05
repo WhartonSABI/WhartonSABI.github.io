@@ -584,7 +584,7 @@ looks like our original data.</p>
 plot with <code>geom_col</code> which shows the batting averages of each
 player in 2014 and 2015.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>batting_2014_2015_slice <span class="ot">&lt;-</span> batting_2014_2015_long <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">20</span>) <span class="co">#take the first 10 players alphabetically </span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span><span class="dv">20</span>) <span class="co"># take the first 20 players alphabetically </span></span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">ggplot</span>(batting_2014_2015_slice, <span class="fu">aes</span>(<span class="at">x =</span> playerID, <span class="at">y =</span> BA, <span class="at">fill =</span> yearID)) <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
@@ -699,16 +699,15 @@ the column indicating the interval in which our observation falls.</p>
 ## # ℹ 60 more rows</code></pre>
 <p>When we run this code and print out our tbl, we see that there is a
 new column called “yhat_1” that contains our new predictions. Before
-proceeding, we should talk a bit about the syntax use in
+proceeding, we should talk a bit about the syntax used in
 <code>cut()</code>. The first argument is the variable we want to
-discretize. The next argument, <code>breaks =</code> is a vector that
+discretize. The next argument, <code>breaks =</code>, is a vector that
 tells R where the endpoints of these intervals are. These are often
-called “cut points” In this particular case, we wanted to divide the
-players into those with below average batting averages in 2014 and above
-average batting averages in 2015. The first element of the cut point
-vector, 0.15 is much less than the smallest BA_2014 value, whereas the
-second elements, 0.272, is the overall mean of the BA_2014 values. The
-last element, 0.40 is much greater than the largest BA_2014 value.</p>
+called “cut points.” In this particular case, we wanted to divide the
+players into those with below-average batting averages in 2014 and above-average batting averages in 2014. The first element of the cut point
+vector, 0.15, is much less than the smallest BA_2014 value, whereas the
+second element, 0.272, is the overall mean of the BA_2014 values. The
+last element, 0.40, is much greater than the largest BA_2014 value.</p>
 <p>Now that we have two different ways of predicting 2015 batting
 averages, let us see how they compare, visually.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">ggplot</span>(batting_2014_2015) <span class="sc">+</span></span>
@@ -828,16 +827,16 @@ by the purple, blue, green, and red predictions. This tells us that the
 predictions formed by binning into smaller intervals fit the data better
 than the predictions formed by binning into larger intervals, confirming
 what we could see visually.</p>
-<p>Now, what if we continued this process, and formed bins that are
+<p>Now, what if we continued this process and formed bins that are
 infinitesimally small? Should we expect our predictions to be even
-better? However, think about the potential issues of doing so: most of
+better? But think about the potential issues of doing so: most of
 the bins (an infinite number of them, in fact) would contain no data
-points. How could we remedy this issue? Perhaps, we could impose a
+points. How could we remedy this issue? Perhaps we could impose a
 constraint that our predictions must lie along a straight line, thus
 allowing the bins with data to help make predictions for the bins
 without data. You’ll have some time to think about this concept, and
 then in <a href="lecture6.html">Lecture 6</a> we will introduce linear
-regression which addresses this exact issue.</p>
+regression, which addresses this exact issue.</p>
 </div>
 
 

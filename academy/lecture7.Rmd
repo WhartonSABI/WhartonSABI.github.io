@@ -6,7 +6,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 library(tidyverse)
-options(pillar.sigfig = 4) # increase sigfigs of tibble output from 3 to 5, increase width of output to fit more columns
+options(pillar.sigfig = 4) # increase sigfigs of tibble output from 3 to 4, increase width of output to fit more columns
 ```
 
 In [Lecture 4](lecture4.html) and [Lecture 6](lecture6.html), we started building a model for predicting a baseball player's 2015 batting average using his 2014 batting average. We found that some models, even though they fit the data quite well, appeared to *overfit* and may not predict future observations well. Overfitting happens when the model is too complex; the model is improperly describing the random error rather than properly describing the relationship between variables. We will switch gears a little bit and discuss how to diagnose overfit issues using data on field goals in the NFL.
@@ -16,8 +16,7 @@ In [Lecture 4](lecture4.html) and [Lecture 6](lecture6.html), we started buildin
 
 Suppose we have fit multiple models to a given dataset. How should we choose which model is the best?  
 
-One strategy might be to see how well the models predict the data we used to fit them. While this seems intuitive, it is possible to "over-learn" the patterns in this training data. Over-learning leads models to apply only the sample with which it was built, 
-not the overall population or future data instances
+One strategy might be to see how well the models predict the data we used to fit them. While this seems intuitive, it is possible to "over-learn" the patterns in this training data. Over-learning leads models to fit only the sample on which they were built, not the overall population or future data instances.
 
 A common alternative is to split our original dataset into two parts: a *training* set and a *testing* set. We fit all of our models on the training set and then see how well they predict the values in the testing set. Think of the training set as a sample and the testing set as a population.
 
@@ -38,7 +37,7 @@ fg_train <-
   mutate(phat_all = mean(Success))
 ```
 
-It turns out that kickers make just over 83% of their attempts. However, we know that there are some truly elite kickers (e.g. Justin Tucker) who make well over 83% of their attempts, and other kickers (e.g. Billy Cundiff) who make less than 83% of their attempts. Instead of forecasting field goal success probabilities with the overall average, we could compute each individual kicker's conversion rate. This can be done using `group_by()` and `mutate()`. In the code below, we add a column to `fg_train` called "phat_kicker", which contains each kicker's individual field goal conversion rate. Notice that because we adding a grouping to carry out this computation, we need to remove the grouping using `ungroup()` when we're done.
+It turns out that kickers make just over 83% of their attempts. However, we know that there are some truly elite kickers (e.g. Justin Tucker) who make well over 83% of their attempts, and other kickers (e.g. Billy Cundiff) who make less than 83% of their attempts. Instead of forecasting field goal success probabilities with the overall average, we could compute each individual kicker's conversion rate. This can be done using `group_by()` and `mutate()`. In the code below, we add a column to `fg_train` called "phat_kicker", which contains each kicker's individual field goal conversion rate. Notice that because we are adding a grouping to carry out this computation, we need to remove the grouping using `ungroup()` when we're done.
 
 ```{r phat_kicker}
 fg_train <- 
@@ -71,7 +70,7 @@ fg_plot <- ggplot(fg_train) +
 fg_plot
 ```
 
-We also could have binned field goal Distance 5- or 2-yard increments, saving bin labels into columns called "Dist_5" or "Dist_2". And similar to the 10-yard bins, we could add columns to `fg_train` that computes the overall conversion rate within each of these 5-yard or 2-yard bins.
+We also could have binned field goal distance into 5- or 2-yard increments, saving bin labels into columns called "Dist_5" or "Dist_2". Similar to the 10-yard bins, we could add columns to `fg_train` that compute the overall conversion rate within each of these 5-yard or 2-yard bins.
 
 ```{r dist_5 dist_2}
 fg_train <- fg_train %>%
@@ -96,7 +95,7 @@ fg_plot  <-
   geom_point(aes(x = Distance, y = phat_dist_2), alpha = 0.1, col = 'white')
 fg_plot 
 ```
-Now when we binned our data into 2-yard increments, we find that our forecasts are no longer monotonic decreasing. Probability of making a field decreases overall; but in our 2-yard bins, the probability increases from 44 to 46 and 52 to 54 years. Remember, monotonic means only decreasing or only increasing for all values. In [Lecture 8](lecture8.html), we'll address this with a more formal regression method. 
+Now when we bin our data into 2-yard increments, we find that our forecasts are no longer monotonic decreasing. The probability of making a field goal decreases overall, but in our 2-yard bins, the probability increases from 44 to 46 yards and from 52 to 54 yards. Remember, monotonic means only decreasing or only increasing for all values. In [Lecture 8](lecture8.html), we'll address this with a more formal regression method. 
 
 
 ## Assessing Predictions
@@ -107,7 +106,7 @@ The [Brier Score](https://en.wikipedia.org/wiki/Brier_score) is defined as
 $$
 BS = \frac{1}{n}\sum_{i = 1}^{n}{(y_{i} - \hat{p}_{i})^{2}}
 $$
-Looking at the formula, we see that the Brier score is just the mean square error of our forecasts. Using code that is very nearly identical to that used to compute RSME in [Lecture 4](lecture4.html), we can compute the Brier score of each of our prediction models.
+Looking at the formula, we see that the Brier score is just the mean square error of our forecasts. Using code that is very nearly identical to that used to compute RMSE in [Lecture 4](lecture4.html), we can compute the Brier score of each of our prediction models.
 
 ```{r fg_train Brier}
 reframe(fg_train,
@@ -186,7 +185,7 @@ select(fg_test, Kicker, Success, phat_all, phat_kicker)
 
 Let's unpack the inner join code line-by-line:  in the first two lines, we are telling R that we want to over-write `fg_test`. Next, we pipe `fg_test` to the function `inner_join`, which takes two more arguments.  The first argument `phat_kicker` tells the function where the additional data corresponding to each key value is. The last argument `by = "Kicker"` tells the function that the key we want to use is the kicker.
 
-Mimic the code above, we can add columns for `fg_test` for the remaining three predictive models: `phat_dist_10`, `phat_dist_5`, and `phat_dist_2`.
+By mimicking the code above, we can add columns to `fg_test` for the remaining three predictive models: `phat_dist_10`, `phat_dist_5`, and `phat_dist_2`.
 
 ```{r fg_test add phat_dist}
 fg_test <- 

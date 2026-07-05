@@ -479,7 +479,7 @@ $(document).ready(function () {
 success using a similar strategy to the one we used in <a
 href="lecture4.html">Lecture 4</a> to predict batting averages in 2015
 using batting averages from 2014. This strategy amounted to
-“binning-and-averaging: we divided the dataset into many small bins,
+“binning-and-averaging”: we divided the dataset into many small bins,
 based on the value of the input or predictor, and then averaged the
 outcomes within each bin. In <a href="lecture6.html">Lecture 6</a>, we
 used <em>linear regression</em> to take this process to the logical
@@ -524,20 +524,20 @@ instead of the fitted log-odds.</p>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Distance, <span class="at">y =</span> preds)) <span class="sc">+</span> </span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span></code></pre></div>
 <p><img src="lecture8_files/figure-html/add%20logit%20preds-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Looking at the plot, things look quite reasonable – short field goals
-are nearly always made and as the distance increases, the fitted
+<p>Looking at the plot, things look quite reasonable: short field goals
+are nearly always made, and as the distance increases, the fitted
 probability of success goes down in a non-linear fashion. The question
-we face now is assessing how well our simple logistic regression model
+we face now is how well our simple logistic regression model
 compares to the “binning-and-averaging” models we built in <a
 href="lecture7.html">Lecture 7</a>. In order to assess this, we would
 like to append the model predictions to the tbls <code>fg_train</code>
 and <code>fg_test</code>, respectively. Rather than using a join, we can
-actually do this directly with <code>add_prediction()</code>. The reason
-for this is that <code>add_prediction()</code> is able to accept as an
+actually do this directly with <code>add_predictions()</code>. The reason
+for this is that <code>add_predictions()</code> is able to accept as an
 argument the output of <code>lm()</code> or <code>glm()</code>. Since
 our “binning-and-averaging” models were not created by either of these
-functions we had to use a join in <a href="lecture7.html">Lecture 7</a>.
-The codeblock below shows how to add our predictions to
+functions, we had to use a join in <a href="lecture7.html">Lecture 7</a>.
+The code block below shows how to add our predictions to
 <code>fg_train</code> and <code>fg_test</code> and also computes the
 Brier score associated with all of the models we’ve built so far. Notice
 that we are saving the predictions in a column called
@@ -590,9 +590,9 @@ bin, over-fit the training data.</p>
 <div id="multiple-regression" class="section level2">
 <h2>Multiple Regression</h2>
 <p>Up to this point, we have only talked about regression models with a
-single predictor (Exception: the end of <a href="ps6.html">Problem Set
+single predictor (exception: the end of <a href="ps6.html">Problem Set
 6</a> had an example of multiple regression). Though the logistic
-regression model we just built out-performs all of the ones we had built
+regression model we just built outperforms all of the ones we had built
 before, it is still pretty limited. After all, for any specific
 distance, this model estimates that every kicker has exactly the same
 chance of making a field goal. The code below fits a logistic regression

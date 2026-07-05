@@ -47,7 +47,7 @@ You can define the `aes` in the `ggplot` call, which will then be used for all l
 
 ### Putting it All Together
 
-Let's make a histogram of judge's scores.
+Let's make a histogram of judges' scores.
 
 ```{r diving hist}
 diving_hist <- 
@@ -56,7 +56,7 @@ diving_hist <-
 diving_hist
 ```
 
-In the code above, we first overwrote `diving_hist` so that is now a histogram of judges' scores where each bin had width 0.25. In the second line, we asked R to display this object. **For ggplot code it is very important that the `+` goes at the end of a line, just like the pipe `%>%`**
+In the code above, we first overwrote `diving_hist` so that it is now a histogram of judges' scores where each bin has width 0.25. In the second line, we asked R to display this object. **For ggplot code, it is very important that the `+` goes at the end of a line, just like the pipe `%>%`.**
 
 Notice that the label for the x-axis is JScore, which is the column name from the tbl. We can change the label by *adding* a layer.
 
@@ -70,7 +70,7 @@ diving_hist
 
 ### Facets
 
-What if we want to separate the judges' scores by country? We can use *facets*. Facets allow you to separate graphs by category. We do not need to redo our above code for the histogram - we only need to add a *facet* layer to our graph `hist`. The first argument of `facet_wrap` is the column of our dataset that contains the category information. The second argument of `facet_wrap` specifies the number of rows for which to display the graphs.
+What if we want to separate the judges' scores by country? We can use *facets*. Facets allow you to separate graphs by category. We do not need to redo our code for the histogram; we only need to add a *facet* layer to our graph `diving_hist`. The first argument of `facet_wrap()` is the column of our dataset that contains the category information. The second argument of `facet_wrap()` specifies the number of rows in which to display the graphs.
 
 ```{r facet_wrap}
 diving_hist <- 
@@ -79,7 +79,7 @@ diving_hist <-
 diving_hist
 ```
 
-To get a sense of whether a particular country's judges are biased, it would be useful to add a reference line at the median score over all judges and countries to each facet. So, we must first calculate the overall median score, which we can do using the summarize function. Then, we can display this median on our plots this with `geom_vline()`, which adds a vertical line. We can also pass in a custom color argument to this line so that it will easily stand out from the rest of our values. This website provides a look at all the build-in color arguments to R: [R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf)
+To get a sense of whether a particular country's judges are biased, it would be useful to add a reference line at the median score over all judges and countries to each facet. So, we must first calculate the overall median score, which we can do using the `summarize()` function. Then, we can display this median on our plots with `geom_vline()`, which adds a vertical line. We can also pass in a custom color argument to this line so that it will easily stand out from the rest of our values. This website provides a look at all the built-in color arguments in R: [R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf)
 
 ```{r facet_wrap median}
 median_score <- diving %>% 
@@ -113,7 +113,7 @@ diving_box <- diving_box +
 diving_box
 ```
 
-We can also plot this data as violin plots, which takes in the same arguments as `geom_boxplot` but instead with `geom_violin`. We can also change the "look" of our plots by setting the theme. `theme_minimal()` is frequently used for a much cleaner look. 
+We can also plot this data as violin plots, which take the same arguments as `geom_boxplot()` but use `geom_violin()` instead. We can also change the "look" of our plots by setting the theme. `theme_minimal()` is frequently used for a much cleaner look. 
 ```{r}
 diving_violin <- ggplot(data = diving) + 
   geom_violin(aes(x = Round, y = JScore, fill = Round)) +
@@ -451,7 +451,7 @@ warriors_shots <- teams_shots(teams = "Golden State Warriors",
 warriors_shots <- readRDS("data/warriors_shots_2022.RDS")
 ```
 
-Using this shot data, we can view the all shot attempts by the Warriors throughout the season colored by whether or not they made the shot.
+Using this shot data, we can view all shot attempts by the Warriors throughout the season, colored by whether or not they made the shot.
 
 ```{r Warriors shots plot}
 warriors_shots %>%
@@ -463,4 +463,4 @@ warriors_shots %>%
        caption = "Data accessed via nbastatR")
 ```
 
-It's apparent from this chart the effect of the three-point line of their shot selection.
+It's apparent from this chart how the three-point line affects their shot selection.

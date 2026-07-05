@@ -502,7 +502,7 @@ averages into separate columns.</p>
 ## 4 aybarer01   0.278   0.270
 ## 5 bautijo02   0.286   0.250
 ## 6 beltrad01   0.324   0.287</code></pre>
-<p>Again we plot the 2014 batting averages against the 2015 batting
+<p>Again, we plot the 2014 batting averages against the 2015 batting
 averages:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> batting_2014_2015) <span class="sc">+</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2014, <span class="at">y =</span> BA_2015)) <span class="sc">+</span> </span>
@@ -564,7 +564,7 @@ class="math inline">\(y\)</span>-intercept = 0.141 and slope = 0.485
 <p><strong>Question:</strong> Which feature of the best fit line, <span
 class="math inline">\(a\)</span> or <span
 class="math inline">\(b\)</span>, quantifies the linear dependence
-between 2014 and 2015 FG%?</p>
+between 2014 and 2015 batting average?</p>
 <p>How does correlation relate to our line of best fit? This brings us
 to the <em>regression method</em>.</p>
 </div>
@@ -616,7 +616,7 @@ The usage of <code>lm()</code> is as follows:</p>
 covariate. In the <code>lm()</code> call above, the column
 <code>BA_2015</code> is our response and <code>BA_2014</code> is our
 predictor.</p>
-<p>The second argument in <code>lm()</code> is where we specifiy our
+<p>The second argument in <code>lm()</code> is where we specify our
 data: <code>batting_2014_2015</code>. <code>R</code> then looks for the
 columns <code>BA_2014</code> and <code>BA_2015</code> in the given
 dataset to calculate the regression coefficients.</p>

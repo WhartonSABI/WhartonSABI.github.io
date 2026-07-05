@@ -480,7 +480,7 @@ Wrangling</h1>
 href="ps1.html">Problem Set 1</a>, where you wrote a script to create a
 tbl containing several shooting statistics for NBA players between the
 1996-97 season and the 2015-16 season. Your script should look something
-like what is the code block below. For reasons that will become clear
+like the code block below. For reasons that will become clear
 shortly, we are going to call our tbl <code>raw_shooting</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># Read in data</span></span>
@@ -512,9 +512,9 @@ of his three point percentage?</p>
 <p>To produce graphics throughout this course, we will use ggplot2,
 which is a package contained in the tidyverse. At a very high level,
 ggplot2 works by layering graphics, adding different features one on top
-of another. You can learn much much more about ggplot2 <a
+of another. You can learn much, much more about ggplot2 <a
 href="https://ggplot2.tidyverse.org">here</a>. We will cover some of the
-more advanced functionality of ggplot2 in</p>
+more advanced functionality of ggplot2 in later lectures.</p>
 <div id="histograms" class="section level3">
 <h3>Histograms</h3>
 <p>As you saw in Prof. Wyner’s lectures, histograms are a powerful way
@@ -523,15 +523,15 @@ to describe a single dataset.</p>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP), <span class="at">bins =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p><img src="lecture2_files/figure-html/hist%20basic-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The first bit of the code above,
-<code>ggplot(data = nba_shooting)</code> tells R to create a coordinate
-system to which can add additional layers. It also tells R that the data
-to be plotted is coming from the tibble <code>nba_shooting</code>. The
+<code>ggplot(data = raw_shooting)</code> tells R to create a coordinate
+system to which we can add additional layers. It also tells R that the
+data to be plotted is coming from the tibble <code>raw_shooting</code>. The
 next part of the code,
 <code>+ geom_histogram(mapping = aes(FGP), bins = 5)</code> tells R to
 <em>add</em> a layer to the blank plot, in this case a histogram of
 field goal percentage that uses 5 bins. The first argument is the
 mapping, which defines how each variable in our dataset is mapped to
-visual components of the graph (the <em>aesthetics</em>) In the case of
+visual components of the graph (the <em>aesthetics</em>). In the case of
 a histogram, we really only need to tell R that the variable we want to
 visualize goes on the horizontal (x) axis. To improve readability, we
 have divided the code to produce the histogram over two lines.
@@ -551,7 +551,7 @@ we could split our data into bins of width 0.05 as follows:</p>
 <p><img src="lecture2_files/figure-html/hist%20binwidth-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>It is often preferable to use a density histogram instead of a
 frequency histogram. This is because the areas of the density histogram
-boxes always sums to 1 no matter how much data you have.</p>
+boxes always sum to 1, no matter how much data you have.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP, <span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="dv">50</span>)</span></code></pre></div>
 <pre><code>## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
@@ -563,7 +563,7 @@ boxes always sums to 1 no matter how much data you have.</p>
 <p>Visually, the histograms look identical but now the vertical (y) axis
 has a different scale.</p>
 <p><strong>Now you should spend time making histograms of FTP and TPP,
-and other variables created in code above. Discuss the differences with
+and of other variables created in the code above. Discuss the differences with
 others.</strong></p>
 </div>
 <div id="visualizing-bivariate-data" class="section level3">
@@ -575,19 +575,19 @@ free throw percentage (FTP) is related to his field goal percentage
 (FGP)?</p>
 <p>To make a scatterplot in R, we can run the following code. Notice
 that it is very similar to the code used to make histograms, but with a
-few important differences</p>
+few important differences.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> raw_shooting) <span class="sc">+</span></span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP, <span class="at">y =</span> FTP))</span></code></pre></div>
 <p><img src="lecture2_files/figure-html/scatter-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Just like the code used to produce the histograms above, we began by
-calling <code>ggplot(data = nba_shooting)</code>. Now, however, instead
-of calling <code>geom_histogram()</code> we are calling
+calling <code>ggplot(data = raw_shooting)</code>. Now, however, instead
+of calling <code>geom_histogram()</code>, we are calling
 <code>geom_point()</code>. This tells R that instead of a histogram, we
 want to plot the data using points. We will learn much more about the
-different “geom” objects available in ggplot2 in Lecture 4. Since we are
+different “geom” objects available in ggplot2 in <a
+href="lecture5.html">Lecture 5</a>. Since we are
 plotting multiple variables, we need to tell R to which axis each
-variable is mapped. This is exactly
-what<code>mapping = aes(x = FGP, y = FTP)</code> does.</p>
+variable is mapped. This is exactly what <code>mapping = aes(x = FGP, y = FTP)</code> does.</p>
 <p>Immediately, we notice a few things about the figure. First, we see
 what appears to be a big black cloud of points in the middle of the
 plotting region. This is a result of R trying to plot lots and lots of
@@ -613,8 +613,8 @@ throws than players who missed every field goal but made every free
 throw.</p>
 <p>To get an even better idea, we can make a <em>heatmap</em>, which you
 can think of as a two-dimensional analog of a histogram. To form a
-heatmap, you start by dividing the plane into lots of evenly-sized
-two-dimensional bins and counting the number of datapoints within each
+heatmap, you start by dividing the plane into lots of evenly sized
+two-dimensional bins and counting the number of data points within each
 bin. You then color the bin according to the count. While you can
 conceptually make the bins any shape you want, there are two popular
 conventions: rectangular binning and hexagonal binning. For the purposes
@@ -822,14 +822,14 @@ function.</p>
 <span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>                         <span class="fl">0.35</span> <span class="sc">&lt;=</span> TPP <span class="sc">&amp;</span> TPP <span class="sc">&lt;</span> <span class="fl">0.4</span> <span class="sc">~</span> <span class="st">&quot;Above Average&quot;</span>,</span>
 <span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>                         <span class="fl">0.4</span> <span class="sc">&lt;=</span> TPP <span class="sc">~</span> <span class="st">&quot;Elite&quot;</span>))</span></code></pre></div>
 <p>Let’s take a minute to unpack the code above. Within
-<code>mutate()</code>, we have started like we always did, with the name
-of the new variable on the left hand side of an equal sign. Then we
+<code>mutate()</code>, we have started as we always have, with the name
+of the new variable on the left-hand side of an equal sign. Then we
 called the <code>case_when()</code> function. Within this function, we
 have a new line for each of the values of the new variable
 “Classification”. On each line we have an expression with a tilde
 (<code>~</code>). On the left of the <code>~</code>, we have put a
-logical expression and on the right we have written the value of
-“Clasification.”</p>
+logical expression, and on the right we have written the value of
+“Classification.”</p>
 <div id="selecting-columns" class="section level3">
 <h3>Selecting Columns</h3>
 <p>Oftentimes, the dataset you load into R contains many, many more

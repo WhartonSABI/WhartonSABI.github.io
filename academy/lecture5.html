@@ -524,17 +524,17 @@ Examples include:</p>
 </div>
 <div id="putting-it-all-together" class="section level3">
 <h3>Putting it All Together</h3>
-<p>Let’s make a histogram of judge’s scores.</p>
+<p>Let’s make a histogram of judges’ scores.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>diving_hist <span class="ot">&lt;-</span> </span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  diving_hist <span class="sc">+</span> </span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> JScore), <span class="at">binwidth =</span> <span class="fl">0.25</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>diving_hist</span></code></pre></div>
 <p><img src="lecture5_files/figure-html/diving%20hist-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>In the code above, we first overwrote <code>diving_hist</code> so
-that is now a histogram of judges’ scores where each bin had width 0.25.
+that it is now a histogram of judges’ scores where each bin has width 0.25.
 In the second line, we asked R to display this object. <strong>For
-ggplot code it is very important that the <code>+</code> goes at the end
-of a line, just like the pipe <code>%&gt;%</code></strong></p>
+ggplot code, it is very important that the <code>+</code> goes at the end
+of a line, just like the pipe <code>%&gt;%</code>.</strong></p>
 <p>Notice that the label for the x-axis is JScore, which is the column
 name from the tbl. We can change the label by <em>adding</em> a
 layer.</p>
@@ -548,11 +548,11 @@ layer.</p>
 <h3>Facets</h3>
 <p>What if we want to separate the judges’ scores by country? We can use
 <em>facets</em>. Facets allow you to separate graphs by category. We do
-not need to redo our above code for the histogram - we only need to add
-a <em>facet</em> layer to our graph <code>hist</code>. The first
-argument of <code>facet_wrap</code> is the column of our dataset that
+not need to redo our code for the histogram; we only need to add
+a <em>facet</em> layer to our graph <code>diving_hist</code>. The first
+argument of <code>facet_wrap()</code> is the column of our dataset that
 contains the category information. The second argument of
-<code>facet_wrap</code> specifies the number of rows for which to
+<code>facet_wrap()</code> specifies the number of rows in which to
 display the graphs.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>diving_hist <span class="ot">&lt;-</span> </span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  diving_hist <span class="sc">+</span> </span>
@@ -562,12 +562,12 @@ display the graphs.</p>
 <p>To get a sense of whether a particular country’s judges are biased,
 it would be useful to add a reference line at the median score over all
 judges and countries to each facet. So, we must first calculate the
-overall median score, which we can do using the summarize function.
-Then, we can display this median on our plots this with
+overall median score, which we can do using the <code>summarize()</code> function.
+Then, we can display this median on our plots with
 <code>geom_vline()</code>, which adds a vertical line. We can also pass
 in a custom color argument to this line so that it will easily stand out
 from the rest of our values. This website provides a look at all the
-build-in color arguments to R: <a
+built-in color arguments in R: <a
 href="https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf">R
 colors</a></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>median_score <span class="ot">&lt;-</span> diving <span class="sc">%&gt;%</span> </span>
@@ -607,9 +607,9 @@ layer:</p>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>())</span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>diving_box</span></code></pre></div>
 <p><img src="lecture5_files/figure-html/boxplot%20theme-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>We can also plot this data as violin plots, which takes in the same
-arguments as <code>geom_boxplot</code> but instead with
-<code>geom_violin</code>. We can also change the “look” of our plots by
+<p>We can also plot this data as violin plots, which take the same
+arguments as <code>geom_boxplot()</code> but use
+<code>geom_violin()</code> instead. We can also change the “look” of our plots by
 setting the theme. <code>theme_minimal()</code> is frequently used for a
 much cleaner look.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>diving_violin <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> diving) <span class="sc">+</span> </span>
@@ -1006,8 +1006,8 @@ attempts by the 2022 NBA champions, the Golden State Warriors, in the
 past season using this package:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>warriors_shots <span class="ot">&lt;-</span> <span class="fu">teams_shots</span>(<span class="at">teams =</span> <span class="st">&quot;Golden State Warriors&quot;</span>, </span>
 <span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>                             <span class="at">seasons =</span> <span class="fu">c</span>(<span class="dv">2022</span>))</span></code></pre></div>
-<p>Using this shot data, we can view the all shot attempts by the
-Warriors throughout the season colored by whether or not they made the
+<p>Using this shot data, we can view all shot attempts by the
+Warriors throughout the season, colored by whether or not they made the
 shot.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a>warriors_shots <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> locationX, <span class="at">y =</span> locationY, <span class="at">color =</span> isShotMade)) <span class="sc">+</span></span>
@@ -1017,8 +1017,8 @@ shot.</p>
 <span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Shot attempts by Golden State Warriors in 2021-22 NBA season&quot;</span>,</span>
 <span id="cb37-7"><a href="#cb37-7" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Data accessed via nbastatR&quot;</span>)</span></code></pre></div>
 <p><img src="lecture5_files/figure-html/Warriors%20shots%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>It’s apparent from this chart the effect of the three-point line of
-their shot selection.</p>
+<p>It’s apparent from this chart how the three-point line affects their
+shot selection.</p>
 </div>
 </div>
 </div>
