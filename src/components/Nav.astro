@@ -1,5 +1,8 @@
 ---
+import { getReleasedAcademyNav } from '../lib/academy';
+
 const currentPath = Astro.url.pathname;
+const academyNav = getReleasedAcademyNav();
 
 const programs = [
   {
@@ -40,31 +43,11 @@ const programs = [
           { href: '/moneyball/academy/people', label: 'People' },
           {
             label: 'Lectures',
-            menu: [
-              { href: '/moneyball/academy/lecture0', label: 'Lecture 0' },
-              { href: '/moneyball/academy/lecture1', label: 'Lecture 1' },
-              { href: '/moneyball/academy/lecture2', label: 'Lecture 2' },
-              { href: '/moneyball/academy/lecture3', label: 'Lecture 3' },
-              { href: '/moneyball/academy/lecture4', label: 'Lecture 4' },
-              { href: '/moneyball/academy/lecture5', label: 'Lecture 5' },
-              { href: '/moneyball/academy/lecture6', label: 'Lecture 6' },
-              { href: '/moneyball/academy/lecture7', label: 'Lecture 7' },
-              { href: '/moneyball/academy/lecture8', label: 'Lecture 8' },
-            ],
+            menu: academyNav.lectures,
           },
           {
             label: 'Problem Sets',
-            menu: [
-              { href: '/moneyball/academy/ps0', label: 'Problem Set 0' },
-              { href: '/moneyball/academy/ps1', label: 'Problem Set 1' },
-              { href: '/moneyball/academy/ps2', label: 'Problem Set 2' },
-              { href: '/moneyball/academy/ps3', label: 'Problem Set 3' },
-              { href: '/moneyball/academy/ps4', label: 'Problem Set 4' },
-              { href: '/moneyball/academy/ps5', label: 'Problem Set 5' },
-              { href: '/moneyball/academy/ps6', label: 'Problem Set 6' },
-              { href: '/moneyball/academy/ps7', label: 'Problem Set 7' },
-              { href: '/moneyball/academy/ps8', label: 'Problem Set 8' },
-            ],
+            menu: academyNav.problemSets,
           },
         ],
       },

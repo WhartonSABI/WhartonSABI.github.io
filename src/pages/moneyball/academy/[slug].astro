@@ -2,12 +2,10 @@
 import Layout from '../../../layouts/Layout.astro';
 import Nav from '../../../components/Nav.astro';
 import AcademyContent from '../../../components/AcademyContent.astro';
-import { loadAcademyPage, ACADEMY_PAGES } from '../../../lib/academy';
+import { loadAcademyPage, getReleasedAcademySlugs } from '../../../lib/academy';
 
 export function getStaticPaths() {
-  return Object.keys(ACADEMY_PAGES)
-    .filter((slug) => slug !== 'index')
-    .map((slug) => ({
+  return getReleasedAcademySlugs().map((slug) => ({
       params: { slug },
       props: { slug },
     }));

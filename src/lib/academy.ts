@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import * as cheerio from 'cheerio';
+import { academyRelease } from '../config/academy-release';
 
 /** Academy source and rendered HTML live in academy/; runtime assets are synced to public/moneyball/academy */
 const ACADEMY_SOURCE = path.join(process.cwd(), 'academy');
@@ -41,6 +42,45 @@ export const TC_PAGES: Record<string, { file: string; title: string }> = {
   ps2: { file: 'tc_ps2.html', title: 'Problem Set 2' },
   ps3: { file: 'tc_ps3.html', title: 'Problem Set 3' },
 };
+
+function academyPageNumber(slug: string): number | null {
+  const match = slug.match(/^(lecture|ps)(\d+)$/);
+  if (!match) return null;
+  return Number.parseInt(match[2], 10);
+}
+
+export function isReleasedAcademySlug(slug: string): boolean {
+  if (slug === 'index') return true;
+  const pageNumber = academyPageNumber(slug);
+  if (pageNumber === null) return true;
+  if (pageNumber === 0) return true;
+  return pageNumber <= academyRelease.maxLecture;
+}
+
+export function getReleasedAcademySlugs(): string[] {
+  return Object.keys(ACADEMY_PAGES).filter((slug) => slug !== 'index' && isReleasedAcademySlug(slug));
+}
+
+export function getReleasedAcademyNav(): {
+  lectures: { href: string; label: string }[];
+  problemSets: { href: string; label: string }[];
+} {
+  const entries = Object.entries(ACADEMY_PAGES).filter(([slug]) => slug !== 'index' && isReleasedAcademySlug(slug));
+  const sortByNumber = ([slugA]: [string, { file: string; title: string }], [slugB]: [string, { file: string; title: string }]) =>
+    (academyPageNumber(slugA) ?? -1) - (academyPageNumber(slugB) ?? -1);
+
+  const lectures = entries
+    .filter(([slug]) => slug.startsWith('lecture'))
+    .sort(sortByNumber)
+    .map(([slug, page]) => ({ href: `${BASE_PATH}/${slug}`, label: page.title }));
+
+  const problemSets = entries
+    .filter(([slug]) => slug.startsWith('ps'))
+    .sort(sortByNumber)
+    .map(([slug, page]) => ({ href: `${BASE_PATH}/${slug}`, label: page.title }));
+
+  return { lectures, problemSets };
+}
 
 const FILE_TO_ROUTE: Record<string, string> = {
   index: '',
@@ -133,6 +173,7 @@ export function extractAcademyContent(htmlPath: string, slug: string): { title: 
 }
 
 export function loadAcademyPage(slug: string): { title: string; content: string } | null {
+  if (!isReleasedAcademySlug(slug)) return null;
   const entry = ACADEMY_PAGES[slug];
   if (!entry) return null;
   const htmlPath = path.join(ACADEMY_SOURCE, entry.file);
