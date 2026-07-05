@@ -49,11 +49,11 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
   2026: {
     title: 'Summer Lab 2026 Course Schedule',
     description:
-      'Weekday schedule for June 2026 through Thursday, July 2, 2026. Excludes no-class dates.',
+      'Weekday schedule for June 2026 through Wednesday, July 1, 2026. Excludes no-class dates.',
     startDate: '2026-06-01',
-    endDate: '2026-07-02',
+    endDate: '2026-07-01',
     noClassDates: ['2026-06-19', '2026-07-04'],
-    noLabDates: ['2026-07-01', '2026-07-02'],
+    noLabDates: ['2026-07-01'],
     overrides: {
       '2026-06-01': {
         lecture: {
@@ -530,7 +530,6 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
           url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/lectures/22_time-series.pdf',
         },
       },
-      '2026-07-02': { lecture: { label: 'Requested Lecture 4' } },
     },
   },
   2025: {
