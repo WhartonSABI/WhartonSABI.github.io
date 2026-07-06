@@ -4,9 +4,9 @@
 
 <head>
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
 
 
 
@@ -15,8 +15,8 @@
 
 <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet">
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -153,7 +153,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type = "text/css">
+<style type="text/css">
 .main-container {
   max-width: 940px;
   margin-left: auto;
@@ -312,7 +312,7 @@ $(document).ready(function () {
 
 
 
-</head>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" data-external="1"></head>
 
 <body>
 
@@ -330,7 +330,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -492,7 +492,7 @@ values are designated <code>NA</code>. To see some of these, we can run
 the following code:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>batting <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">select</span>(playerID, yearID, teamID, AB, BB, HBP, SH, SF, IBB, GIDP)</span></code></pre></div>
-<pre><code>## # A tibble: 113,799 × 10
+<pre><code>## # A tibble: 128,598 &#xD7; 10
 ##    playerID  yearID teamID    AB    BB   HBP    SH    SF   IBB  GIDP
 ##    &lt;chr&gt;      &lt;int&gt; &lt;fct&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
 ##  1 aardsda01   2004 SFN        0     0     0     0     0     0     0
@@ -505,16 +505,16 @@ the following code:</p>
 ##  8 aardsda01   2013 NYN        0     0     0     0     0     0     0
 ##  9 aardsda01   2015 ATL        1     0     0     0     0     0     0
 ## 10 aaronha01   1954 ML1      468    28     3     6     4    NA    13
-## # ℹ 113,789 more rows</code></pre>
+## # &#x2139; 128,588 more rows</code></pre>
 <p>A common convention for dealing with the missing values when
-computing <span class="math inline">\(\text{PA}\)</span> is to replace
-the <code>NA</code> with a <code>0</code>. To do this, we can use the
+computing <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>PA</mtext></mrow><annotation encoding="application/x-tex">\text{PA}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">PA</span></span></span></span></span> is to replace the
+<code>NA</code> with a <code>0</code>. To do this, we can use the
 function <code>replace_na()</code> within a pipe as follows.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>batting <span class="ot">&lt;-</span> </span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  batting <span class="sc">%&gt;%</span> </span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">replace_na</span>(<span class="fu">list</span>(<span class="at">IBB =</span> <span class="dv">0</span>, <span class="at">HBP =</span> <span class="dv">0</span>, <span class="at">SH =</span> <span class="dv">0</span>, <span class="at">SF =</span> <span class="dv">0</span>, <span class="at">GIDP =</span> <span class="dv">0</span>))</span>
 <span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>batting <span class="sc">%&gt;%</span> <span class="fu">select</span>(playerID, yearID, teamID, AB, BB, HBP, SH, SF, IBB)</span></code></pre></div>
-<pre><code>## # A tibble: 113,799 × 9
+<pre><code>## # A tibble: 128,598 &#xD7; 9
 ##    playerID  yearID teamID    AB    BB   HBP    SH    SF   IBB
 ##    &lt;chr&gt;      &lt;int&gt; &lt;fct&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
 ##  1 aardsda01   2004 SFN        0     0     0     0     0     0
@@ -527,14 +527,14 @@ function <code>replace_na()</code> within a pipe as follows.</p>
 ##  8 aardsda01   2013 NYN        0     0     0     0     0     0
 ##  9 aardsda01   2015 ATL        1     0     0     0     0     0
 ## 10 aaronha01   1954 ML1      468    28     3     6     4     0
-## # ℹ 113,789 more rows</code></pre>
+## # &#x2139; 128,588 more rows</code></pre>
 <p>The syntax for <code>replace_na()</code> is a bit involved but the
 basic idea is you have to specify the value you want to replace each
 <code>NA</code>. When using <code>replace_na()</code> it is very
 important to remember to include the <code>list(...)</code> bit.</p>
 <ol style="list-style-type: decimal">
 <li><p>Load the Lahman data and run the above code to create the tbl
-<code>Batting</code>, which has replaced all of the <code>NA</code>’ in
+<code>Batting</code>, which has replaced all of the <code>NA</code>&#x2019; in
 the columns <code>IBB, HBP, SH, SF</code> and GIDP`.</p></li>
 <li><p>Using the pipe <code>%&gt;%</code>, <code>mutate()</code>,
 <code>filter()</code>, and <code>select()</code>, create a tbl
@@ -544,20 +544,19 @@ the columns <code>IBB, HBP, SH, SF</code> and GIDP`.</p></li>
 (PA), unintentional walks (uBB), singles (X1B), batting average (BA),
 on-base percentage (OBP), on-base plus slugging (OPS), and weighted
 On-Base Average (wOBA). Note that the formula for plate appearances is
-<span class="math inline">\(\text{PA} = \text{AB} + \text{BB} +
-\text{HBP} + \text{SH} + \text{SF}.\)</span> Formulae for the remaining
-statistics are given in <a href="ps2.html">Problem Set 2</a>.</li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>PA</mtext><mo>=</mo><mtext>AB</mtext><mo>+</mo><mtext>BB</mtext><mo>+</mo><mtext>HBP</mtext><mo>+</mo><mtext>SH</mtext><mo>+</mo><mtext>SF</mtext><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\text{PA} = \text{AB} + \text{BB} + \text{HBP}
++ \text{SH} + \text{SF}.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">PA</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">AB</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">BB</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">HBP</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">SH</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">SF</span></span><span class="mord">.</span></span></span></span> Formulae for the remaining statistics
+are given in <a href="ps2.html">Problem Set 2</a>.</li>
 <li>Pulling out only those rows of players with at least 502 plate
 appearances with <code>filter()</code></li>
 <li>Select the following columns: playerID, yearID, lgID, teamID, PA,
 BA, OBP, OPS, wOBA.
-<p/></li>
+<p></p></li>
 </ul></li>
 <li><p>Standardize each of BA, OBP, OPS, and wOBA using data from all of
 the years. Name the columns containing these new standardized values
 <code>zBA_all</code>, <code>zOPB_all</code>, etc. <em>Remember, you can
-do this with the <code>scale()</code> function from <a
-href="lecture3.html">Lecture 3</a></em> Who were the best and worst
+do this with the <code>scale()</code> function from <a href="lecture3.html">Lecture 3</a></em> Who were the best and worst
 batters according to these four metrics?</p></li>
 <li><p>Group <code>batting</code> by year and compute the standardized
 BA, OBP, OPS, and wOBA within each year. Name the columns containing
@@ -569,17 +568,16 @@ Once again, standardize OBP, OPS, and wOBA within each league-year
 combination, and name the columns containing these new standardized
 values <code>zBA_year_lg</code>, <code>zOBP_year_lg</code>, etc. Are the
 best and worst batters still the same?</p></li>
-<li><p>Remove the grouping you created in Problem 4. Bill James <a
-href="https://www.billjamesonline.com/dividing_baseball_history_into_eras/">divided
+<li><p>Remove the grouping you created in Problem 4. Bill James <a href="https://www.billjamesonline.com/dividing_baseball_history_into_eras/">divided
 baseball history into several eras</a> as follows:</p>
 <ul>
-<li>Pioneer Era: 1871 – 1892</li>
-<li>Spitball Era: 1893 – 1919</li>
-<li>Landis Era: 1920 – 1946</li>
-<li>Baby Boomer Era: 1947 – 1968</li>
-<li>Artifical Turf Era: 1969 – 1992</li>
-<li>Camden Yards Era: 1993 – present
-<p/></li>
+<li>Pioneer Era: 1871 &#x2013; 1892</li>
+<li>Spitball Era: 1893 &#x2013; 1919</li>
+<li>Landis Era: 1920 &#x2013; 1946</li>
+<li>Baby Boomer Era: 1947 &#x2013; 1968</li>
+<li>Artifical Turf Era: 1969 &#x2013; 1992</li>
+<li>Camden Yards Era: 1993 &#x2013; present
+<p></p></li>
 </ul>
 <p>Use <code>mutate()</code> and <code>case_when()</code> (just like we
 did in <a href="lecture2.html">Lecture 2</a>) to add a column called
@@ -612,8 +610,8 @@ code with a function, as reproduced below:</li>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">return</span>( (x <span class="sc">-</span> mu)<span class="sc">/</span>sigma)</span>
 <span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>}</span></code></pre></div>
 <ul>
-<li>We need to write another function in order to compute “relative
-payroll”. This function will take in a vector <code>x</code>, compute
+<li>We need to write another function in order to compute &#x201C;relative
+payroll&#x201D;. This function will take in a vector <code>x</code>, compute
 its median, and then divides every element of <code>x</code> by the
 median.</li>
 </ul>
@@ -648,8 +646,8 @@ year to year?</p></li>
 </div>
 <div id="a-challenge-question" class="section level2">
 <h2>A Challenge Question</h2>
-<p>Without running the code, work with your teammates to see if you can
-figure out what the code below is doing.</p>
+<p>Without running the code, see if you can figure out what the code
+below is doing.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>batting_2014_2015 <span class="ot">&lt;-</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  batting <span class="sc">%&gt;%</span></span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">filter</span>(yearID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2014</span>, <span class="dv">2015</span>)) <span class="sc">%&gt;%</span></span>
@@ -658,7 +656,7 @@ figure out what the code below is doing.</p>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">select</span>(playerID, yearID, BA) <span class="sc">%&gt;%</span></span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="fu">arrange</span>(playerID)</span></code></pre></div>
 <p>Now, run the code above and save the tbl
-<code>batting_2014_2015</code> to the file “data/batting_2014_2015.csv”
+<code>batting_2014_2015</code> to the file &#x201C;data/batting_2014_2015.csv&#x201D;
 using the <code>write_csv()</code> function. We will return to this
 dataset in <a href="lecture4.html">Lecture 4</a>.</p>
 </div>
@@ -698,15 +696,6 @@ $(document).ready(function () {
 <!-- code folding -->
 
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
 </body>
 </html>

@@ -4,9 +4,9 @@
 
 <head>
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
 
 
 
@@ -15,8 +15,8 @@
 
 <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet">
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -153,7 +153,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type = "text/css">
+<style type="text/css">
 .main-container {
   max-width: 940px;
   margin-left: auto;
@@ -312,7 +312,7 @@ $(document).ready(function () {
 
 
 
-</head>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" data-external="1"></head>
 
 <body>
 
@@ -330,7 +330,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -478,7 +478,7 @@ Tidyverse</h1>
 
 <div id="setting-our-working-directory" class="section level2">
 <h2>Setting our working directory</h2>
-<p>The <em>working directory</em> is a really powerful concept in R – it
+<p>The <em>working directory</em> is a really powerful concept in R &#x2013; it
 is where R saves any output files you create during an analysis and it
 is the place where R looks for any data you want to read in. When you
 installed R &amp; RStudio in <a href="lecture0.html">Lecture 0</a>, we
@@ -486,7 +486,7 @@ asked you to create a folder on your Desktop called Moneyball. This will
 be your working directory for the duration of the course.</p>
 <p>Every time you open RStudio, it automatically sets the working
 directory to some default folder on your computer. To see what that is,
-we’ll open RStudio and look at the console pane.
+we&#x2019;ll open RStudio and look at the console pane.
 <!-- show console pane --></p>
 <p>Once we open RStudio, before we do anything, we need to tell R to
 change the working directory to our Moneyball folder. We can do this in
@@ -494,9 +494,9 @@ several ways. <!-- show the different ways to do this --></p>
 <ol style="list-style-type: decimal">
 <li>In the top toolbar, Session/Set Working Directory/Choose Working
 Directory allows us to select and set our working directory from our
-files.<br />
+files.<br>
 </li>
-<li>The code <code>setwd("~/Desktop/Moneyball")</code> sets our working
+<li>The code <code>setwd(&quot;~/Desktop/Moneyball&quot;)</code> sets our working
 directory to the Moneyball folder, and can be edited for any file
 location.</li>
 </ol>
@@ -506,15 +506,14 @@ folder.</strong></p>
 </div>
 <div id="the-tidyverse" class="section level2">
 <h2>The tidyverse</h2>
-<p>So far we have seen only the most basic of R’s functionality.
+<p>So far we have seen only the most basic of R&#x2019;s functionality.
 Arguably, one of the things that makes R so powerful is the ease with
 which users are able to define their own functions and release them to
 the public. As <a href="http://hadley.nz">Hadley Wickham</a> defines
-them, “[R] packages are fundamental units of reproducible code. They
+them, &#x201C;[R] packages are fundamental units of reproducible code. They
 include reusable R functions, the documentation that describes how to
-use them, and sample data.” As of July 8, 2018, there are 12,725
-packages available from the <a
-href="https://cran.r-project.org">Comprehensive R Archive Network
+use them, and sample data.&#x201D; As of July 8, 2018, there are 12,725
+packages available from the <a href="https://cran.r-project.org">Comprehensive R Archive Network
 (CRAN)</a>. The scope of these packages is vast: there are some designed
 for scraping data from the web, pre-processing data to get it into an
 analyzable format, performing standard and specialized statistical
@@ -523,8 +522,7 @@ packages tailored to very specific applications like analyzing baseball
 data. There are also some more whimsical packages, like one that allow
 you to display your favorite <a href="https://xkcd.com">XKCD</a> comic
 strip!</p>
-<p>For the rest of the course, we will be working within the <a
-href="https://www.tidyverse.org/"><code>tidyverse</code></a>, which
+<p>For the rest of the course, we will be working within the <a href="https://www.tidyverse.org/"><code>tidyverse</code></a>, which
 consists of several R packages for data manipulation, exploration, and
 visualization. They are all based on a common design philosophy, mostly
 developed by Hadley Wickham (whose name you will encounter a lot as you
@@ -539,7 +537,7 @@ install.</p>
 <p>Now with the <code>tidyverse</code> suite of packages installed, we
 can load them with the following code:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<p>When you do that, you’ll see a lot of output to the console, most of
+<p>When you do that, you&#x2019;ll see a lot of output to the console, most of
 which you can safely ignore for now.</p>
 </div>
 <div id="reading-in-tabular-data" class="section level2">
@@ -850,58 +848,56 @@ tabular data like this is to use what is known as a <code>tbl</code>
 (pronounced <em>tibble</em>), synonymous with a spreadsheet or
 <code>data.frame</code>. At a high-level, a <code>tbl</code> is a
 two-dimensional array whose columns can be of different data types. That
-is, the first column might be characters (e.g. the names of athletes)
-and the second column can be numeric (e.g. the number of points
+is, the first column might be characters (e.g.&#xA0;the names of athletes)
+and the second column can be numeric (e.g.&#xA0;the number of points
 scored).</p>
 <p>Throughout the course, you will be downloading all datasets we will
-analyze to your “data” folder within your working directory (the
-“Moneyball” folder). All of these datasets are in the form of <a
-href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated</a>
-files, which have extension ‘.csv’.</p>
+analyze to your &#x201C;data&#x201D; folder within your working directory (the
+&#x201C;Moneyball&#x201D; folder). All of these datasets are in the form of <a href="https://en.wikipedia.org/wiki/Comma-separated_values">comma-separated</a>
+files, which have extension &#x2018;.csv&#x2019;.</p>
 <p>Within the tidyverse, we can use the function <code>read_csv()</code>
 to read in a csv file that is stored on your computer and create a
 tibble containing all of the data. The dataset showed above is stored in
-a csv file named “nba_shooting_small.csv” in the “data” folder of our
+a csv file named &#x201C;nba_shooting_small.csv&#x201D; in the &#x201C;data&#x201D; folder of our
 working directory. We will read it into R with the
 <code>read_csv()</code> function like so:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>nba_shooting_small <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;data/nba_shooting_small.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Rows: 10 Columns: 8
-## ── Column specification ────────────────────────────────────────────────────────
+## &#x2500;&#x2500; Column specification &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;
 ## Delimiter: &quot;,&quot;
 ## chr (1): PLAYER
 ## dbl (7): SEASON, FGM, FGA, TPM, TPA, FTM, FTA
 ## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+## &#x2139; Use `spec()` to retrieve the full column specification for this data.
+## &#x2139; Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p>Before proceeding, let us parse the syntax
 <code>nba_shooting_small &lt;- read_csv(...)</code> The first thing to
-notice is that we’re using the assignment operator that we saw in <a
-href="ps0.html">Problem Set 0</a>. This tells R that we want it to
+notice is that we&#x2019;re using the assignment operator that we saw in <a href="ps0.html">Problem Set 0</a>. This tells R that we want it to
 evalaute whatever is on the right-hand side (in this case
-<code>read_csv(file = "data/nba_shooting_small.csv")</code>) and assign
+<code>read_csv(file = &quot;data/nba_shooting_small.csv&quot;)</code>) and assign
 the resulting evaluation to a new object called
 <code>nba_shooting_small</code> (which R will create). We called the
 function <code>read_csv()</code> with one argument <code>file</code>.
 This argument is the <em>relative path</em> of the CSV file that we want
 to read into R. Basically, R starts in the working directory and first
-looks for a folder called “data.” If it finds such a folder, it looks
-inside it for a file called “nba_shooting_small.csv.” If it finds the
+looks for a folder called &#x201C;data.&#x201D; If it finds such a folder, it looks
+inside it for a file called &#x201C;nba_shooting_small.csv.&#x201D; If it finds the
 file, it creates a <code>tbl</code> called
 <code>nba_shooting_small</code> that contains all of the data.</p>
 <p>When we type in the command and hit <kbd>Enter</kbd> or
 <kbd>Return</kbd>, we see some output printed to the console. This is
 <code>read_csv</code> telling us that it (a) found the file, (b) read it
 in successfully, and (c) identified the type of data stored in each
-column. We see, for instance, that the column named “PLAYER” contains
+column. We see, for instance, that the column named &#x201C;PLAYER&#x201D; contains
 <em>character strings</em>, and is parsed as
 <code>col_character()</code>. Similarly, the number of field goals made
-(“FGM”) is parsed as integer data.</p>
+(&#x201C;FGM&#x201D;) is parsed as integer data.</p>
 <p>When we print out our tbl, R outputs many things: the dimension (in
-this case, <span class="math inline">\(10 \times 7\)</span>), the column
+this case, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn><mo>&#xD7;</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">10 \times 7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">10</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">7</span></span></span></span>), the column
 names, the <em>type</em> of data included in each column, and then the
 actual data.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>nba_shooting_small</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 8
+<pre><code>## # A tibble: 10 &#xD7; 8
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1 Stephen Curry           2016   805  1597   402   887   363   400
@@ -917,16 +913,16 @@ actual data.</p>
 </div>
 <div id="wrangling-data" class="section level2">
 <h2>Wrangling Data</h2>
-<p>Now that we have read in our dataset, we’re ready to begin analyzing
+<p>Now that we have read in our dataset, we&#x2019;re ready to begin analyzing
 it. Very often, our analysis will involve some type of manipulation or
 <em>wrangling</em> of the data contained in the <code>tbl</code>. For
 instance, we may want to compute some new summary statistic based on the
 data in the table. In our NBA example, we could compute, say, each
-player’s field goal percentage. Alternatively, we could subset our data
+player&#x2019;s field goal percentage. Alternatively, we could subset our data
 to find all players who took at least 100 three point shots and made at
 least 80% of their free throws. One package within the
 <code>tidyverse</code> is called <code>dplyr</code> and it contains five
-main functions corresponding to the most common things that you’ll end
+main functions corresponding to the most common things that you&#x2019;ll end
 up doing to your data. Over the next two days, we will learn each of
 these:</p>
 <ul>
@@ -946,7 +942,7 @@ these:</p>
 of column names and sorting the data according to the values in these
 columns.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">arrange</span>(nba_shooting_small, FGA)</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 8
+<pre><code>## # A tibble: 10 &#xD7; 8
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1 Marc Gasol              2016   328   707     2     3   203   245
@@ -965,7 +961,7 @@ field goals (707) while James Harden and Stephen Curry attempted more
 than twice as many. We could also sort the players in descending order
 using <code>desc()</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">arrange</span>(nba_shooting_small, <span class="fu">desc</span>(FGA))</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 8
+<pre><code>## # A tibble: 10 &#xD7; 8
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1 James Harden            2016   710  1617   236   657   720   837
@@ -979,15 +975,14 @@ using <code>desc()</code>:</p>
 ##  9 Giannis Antetokounmpo   2016   513  1013    28   110   296   409
 ## 10 Marc Gasol              2016   328   707     2     3   203   245</code></pre>
 <p>In this small dataset, no two players attempted the same number of
-field goals. In larger datasets (like the one you’ll see in <a
-href="tc_ps1.html">Problem Set 1</a>), it can be the case that there are
+field goals. In larger datasets (like the one you&#x2019;ll see in <a href="tc_ps1.html">Problem Set 1</a>), it can be the case that there are
 multiple rows with the same value in a given column. When arranging the
 rows of a <code>tbl</code>, to break ties, we can specify more than
 column. For instance, the code below sorts the players first by the
 number of field goal attempts and then by the number of three point
 attempts.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">arrange</span>(nba_shooting_small, FGA, TPA)</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 8
+<pre><code>## # A tibble: 10 &#xD7; 8
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1 Marc Gasol              2016   328   707     2     3   203   245
@@ -1002,7 +997,7 @@ attempts.</p>
 ## 10 James Harden            2016   710  1617   236   657   720   837</code></pre>
 <p>Now consider the two lines of code:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">arrange</span>(nba_shooting_small, PLAYER)</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 8
+<pre><code>## # A tibble: 10 &#xD7; 8
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1 Damian Lillard          2016   618  1474   229   610   414   464
@@ -1016,7 +1011,7 @@ attempts.</p>
 ##  9 Marc Gasol              2016   328   707     2     3   203   245
 ## 10 Stephen Curry           2016   805  1597   402   887   363   400</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>nba_shooting_small</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 8
+<pre><code>## # A tibble: 10 &#xD7; 8
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1 Stephen Curry           2016   805  1597   402   887   363   400
@@ -1029,7 +1024,7 @@ attempts.</p>
 ##  8 Giannis Antetokounmpo   2016   513  1013    28   110   296   409
 ##  9 DeMarcus Cousins        2016   601  1332    70   210   476   663
 ## 10 Marc Gasol              2016   328   707     2     3   203   245</code></pre>
-<p>In the first line, we’ve sorted the players in alphabet order of
+<p>In the first line, we&#x2019;ve sorted the players in alphabet order of
 their first name. But when we print out our <code>tbl</code>,
 <code>nba_shooting_small</code>, we see that the players are no longer
 sorted. This is because <code>dplyr</code> (and most other R) functions
@@ -1039,7 +1034,7 @@ would have to <em>overwrite</em> <code>nba_shooting_small</code> using a
 combination of the assignment operator and <code>arrange()</code>.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>nba_shooting_small <span class="ot">&lt;-</span> <span class="fu">arrange</span>(nba_shooting_small, PLAYER)</span>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>nba_shooting_small</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 8
+<pre><code>## # A tibble: 10 &#xD7; 8
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ##  1 Damian Lillard          2016   618  1474   229   610   414   464
@@ -1057,13 +1052,12 @@ combination of the assignment operator and <code>arrange()</code>.</p>
 <h3>Creating new variables from old</h3>
 <p>While arranging our data is useful, it is not quite sufficient to
 determine which player is the best shooter in our dataset. Perhaps the
-simplest way to compare players’ shooting ability is with field goal
-percentage (FGP). We can compute this percentage using the formula <span
-class="math inline">\(\text{FGP} =
-\frac{\text{FGM}}{\text{FGA}}.\)</span> We use the function
-<code>mutate()</code> to add a column to our <code>tbl</code>.</p>
+simplest way to compare players&#x2019; shooting ability is with field goal
+percentage (FGP). We can compute this percentage using the formula <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>FGP</mtext><mo>=</mo><mfrac><mtext>FGM</mtext><mtext>FGA</mtext></mfrac><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\text{FGP} = \frac{\text{FGM}}{\text{FGA}}.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">FGP</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2173em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8723em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">FGA</span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">FGM</span></span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord">.</span></span></span></span>
+We use the function <code>mutate()</code> to add a column to our
+<code>tbl</code>.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">mutate</span>(nba_shooting_small, <span class="at">FGP =</span> FGM <span class="sc">/</span> FGA)</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 9
+<pre><code>## # A tibble: 10 &#xD7; 9
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA     FGP
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ##  1 Damian Lillard          2016   618  1474   229   610   414   464 0.41927
@@ -1084,13 +1078,13 @@ FGP. As expected, when we run this command, R returns a
 for each of these 10 players. Just like with <code>arrange()</code>, if
 we call <code>mutate()</code> by itself, R will not add the new column
 to our existing data frame. In order to permanently add a column for
-field goal percentages to <code>nba_shooting_small</code>, we’re going
+field goal percentages to <code>nba_shooting_small</code>, we&#x2019;re going
 to need to use the assignment operator.</p>
 <p>It turns out that we can add <em>multiple</em> columns to a
 <code>tbl</code> at once by passing more arguments to
 <code>mutate()</code>, one for each column we wish to define.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">mutate</span>(nba_shooting_small, <span class="at">FGP =</span> FGM <span class="sc">/</span> FGA, <span class="at">TPP =</span> TPM <span class="sc">/</span> TPA, <span class="at">FTP =</span> FTM <span class="sc">/</span> FTA)</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 11
+<pre><code>## # A tibble: 10 &#xD7; 11
 ##    PLAYER                SEASON   FGM   FGA   TPM   TPA   FTM   FTA     FGP     TPP     FTP
 ##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
 ##  1 Damian Lillard          2016   618  1474   229   610   414   464 0.41927 0.37541 0.89224
@@ -1112,8 +1106,8 @@ proceeding line-by-line. In the previous code block, we tried to add
 three columns to our <code>tbl</code> and the <code>mutate</code> call
 got a little bit over-whelming. Imagine trying to add five or six more
 columns simultaneously! As our commands become more and more complex,
-you’ll find that using the console can get pretty cramped. And if you
-make a mistake in entering your code, you’ll get an error and have to
+you&#x2019;ll find that using the console can get pretty cramped. And if you
+make a mistake in entering your code, you&#x2019;ll get an error and have to
 start all over again. Plus, when we start a new session of RStudio, the
 console is cleared. How can we save the commands we typed into R? We do
 so using an <strong>R Script</strong>.</p>
@@ -1121,31 +1115,31 @@ so using an <strong>R Script</strong>.</p>
 and is saved as a .R file. R Scripts are useful as we can edit our code
 before sending it to be run in the console.</p>
 <p>We can start a new R Script by clicking on the top left symbol in
-RStudio and selecting “R Script”.</p>
-<p><img src="figures/lecture1_fig1.png" /></p>
+RStudio and selecting &#x201C;R Script&#x201D;.</p>
+<p><img src="figures/lecture1_fig1.png"></p>
 <p>The untitled R Script will then appear in the top left hand box of
 RStudio.</p>
-<p><img src="figures/lecture1_fig2.png" /></p>
+<p><img src="figures/lecture1_fig2.png"></p>
 <p>In the R Script, type the following:</p>
 <pre><code>2 * 3
 x &lt;- 4
 sqrt(x)</code></pre>
 <p>Now our code is just sitting in the R Script. To run the code (that
-is, evaluate it in the console) we click the “Run” button in the top
+is, evaluate it in the console) we click the &#x201C;Run&#x201D; button in the top
 right of the script. This will run one line of code at a time -
 whichever line the cursor is on. Place your cursor on the first line and
-click “Run”. Observe how <code>2 * 3</code> now appears in the console,
+click &#x201C;Run&#x201D;. Observe how <code>2 * 3</code> now appears in the console,
 as well as the output <code>6</code>.</p>
-<p><img src="figures/lecture1_fig3.png" /></p>
+<p><img src="figures/lecture1_fig3.png"></p>
 <p>If we want to run multiple lines at once, we highlight them all and
-click “Run”.</p>
-<p><img src="figures/lecture1_fig4.png" /></p>
+click &#x201C;Run&#x201D;.</p>
+<p><img src="figures/lecture1_fig4.png"></p>
 <p>Note in the above that we had to run <code>x &lt;- 4</code> before
 <code>sqrt(x)</code>. We need to define our variables first and run this
 code in the console before performing calculations with those variables.
-The console can’t “see” the script unless you run the code in the
+The console can&#x2019;t &#x201C;see&#x201D; the script unless you run the code in the
 script.</p>
-<p>One very nice thing about RStudio’s script editor is that it will
+<p>One very nice thing about RStudio&#x2019;s script editor is that it will
 highlight syntax errors with a red squiggly line and a red cross in the
 sidebar. If you move your mouse over the line, a pop-up will appear that
 can help you diagnose the potential problem.</p>
@@ -1155,8 +1149,8 @@ Comments are useful because they allow you to explain what your code is
 doing. <strong>Throughout the rest of this course, we will be working
 almost exclusively with R scripts rather than directly entering commands
 into the console.</strong> For the sake of organization, you should save
-all of your scripts into the ‘scripts’ folder we created within the
-‘Moneyball’ working directory.</p>
+all of your scripts into the &#x2018;scripts&#x2019; folder we created within the
+&#x2018;Moneyball&#x2019; working directory.</p>
 </div>
 <div id="back-to-the-nba-data" class="section level2">
 <h2>Back to the NBA data</h2>
@@ -1186,20 +1180,20 @@ point attempts:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>nba_shooting_small <span class="sc">%&gt;%</span></span>
 <span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">three_point_fg_rate =</span> TPA <span class="sc">/</span> FGA) <span class="sc">%&gt;%</span></span>
 <span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(three_point_fg_rate))</span></code></pre></div>
-<pre><code>## # A tibble: 10 × 12
+<pre><code>## # A tibble: 10 &#xD7; 12
 ##    PLAYER     SEASON   FGM   FGA   TPM   TPA   FTM   FTA     FGP     TPP     FTP three_point_fg_rate
 ##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;               &lt;dbl&gt;
-##  1 Stephen C…   2016   805  1597   402   887   363   400 0.50407 0.45321 0.9075            0.55542  
-##  2 Damian Li…   2016   618  1474   229   610   414   464 0.41927 0.37541 0.89224           0.41384  
-##  3 James Har…   2016   710  1617   236   657   720   837 0.43908 0.35921 0.86022           0.40631  
-##  4 Kevin Dur…   2016   698  1381   186   480   447   498 0.50543 0.3875  0.89759           0.34757  
-##  5 Dirk Nowi…   2016   498  1112   126   342   250   280 0.44784 0.36842 0.89286           0.30755  
-##  6 Jimmy But…   2016   470  1034    64   206   395   475 0.45455 0.31068 0.83158           0.19923  
-##  7 LeBron Ja…   2016   737  1416    87   282   359   491 0.52048 0.30851 0.73116           0.19915  
-##  8 DeMarcus …   2016   601  1332    70   210   476   663 0.45120 0.33333 0.71795           0.15766  
-##  9 Giannis A…   2016   513  1013    28   110   296   409 0.50642 0.25455 0.72372           0.10859  
+##  1 Stephen C&#x2026;   2016   805  1597   402   887   363   400 0.50407 0.45321 0.9075            0.55542  
+##  2 Damian Li&#x2026;   2016   618  1474   229   610   414   464 0.41927 0.37541 0.89224           0.41384  
+##  3 James Har&#x2026;   2016   710  1617   236   657   720   837 0.43908 0.35921 0.86022           0.40631  
+##  4 Kevin Dur&#x2026;   2016   698  1381   186   480   447   498 0.50543 0.3875  0.89759           0.34757  
+##  5 Dirk Nowi&#x2026;   2016   498  1112   126   342   250   280 0.44784 0.36842 0.89286           0.30755  
+##  6 Jimmy But&#x2026;   2016   470  1034    64   206   395   475 0.45455 0.31068 0.83158           0.19923  
+##  7 LeBron Ja&#x2026;   2016   737  1416    87   282   359   491 0.52048 0.30851 0.73116           0.19915  
+##  8 DeMarcus &#x2026;   2016   601  1332    70   210   476   663 0.45120 0.33333 0.71795           0.15766  
+##  9 Giannis A&#x2026;   2016   513  1013    28   110   296   409 0.50642 0.25455 0.72372           0.10859  
 ## 10 Marc Gasol   2016   328   707     2     3   203   245 0.46393 0.66667 0.82857           0.0042433</code></pre>
-<p>Let’s break down what’s happening here. First, R “pipes” the
+<p>Let&#x2019;s break down what&#x2019;s happening here. First, R &#x201C;pipes&#x201D; the
 <code>tbl</code> <code>nba_shooting_small</code> into into
 <code>mutate</code> to create a new variable
 <code>three_point_fg_rate</code>. Then it pipes the result of this
@@ -1211,17 +1205,15 @@ than once! The sequence of analysis flow naturally top-to-bottom and
 puts the emphasis on the <em>actions</em> being carried out by the
 analyst (like the functions <code>mutate</code> and
 <code>arrange</code>) and the final output rather than a bunch of
-temporary <code>tbl</code>’s that may not be of much interest.</p>
+temporary <code>tbl</code>&#x2019;s that may not be of much interest.</p>
 <p>We will be using the pipe <code>%&gt;%</code> operator for the
 remainder of the week, and you will see how convenient it is to use in
 the <a href="tc_lecture2.html">next lecture</a> when making
 visualizations. Next, proceed to practice the basics of reading and
 wrangling data in <a href="tc_ps1.html">Problem Set 1</a>.</p>
 <p><strong>NOTE</strong>: There are several conventions for formatting
-code when using the pipe. See <a
-href="http://style.tidyverse.org/pipes.html">here</a> and <a
-href="http://r4ds.had.co.nz/pipes.html">here</a> for much more
-information and for some advanced “special” pipes.</p>
+code when using the pipe. See <a href="http://style.tidyverse.org/pipes.html">here</a> and <a href="http://r4ds.had.co.nz/pipes.html">here</a> for much more
+information and for some advanced &#x201C;special&#x201D; pipes.</p>
 </div>
 </div>
 
@@ -1260,15 +1252,6 @@ $(document).ready(function () {
 <!-- code folding -->
 
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
 </body>
 </html>

@@ -84,3 +84,4 @@ output:
   html_document:
     theme: cerulean
     highlight: tango
+    math_method: r-katex

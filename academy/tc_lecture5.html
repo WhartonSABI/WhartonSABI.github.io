@@ -4,9 +4,9 @@
 
 <head>
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
 
 
 
@@ -15,8 +15,8 @@
 
 <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet">
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -153,7 +153,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type = "text/css">
+<style type="text/css">
 .main-container {
   max-width: 940px;
   margin-left: auto;
@@ -312,7 +312,7 @@ $(document).ready(function () {
 
 
 
-</head>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" data-external="1"></head>
 
 <body>
 
@@ -330,7 +330,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -478,12 +478,11 @@ and Prediction</h1>
 
 <div id="mlb-batting-statistics" class="section level2">
 <h2>MLB Batting Statistics</h2>
-<p>Let’s first load the <code>Lahman</code> library used in <a
-href="tc_lecture4.html">Lecture 4</a>.</p>
+<p>Let&#x2019;s first load the <code>Lahman</code> library used in <a href="tc_lecture4.html">Lecture 4</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(Lahman)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>batting <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(Batting)</span></code></pre></div>
-<p>In the code below we’ll create a dataset to use that has player
+<p>In the code below we&#x2019;ll create a dataset to use that has player
 batting averages from the 2017 and 2018 seasons. <strong>Can you
 describe what this code is doing?</strong></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>batting_2017_2018 <span class="ot">&lt;-</span> batting <span class="sc">%&gt;%</span></span>
@@ -498,10 +497,10 @@ describe what this code is doing?</strong></p>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">==</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>  <span class="fu">select</span>(playerID, yearID, BA) <span class="sc">%&gt;%</span></span>
 <span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="fu">arrange</span>(playerID)</span></code></pre></div>
-<p>In order to study the relationship between a player’s 2017 batting
+<p>In order to study the relationship between a player&#x2019;s 2017 batting
 average and his 2018 batting average, it will be more convenient to
 store the data as below.</p>
-<pre><code>## # A tibble: 196 × 3
+<pre><code>## # A tibble: 196 &#xD7; 3
 ## # Groups:   playerID [196]
 ##    playerID   `2017`  `2018`
 ##    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;
@@ -515,7 +514,7 @@ store the data as below.</p>
 ##  8 arenano01 0.30858 0.29661
 ##  9 baezja01  0.27292 0.29043
 ## 10 barnhtu01 0.27027 0.24783
-## # ℹ 186 more rows</code></pre>
+## # &#x2139; 186 more rows</code></pre>
 <p>In this format, we have a row for each player and two columns for his
 batting averages, one for 2017 and one for 2018. In order to convert our
 data into this format, we use <em>spreading</em>.</p>
@@ -526,9 +525,9 @@ it is a grouped dataset. Before proceeding we will need to remove this
 grouping.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>batting_2017_2018 <span class="ot">&lt;-</span> batting_2017_2018 <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div>
-<p>Notice that the column names of the tbl are now “2017” and “2018”.
+<p>Notice that the column names of the tbl are now &#x201C;2017&#x201D; and &#x201C;2018&#x201D;.
 This can get annoying as we will have to place tick marks around these
-names (e.g. `2017`) whenever referencing the variables since they begin
+names (e.g.&#xA0;`2017`) whenever referencing the variables since they begin
 with a number rather than a letter. To avoid having to do this, we will
 <strong>rename</strong> these column names with the <code>rename</code>
 function:</p>
@@ -542,7 +541,7 @@ function:</p>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;2017 Batting Average&quot;</span>, <span class="at">y =</span> <span class="st">&quot;2018 Batting Average&quot;</span>)</span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>ba_plot</span></code></pre></div>
-<p><img src="tc_lecture5_files/figure-html/plot%20BA%202017%202018-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="tc_lecture5_files/figure-html/plot%20BA%202017%202018-1.png" width="672" style="display: block; margin: auto;"></p>
 <div id="correlation" class="section level3">
 <h3>Correlation</h3>
 <p>We can see a positive trend between the 2017 and 2018 batting
@@ -551,15 +550,13 @@ data?</p>
 <p>The <strong>correlation coefficient</strong>, <em>r</em>, is one way
 to summarize the dependence between two seasons with one number.
 <em>r</em> is a standardized measure of the <em>linear</em> dependence
-between two variables (usually called <span
-class="math inline">\(x\)</span> and <span
-class="math inline">\(y\)</span>) and can take values between -1 and +1.
-If <span class="math inline">\(r = 1\)</span>, then the points all lie
-on a line with positive slope. If <span class="math inline">\(r =
--1\)</span>, the points all lie on a line with negative slope.</p>
+between two variables (usually called <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>
+and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>) and can take values between -1
+and +1. If <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, then the points all
+lie on a line with positive slope. If <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mo>&#x2212;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r =
+-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">&#x2212;</span><span class="mord">1</span></span></span></span>, the points all lie on a line with negative slope.</p>
 <p>Loosely speaking, we can think of correlation as a measure of how
-well a line fits our data. <a
-href="http://guessthecorrelation.com/">Let’s get some practice!</a></p>
+well a line fits our data. <a href="http://guessthecorrelation.com/">Let&#x2019;s get some practice!</a></p>
 <p>We can calculate the correlation between two variables in
 <code>R</code> using the function <code>cor()</code>. The correlation
 between the 2017 and 2018 batting averages is:</p>
@@ -569,61 +566,49 @@ between the 2017 and 2018 batting averages is:</p>
 batting averages, but there is still a lot of noise.</p>
 <p>It is important to remember that correlation is only a measure of
 <em>linear</em> dependence between two variables. The below example
-shows data where <span class="math inline">\(y = x^2\)</span>
-exactly.</p>
-<p><img src="tc_lecture5_files/figure-html/plot%20quadratic-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Even though <span class="math inline">\(x\)</span> and <span
-class="math inline">\(y\)</span> are dependent, <span
-class="math inline">\(r = -0.1\)</span>, indicating a weak linear
-dependence. If we were to draw a line to fit this data, it would be
-quite flat!</p>
-<p><img src="tc_lecture5_files/figure-html/plot%20quadratic%20line-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Now let’s go back to the 2017 and 2018 batting data. To visualize our
+shows data where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msup><mi>x</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">y = x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span> exactly.</p>
+<p><img src="tc_lecture5_files/figure-html/plot%20quadratic-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>Even though <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> are dependent, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mo>&#x2212;</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">r
+= -0.1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">&#x2212;</span><span class="mord">0.1</span></span></span></span>, indicating a weak linear dependence. If we were to draw a
+line to fit this data, it would be quite flat!</p>
+<p><img src="tc_lecture5_files/figure-html/plot%20quadratic%20line-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>Now let&#x2019;s go back to the 2017 and 2018 batting data. To visualize our
 correlation, we draw the <em>line of best fit</em> through our data. In
-this example, the line of best fit has <span
-class="math inline">\(y\)</span>-intercept = 0.131 and slope = 0.474
-(we’ll talk about how we find this values later).</p>
+this example, the line of best fit has <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>-intercept = 0.131 and slope = 0.474 (we&#x2019;ll
+talk about how we find this values later).</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>ba_plot <span class="ot">&lt;-</span> ba_plot <span class="sc">+</span> </span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> a_best, <span class="at">slope =</span> b_best, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span> </span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;y = 0.131 + 0.474x&quot;</span>)</span>
 <span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>ba_plot</span></code></pre></div>
-<p><img src="tc_lecture5_files/figure-html/ba_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Question:</strong> Which feature of the best fit line, <span
-class="math inline">\(a\)</span> or <span
-class="math inline">\(b\)</span>, quantifies the linear dependence
-between 2017 and 2018 FG%?</p>
+<p><img src="tc_lecture5_files/figure-html/ba_plot-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><strong>Question:</strong> Which feature of the best fit line, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span> or <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>,
+quantifies the linear dependence between 2017 and 2018 FG%?</p>
 <p>How does correlation relate to our line of best fit? This brings us
 to the <em>regression method</em>.</p>
 </div>
 <div id="the-regression-method" class="section level3">
 <h3>The Regression Method</h3>
-<p>If we standardize both datasets, <span
-class="math inline">\(x\)</span> and <span
-class="math inline">\(y\)</span>, the correlation is the <em>slope</em>
-of the line of best fit:</p>
-<p><span class="math display">\[\frac{y - \bar{y}}{sd(y)} = r \times
-\frac{x - \bar{x}}{sd(x)}\]</span></p>
+<p>If we standardize both datasets, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>
+and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>, the correlation is the
+<em>slope</em> of the line of best fit:</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi>y</mi><mo>&#x2212;</mo><mover accent="true"><mi>y</mi><mo>&#x2C9;</mo></mover></mrow><mrow><mi>s</mi><mi>d</mi><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo></mrow></mfrac><mo>=</mo><mi>r</mi><mo>&#xD7;</mo><mfrac><mrow><mi>x</mi><mo>&#x2212;</mo><mover accent="true"><mi>x</mi><mo>&#x2C9;</mo></mover></mrow><mrow><mi>s</mi><mi>d</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{y - \bar{y}}{sd(y)} = r \times
+\frac{x - \bar{x}}{sd(x)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.1963em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.2603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.5678em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">&#x2C9;</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.1963em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.2603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.5678em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">&#x2C9;</span></span></span></span></span></span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
 <p>We can unpack this equation to get the formula for our unstandardized
 line of best fit:</p>
-<p><span class="math display">\[y = a + bx\]</span> where <span
-class="math inline">\(a = \bar{y} - b\bar{x}\)</span> and <span
-class="math inline">\(b = r \times sd(y)/sd(x)\)</span>.</p>
-<p>Now that we have our regression line, we can predict a future <span
-class="math inline">\(y\)</span> value given we know <span
-class="math inline">\(x\)</span>. For example, if we know that a
-player’s 2017 batting average was 0.31, we predict that their 2018
-batting average will be: <span class="math display">\[\widehat{y} =
-0.131 + 0.474 \times 0.31 = 0.278.\]</span> Note that we use <span
-class="math inline">\(\widehat{y}\)</span> for a predicted value of
-<span class="math inline">\(y\)</span>; we can think of this as <span
-class="math inline">\(\widehat{y} = E[Y|x]\)</span>.</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">y = a + bx</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mord mathnormal">x</span></span></span></span></span> where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mover accent="true"><mi>y</mi><mo>&#x2C9;</mo></mover><mo>&#x2212;</mo><mi>b</mi><mover accent="true"><mi>x</mi><mo>&#x2C9;</mo></mover></mrow><annotation encoding="application/x-tex">a = \bar{y} - b\bar{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.5678em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">&#x2C9;</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.5678em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">&#x2C9;</span></span></span></span></span></span></span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mi>r</mi><mo>&#xD7;</mo><mi>s</mi><mi>d</mi><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>s</mi><mi>d</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">b = r \times sd(y)/sd(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span><span class="mord">/</span><span class="mord mathnormal">s</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span>.</p>
+<p>Now that we have our regression line, we can predict a future <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> value given we know <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>. For example, if we know that a player&#x2019;s
+2017 batting average was 0.31, we predict that their 2018 batting
+average will be: <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>y</mi><mo stretchy="true">^</mo></mover><mo>=</mo><mn>0.131</mn><mo>+</mo><mn>0.474</mn><mo>&#xD7;</mo><mn>0.31</mn><mo>=</mo><mn>0.278.</mn></mrow><annotation encoding="application/x-tex">\widehat{y} = 0.131 + 0.474
+\times 0.31 = 0.278.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.865em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6706em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span class="svg-align" style="width:calc(100% - 0.1111em);margin-left:0.1111em;top:-3.4306em;"><span class="pstrut" style="height:3em;"></span><span style="height:0.24em;"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="0.24em" viewbox="0 0 1062 239" preserveaspectratio="none"><path d="M529 0h5l519 115c5 1 9 5 9 10 0 1-1 2-1 3l-4 22
+c-1 5-5 9-11 9h-2L532 67 19 159h-2c-5 0-9-4-11-9l-5-22c-1-6 2-12 8-13z"/></svg></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.131</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.474</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.31</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.278.</span></span></span></span></span> Note that we use <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo stretchy="true">^</mo></mover></mrow><annotation encoding="application/x-tex">\widehat{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.865em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6706em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span class="svg-align" style="width:calc(100% - 0.1111em);margin-left:0.1111em;top:-3.4306em;"><span class="pstrut" style="height:3em;"></span><span style="height:0.24em;"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="0.24em" viewbox="0 0 1062 239" preserveaspectratio="none"><path d="M529 0h5l519 115c5 1 9 5 9 10 0 1-1 2-1 3l-4 22
+c-1 5-5 9-11 9h-2L532 67 19 159h-2c-5 0-9-4-11-9l-5-22c-1-6 2-12 8-13z"/></svg></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span> for a predicted value of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>; we can think of this as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo stretchy="true">^</mo></mover><mo>=</mo><mi>E</mi><mo stretchy="false">[</mo><mi>Y</mi><mi mathvariant="normal">&#x2223;</mi><mi>x</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">\widehat{y} = E[Y|x]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.865em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6706em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span><span class="svg-align" style="width:calc(100% - 0.1111em);margin-left:0.1111em;top:-3.4306em;"><span class="pstrut" style="height:3em;"></span><span style="height:0.24em;"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="0.24em" viewbox="0 0 1062 239" preserveaspectratio="none"><path d="M529 0h5l519 115c5 1 9 5 9 10 0 1-1 2-1 3l-4 22
+c-1 5-5 9-11 9h-2L532 67 19 159h-2c-5 0-9-4-11-9l-5-22c-1-6 2-12 8-13z"/></svg></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mord">&#x2223;</span><span class="mord mathnormal">x</span><span class="mclose">]</span></span></span></span>.</p>
 </div>
 <div id="fitting-linear-models" class="section level3">
 <h3>Fitting linear models</h3>
-<p>To find the regression coefficients, <span
-class="math inline">\(a\)</span> and <span
-class="math inline">\(b\)</span>, we use the function <code>lm()</code>.
-The usage of <code>lm()</code> is as follows:</p>
+<p>To find the regression coefficients, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>, we
+use the function <code>lm()</code>. The usage of <code>lm()</code> is as
+follows:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(BA_2018 <span class="sc">~</span> BA_2017, <span class="at">data =</span> batting_2017_2018)</span></code></pre></div>
 <p>The first argument in the <code>lm()</code> call is called a
 <code>formula</code>. This takes input <code>y ~ x</code>, where
@@ -649,9 +634,8 @@ can access the coefficients as follows:</p>
 regression models.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">library</span>(modelr)</span></code></pre></div>
 <p>We can use the function <code>rsquare</code> to get the square of the
-correlation, <span class="math inline">\(r^2\)</span>. The quantity
-<span class="math inline">\(r^2\)</span> is the <em>proportion of
-variance</em> explained by the linear model. The first argument of the
+correlation, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>r</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">r^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>. The quantity <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>r</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">r^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span> is the <em>proportion of variance</em>
+explained by the linear model. The first argument of the
 <code>rsquare</code> function is the output <code>fit</code> from our
 linear model function <code>lm</code>. The second argument is our
 original dataset, <code>batting_2017_2018</code>:</p>
@@ -665,7 +649,7 @@ to our original dataset:</p>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">add_predictions</span>(<span class="at">model =</span> fit, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>, <span class="at">var =</span> <span class="st">&quot;pred&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">add_residuals</span>(<span class="at">model =</span> fit, <span class="at">var =</span> <span class="st">&quot;resid&quot;</span>)</span>
 <span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>batting_2017_2018</span></code></pre></div>
-<pre><code>## # A tibble: 196 × 5
+<pre><code>## # A tibble: 196 &#xD7; 5
 ##    playerID  BA_2017 BA_2018    pred      resid
 ##    &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;
 ##  1 abreujo02 0.30435 0.26453 0.27466 -0.010133 
@@ -678,10 +662,10 @@ to our original dataset:</p>
 ##  8 arenano01 0.30858 0.29661 0.27667  0.019943 
 ##  9 baezja01  0.27292 0.29043 0.25978  0.030651 
 ## 10 barnhtu01 0.27027 0.24783 0.25852 -0.010697 
-## # ℹ 186 more rows</code></pre>
+## # &#x2139; 186 more rows</code></pre>
 <p>In <code>add_predictions</code>, we have to specify three arguments:
 (i) the model, which is just the output of <code>lm()</code>, (ii) the
-type, which will always be “response” for this course, and (iii) the
+type, which will always be &#x201C;response&#x201D; for this course, and (iii) the
 name of the column we want our predictions to be stored in. We similarly
 have to specify a <code>model</code> and <code>var</code> argument in
 <code>add_residual</code>.</p>
@@ -692,18 +676,18 @@ residual lengths:</p>
 <span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2017, <span class="at">xend =</span> BA_2017, <span class="at">y =</span> BA_2018, <span class="at">yend =</span> pred), <span class="at">color =</span> <span class="st">&quot;dodgerblue&quot;</span>) <span class="sc">+</span></span>
 <span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> BA_2017, <span class="at">y =</span> BA_2018)) <span class="sc">+</span> </span>
 <span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">0.1305237</span>, <span class="at">slope =</span> <span class="fl">0.4735976</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
-<p><img src="tc_lecture5_files/figure-html/plot%20pred%20resid-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="tc_lecture5_files/figure-html/plot%20pred%20resid-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="predict" class="section level3">
 <h3>Predict</h3>
 <p>So far we have looked at the predicted values from our
 <em>training</em> data; that is, the data we used to fit our linear
-model. Suppose we have more players’ batting averages from 2017 but we
+model. Suppose we have more players&#x2019; batting averages from 2017 but we
 do not have their batting averages from 2018. We can use our linear
-model to predict these players’ 2018 batting average using the function
+model to predict these players&#x2019; 2018 batting average using the function
 <code>predict</code>.</p>
-<p>In the below code, we enter the players’ 2017 batting averages as the
+<p>In the below code, we enter the players&#x2019; 2017 batting averages as the
 tibble <code>new_data</code>. We then use the function
 <code>predict</code>. The first argument of <code>predict</code> is the
 fitted model, <code>fit</code>. The second argument is
@@ -718,7 +702,7 @@ fitted model, <code>fit</code>. The second argument is
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> new_data <span class="sc">%&gt;%</span></span>
 <span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>  <span class="fu">add_predictions</span>(fit)</span>
 <span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>new_data</span></code></pre></div>
-<pre><code>## # A tibble: 3 × 2
+<pre><code>## # A tibble: 3 &#xD7; 2
 ##   BA_2017    pred
 ##     &lt;dbl&gt;   &lt;dbl&gt;
 ## 1   0.241 0.24466
@@ -729,7 +713,7 @@ fitted model, <code>fit</code>. The second argument is
 <span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> batting_2017_2018, <span class="fu">aes</span>(<span class="at">x =</span> BA_2017, <span class="at">y =</span> BA_2018)) <span class="sc">+</span> </span>
 <span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="fl">0.1305237</span>, <span class="at">slope =</span> <span class="fl">0.4735976</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span> </span>
 <span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> new_data, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> BA_2017, <span class="at">y =</span> pred), <span class="at">color =</span> <span class="st">&quot;dodgerblue&quot;</span>)</span></code></pre></div>
-<p><img src="tc_lecture5_files/figure-html/plot%20new_data%20pred-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="tc_lecture5_files/figure-html/plot%20new_data%20pred-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
 
@@ -768,15 +752,6 @@ $(document).ready(function () {
 <!-- code folding -->
 
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
 </body>
 </html>

@@ -1,6 +1,8 @@
 ---
 title: "Problem Set 5"
-output: html_document
+output:
+  html_document:
+    math_method: r-katex
 ---
 
 ```{r setup, include=FALSE}
@@ -290,5 +292,4 @@ ggplot(pbp_explosive_rate, aes(x = ydstogo, y = reorder(defteam, -explosive_rate
         axis.text.y = element_text(size = 10))
 ```
 
-Discuss with fellow students possible conclusions that can be drawn from the visualizations in this section. How are teams' defenses stacking up against explosive plays? How much should certain bins in this visualization be weighed over others? 
-
+What conclusions can you draw from the visualizations in this section? How are teams' defenses stacking up against explosive plays? How much should certain bins in this visualization be weighed over others?

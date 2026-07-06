@@ -402,7 +402,7 @@ mlb_payrolls %>%
 
 ## A Challenge Question
 
-Without running the code, work with your teammates to see if you can figure out what the code below is doing.
+Without running the code, see if you can figure out what the code below is doing.
 
 ```{r challenge Q, include=TRUE, eval=FALSE}
 batting_2014_2015 <-

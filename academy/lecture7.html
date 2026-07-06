@@ -4,9 +4,9 @@
 
 <head>
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
 
 
 
@@ -15,8 +15,8 @@
 
 <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet">
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -153,7 +153,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type = "text/css">
+<style type="text/css">
 .main-container {
   max-width: 940px;
   margin-left: auto;
@@ -312,7 +312,7 @@ $(document).ready(function () {
 
 
 
-</head>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" data-external="1"></head>
 
 <body>
 
@@ -330,7 +330,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -475,9 +475,8 @@ $(document).ready(function () {
 </div>
 
 
-<p>In <a href="lecture4.html">Lecture 4</a> and <a
-href="lecture6.html">Lecture 6</a>, we started building a model for
-predicting a baseball player’s 2015 batting average using his 2014
+<p>In <a href="lecture4.html">Lecture 4</a> and <a href="lecture6.html">Lecture 6</a>, we started building a model for
+predicting a baseball player&#x2019;s 2015 batting average using his 2014
 batting average. We found that some models, even though they fit the
 data quite well, appeared to <em>overfit</em> and may not predict future
 observations well. Overfitting happens when the model is too complex;
@@ -491,7 +490,7 @@ field goals in the NFL.</p>
 choose which model is the best?</p>
 <p>One strategy might be to see how well the models predict the data we
 used to fit them. While this seems intuitive, it is possible to
-“over-learn” the patterns in this training data. Over-learning leads
+&#x201C;over-learn&#x201D; the patterns in this training data. Over-learning leads
 models to fit only the sample on which they were built, not the overall
 population or future data instances.</p>
 <p>A common alternative is to split our original dataset into two parts:
@@ -506,40 +505,39 @@ testing set as a population.</p>
 contains a large dataset about field goals attempted in the NFL between
 2005 and 2015. First, we will train several models of field goal success
 with this data. Then, we will evaluate their predictive performance
-using the data contained in <a
-href="data/nfl_fg_test.csv">nfl_fg_test.csv</a>. Download both of these
-files and move them to your “data” folder.</p>
+using the data contained in <a href="data/nfl_fg_test.csv">nfl_fg_test.csv</a>. Download both of these
+files and move them to your &#x201C;data&#x201D; folder.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>fg_train <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/nfl_fg_train.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Rows: 9505 Columns: 8
-## ── Column specification ────────────────────────────────────────────────────────
+## &#x2500;&#x2500; Column specification &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;
 ## Delimiter: &quot;,&quot;
 ## chr (2): Team, Kicker
 ## dbl (5): Year, GameMinute, Distance, ScoreDiff, Success
 ## lgl (1): Grass
 ## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+## &#x2139; Use `spec()` to retrieve the full column specification for this data.
+## &#x2139; Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p>The simplest forecast for field goal success probability is the
 overall average success rate. This forecast does not differentiate
 between players or attempt to adjust for distance or other game
 contexts. To compute this forecast, we need to find the average of the
-data in the column “Success.” The code below adds a column to the tbl
-called “phat_all”.</p>
+data in the column &#x201C;Success.&#x201D; The code below adds a column to the tbl
+called &#x201C;phat_all&#x201D;.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>fg_train <span class="ot">&lt;-</span> </span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  fg_train <span class="sc">%&gt;%</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">phat_all =</span> <span class="fu">mean</span>(Success))</span></code></pre></div>
 <p>It turns out that kickers make just over 83% of their attempts.
-However, we know that there are some truly elite kickers (e.g. Justin
+However, we know that there are some truly elite kickers (e.g.&#xA0;Justin
 Tucker) who make well over 83% of their attempts, and other kickers
-(e.g. Billy Cundiff) who make less than 83% of their attempts. Instead
+(e.g.&#xA0;Billy Cundiff) who make less than 83% of their attempts. Instead
 of forecasting field goal success probabilities with the overall
-average, we could compute each individual kicker’s conversion rate. This
+average, we could compute each individual kicker&#x2019;s conversion rate. This
 can be done using <code>group_by()</code> and <code>mutate()</code>. In
 the code below, we add a column to <code>fg_train</code> called
-“phat_kicker”, which contains each kicker’s individual field goal
+&#x201C;phat_kicker&#x201D;, which contains each kicker&#x2019;s individual field goal
 conversion rate. Notice that because we are adding a grouping to carry
 out this computation, we need to remove the grouping using
-<code>ungroup()</code> when we’re done.</p>
+<code>ungroup()</code> when we&#x2019;re done.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fg_train <span class="ot">&lt;-</span> </span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  fg_train <span class="sc">%&gt;%</span> </span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Kicker) <span class="sc">%&gt;%</span></span>
@@ -553,9 +551,9 @@ we must have used the <code>ungroup()</code> function at the end of our
 last line of code.</p>
 <p>In our dataset, the shortest field goal attempt was 18 yards and the
 longest was 76. We will begin by binning our data into 10 yard
-increments, 10 – 20, 20 – 30, …, 70 – 80. We then save the bin label in
-a column called “Dist_10” and the predictions in a column called
-“phat_dist_10”.</p>
+increments, 10 &#x2013; 20, 20 &#x2013; 30, &#x2026;, 70 &#x2013; 80. We then save the bin label in
+a column called &#x201C;Dist_10&#x201D; and the predictions in a column called
+&#x201C;phat_dist_10&#x201D;.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>fg_train <span class="ot">&lt;-</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  fg_train <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Dist_10 =</span> <span class="fu">cut</span>(Distance, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="dv">80</span>, <span class="at">by =</span> <span class="dv">10</span>))) <span class="sc">%&gt;%</span></span>
@@ -563,8 +561,8 @@ a column called “Dist_10” and the predictions in a column called
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">phat_dist_10 =</span> <span class="fu">mean</span>(Success)) <span class="sc">%&gt;%</span></span>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div>
 <p>We can now look at a scatter plot of distance and our forecasts
-“phat_dist_10”. Since there are many attempts from certain yardages,
-we’ll use alpha-blending (see <a href="lecture2.html">Lecture 2</a> for
+&#x201C;phat_dist_10&#x201D;. Since there are many attempts from certain yardages,
+we&#x2019;ll use alpha-blending (see <a href="lecture2.html">Lecture 2</a> for
 a refresher on this!) to change change the transparency of the points
 according to their frequency. Essentially, darker dots have higher n
 values than lighter dots.</p>
@@ -574,9 +572,9 @@ distance increases.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>fg_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(fg_train) <span class="sc">+</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Distance, <span class="at">y =</span> phat_dist_10), <span class="at">alpha =</span> <span class="fl">0.2</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>fg_plot</span></code></pre></div>
-<p><img src="lecture7_files/figure-html/plot%20phat_dist_10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="lecture7_files/figure-html/plot%20phat_dist_10-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>We also could have binned field goal distance into 5- or 2-yard
-increments, saving bin labels into columns called “Dist_5” or “Dist_2”.
+increments, saving bin labels into columns called &#x201C;Dist_5&#x201D; or &#x201C;Dist_2&#x201D;.
 Similar to the 10-yard bins, we could add columns to
 <code>fg_train</code> that compute the overall conversion rate within
 each of these 5-yard or 2-yard bins.</p>
@@ -594,17 +592,16 @@ each of these 5-yard or 2-yard bins.</p>
 methods.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>fg_plot  <span class="ot">&lt;-</span> </span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(fg_train) <span class="sc">+</span> </span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Distance, <span class="at">y =</span> phat_dist_10), <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">col =</span> <span class="st">&#39;black&#39;</span>) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Distance, <span class="at">y =</span> phat_dist_5), <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">col =</span> <span class="st">&#39;lawngreen&#39;</span>) <span class="sc">+</span> </span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Distance, <span class="at">y =</span> phat_dist_2), <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">col =</span> <span class="st">&#39;white&#39;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Distance, <span class="at">y =</span> phat_dist_10), <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">col =</span> <span class="st">&apos;black&apos;</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Distance, <span class="at">y =</span> phat_dist_5), <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">col =</span> <span class="st">&apos;lawngreen&apos;</span>) <span class="sc">+</span> </span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Distance, <span class="at">y =</span> phat_dist_2), <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">col =</span> <span class="st">&apos;white&apos;</span>)</span>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>fg_plot </span></code></pre></div>
-<p><img src="lecture7_files/figure-html/plot%203%20bins-1.png" width="672" style="display: block; margin: auto;" />
+<p><img src="lecture7_files/figure-html/plot%203%20bins-1.png" width="672" style="display: block; margin: auto;">
 Now when we bin our data into 2-yard increments, we find that our
 forecasts are no longer monotonic decreasing. The probability of making
 a field goal decreases overall, but in our 2-yard bins, the probability
 increases from 44 to 46 yards and from 52 to 54 yards. Remember,
-monotonic means only decreasing or only increasing for all values. In <a
-href="lecture8.html">Lecture 8</a>, we’ll address this with a more
+monotonic means only decreasing or only increasing for all values. In <a href="lecture8.html">Lecture 8</a>, we&#x2019;ll address this with a more
 formal regression method.</p>
 </div>
 <div id="assessing-predictions" class="section level2">
@@ -614,18 +611,14 @@ phat_all, phat_kicker, phat_dist_10, phat_dist_5, and phat_dist_2.
 Recall from <a href="lecture4.html">Lecture 4</a> that to assess how
 well we are predicting a continuous outcome, we could use the RMSE. When
 predicting a binary outcome, we have a few more options. To set the
-stage, let <span class="math inline">\(y_{i}\)</span> be the outcome of
-the <span class="math inline">\(i^{\text{th}}\)</span> observation and
-let <span class="math inline">\(\hat{p}_{i}\)</span> be the forecasted
-probability that <span class="math inline">\(y_{i} = 1.\)</span>
-(i.e. of making the FG)</p>
+stage, let <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_{i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> be the outcome of the
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>i</mi><mtext>th</mtext></msup></mrow><annotation encoding="application/x-tex">i^{\text{th}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathnormal">i</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">th</span></span></span></span></span></span></span></span></span></span></span></span></span> observation and let <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>p</mi><mo>^</mo></mover><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\hat{p}_{i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> be the forecasted probability
+that <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mn>1.</mn></mrow><annotation encoding="application/x-tex">y_{i} = 1.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.</span></span></span></span> (i.e.&#xA0;of making the
+FG)</p>
 <p>The <a href="https://en.wikipedia.org/wiki/Brier_score">Brier
-Score</a> is defined as <span class="math display">\[
-BS = \frac{1}{n}\sum_{i = 1}^{n}{(y_{i} - \hat{p}_{i})^{2}}
-\]</span> Looking at the formula, we see that the Brier score is just
-the mean square error of our forecasts. Using code that is very nearly
-identical to that used to compute RMSE in <a
-href="lecture4.html">Lecture 4</a>, we can compute the Brier score of
+Score</a> is defined as <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>B</mi><mi>S</mi><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>&#x2211;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>&#x2212;</mo><msub><mover accent="true"><mi>p</mi><mo>^</mo></mover><mi>i</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">BS = \frac{1}{n}\sum_{i = 1}^{n}{(y_{i} - \hat{p}_{i})^{2}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">BS</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.9291em;vertical-align:-1.2777em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">&#x2211;</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></span></span> Looking at the formula, we see that the Brier score is just the
+mean square error of our forecasts. Using code that is very nearly
+identical to that used to compute RMSE in <a href="lecture4.html">Lecture 4</a>, we can compute the Brier score of
 each of our prediction models.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">reframe</span>(fg_train,</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>          <span class="at">phat_all =</span> <span class="fu">mean</span>( (Success <span class="sc">-</span> phat_all)<span class="sc">^</span><span class="dv">2</span>),</span>
@@ -633,15 +626,15 @@ each of our prediction models.</p>
 <span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>          <span class="at">phat_dist_10 =</span> <span class="fu">mean</span>( (Success <span class="sc">-</span> phat_dist_10)<span class="sc">^</span><span class="dv">2</span>),</span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>          <span class="at">phat_dist_5 =</span> <span class="fu">mean</span>( (Success <span class="sc">-</span> phat_dist_5)<span class="sc">^</span><span class="dv">2</span>),</span>
 <span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>          <span class="at">phat_dist_2 =</span> <span class="fu">mean</span>( (Success <span class="sc">-</span> phat_dist_2)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
-<pre><code>## # A tibble: 1 × 5
+<pre><code>## # A tibble: 1 &#xD7; 5
 ##   phat_all phat_kicker phat_dist_10 phat_dist_5 phat_dist_2
 ##      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
 ## 1   0.1403      0.1383       0.1245      0.1233      0.1231</code></pre>
 <p>Which model has the lowest Brier score? Do you think this model
 over-fits the data?</p>
 <p>Before assessing how well our models predict <em>out-of-sample</em>,
-it will be useful to create tibbles that summarize each model’s
-forecasts. For instance, when we grouped the data by kickers, we don’t
+it will be useful to create tibbles that summarize each model&#x2019;s
+forecasts. For instance, when we grouped the data by kickers, we don&#x2019;t
 need multiple rows recording the same prediction for each kicker.
 Instead, we can create a tbl called <code>phat_kicker</code> which has
 one row per kicker and two columns, one identifying kicker and one for
@@ -664,7 +657,7 @@ phat_dist_2.</p>
 <span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>  fg_train <span class="sc">%&gt;%</span></span>
 <span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>  <span class="fu">group_by</span>(Dist_2) <span class="sc">%&gt;%</span></span>
 <span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">phat_dist_2 =</span> <span class="fu">mean</span>(Success))</span></code></pre></div>
-<p>The file “nfl_fg_test.csv” contains additional data on more field
+<p>The file &#x201C;nfl_fg_test.csv&#x201D; contains additional data on more field
 goals kicked between 2005 and 2015. Since we have not used the data in
 this file to train our models, we can get a sense of the
 <em>out-of-sample</em> predictive performance of our models by looking
@@ -672,27 +665,27 @@ at how well they predict these field goals. We first load the data into
 a tbl called <code>fg_test</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>fg_test <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/nfl_fg_test.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Rows: 1682 Columns: 8
-## ── Column specification ────────────────────────────────────────────────────────
+## &#x2500;&#x2500; Column specification &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;
 ## Delimiter: &quot;,&quot;
 ## chr (2): Team, Kicker
 ## dbl (5): Year, GameMinute, Distance, ScoreDiff, Success
 ## lgl (1): Grass
 ## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+## &#x2139; Use `spec()` to retrieve the full column specification for this data.
+## &#x2139; Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p>Using <code>mutate()</code> and <code>cut()</code>, add columns
-“Dist_10”, “Dist_5”, and “Dist_2” to <code>fg_test</code> that bin the
+&#x201C;Dist_10&#x201D;, &#x201C;Dist_5&#x201D;, and &#x201C;Dist_2&#x201D; to <code>fg_test</code> that bin the
 data into 10-yard, 5-yard, and 2-yard increments.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>fg_test <span class="ot">&lt;-</span></span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  fg_test <span class="sc">%&gt;%</span></span>
 <span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Dist_10 =</span> <span class="fu">cut</span>(Distance, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="dv">80</span>, <span class="at">by =</span> <span class="dv">10</span>)),</span>
 <span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>         <span class="at">Dist_5 =</span> <span class="fu">cut</span>(Distance, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="dv">80</span>, <span class="at">by =</span> <span class="dv">5</span>)),</span>
 <span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>         <span class="at">Dist_2 =</span> <span class="fu">cut</span>(Distance, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="dv">80</span>, <span class="at">by =</span> <span class="dv">2</span>)))</span></code></pre></div>
-<p>We are now ready to apply our <code>fg_train</code> model’s forecasts
+<p>We are now ready to apply our <code>fg_train</code> model&#x2019;s forecasts
 to <code>fg_test</code>. For instance, we can add the forecast from
-“phat_all”, which is just the overall conversion rate averaged over all
+&#x201C;phat_all&#x201D;, which is just the overall conversion rate averaged over all
 kickers. Notice that instead of computing the mean of the column
-“Success” from <code>fg_test</code>, we are computing the mean from
+&#x201C;Success&#x201D; from <code>fg_test</code>, we are computing the mean from
 <code>fg_train</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>fg_test <span class="ot">&lt;-</span></span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  fg_test <span class="sc">%&gt;%</span></span>
@@ -704,10 +697,10 @@ between the tables. For instance, to add the forecasts from the tbl
 row-by-row. First, for each field goal in <code>fg_test</code>, the
 function identifies the kicker who attempted the field goal. Then it
 matches that kicker with corresponding kicker row from the tbl
-<code>phat_kicker</code>. The join function then appends that kicker’s
+<code>phat_kicker</code>. The join function then appends that kicker&#x2019;s
 forecast from <code>phat_kicker</code> to the row in
 <code>fg_test.</code> What we have just described is what is known as an
-“inner join”. In this situation, the key was the Kicker. The code to
+&#x201C;inner join&#x201D;. In this situation, the key was the Kicker. The code to
 carry out these operations is given below.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>fg_test <span class="ot">&lt;-</span></span>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  fg_test <span class="sc">%&gt;%</span></span>
@@ -715,7 +708,7 @@ carry out these operations is given below.</p>
 <p>To verify that we have successfully performed this join, we can print
 out a few rows of <code>fg_test</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">select</span>(fg_test, Kicker, Success, phat_all, phat_kicker)</span></code></pre></div>
-<pre><code>## # A tibble: 1,682 × 4
+<pre><code>## # A tibble: 1,682 &#xD7; 4
 ##    Kicker  Success phat_all phat_kicker
 ##    &lt;chr&gt;     &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;
 ##  1 Akers         1   0.8312      0.7884
@@ -728,14 +721,14 @@ out a few rows of <code>fg_test</code>:</p>
 ##  8 Brown         1   0.8312      0.8291
 ##  9 Brown         1   0.8312      0.8291
 ## 10 Brown         1   0.8312      0.8291
-## # ℹ 1,672 more rows</code></pre>
-<p>Let’s unpack the inner join code line-by-line: in the first two
+## # &#x2139; 1,672 more rows</code></pre>
+<p>Let&#x2019;s unpack the inner join code line-by-line: in the first two
 lines, we are telling R that we want to over-write <code>fg_test</code>.
 Next, we pipe <code>fg_test</code> to the function
 <code>inner_join</code>, which takes two more arguments. The first
 argument <code>phat_kicker</code> tells the function where the
 additional data corresponding to each key value is. The last argument
-<code>by = "Kicker"</code> tells the function that the key we want to
+<code>by = &quot;Kicker&quot;</code> tells the function that the key we want to
 use is the kicker.</p>
 <p>By mimicking the code above, we can add columns to
 <code>fg_test</code> for the remaining three predictive models:
@@ -748,7 +741,7 @@ use is the kicker.</p>
 <span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>  <span class="fu">inner_join</span>(phat_dist_2, <span class="at">by =</span> <span class="st">&quot;Dist_2&quot;</span>)</span></code></pre></div>
 <p>Now, we can compute the out-of-sample Brier scores for each of our
 models. Which has the best out-of-sample performance?</p>
-<pre><code>## # A tibble: 1 × 5
+<pre><code>## # A tibble: 1 &#xD7; 5
 ##   phat_all phat_kicker phat_dist_10 phat_dist_5 phat_dist_2
 ##      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
 ## 1   0.1340      0.1332       0.1198      0.1177      0.1180</code></pre>
@@ -756,8 +749,8 @@ models. Which has the best out-of-sample performance?</p>
 <div id="looking-ahead-to-tomorrow" class="section level2">
 <h2>Looking ahead to tomorrow</h2>
 <p>Tomorrow, we are going to use <em>logistic regression</em> to take
-the “binning-and-averaging” approach we used above to its logical
-extreme (i.e. what would happen if we made our bins infinitesimally
+the &#x201C;binning-and-averaging&#x201D; approach we used above to its logical
+extreme (i.e.&#xA0;what would happen if we made our bins infinitesimally
 small). In order to do that, we will want to save our tbls
 <code>fg_train</code> and <code>fg_test</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">save</span>(fg_train, fg_test, <span class="at">file =</span> <span class="st">&quot;data/nfl_fg.RData&quot;</span>)</span></code></pre></div>
@@ -798,15 +791,6 @@ $(document).ready(function () {
 <!-- code folding -->
 
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
 </body>
 </html>

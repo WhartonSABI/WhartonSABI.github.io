@@ -4,9 +4,9 @@
 
 <head>
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
 
 
 
@@ -15,8 +15,8 @@
 
 <script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet">
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -153,7 +153,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type = "text/css">
+<style type="text/css">
 .main-container {
   max-width: 940px;
   margin-left: auto;
@@ -312,7 +312,7 @@ $(document).ready(function () {
 
 
 
-</head>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" data-external="1"></head>
 
 <body>
 
@@ -330,7 +330,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -477,34 +477,30 @@ $(document).ready(function () {
 
 <div id="review-lecture-2-notes" class="section level2">
 <h2>Review Lecture 2 Notes</h2>
-<p>Please spend a few minutes reading through the notes from <a
-href="lecture2.html">Lecture 2</a>. Like in <a href="ps1.html">Problem
-Set 1</a>, you should go through each code block with someone in your
-group and see if you can both explain to each other what all of the code
-does.</p>
+<p>Please spend a few minutes reading through the notes from <a href="lecture2.html">Lecture 2</a> and make sure you understand what
+each code block does.</p>
 </div>
-<div id="payroll-and-winning-percentage-in-the-mlb"
-class="section level2">
+<div id="payroll-and-winning-percentage-in-the-mlb" class="section level2">
 <h2>Payroll and Winning Percentage in the MLB</h2>
 <p>In lecture, Professor Wyner discussed the relationship between a
-team’s payroll and its winning percentage. In particular, for each
-season, he computed the “relative payroll” of each team by taking its
+team&#x2019;s payroll and its winning percentage. In particular, for each
+season, he computed the &#x201C;relative payroll&#x201D; of each team by taking its
 payroll and dividing it by the median of payrolls of all teams in that
 season. We will replicate his analysis in the following problems using
-the dataset “mlb_relative_payrolls.csv”, which we saved to the “data”
+the dataset &#x201C;mlb_relative_payrolls.csv&#x201D;, which we saved to the &#x201C;data&#x201D;
 folder of our working directory back in <a href="lecture0">Lecture
 0</a>. You should save all of the code for this analysis in an R script
-called “ps2_mlb_payroll.R”.</p>
+called &#x201C;ps2_mlb_payroll.R&#x201D;.</p>
 <ol style="list-style-type: decimal">
-<li><p>Read the data in from “mlb_relative_payrolls.csv” and save it as
-a tbl called “relative_payroll”</p></li>
+<li><p>Read the data in from &#x201C;mlb_relative_payrolls.csv&#x201D; and save it as
+a tbl called &#x201C;relative_payroll&#x201D;</p></li>
 <li><p>Make a histogram of team winning percentages. Play around with
 different binwidths.</p></li>
 <li><p>Make a histogram of the relative payrolls.</p></li>
 <li><p>Make a scatterplot with relative payroll on the horizontal axis
 and winning percentage on the vertical axis.</p></li>
-<li><p>Without executing the code below, discuss with your group and see
-if you can figure out what it is doing.</p></li>
+<li><p>Without executing the code below, see if you can figure out what
+it is doing.</p></li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> relative_payroll) <span class="sc">+</span> </span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Team_Payroll))</span></code></pre></div>
@@ -520,20 +516,20 @@ have evolved over time? Make a similar plot that visualizes how
 verbs we learned in Lecture 2 to analyze batting statistics of MLB
 players with at least 502.2 plate appearances. We will be using the
 dataset <a href="data/hitting_qualified.csv">hitting_qualified.csv</a>
-(click on that link to download it, then move it into your “data”
+(click on that link to download it, then move it into your &#x201C;data&#x201D;
 folder). You should write save all of the code for this analyses in an R
-script called “ps2_mlb_batting.R”.</p>
+script called &#x201C;ps2_mlb_batting.R&#x201D;.</p>
 <ol style="list-style-type: decimal">
 <li><p>Load the data into a tibble called <code>hitting_qualified</code>
 using <code>read_csv()</code>.</p>
 <p>The columns of this dataset include:</p>
 <ul>
-<li><code>playerID</code>: the player’s ID code</li>
+<li><code>playerID</code>: the player&#x2019;s ID code</li>
 <li><code>yearID</code>: Year</li>
-<li><code>stint</code>: the player’s stint (order of appearances within
+<li><code>stint</code>: the player&#x2019;s stint (order of appearances within
 a season)</li>
-<li><code>teamID</code>: the player’s team</li>
-<li><code>lgID</code>: the player’s league</li>
+<li><code>teamID</code>: the player&#x2019;s team</li>
+<li><code>lgID</code>: the player&#x2019;s league</li>
 <li><code>G</code>: the number of Games the player played in that
 year</li>
 <li><code>AB</code>: number of At Bats of that player in that year</li>
@@ -566,7 +562,7 @@ for which we have data. <em>Hint: you may need to use
 <li><p>Use <code>reframe()</code> to find out the first and last season
 for which we have data. <em>Hint, you only need one line of code to do
 this</em></p></li>
-<li><p>When you print out <code>hitting_qualified</code> you’ll notice
+<li><p>When you print out <code>hitting_qualified</code> you&#x2019;ll notice
 that some columns were read in as characters and not integers or
 numerics. This can happen sometimes whenever the original csv file has
 missing values. In this case, the columns IBB, HBP, SH, SF, and GIDP
@@ -579,10 +575,10 @@ integers. We can do this using <code>mutate()</code> and the function
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                            <span class="at">HBP =</span> <span class="fu">as.integer</span>(HBP),</span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>                            <span class="co"># finish on your own</span></span></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
-<li>Let’s take a look at some of the columns we just converted:</li>
+<li>Let&#x2019;s take a look at some of the columns we just converted:</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">select</span>(hitting_qualified, playerID, yearID, AB, IBB, HBP, SH, SF, GIDP)</span></code></pre></div>
-<pre><code>## # A tibble: 12,043 × 8
+<pre><code>## # A tibble: 12,043 &#xD7; 8
 ##    playerID  yearID    AB   IBB   HBP    SH    SF  GIDP
 ##    &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
 ##  1 ansonca01   1884   475    NA    NA    NA    NA    NA
@@ -595,9 +591,9 @@ integers. We can do this using <code>mutate()</code> and the function
 ##  8 hornujo01   1884   518    NA    NA    NA    NA    NA
 ##  9 jonesch01   1884   472    NA    10    NA    NA    NA
 ## 10 nelsoca01   1884   432    NA     9    NA    NA    NA
-## # ℹ 12,033 more rows</code></pre>
+## # &#x2139; 12,033 more rows</code></pre>
 <ul>
-<li>You’ll notice that a lot of these columns contain <code>NA</code>
+<li>You&#x2019;ll notice that a lot of these columns contain <code>NA</code>
 values, which indicates that some of these values are missing. This
 makes sense, since a lot of these statistics were not recorded in the
 early years of baseball. A popular convention for dealing with these
@@ -615,8 +611,8 @@ check that the NAs were replaced with zeros.</li>
 </ul>
 <ol start="6" style="list-style-type: decimal">
 <li><p>Use <code>mutate()</code> to add a column for the number of
-singles, which can be computed as <span class="math inline">\(\text{X1B}
-= \text{H} - \text{X2B} - \text{X3B} - \text{HR}\)</span>.</p></li>
+singles, which can be computed as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>X1B</mtext><mo>=</mo><mtext>H</mtext><mo>&#x2212;</mo><mtext>X2B</mtext><mo>&#x2212;</mo><mtext>X3B</mtext><mo>&#x2212;</mo><mtext>HR</mtext></mrow><annotation encoding="application/x-tex">\text{X1B} =
+\text{H} - \text{X2B} - \text{X3B} - \text{HR}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">X1B</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">H</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">X2B</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">X3B</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">HR</span></span></span></span></span>.</p></li>
 <li><p>The variable BB includes as a subset all intentional walks (IBB).
 Use <code>mutate()</code> to add a column to
 <code>hitting_qualified</code> that counts the number of
@@ -624,38 +620,30 @@ Use <code>mutate()</code> to add a column to
 tibble as <code>hitting_qualified</code>.</p></li>
 <li><p>Use <code>mutate()</code> to add columns for the following
 offensive statistics, whose formulae are given below. We have also
-included links to pages on <a
-href="https://www.fangraphs.com">Fangraphs</a> that define and discuss
+included links to pages on <a href="https://www.fangraphs.com">Fangraphs</a> that define and discuss
 each of these statistics.</p>
 <ul>
 <li><a href="https://www.fangraphs.com/library/offense/rate-stats/">Walk
-Percentage</a> (BBP): <span class="math display">\[
-\text{BBP} = \frac{\text{BB}}{\text{PA}}
-\]</span></li>
-<li><a
-href="https://www.fangraphs.com/library/offense/rate-stats/">Strike-out
-Percentage</a> (KP): <span class="math display">\[\text{KP} =
-\frac{\text{SO}}{\text{PA}}\]</span></li>
+Percentage</a> (BBP): <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>BBP</mtext><mo>=</mo><mfrac><mtext>BB</mtext><mtext>PA</mtext></mfrac></mrow><annotation encoding="application/x-tex">\text{BBP} = \frac{\text{BB}}{\text{PA}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">BBP</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">PA</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">BB</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></li>
+<li><a href="https://www.fangraphs.com/library/offense/rate-stats/">Strike-out
+Percentage</a> (KP): <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>KP</mtext><mo>=</mo><mfrac><mtext>SO</mtext><mtext>PA</mtext></mfrac></mrow><annotation encoding="application/x-tex">\text{KP} =
+\frac{\text{SO}}{\text{PA}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">KP</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">PA</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">SO</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></li>
 <li><a href="https://www.fangraphs.com/library/offense/obp/">On-Base
-Percentage</a> (OBP): <span class="math display">\[\text{OBP} =
+Percentage</a> (OBP): <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>OBP</mtext><mo>=</mo><mfrac><mrow><mtext>H</mtext><mo>+</mo><mtext>BB</mtext><mo>+</mo><mtext>HBP</mtext></mrow><mrow><mtext>AB</mtext><mo>+</mo><mtext>BB</mtext><mo>+</mo><mtext>HBP</mtext><mo>+</mo><mtext>SF</mtext></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{OBP} =
 \frac{\text{H} + \text{BB} + \text{HBP}}{\text{AB} + \text{BB} +
-\text{HBP} + \text{SF}}\]</span></li>
-<li>Slugging (SLG): <span class="math display">\[
-\text{SLG} = \frac{\text{X1B} + 2 \times \text{X2B} + 3\times \text{X3B}
-+ 4\times \text{HR}}{\text{AB}}
-\]</span></li>
+\text{HBP} + \text{SF}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">OBP</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1297em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">AB</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">BB</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">HBP</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">SF</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">H</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">BB</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">HBP</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></li>
+<li>Slugging (SLG): <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>SLG</mtext><mo>=</mo><mfrac><mrow><mtext>X1B</mtext><mo>+</mo><mn>2</mn><mo>&#xD7;</mo><mtext>X2B</mtext><mo>+</mo><mn>3</mn><mo>&#xD7;</mo><mtext>X3B</mtext><mo>+</mo><mn>4</mn><mo>&#xD7;</mo><mtext>HR</mtext></mrow><mtext>AB</mtext></mfrac></mrow><annotation encoding="application/x-tex">\text{SLG} = \frac{\text{X1B} + 2 \times \text{X2B} + 3\times \text{X3B}
++ 4\times \text{HR}}{\text{AB}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">SLG</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">AB</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">X1B</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">X2B</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">X3B</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">HR</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></li>
 <li><a href="https://www.fangraphs.com/library/offense/ops/">On-Base
-Plus Slugging</a> (OPS): <span class="math display">\[\text{OPS} =
-\text{OBP} + \text{SLG}\]</span></li>
+Plus Slugging</a> (OPS): <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>OPS</mtext><mo>=</mo><mtext>OBP</mtext><mo>+</mo><mtext>SLG</mtext></mrow><annotation encoding="application/x-tex">\text{OPS} =
+\text{OBP} + \text{SLG}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">OPS</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">OBP</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">SLG</span></span></span></span></span></span></li>
 <li><a href="https://www.fangraphs.com/library/offense/woba/">weighted
 On-Base Average</a> (wOBA): We will use the 2013 weights which can be
 found <a href="https://www.fangraphs.com/guts.aspx?type=cn">here</a>
-<span class="math display">\[
-\text{wOBA} = \frac{0.687 \times \text{uBB} + 0.718 \times \text{HBP} +
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>wOBA</mtext><mo>=</mo><mfrac><mrow><mn>0.687</mn><mo>&#xD7;</mo><mtext>uBB</mtext><mo>+</mo><mn>0.718</mn><mo>&#xD7;</mo><mtext>HBP</mtext><mo>+</mo><mn>0.881</mn><mo>&#xD7;</mo><mtext>X1B</mtext><mo>+</mo><mn>1.256</mn><mo>&#xD7;</mo><mtext>X2B</mtext><mo>+</mo><mn>1.594</mn><mo>&#xD7;</mo><mtext>X3B</mtext><mo>+</mo><mn>2.065</mn><mo>&#xD7;</mo><mtext>HR</mtext></mrow><mrow><mtext>AB</mtext><mo>+</mo><mtext>uBB</mtext><mo>+</mo><mtext>SF</mtext><mo>+</mo><mtext>HBP</mtext></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{wOBA} = \frac{0.687 \times \text{uBB} + 0.718 \times \text{HBP} +
 0.881 \times \text{X1B} + 1.256 \times \text{X2B} + 1.594 \times
 \text{X3B} + 2.065 \times \text{HR}}{\text{AB} + \text{uBB} + \text{SF}
-+ \text{HBP}}
-\]</span></li>
++ \text{HBP}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">wOBA</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1297em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">AB</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">uBB</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">SF</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">HBP</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0.687</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">uBB</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.718</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">HBP</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.881</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">X1B</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1.256</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">X2B</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1.594</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">X3B</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">2.065</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">HR</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></li>
 </ul></li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>hitting_qualified <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hitting_qualified,</span>
@@ -665,12 +653,12 @@ found <a href="https://www.fangraphs.com/guts.aspx?type=cn">here</a>
 <ol start="9" style="list-style-type: decimal">
 <li>For most of the statistics in the previous question, Fangraphs has
 defined rating scales (to see these ratings, click on the linked page
-for each statistic in Question 6 and scroll down to the “Context”
+for each statistic in Question 6 and scroll down to the &#x201C;Context&#x201D;
 section of the page). Use <code>mutate()</code> and
 <code>case_when()</code> to add the ratings for walk percentage (BBP),
 strike-out percentage (KP), on-base percentage (OBP), on-base plus
-slugging (OPS), and wOBA. Call the columns “BBP_rating”, “KP_rating”,
-“OBP_rating”, “OPS_rating”, and “wOBA_rating.”</li>
+slugging (OPS), and wOBA. Call the columns &#x201C;BBP_rating&#x201D;, &#x201C;KP_rating&#x201D;,
+&#x201C;OBP_rating&#x201D;, &#x201C;OPS_rating&#x201D;, and &#x201C;wOBA_rating.&#x201D;</li>
 </ol>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>hitting_qualified <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hitting_qualified, </span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                            <span class="at">BBP_rating =</span> <span class="fu">case_when</span>(BBP <span class="sc">&gt;=</span> .<span class="dv">15</span> <span class="sc">~</span> <span class="st">&quot;Excellent&quot;</span>,</span>
@@ -732,15 +720,6 @@ $(document).ready(function () {
 <!-- code folding -->
 
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
 </body>
 </html>
