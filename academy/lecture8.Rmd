@@ -15,7 +15,7 @@ In [Lecture 7](lecture7.html), we predicted field goal success using a similar s
 
 ## Logistic Regression with glm()
 
-Before we get started, we will load the tidyverse and modelr packages and also load the [tbls](data/nfl_fg.RData) we saved at the end of [Lecture 7](lecture7.html).
+Before we get started, we will load the tidyverse and modelr packages and also load the [tbls](data/nfl_fg.RData) we saved at the end of [Lecture 7](lecture7.html). If you do not already have that file, download it and move it into your `data` folder first.
 
 ```{r load nfl_fg}
 library(tidyverse)

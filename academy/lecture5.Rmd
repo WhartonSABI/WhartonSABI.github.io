@@ -408,6 +408,7 @@ judge_statcast_data <- scrape_statcast_savant_batter(start_date = "2022-01-01",
                                                     batterid = 592450)
 ```
 
+If you want to reproduce the plot below without scraping the data yourself, download [judge_statcast_data_2022.RDS](data/judge_statcast_data_2022.RDS) and move it into your `data` folder.
 
 ```{r load Judge data, include = FALSE}
 #saveRDS(judge_statcast_data, file = 'data/judge_statcast_data_2022.RDS')
@@ -449,6 +450,8 @@ library(nbastatR)
 warriors_shots <- teams_shots(teams = "Golden State Warriors", 
                              seasons = c(2022))
 ```
+
+If you want to reproduce the plot below without pulling the data yourself, download [warriors_shots_2022.RDS](data/warriors_shots_2022.RDS) and move it into your `data` folder.
 
 ```{r load Warriors shots, include = FALSE}
 #saveRDS(warriors_shots, file = 'data/warriors_shots_2022.RDS')

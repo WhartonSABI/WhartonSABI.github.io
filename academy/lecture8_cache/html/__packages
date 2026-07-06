@@ -9,3 +9,7 @@ stringr
 forcats
 lubridate
 modelr
+nflfastR
+ggbeeswarm
+Lahman
+ggimage
