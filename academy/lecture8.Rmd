@@ -33,7 +33,8 @@ We can visualize this model fit by (i) creating a grid of distance values and (i
 
 ```{r add logit preds}
 distance_preds <- fg_train %>%
-  mutate(preds = predict(logit_distance, type = "response"))
+  data_grid(Distance = seq(min(Distance), max(Distance), by = 1)) %>%
+  add_predictions(model = logit_distance, var = "preds", type = "response")
 
 ggplot(data = distance_preds) + 
   geom_line(mapping = aes(x = Distance, y = preds)) + 
@@ -87,8 +88,12 @@ To visualize the predictions made by this model, we can also use `data_grid()`. 
 
 ```{r plot logit multiple}
 dist_kick_grid <- fg_train %>%
-   mutate(preds = predict(logit_dist_kicker, type = "response")) %>%
-   filter(Kicker %in% c("Bailey", "Vinatieri", "Zuerlein"))
+  filter(Kicker %in% c("Bailey", "Vinatieri", "Zuerlein")) %>%
+  data_grid(
+    Distance = seq(min(Distance), max(Distance), by = 1),
+    Kicker
+  ) %>%
+  add_predictions(model = logit_dist_kicker, var = "preds", type = "response")
  
 ggplot(data = dist_kick_grid) +
   geom_line(mapping = aes(x = Distance, y = preds, color = Kicker))

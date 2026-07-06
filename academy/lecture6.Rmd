@@ -43,7 +43,7 @@ If $r = 1$, then the points all lie on a line with positive slope. If $r = -1$, 
 
 Loosely speaking, we can think of correlation as a measure of how well a line fits our data. [Let's get some practice!](http://guessthecorrelation.com/)
 
-We can calculate the correlation between two variables in `R` using the function `cor()`. Note that `cor()` is a Base R function and does not work with the other tidyverse functions, so we cannot pipe our data into it. Instead, we need to specifically point to each variable within the dataset, using the dollar sign symbol we've seen a couple times before: `our_dataset$our_variable`. This is equivalent to the tidyverse notation for doing `our_dataset %>% select(our_variable)`.
+We can calculate the correlation between two variables in `R` using the function `cor()`. Note that `cor()` is a Base R function and does not work with the other tidyverse functions, so we cannot pipe our data into it. Instead, we need to specifically point to each variable within the dataset, using the dollar sign symbol we've seen a couple times before: `our_dataset$our_variable`. This extracts a single column as a vector. By contrast, `our_dataset %>% select(our_variable)` returns a one-column tibble, which is useful in other contexts but is not what we want here.
 
 The correlation between the 2014 and 2015 batting averages is:
 
@@ -77,14 +77,14 @@ eg
 Now let's go back to the 2014 and 2015 batting data. To visualize our correlation, we draw the *line of best fit* through our data. In this example, the line of best fit has $y$-intercept = 0.141 and slope = 0.485 (we'll talk about how we find these values later). 
 
 ```{r slope intercept, echo=FALSE}
-fit <- summary(lm(BA_2015~BA_2014, data = batting_2014_2015))
-a_best   <- fit$coefficients[1,1]
-b_best   <- fit$coefficients[2,1]
+best_fit <- lm(BA_2015 ~ BA_2014, data = batting_2014_2015)
+a_best <- best_fit$coefficients[1]
+b_best <- best_fit$coefficients[2]
 ```
 
 ```{r slope intercept plot}
-g <- g + geom_abline(intercept = 0.141, slope = 0.485, color = "red") + 
-  labs(title = "y = 0.141 + 0.485x")
+g <- g + geom_abline(intercept = a_best, slope = b_best, color = "red") + 
+  labs(title = paste0("y = ", round(a_best, 3), " + ", round(b_best, 3), "x"))
 g
 ```
 
@@ -138,17 +138,17 @@ The first argument in the `lm()` call is called a `formula`. This takes input `y
 
 The second argument in `lm()` is where we specify our data: `batting_2014_2015`. `R` then looks for the columns `BA_2014` and `BA_2015` in the given dataset to calculate the regression coefficients.
 
-Our new object, `fit`, contains a lot of information about our regression line. At the moment, we just want the coefficients. We can access the coefficients as follows:
+Our new object, `model`, contains a lot of information about our regression line. At the moment, we just want the coefficients. We can access the coefficients as follows:
 ```{r get coefficients}
 model$coefficients
 ```
 
-We can plot the data by feeding these coefficients to `geom_abline()`, however this approach only works for linear regression. A more efficient way is to use `predict()` to add predicted values from the model to our dataset, then add these points to our plot with `geom_line()`. We can do this as below:
+We can plot the data by feeding these coefficients to `geom_abline()`, however this approach only works for linear regression. A more efficient way is to use `predict()` to add predicted values from the model to our dataset, sort the data by the predictor, and then add these points to our plot with `geom_line()`. We can do this as below:
 ```{r plot predictions, warning = FALSE }
 batting_2014_2015 <- batting_2014_2015 %>%
   mutate(pred = predict(model))
 
-ggplot(data = batting_2014_2015) +
+ggplot(data = arrange(batting_2014_2015, BA_2014)) +
   geom_point(aes(x = BA_2014, y = BA_2015)) + 
   geom_line(aes(x = BA_2014, y = pred), color = "lightcoral", size = 1) +
   labs(x = "2014 Batting Average", y = "2015 Batting Average") +
@@ -167,10 +167,10 @@ ggplot(data = batting_2014_2015) +
 library(modelr)
 ```
 
-We can use the function `rsquare` to get the square of the correlation, $r^2$. The quantity $r^2$ is the *proportion of variance* explained by the linear model. The first argument of the `rsquare` function is the output `fit` from our linear model function `lm`. The second argument is our original dataset, `batting_2014_2015`:
+We can use the function `rsquare` to get the square of the correlation, $r^2$. The quantity $r^2$ is the *proportion of variance* explained by the linear model. The first argument of the `rsquare` function is the output `model` from our linear model function `lm`. The second argument is our original dataset, `batting_2014_2015`:
 
 ```{r rsquare}
-rsquare(fit, batting_2014_2015)
+rsquare(model, batting_2014_2015)
 ```
 
 
@@ -180,8 +180,8 @@ We can also use `modelr` to add predictions and residuals to our original datase
 
 ```{r add predictions residuals}
 batting_2014_2015 <- batting_2014_2015 %>% 
-  add_predictions(model = fit, type = "response", var = "pred") %>%
-  add_residuals(model = fit, var = "resid")
+  add_predictions(model = model, type = "response", var = "pred") %>%
+  add_residuals(model = model, var = "resid")
 batting_2014_2015
 ```
 
@@ -194,7 +194,7 @@ Using these new columns, we can create the original plot and add the residual le
 g <- ggplot(batting_2014_2015) +
   geom_segment(aes(x = BA_2014, xend = BA_2014, y = BA_2015, yend = pred), color = "dodgerblue") + 
   geom_point(aes(x = BA_2014, y = BA_2015)) + 
-  geom_abline(intercept = 0.1409779, slope = 0.4851417, color = "red")
+  geom_abline(intercept = a_best, slope = b_best, color = "red")
 g
 ```
 
@@ -222,7 +222,7 @@ new_data
 We add these predictions to our plot:
 
 ```{r plot new predictions}
-ggplot(batting_2014_2015) +
+ggplot(arrange(batting_2014_2015, BA_2014)) +
   geom_point(aes(x = BA_2014, y = BA_2015)) +
   geom_line(aes(x = BA_2014, y = pred), color = "lightcoral", size = 1) +
   geom_point(data = new_data, mapping = aes(x = BA_2014, y = pred), color = "dodgerblue")

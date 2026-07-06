@@ -58,10 +58,14 @@ For the purpose of this course, you should keep all of your work in one place.
 So that everyone is on the same page, go to your Desktop and create a new folder called Moneyball.
 Then, inside that folder, create a new folder named 'data' and a separate folder named 'scripts'. You can do this either from your desktop or directly in RStudio with the 'New Folder' button in the bottom-right pane.
 
+We have also created an RStudio Project file for you: [Moneyball.Rproj](Moneyball.Rproj). Download this file and save it directly inside your Moneyball folder (not inside `data` or `scripts`).
+
+Once the file is there, double-click `Moneyball.Rproj` to open the project in RStudio. From then on, RStudio will automatically treat the Moneyball folder as your working directory whenever you open this project, so you will not need to reset the working directory by hand each day.
+
 
 ## Downloading data and saving into Moneyball/data folder
 
-After you get the folders ready, download the following files, and move them into your "data" folder created above: 
+After you get the folders ready and save `Moneyball.Rproj` in the main Moneyball folder, download the following files, and move them into your "data" folder created above: 
 
 * [nba_shooting_small.csv](data/nba_shooting_small.csv)
 * [nba_shooting.csv](data/nba_shooting.csv)

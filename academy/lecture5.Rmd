@@ -141,7 +141,7 @@ bar
 
 ### Scatterplots
 
-Now let's turn back to scatterplots, which were introduced in [Lecture 2](lecture2.html). We plot judges' score versus rank of the diver. As we expect, the higher the divers' rank, the higher their score.
+Now let's turn back to scatterplots, which were introduced in [Lecture 2](lecture2.html). We plot judges' score versus rank of the diver. As we expect, divers with better (lower-numbered) ranks tend to receive higher scores.
 ```{r scatterplot}
 scatter_raw = ggplot(data = diving) +
   geom_point(aes(x = Rank, y = JScore, color = Country)) +
@@ -174,7 +174,7 @@ scatter = ggplot(data = diving_grouped) +
 
 scatter
 ```
-We can see here the much clearer trend between judge score and diver rank.
+We can see here the much clearer negative relationship between judge score and diver rank.
 
 ### Lines
 
@@ -198,9 +198,9 @@ Other `geom` for lines are:
 
 We can also specify a layer using `stat_`, which stands for statistical transformation. This is useful if we want to plot a summary statistic of our data, such as a mean or median. By using a `stat_` layer, we do not have to compute this summary statistic beforehand--`ggplot` will compute the summary statistic for us and then plot the result. 
 
-For example, suppose we want to plot the means of each judge's score and provide error bars of one standard deviation on either side of the mean. We could use `summarize` and `group_by` to find the mean and standard deviations for each judge, *or* we could just use a `stat_` layer!
+For example, suppose we want to plot the means of each judge's score and provide error bars of one standard error on either side of the mean. We could use `summarize` and `group_by` to find the mean and standard errors for each judge, *or* we could just use a `stat_` layer!
 
-The layer `stat_summary()` computes and then plots a user-specified summary statistic. We choose the option `mean_se` to calculate the means and standard deviations of the scores of each judge.
+The layer `stat_summary()` computes and then plots a user-specified summary statistic. We choose the option `mean_se` to calculate the means and standard errors of the scores of each judge.
 
 As always, we set up the plot by calling `ggplot`, specifying `data = diving` and then providing the `aes`. In this case, we want the judge on the `x`-axis and their scores on the `y`-axis. We then add our `stat_summary` layer.
 
@@ -288,6 +288,10 @@ data(package = "Lahman")
 ```
 
 There is an incredible amount of data here going up through the 2021 season (it updates following the end of each season). As an example, let's access the Teams dataset, use a `group_by` operation to calculate the number of strikeouts each year since 1871, and plot the line over time:
+
+One quick note about missing data: in R, a missing value is recorded as `NA`.
+When you see `na.rm = TRUE`, it means "ignore the missing values when carrying out this calculation."
+More generally, `is.na(x)` checks whether `x` is missing, and `!is.na(x)` keeps only the rows where `x` is not missing.
 
 ```{r Lahman strikeouts year}
 Teams %>%
