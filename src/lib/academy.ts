@@ -43,18 +43,22 @@ export const TC_PAGES: Record<string, { file: string; title: string }> = {
   ps3: { file: 'tc_ps3.html', title: 'Problem Set 3' },
 };
 
-function academyPageNumber(slug: string): number | null {
+function academyPageInfo(slug: string): { type: 'lecture' | 'ps'; number: number } | null {
   const match = slug.match(/^(lecture|ps)(\d+)$/);
   if (!match) return null;
-  return Number.parseInt(match[2], 10);
+  return {
+    type: match[1] as 'lecture' | 'ps',
+    number: Number.parseInt(match[2], 10),
+  };
 }
 
 export function isReleasedAcademySlug(slug: string): boolean {
   if (slug === 'index') return true;
-  const pageNumber = academyPageNumber(slug);
-  if (pageNumber === null) return true;
-  if (pageNumber === 0) return true;
-  return pageNumber <= academyRelease.maxLecture;
+  const pageInfo = academyPageInfo(slug);
+  if (pageInfo === null) return true;
+  if (pageInfo.number === 0) return true;
+  if (pageInfo.type === 'lecture') return pageInfo.number <= academyRelease.maxLecture;
+  return pageInfo.number <= academyRelease.maxProblemSet;
 }
 
 export function getReleasedAcademySlugs(): string[] {
@@ -67,7 +71,7 @@ export function getReleasedAcademyNav(): {
 } {
   const entries = Object.entries(ACADEMY_PAGES).filter(([slug]) => slug !== 'index' && isReleasedAcademySlug(slug));
   const sortByNumber = ([slugA]: [string, { file: string; title: string }], [slugB]: [string, { file: string; title: string }]) =>
-    (academyPageNumber(slugA) ?? -1) - (academyPageNumber(slugB) ?? -1);
+    (academyPageInfo(slugA)?.number ?? -1) - (academyPageInfo(slugB)?.number ?? -1);
 
   const lectures = entries
     .filter(([slug]) => slug.startsWith('lecture'))
