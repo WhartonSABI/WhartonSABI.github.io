@@ -13,7 +13,7 @@
 
 <title>Lecture 3: Piping &amp; Grouped Comparisons</title>
 
-<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -507,7 +507,7 @@ an input and returns a different tbl as an output. More complex data
 analysis tasks often require sequences of several operations on the
 dataset. Given what we have learned so far, it would appear that the
 analyst has two options: (1) save a temporary tbl after each function
-application and apply the next function to the temporary tbl or (2)
+application and apply the next function to the temporary tbl, or (2)
 “nest” all of the functions together. Below is an example of what these
 two strategies look like:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># An Example: Applying func_1(), func_2(), and func_3() sequentially to a tibble named dat.</span></span>
@@ -519,14 +519,14 @@ two strategies look like:</p>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co"># Strategy 2</span></span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>dat_final <span class="ot">&lt;-</span> <span class="fu">func_3</span>(<span class="fu">func_2</span>(<span class="fu">func_1</span>(dat)))</span></code></pre></div>
-<p>Both are hard to read and the first strategy is particularly prone to
-errors because you have introduced several temporary tibbles with the same
-name plus a numeric suffix. It’s very easy to make mistakes like
+<p>Both are hard to read, and the first strategy is particularly prone
+to errors because you have introduced several temporary tibbles with the
+same name plus a numeric suffix. It’s very easy to make mistakes like
 <code>dat_2 &lt;- func_2(dat)</code> or
 <code>dat_final &lt;- func_2(dat_2)</code>, especially if you are
-copying-and-pasting lines and then changing suffixes. The second
+copying and pasting lines and then changing suffixes. The second
 strategy is ugly because we’re generally not used to reading things from
-inside-out or right-to-left. It becomes especially problematic when each
+inside out or right to left. It becomes especially problematic when each
 function has many additional arguments.</p>
 <p>Luckily there’s another option – the pipe operator
 <code>%&gt;%</code>. Here is what the same example looks like using the
@@ -538,26 +538,26 @@ pipe:</p>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="fu">func_3</span>()</span></code></pre></div>
 <p>Let’s break down what’s happening on the right-hand side of the
 assignment operator. First, R “pipes” the tbl <code>dat</code> into the
-function <code>func_1()</code>. Then it pipes the result of
-evaluating <code>func_1(dat)</code> into <code>func_2()</code>, and so on. One way to understand the pipe operator is to think of
-your analysis as a “pipeline”. The sequence of analysis flows naturally
-top to bottom and puts the emphasis on the <em>actions</em> being
-carried out by the analyst (i.e. the functions) and the final output
-rather than a bunch of temporary tbls that may not be of much
-interest.</p>
-<p>There are several conventions for formatting code when using the pipe.
-See <a href="http://style.tidyverse.org/pipes.html">here</a> and <a
-href="http://r4ds.had.co.nz/pipes.html">here</a> for much more
+function <code>func_1()</code>. Then it pipes the result of evaluating
+<code>func_1(dat)</code> into <code>func_2()</code>, and so on. One way
+to understand the pipe operator is to think of your analysis as a
+“pipeline”. The sequence of analysis flows naturally top to bottom and
+puts the emphasis on the <em>actions</em> being carried out by the
+analyst (i.e. the functions) and the final output rather than a bunch of
+temporary tbls that may not be of much interest.</p>
+<p>There are several conventions for formatting code when using the
+pipe. See <a href="http://style.tidyverse.org/pipes.html">here</a> and
+<a href="http://r4ds.had.co.nz/pipes.html">here</a> for much more
 information and for some advanced “special” pipes.</p>
 </div>
 <div id="the-lahman-baseball-database" class="section level2">
 <h2>The Lahman Baseball Database</h2>
-<p>As mentioned above, we will use data from a baseball database maintained
-by <a href="http://www.seanlahman.com">Sean Lahman</a>. This database
-contains pitching, hitting, and fielding statistics from Major League
-Baseball from 1871 to 2016. The data is available as an R package, which
-we will need to install and load. To install the package, we need to run
-the following in our console.</p>
+<p>As mentioned above, we will use data from a baseball database
+maintained by <a href="http://www.seanlahman.com">Sean Lahman</a>. This
+database contains pitching, hitting, and fielding statistics from Major
+League Baseball from 1871 to 2016. The data is available as an R
+package, which we will need to install and load. To install the package,
+we need to run the following in our console.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;Lahman&quot;</span>)</span></code></pre></div>
 <p>Once the package is installed, we can load it into R along with the
 tidyverse packages:</p>
@@ -603,12 +603,12 @@ pitched and whose formula is <span class="math inline">\(\text{IPOuts} =
 3 \times \text{IP}.\)</span></p>
 <p>Using the pipe and the dplyr verbs we learned in <a
 href="lecture2.html">Lecture 2</a>, we will create a new dataset called
-<code>pitching</code> (we make it all lowercase to differentiate from
+<code>pitching</code> (we make it all lowercase to differentiate it from
 the original Lahman <code>Pitching</code> dataset), then add the “IP”
-column, filter the data to include only players who pitched at least
-150 innings and played in either the AL or the NL, and select only the
-columns corresponding to the player, year, team, league, innings
-pitched, and ERA.</p>
+column, filter the data to include only players who pitched at least 150
+innings and were in either the AL or the NL, and select only the columns
+corresponding to the player, year, team, league, innings pitched, and
+ERA.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>pitching <span class="ot">&lt;-</span> pitching <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IP =</span> IPouts<span class="sc">/</span><span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">filter</span>(lgID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;AL&#39;</span>, <span class="st">&#39;NL&#39;</span>) <span class="sc">&amp;</span> IP <span class="sc">&gt;=</span> <span class="dv">150</span>) <span class="sc">%&gt;%</span></span>
@@ -724,11 +724,10 @@ that tells us the grouping variable. Now when we pass this tibble on to
 subsequent calculations, these calculations will be done on each group.
 Recall from earlier that the code
 <code>pitching %&gt;% reframe(mean = mean(ERA))</code> returned a single
-row containing the average ERA over all players and years. If we now
-run the same code again, we actually get a tibble with one row per year
-that lists the mean and standard deviation of ERA <em>within each
-year</em>. We will save this tibble as
-<code>pitching_summary</code>:</p>
+row containing the average ERA over all players and years. If we now run
+the same code again, we actually get a tibble with one row per year that
+lists the mean and standard deviation of ERA <em>within each year</em>.
+We will save this tibble as <code>pitching_summary</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>pitching_summary <span class="ot">&lt;-</span> </span>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  pitching <span class="sc">%&gt;%</span> </span>
 <span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">mean =</span> <span class="fu">mean</span>(ERA), <span class="at">sd =</span> <span class="fu">sd</span>(ERA))</span></code></pre></div>

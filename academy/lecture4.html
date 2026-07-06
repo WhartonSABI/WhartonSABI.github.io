@@ -13,7 +13,7 @@
 
 <title>Lecture 4: Tidy Data &amp; Regression Introduction</title>
 
-<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -553,15 +553,16 @@ We’ll continue to see examples of how to “tidy” up our data as we go
 through the lectures and problem sets.</p>
 <p>It can also be helpful to work with the original, “long” format of
 the data when making visualizations. We can easily revert back to this
-form with pivot longer, which will take the compact version and unpack
-it back into one row per year. <code>cols</code> represents the column
-titles that are instead being converted into a new column - in this case
-<code>BA_2014</code> and <code>BA_2015</code>. The <code>names_to</code>
-argument indicates the name of the new column that will contain these
-values, and the <code>values_to</code> argument indicates the name of
-the new column that will contain the values themselves. We can then
-mutate to remove the <code>BA_</code> prefix and then see that our table
-looks like our original data.</p>
+form with <code>pivot_longer()</code>, which will take the compact
+version and unpack it back into one row per year. <code>cols</code>
+represents the column titles that are being converted into a new column,
+in this case <code>BA_2014</code> and <code>BA_2015</code>. The
+<code>names_to</code> argument indicates the name of the new column that
+will contain these values, and the <code>values_to</code> argument
+indicates the name of the new column that will contain the values
+themselves. We can then <code>mutate()</code> to remove the
+<code>BA_</code> prefix and see that our table looks like our original
+data.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>batting_2014_2015_long <span class="ot">&lt;-</span> batting_2014_2015 <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;BA_&quot;</span>),</span>
@@ -584,13 +585,13 @@ looks like our original data.</p>
 plot with <code>geom_col</code> which shows the batting averages of each
 player in 2014 and 2015.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>batting_2014_2015_slice <span class="ot">&lt;-</span> batting_2014_2015_long <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span><span class="dv">20</span>) <span class="co"># take the first 20 players alphabetically </span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">20</span>) <span class="co"># take the first 20 players alphabetically </span></span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="fu">ggplot</span>(batting_2014_2015_slice, <span class="fu">aes</span>(<span class="at">x =</span> playerID, <span class="at">y =</span> BA, <span class="at">fill =</span> yearID)) <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div>
-<p><img src="lecture4_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" />
+<p><img src="lecture4_files/figure-html/unnamed-chunk-1-1.png" alt="" width="672" style="display: block; margin: auto;" />
 These visualizations can be helpful to compare player statistics. We can
 now move back to using our cleaned, tidy data for predictions.</p>
 </div>
@@ -704,10 +705,12 @@ proceeding, we should talk a bit about the syntax used in
 discretize. The next argument, <code>breaks =</code>, is a vector that
 tells R where the endpoints of these intervals are. These are often
 called “cut points.” In this particular case, we wanted to divide the
-players into those with below-average batting averages in 2014 and above-average batting averages in 2014. The first element of the cut point
-vector, 0.15, is much less than the smallest BA_2014 value, whereas the
-second element, 0.272, is the overall mean of the BA_2014 values. The
-last element, 0.40, is much greater than the largest BA_2014 value.</p>
+players into those with below-average batting averages in 2014 and
+above-average batting averages in 2014. The first element of the cut
+point vector, 0.15, is much less than the smallest BA_2014 value,
+whereas the second element, 0.272, is the overall mean of the BA_2014
+values. The last element, 0.40, is much greater than the largest BA_2014
+value.</p>
 <p>Now that we have two different ways of predicting 2015 batting
 averages, let us see how they compare, visually.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">ggplot</span>(batting_2014_2015) <span class="sc">+</span></span>
@@ -822,21 +825,21 @@ and the predicted values.</p>
 ##   rmse_0 rmse_1 rmse_2 rmse_3 rmse_4
 ##    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 0.0257 0.0244 0.0226 0.0185 0.0113</code></pre>
-<p>We see that the the orange predictions have the lowest RMSE, followed
-by the purple, blue, green, and red predictions. This tells us that the
+<p>We see that the orange predictions have the lowest RMSE, followed by
+the pink, green, blue, and red predictions. This tells us that the
 predictions formed by binning into smaller intervals fit the data better
 than the predictions formed by binning into larger intervals, confirming
 what we could see visually.</p>
 <p>Now, what if we continued this process and formed bins that are
 infinitesimally small? Should we expect our predictions to be even
-better? But think about the potential issues of doing so: most of
-the bins (an infinite number of them, in fact) would contain no data
-points. How could we remedy this issue? Perhaps we could impose a
-constraint that our predictions must lie along a straight line, thus
-allowing the bins with data to help make predictions for the bins
-without data. You’ll have some time to think about this concept, and
-then in <a href="lecture6.html">Lecture 6</a> we will introduce linear
-regression, which addresses this exact issue.</p>
+better? But think about the potential issues of doing so: most of the
+bins (an infinite number of them, in fact) would contain no data points.
+How could we remedy this issue? Perhaps we could impose a constraint
+that our predictions must lie along a straight line, thus allowing the
+bins with data to help make predictions for the bins without data.
+You’ll have some time to think about this concept, and then in <a
+href="lecture6.html">Lecture 6</a> we will introduce linear regression,
+which addresses this exact issue.</p>
 </div>
 
 

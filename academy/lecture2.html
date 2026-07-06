@@ -13,7 +13,7 @@
 
 <title>Lecture 2: Visualization and More Data Wrangling</title>
 
-<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -480,8 +480,8 @@ Wrangling</h1>
 href="ps1.html">Problem Set 1</a>, where you wrote a script to create a
 tbl containing several shooting statistics for NBA players between the
 1996-97 season and the 2015-16 season. Your script should look something
-like the code block below. For reasons that will become clear
-shortly, we are going to call our tbl <code>raw_shooting</code>.</p>
+like the code block below. For reasons that will become clear shortly,
+we are going to call our tbl <code>raw_shooting</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># Read in data</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>raw_shooting <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;data/nba_shooting.csv&quot;</span>)</span></code></pre></div>
@@ -523,11 +523,11 @@ to describe a single dataset.</p>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FGP), <span class="at">bins =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p><img src="lecture2_files/figure-html/hist%20basic-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The first bit of the code above,
-<code>ggplot(data = raw_shooting)</code> tells R to create a coordinate
+<code>ggplot(data = raw_shooting)</code>, tells R to create a coordinate
 system to which we can add additional layers. It also tells R that the
-data to be plotted is coming from the tibble <code>raw_shooting</code>. The
-next part of the code,
-<code>+ geom_histogram(mapping = aes(FGP), bins = 5)</code> tells R to
+data to be plotted is coming from the tibble <code>raw_shooting</code>.
+The next part of the code,
+<code>+ geom_histogram(mapping = aes(FGP), bins = 5)</code>, tells R to
 <em>add</em> a layer to the blank plot, in this case a histogram of
 field goal percentage that uses 5 bins. The first argument is the
 mapping, which defines how each variable in our dataset is mapped to
@@ -563,8 +563,8 @@ boxes always sum to 1, no matter how much data you have.</p>
 <p>Visually, the histograms look identical but now the vertical (y) axis
 has a different scale.</p>
 <p><strong>Now you should spend time making histograms of FTP and TPP,
-and of other variables created in the code above. Discuss the differences with
-others.</strong></p>
+and of other variables created in the code above. Discuss the
+differences with others.</strong></p>
 </div>
 <div id="visualizing-bivariate-data" class="section level3">
 <h3>Visualizing bivariate data</h3>
@@ -585,9 +585,9 @@ of calling <code>geom_histogram()</code>, we are calling
 <code>geom_point()</code>. This tells R that instead of a histogram, we
 want to plot the data using points. We will learn much more about the
 different “geom” objects available in ggplot2 in <a
-href="lecture5.html">Lecture 5</a>. Since we are
-plotting multiple variables, we need to tell R to which axis each
-variable is mapped. This is exactly what <code>mapping = aes(x = FGP, y = FTP)</code> does.</p>
+href="lecture5.html">Lecture 5</a>. Since we are plotting multiple
+variables, we need to tell R to which axis each variable is mapped. This
+is exactly what <code>mapping = aes(x = FGP, y = FTP)</code> does.</p>
 <p>Immediately, we notice a few things about the figure. First, we see
 what appears to be a big black cloud of points in the middle of the
 plotting region. This is a result of R trying to plot lots and lots of
@@ -613,8 +613,8 @@ throws than players who missed every field goal but made every free
 throw.</p>
 <p>To get an even better idea, we can make a <em>heatmap</em>, which you
 can think of as a two-dimensional analog of a histogram. To form a
-heatmap, you start by dividing the plane into lots of evenly sized
-two-dimensional bins and counting the number of data points within each
+heatmap, you start by dividing the plane into lots of evenly-sized
+two-dimensional bins and counting the number of datapoints within each
 bin. You then color the bin according to the count. While you can
 conceptually make the bins any shape you want, there are two popular
 conventions: rectangular binning and hexagonal binning. For the purposes
@@ -671,7 +671,7 @@ than or equal to”</li>
 “OR” and “NOT”</li>
 </ul>
 <p>The code below filters out all of the players with at least 100 field
-goals in a single season.</p>
+goal attempts in a single season.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">filter</span>(raw_shooting, FGA <span class="sc">&gt;</span> <span class="dv">100</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 6,295 × 14
 ##    PLAYER     SEASON   FGM   FGA   TPM   TPA   FTM   FTA   FGP   TPP   FTP  eFGP

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Lecture 5a: Using AI as a programming assistant</title>
+
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><img id="logo" style="width: 200px;" src="figures/WMA_logo.png" /></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-sign-in"></span>
+     
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture0.html">Lecture 0</a>
+    </li>
+    <li>
+      <a href="ps0.html">Problem Set 0</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-institution"></span>
+     
+    Academy
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="lecture5.html">Lecture 5</a>
+    </li>
+    <li>
+      <a href="lecture6.html">Lecture 6</a>
+    </li>
+    <li>
+      <a href="lecture7.html">Lecture 7</a>
+    </li>
+    <li>
+      <a href="lecture8.html">Lecture 8</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="ps3.html">Problem Set 3</a>
+    </li>
+    <li>
+      <a href="ps4.html">Problem Set 4</a>
+    </li>
+    <li>
+      <a href="ps5.html">Problem Set 5</a>
+    </li>
+    <li>
+      <a href="ps6.html">Problem Set 6</a>
+    </li>
+    <li>
+      <a href="ps7.html">Problem Set 7</a>
+    </li>
+    <li>
+      <a href="ps8.html">Problem Set 8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-dribbble"></span>
+     
+    Training Camp
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="tc_lecture1.html">Lecture 1</a>
+    </li>
+    <li>
+      <a href="tc_lecture2.html">Lecture 2</a>
+    </li>
+    <li>
+      <a href="tc_lecture3.html">Lecture 3</a>
+    </li>
+    <li>
+      <a href="tc_lecture4.html">Lecture 4</a>
+    </li>
+    <li>
+      <a href="tc_lecture5.html">Lecture 5</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_ps1.html">Problem Set 1</a>
+    </li>
+    <li>
+      <a href="tc_ps2.html">Problem Set 2</a>
+    </li>
+    <li>
+      <a href="tc_ps3.html">Problem Set 3</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="tc_lecture_data_sources.html">Data Sources Lecture</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lecture 5a: Using AI as a programming
+assistant</h1>
+
+</div>
+
+
+<p>So far you’ve learned how to use R to manipulate and visualize data.
+Understanding the fundamentals of programming (and R specifically) is
+important for any data scientist - it is a core skill for planning and
+troubleshooting complex data analyses. However, as you probably know,
+recent years have seen the rise of powerful machine learning (ML) or
+artificial intelligence (AI) systems that can be used to automate many
+language-based tasks. In particular, they are exceptional at writing
+code. This is partly because code is by design highly structured and
+consistent, which makes it predictable, and also because there are lots
+of examples of good code on the internet that the AI can learn from. In
+this lecture, we’ll explore how you can use AI to help you write code -
+what it’s good at, what it’s not so good at, and best practices for
+getting the most out of it.</p>
+<div id="basic-concepts-for-large-language-models"
+class="section level2">
+<h2>Basic concepts for large language models</h2>
+<p>Large language models (ChatGPT, Claude, Bard, etc.), or LLM’s, are
+what the name suggests: big neural networks that have been trained on a
+lot of text data.</p>
+<p>The most important thing to know about these models is that they are
+trained for <strong>next-word prediction</strong>. This means that they
+are designed to predict the next word in a sentence given the words that
+have come before it. They learn this, fundamentally, by “reading” a
+bunch of text (from the internet) and identifying patterns in the way
+that words are used together. So, remember, these models are basically
+adding the next word (or “token”) that creates a sentence most like
+those it has seen on the internet.</p>
+<p>There’s a lot to talk about here, but the important takeaways
+are:</p>
+<ol style="list-style-type: decimal">
+<li>The prompt, or context, you give the model is very important. It’s
+what the model uses for pattern matching to predict the next word. The
+more specific and detailed your prompt, the better the model will be at
+predicting the next word.</li>
+<li>The model is only as good as the data it was trained on. If the
+model has seen a lot of examples of <code>X</code>, it will be good at
+predicting the next word in <code>X</code>. If it hasn’t, it won’t be as
+good.</li>
+</ol>
+<div class="float">
+<img src="figures/lecture_5a_fig1.png"
+alt="Language models rely heavily on context" />
+<div class="figcaption">Language models rely heavily on context</div>
+</div>
+</div>
+<div id="using-ai-to-write-code" class="section level2">
+<h2>Using AI to write code</h2>
+<p>We’ll next use AI to help us reproduce some of the code we’ve written
+in previous lectures or problem sets more efficiently. We hope that
+you’ll take away a few things from this exercise:</p>
+<ul>
+<li>AI is awesome at remembering / reproducing patterns, so it’s great
+for writing code that follows a template (like many <code>dplyr</code>
+and <code>ggplot2</code> functions operations)</li>
+<li>AI will make mistakes if you don’t give it enough context or
+instructions. It’s not magic, it’s just a big pattern-matching
+machine.</li>
+</ul>
+<div id="example-1-data-wrangling" class="section level3">
+<h3>Example 1: Data wrangling</h3>
+<p>Every data analysis project starts with data wrangling, which means
+that there are lots of repetitive tasks using operations like
+<code>filter</code>, <code>mutate</code>, <code>group_by</code>, and
+<code>summarize</code>.</p>
+<p>Check out this chat with a cutting edge model from OpenAI, ChatGPT
+4o: <a
+href="https://chatgpt.com/share/5a71afd7-7f98-4d2d-9697-d01c5675c7ac">Click
+here</a></p>
+<p>For the later examples with plotting I’ll reproduce the exchange in
+this notebook, but for data wrangling that would be more clutter than
+necessary. Please check out the chat in a browser and then come back
+here.</p>
+<p>There are a few things to note about this example:</p>
+<ul>
+<li><p>ChatGPT doesn’t actually know anything about your data unless you
+give it information explicitly. There’s more than one way to do this -
+in the example above we uploaded a text file to the chat, which became
+part of the model’s context. You could also paste in a description of
+your data, or a few rows of it, or a detailed description of the task
+you’re trying to accomplish.</p></li>
+<li><p>Compare the wOBA calculation in the chat with the one we did in
+the previous lectures / problem sets. ChatGPT initially rounded the wOBA
+coefficients to two decimal places, which is less precise than our
+calculation. When we asked it to be more precise, it just made up some
+numbers. This would lead to incorrect answers if we didn’t catch
+it!</p></li>
+<li><p>When an analysis is complex, it’s important to be specific and
+sometimes to break it down into smaller steps. These language model’s
+are capable of a lot, but ultimately they’re not “reasoning” about how
+best to solve a problem - they’re just trying to predict the next word
+in a sentence. So, while AI is super powerful and can accelerate your
+work, it requires a lot of hand-holding to get the best results. Most
+importantly, it is <strong>NOT</strong> a substitute for understanding
+the underlying concepts and motivation of the code you’re
+writing.</p></li>
+</ul>
+<p>Before moving on, let’s confirm the code we got works (after
+adjusting the file path) by running it in R):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Define the path to the CSV file</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">&quot;data/hitting_qualified.csv&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co"># Read the CSV file into a dataframe</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(file_path)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co"># Compute singles (X1B) and wOBA with precise coefficients</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">X1B =</span> H <span class="sc">-</span> X2B <span class="sc">-</span> X3B <span class="sc">-</span> HR) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">wOBA =</span> (<span class="fl">0.690</span> <span class="sc">*</span> BB <span class="sc">+</span> <span class="fl">0.722</span> <span class="sc">*</span> HBP <span class="sc">+</span> <span class="fl">0.888</span> <span class="sc">*</span> X1B <span class="sc">+</span> <span class="fl">1.271</span> <span class="sc">*</span> X2B <span class="sc">+</span> <span class="fl">1.616</span> <span class="sc">*</span> X3B <span class="sc">+</span> <span class="fl">2.101</span> <span class="sc">*</span> HR) <span class="sc">/</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>                 (AB <span class="sc">+</span> BB <span class="sc">-</span> IBB <span class="sc">+</span> SF <span class="sc">+</span> HBP))</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co"># Calculate the average wOBA for each year</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>yearly_avg_wOBA <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>  <span class="fu">group_by</span>(yearID) <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">average_wOBA =</span> <span class="fu">mean</span>(wOBA, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co"># Join the average wOBA for each year back to the original data</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>  <span class="fu">left_join</span>(yearly_avg_wOBA, <span class="at">by =</span> <span class="st">&quot;yearID&quot;</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="co"># Determine which players have an above-average wOBA for their specific year</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">above_average_wOBA =</span> <span class="fu">ifelse</span>(wOBA <span class="sc">&gt;</span> average_wOBA, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co"># Compute the proportion of players on each team with an above-average wOBA for their specific year</span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>proportion_above_average_wOBA <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a>  <span class="fu">group_by</span>(teamID, yearID) <span class="sc">%&gt;%</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">proportion =</span> <span class="fu">mean</span>(above_average_wOBA, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="co"># Display the result</span></span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a>proportion_above_average_wOBA</span></code></pre></div>
+<pre><code>## # A tibble: 2,599 × 3
+##    teamID yearID proportion
+##    &lt;chr&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+##  1 A        1997      0.5  
+##  2 A        1998      0.6  
+##  3 A        1999      0.25 
+##  4 A        2000      0.571
+##  5 A        2001      0.143
+##  6 A        2002      0.429
+##  7 A        2003      0.4  
+##  8 A        2004      0.333
+##  9 ARI      1998      0    
+## 10 ARI      1999      0.8  
+## # ℹ 2,589 more rows</code></pre>
+</div>
+<div id="example-2-data-visualization" class="section level3">
+<h3>Example 2: Data visualization</h3>
+<p>Perhaps even more formulaic than data wrangling, data visualization
+with <code>ggplot2</code> is also a great task for AI. This might
+actually be the best use case for AI in data science programming - there
+are so many ways to customize a plot that it’s difficult to remember the
+syntax for all of the varied options. It’s also easy for us to describe
+what we want in natural language, which AI is good at understanding.</p>
+<p>Let’s use <code>mlb_payrolls.csv</code> and see if we can get ChatGPT
+to help us do something cool: <a
+href="https://chatgpt.com/share/4c273eb6-9c7d-4b9a-bb96-2fbecba8e6c3">Click
+here</a></p>
+<p>Attempt 1: “I’d like to visualize team payroll over the years. give
+me R code to do this, using tidyverse whenever possible”</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># Load the dataset</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>mlb_payrolls <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/mlb_payrolls.csv&quot;</span>, <span class="at">encoding =</span> <span class="st">&quot;latin1&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># Create the line plot</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mlb_payrolls, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Team_Payroll, <span class="at">color =</span> Team)) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Team Payroll Over the Years&quot;</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Year&quot;</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Team Payroll&quot;</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Team&quot;</span>) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<p><img src="lecture5a_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" />
+Ok, so the model did what we asked by it’s not very pretty. I can’t tell
+the teams apart and they’re highly overlapping.</p>
+<p>Attempt 2: “this is hard to read”</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co"># Load the dataset</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>mlb_payrolls <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/mlb_payrolls.csv&quot;</span>, <span class="at">encoding =</span> <span class="st">&quot;latin1&quot;</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co"># Filter for a few selected teams (e.g., top 5 teams based on average payroll)</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>selected_teams <span class="ot">&lt;-</span> mlb_payrolls <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="fu">group_by</span>(Team) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">Average_Payroll =</span> <span class="fu">mean</span>(Team_Payroll, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">5</span>, Average_Payroll) <span class="sc">%&gt;%</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>  <span class="fu">pull</span>(Team)</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> mlb_payrolls <span class="sc">%&gt;%</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>  <span class="fu">filter</span>(Team <span class="sc">%in%</span> selected_teams)</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co"># Create the line plot</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> filtered_data, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Team_Payroll, <span class="at">color =</span> Team)) <span class="sc">+</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Team Payroll Over the Years&quot;</span>,</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Year&quot;</span>,</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Team Payroll&quot;</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Team&quot;</span>) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>,</span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co"># Convert the plot to an interactive plotly plot</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="fu">ggplotly</span>(p)</span></code></pre></div>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-8aceb8a17b5f3b903277" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-8aceb8a17b5f3b903277">{"x":{"data":[{"x":[1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015],"y":[59497000,71725000,77940333,109558908,108366060,99946500,125208542,121311945,120099824,143026214,133390035,122696000,162747333,161407476,173186617,150655500,162817411,214789749],"text":["Year: 1998<br />Team_Payroll:  59497000<br />Team: Boston Red Sox","Year: 1999<br />Team_Payroll:  71725000<br />Team: Boston Red Sox","Year: 2000<br />Team_Payroll:  77940333<br />Team: Boston Red Sox","Year: 2001<br />Team_Payroll: 109558908<br />Team: Boston Red Sox","Year: 2002<br />Team_Payroll: 108366060<br />Team: Boston Red Sox","Year: 2003<br />Team_Payroll:  99946500<br />Team: Boston Red Sox","Year: 2004<br />Team_Payroll: 125208542<br />Team: Boston Red Sox","Year: 2005<br />Team_Payroll: 121311945<br />Team: Boston Red Sox","Year: 2006<br />Team_Payroll: 120099824<br />Team: Boston Red Sox","Year: 2007<br />Team_Payroll: 143026214<br />Team: Boston Red Sox","Year: 2008<br />Team_Payroll: 133390035<br />Team: Boston Red Sox","Year: 2009<br />Team_Payroll: 122696000<br />Team: Boston Red Sox","Year: 2010<br />Team_Payroll: 162747333<br />Team: Boston Red Sox","Year: 2011<br />Team_Payroll: 161407476<br />Team: Boston Red Sox","Year: 2012<br />Team_Payroll: 173186617<br />Team: Boston Red Sox","Year: 2013<br />Team_Payroll: 150655500<br />Team: Boston Red Sox","Year: 2014<br />Team_Payroll: 162817411<br />Team: Boston Red Sox","Year: 2015<br />Team_Payroll: 214789749<br />Team: Boston Red Sox"],"type":"scatter","mode":"lines","line":{"width":3.7795275590551185,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","name":"Boston Red Sox","legendgroup":"Boston Red Sox","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015],"y":[62806667,71115786,88124286,108980952,94850952,105872620,89694342,81029500,98447187,108454524,118588536,100458101,94945517,103788990,95143575,216597577,235295219,301735080],"text":["Year: 1998<br />Team_Payroll:  62806667<br />Team: LA Dodgers","Year: 1999<br />Team_Payroll:  71115786<br />Team: LA Dodgers","Year: 2000<br />Team_Payroll:  88124286<br />Team: LA Dodgers","Year: 2001<br />Team_Payroll: 108980952<br />Team: LA Dodgers","Year: 2002<br />Team_Payroll:  94850952<br />Team: LA Dodgers","Year: 2003<br />Team_Payroll: 105872620<br />Team: LA Dodgers","Year: 2004<br />Team_Payroll:  89694342<br />Team: LA Dodgers","Year: 2005<br />Team_Payroll:  81029500<br />Team: LA Dodgers","Year: 2006<br />Team_Payroll:  98447187<br />Team: LA Dodgers","Year: 2007<br />Team_Payroll: 108454524<br />Team: LA Dodgers","Year: 2008<br />Team_Payroll: 118588536<br />Team: LA Dodgers","Year: 2009<br />Team_Payroll: 100458101<br />Team: LA Dodgers","Year: 2010<br />Team_Payroll:  94945517<br />Team: LA Dodgers","Year: 2011<br />Team_Payroll: 103788990<br />Team: LA Dodgers","Year: 2012<br />Team_Payroll:  95143575<br />Team: LA Dodgers","Year: 2013<br />Team_Payroll: 216597577<br />Team: LA Dodgers","Year: 2014<br />Team_Payroll: 235295219<br />Team: LA Dodgers","Year: 2015<br />Team_Payroll: 301735080<br />Team: LA Dodgers"],"type":"scatter","mode":"lines","line":{"width":3.7795275590551185,"color":"rgba(163,165,0,1)","dash":"solid"},"hoveron":"points","name":"LA Dodgers","legendgroup":"LA Dodgers","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015],"y":[58660665,71506427,79509776,93174428,94633593,117176429,100629303,104770139,101084963,115231663,137793376,135773988,132701445,120147310,93353983,73396649,89051758,115641550],"text":["Year: 1998<br />Team_Payroll:  58660665<br />Team: NY Mets","Year: 1999<br />Team_Payroll:  71506427<br />Team: NY Mets","Year: 2000<br />Team_Payroll:  79509776<br />Team: NY Mets","Year: 2001<br />Team_Payroll:  93174428<br />Team: NY Mets","Year: 2002<br />Team_Payroll:  94633593<br />Team: NY Mets","Year: 2003<br />Team_Payroll: 117176429<br />Team: NY Mets","Year: 2004<br />Team_Payroll: 100629303<br />Team: NY Mets","Year: 2005<br />Team_Payroll: 104770139<br />Team: NY Mets","Year: 2006<br />Team_Payroll: 101084963<br />Team: NY Mets","Year: 2007<br />Team_Payroll: 115231663<br />Team: NY Mets","Year: 2008<br />Team_Payroll: 137793376<br />Team: NY Mets","Year: 2009<br />Team_Payroll: 135773988<br />Team: NY Mets","Year: 2010<br />Team_Payroll: 132701445<br />Team: NY Mets","Year: 2011<br />Team_Payroll: 120147310<br />Team: NY Mets","Year: 2012<br />Team_Payroll:  93353983<br />Team: NY Mets","Year: 2013<br />Team_Payroll:  73396649<br />Team: NY Mets","Year: 2014<br />Team_Payroll:  89051758<br />Team: NY Mets","Year: 2015<br />Team_Payroll: 115641550<br />Team: NY Mets"],"type":"scatter","mode":"lines","line":{"width":3.7795275590551185,"color":"rgba(0,191,125,1)","dash":"solid"},"hoveron":"points","name":"NY Mets","legendgroup":"NY Mets","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015],"y":[65663698,88180712,92538260,109791893,125928583,152749814,182835513,205938439,194663079,189639045,209081577,201449289,206333389,201689030,197962289,228835490,203812506,221256867],"text":["Year: 1998<br />Team_Payroll:  65663698<br />Team: NY Yankees","Year: 1999<br />Team_Payroll:  88180712<br />Team: NY Yankees","Year: 2000<br />Team_Payroll:  92538260<br />Team: NY Yankees","Year: 2001<br />Team_Payroll: 109791893<br />Team: NY Yankees","Year: 2002<br />Team_Payroll: 125928583<br />Team: NY Yankees","Year: 2003<br />Team_Payroll: 152749814<br />Team: NY Yankees","Year: 2004<br />Team_Payroll: 182835513<br />Team: NY Yankees","Year: 2005<br />Team_Payroll: 205938439<br />Team: NY Yankees","Year: 2006<br />Team_Payroll: 194663079<br />Team: NY Yankees","Year: 2007<br />Team_Payroll: 189639045<br />Team: NY Yankees","Year: 2008<br />Team_Payroll: 209081577<br />Team: NY Yankees","Year: 2009<br />Team_Payroll: 201449289<br />Team: NY Yankees","Year: 2010<br />Team_Payroll: 206333389<br />Team: NY Yankees","Year: 2011<br />Team_Payroll: 201689030<br />Team: NY Yankees","Year: 2012<br />Team_Payroll: 197962289<br />Team: NY Yankees","Year: 2013<br />Team_Payroll: 228835490<br />Team: NY Yankees","Year: 2014<br />Team_Payroll: 203812506<br />Team: NY Yankees","Year: 2015<br />Team_Payroll: 221256867<br />Team: NY Yankees"],"type":"scatter","mode":"lines","line":{"width":3.7795275590551185,"color":"rgba(0,176,246,1)","dash":"solid"},"hoveron":"points","name":"NY Yankees","legendgroup":"NY Yankees","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015],"y":[28622500,30568167,47308000,41664167,57955000,70780000,93219167,95337908,88273333,89428213,98269880,113004048,141927381,172976381,174538938,165385714,180052723,141722639],"text":["Year: 1998<br />Team_Payroll:  28622500<br />Team: Philadelphia Phillies","Year: 1999<br />Team_Payroll:  30568167<br />Team: Philadelphia Phillies","Year: 2000<br />Team_Payroll:  47308000<br />Team: Philadelphia Phillies","Year: 2001<br />Team_Payroll:  41664167<br />Team: Philadelphia Phillies","Year: 2002<br />Team_Payroll:  57955000<br />Team: Philadelphia Phillies","Year: 2003<br />Team_Payroll:  70780000<br />Team: Philadelphia Phillies","Year: 2004<br />Team_Payroll:  93219167<br />Team: Philadelphia Phillies","Year: 2005<br />Team_Payroll:  95337908<br />Team: Philadelphia Phillies","Year: 2006<br />Team_Payroll:  88273333<br />Team: Philadelphia Phillies","Year: 2007<br />Team_Payroll:  89428213<br />Team: Philadelphia Phillies","Year: 2008<br />Team_Payroll:  98269880<br />Team: Philadelphia Phillies","Year: 2009<br />Team_Payroll: 113004048<br />Team: Philadelphia Phillies","Year: 2010<br />Team_Payroll: 141927381<br />Team: Philadelphia Phillies","Year: 2011<br />Team_Payroll: 172976381<br />Team: Philadelphia Phillies","Year: 2012<br />Team_Payroll: 174538938<br />Team: Philadelphia Phillies","Year: 2013<br />Team_Payroll: 165385714<br />Team: Philadelphia Phillies","Year: 2014<br />Team_Payroll: 180052723<br />Team: Philadelphia Phillies","Year: 2015<br />Team_Payroll: 141722639<br />Team: Philadelphia Phillies"],"type":"scatter","mode":"lines","line":{"width":3.7795275590551185,"color":"rgba(231,107,243,1)","dash":"solid"},"hoveron":"points","name":"Philadelphia Phillies","legendgroup":"Philadelphia Phillies","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":54.794520547945211},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Team Payroll Over the Years","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0.5,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1997.1500000000001,2015.8499999999999],"tickmode":"array","ticktext":["2000","2005","2010","2015"],"tickvals":[2000,2005,2010,2015],"categoryorder":"array","categoryarray":["2000","2005","2010","2015"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Year","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[14966871,315390709],"tickmode":"array","ticktext":["1e+08","2e+08","3e+08"],"tickvals":[100000000,200000000,300000000],"categoryorder":"array","categoryarray":["1e+08","2e+08","3e+08"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Team Payroll","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Team","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"bbd25fd6084":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"bbd25fd6084","visdat":{"bbd25fd6084":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>Because the prompt lacked specificity, the model didn’t know how to
+address my complaint. It chose something reasonable to do, but it wasn’t
+what we wanted.</p>
+<p>Attempt 3: “ok that’s cool, but not what I’m looking for. Can you use
+facets to show the payroll over time for each team separately? organize
+it neatly”</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Create the faceted line plot</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mlb_payrolls, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Team_Payroll)) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Team, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Team Payroll Over the Years&quot;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Year&quot;</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Team Payroll&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="lecture5a_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Attempt 4: “What if we showed them all on the same plot, but with a
+color scale / transparency that emphasized the teams with the highest
+payrolls?”</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Filter out the Expos</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>mlb_payrolls_filtered <span class="ot">&lt;-</span> mlb_payrolls <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">filter</span>(Team <span class="sc">!=</span> <span class="st">&quot;Montreal Expos&quot;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># Create the line plot with color scale and transparency</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mlb_payrolls_filtered, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Team_Payroll, <span class="at">group =</span> Team)) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> Team_Payroll, <span class="at">alpha =</span> Team_Payroll), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="fu">scale_alpha_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Team Payroll Over the Years&quot;</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Year&quot;</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Team Payroll&quot;</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Payroll&quot;</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>       <span class="at">alpha =</span> <span class="st">&quot;Payroll&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span></code></pre></div>
+<p><img src="lecture5a_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Attempt 5: “each line should have the same color – their relative
+color to one another should be based on average payroll for each team
+across the years”</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Filter out the Expos</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>mlb_payrolls_filtered <span class="ot">&lt;-</span> mlb_payrolls <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">filter</span>(Team <span class="sc">!=</span> <span class="st">&quot;Montreal Expos&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co"># Calculate average payroll for each team</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>average_payrolls <span class="ot">&lt;-</span> mlb_payrolls_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="fu">group_by</span>(Team) <span class="sc">%&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">Average_Payroll =</span> <span class="fu">mean</span>(Team_Payroll))</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co"># Merge average payrolls back into the main dataset</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>mlb_payrolls_filtered <span class="ot">&lt;-</span> mlb_payrolls_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="fu">left_join</span>(average_payrolls, <span class="at">by =</span> <span class="st">&quot;Team&quot;</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co"># Create the line plot with color based on average payroll</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mlb_payrolls_filtered, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Team_Payroll, <span class="at">group =</span> Team)) <span class="sc">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> Average_Payroll), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Team Payroll Over the Years&quot;</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Year&quot;</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Team Payroll&quot;</span>,</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Avg Payroll&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span></code></pre></div>
+<p><img src="lecture5a_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Plenty more work to do, but you get the point.</p>
+</div>
+<div id="example-3-general-purpose-researchknowledge"
+class="section level3">
+<h3>Example 3: General-purpose research/knowledge</h3>
+<p>Say I wanted to analyze some motor racing data, but I didn’t know
+where to start. In fact, I’m so oblivious that the dataset basically
+doesn’t even mean anything to me. Do I need more data? Which columns are
+relevant / interesting? What are some common analyses that people do
+with this kind of data?</p>
+<p>Thankfully I can ask ChatGPT (or another model) for help: <a
+href="https://chatgpt.com/share/9276a21a-bba9-4694-a89c-710fcc5dfe70">Click
+here</a> (the output is long so I won’t copy it here)</p>
+<p>LLM’s are great for this kind of thing - they don’t need to be
+exactly right, but they can give an intuitive natural language summary
+of information from the internet to help you get started. Even better,
+if your prompt is detailed then that summary will be tailored to your
+needs.</p>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>Large language models are awesome! They can actually be a huge help
+in writing code, especially for repetitive tasks. They’re also very good
+at adhering to proper style and explaining the code they write. It’s
+important to remember, though: they cannot read your mind, they cannot
+reason about the best way to solve a problem, and they are only as good
+as the data they were trained on.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -13,7 +13,7 @@
 
 <title>Lecture 7: More About Regression</title>
 
-<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
@@ -30,8 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -492,8 +492,8 @@ choose which model is the best?</p>
 <p>One strategy might be to see how well the models predict the data we
 used to fit them. While this seems intuitive, it is possible to
 “over-learn” the patterns in this training data. Over-learning leads
-models to apply only the sample with which it was built, not the overall
-population or future data instances</p>
+models to fit only the sample on which they were built, not the overall
+population or future data instances.</p>
 <p>A common alternative is to split our original dataset into two parts:
 a <em>training</em> set and a <em>testing</em> set. We fit all of our
 models on the training set and then see how well they predict the values
@@ -537,8 +537,8 @@ average, we could compute each individual kicker’s conversion rate. This
 can be done using <code>group_by()</code> and <code>mutate()</code>. In
 the code below, we add a column to <code>fg_train</code> called
 “phat_kicker”, which contains each kicker’s individual field goal
-conversion rate. Notice that because we are adding a grouping to carry out
-this computation, we need to remove the grouping using
+conversion rate. Notice that because we are adding a grouping to carry
+out this computation, we need to remove the grouping using
 <code>ungroup()</code> when we’re done.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fg_train <span class="ot">&lt;-</span> </span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  fg_train <span class="sc">%&gt;%</span> </span>
@@ -600,10 +600,10 @@ methods.</p>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>fg_plot </span></code></pre></div>
 <p><img src="lecture7_files/figure-html/plot%203%20bins-1.png" width="672" style="display: block; margin: auto;" />
 Now when we bin our data into 2-yard increments, we find that our
-forecasts are no longer monotonic decreasing. The probability of making a
-field goal decreases overall, but in our 2-yard bins, the probability
-increases from 44 to 46 yards and from 52 to 54 yards. Remember, monotonic means
-only decreasing or only increasing for all values. In <a
+forecasts are no longer monotonic decreasing. The probability of making
+a field goal decreases overall, but in our 2-yard bins, the probability
+increases from 44 to 46 yards and from 52 to 54 yards. Remember,
+monotonic means only decreasing or only increasing for all values. In <a
 href="lecture8.html">Lecture 8</a>, we’ll address this with a more
 formal regression method.</p>
 </div>
@@ -737,9 +737,10 @@ argument <code>phat_kicker</code> tells the function where the
 additional data corresponding to each key value is. The last argument
 <code>by = "Kicker"</code> tells the function that the key we want to
 use is the kicker.</p>
-<p>By mimicking the code above, we can add columns to <code>fg_test</code> for
-the remaining three predictive models: <code>phat_dist_10</code>,
-<code>phat_dist_5</code>, and <code>phat_dist_2</code>.</p>
+<p>By mimicking the code above, we can add columns to
+<code>fg_test</code> for the remaining three predictive models:
+<code>phat_dist_10</code>, <code>phat_dist_5</code>, and
+<code>phat_dist_2</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>fg_test <span class="ot">&lt;-</span> </span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  fg_test <span class="sc">%&gt;%</span></span>
 <span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>  <span class="fu">inner_join</span>(phat_dist_10, <span class="at">by =</span> <span class="st">&quot;Dist_10&quot;</span>) <span class="sc">%&gt;%</span></span>
