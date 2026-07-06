@@ -10,7 +10,7 @@ library(tidyverse)
 ## Opening our project
 
 The *working directory* is the place where R saves output files and where it looks for data that you want to read in.
-In [Lecture 0](lecture0.html), we asked you to create a folder on your Desktop called Moneyball and save [Moneyball.Rproj](Moneyball.Rproj) inside it.
+In [Lecture 0](lecture0.html), we asked you to create a folder on your Desktop called Moneyball and save <a href="Moneyball.Rproj" download="Moneyball.Rproj">Moneyball.Rproj</a> inside it.
 
 From now on, the easiest way to start your work is to open `Moneyball.Rproj` in RStudio.
 When you open that project, RStudio automatically uses the Moneyball folder as your working directory.

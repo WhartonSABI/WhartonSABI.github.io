@@ -15,6 +15,8 @@ This summer, you'll learn how to analyze sports data using R, a free and widely 
 
 **To help us start analyzing data right away, please install R and RStudio before the first day.** Instructions for installing both programs and setting up your computer are covered in [Lecture 0](lecture0.html).
 
+You can also download the course project file directly here: <a href="Moneyball.Rproj" download="Moneyball.Rproj">Moneyball.Rproj</a>.
+
 **Note: tablets and Chromebooks may not have sufficient computing power to run R and RStudio. We highly recommend using a laptop or desktop.**
 
 After completing Lecture 0, [Problem Set 0](ps0.html) will give you a brief introduction to R through simple exercises and motivating questions for the morning lectures. Don't worry if you don't finish everything before the first day. On the first morning, you'll meet with your project team and TAs to discuss the material.
@@ -57,4 +59,4 @@ Victoria Lee is a rising senior in the VIPER program at Penn, studying Physics a
 
 <br> 
 
-![](/images/wsabi-logo.png)
+![](figures/WMA_logo.png)

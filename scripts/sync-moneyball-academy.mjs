@@ -6,6 +6,7 @@ const ROOT = process.cwd();
 const ACADEMY_DIR = path.join(ROOT, 'academy');
 const PUBLIC_ACADEMY_DIR = path.join(ROOT, 'public', 'moneyball', 'academy');
 const STATIC_DIR_NAMES = new Set(['data', 'figures', 'site_libs']);
+const STATIC_FILE_NAMES = new Set(['Moneyball.Rproj']);
 const ROUTABLE_PAGE_BASENAMES = new Set([
   'index',
   'lecture0',
@@ -126,12 +127,19 @@ async function syncRuntimeAssets() {
   await fs.mkdir(PUBLIC_ACADEMY_DIR, { recursive: true });
 
   const entries = await fs.readdir(ACADEMY_DIR, { withFileTypes: true });
-  const assetEntries = entries.filter((entry) => {
+  const assetDirs = entries.filter((entry) => {
     if (!entry.isDirectory()) return false;
     return STATIC_DIR_NAMES.has(entry.name) || entry.name.endsWith('_files');
   });
+  const assetFiles = entries.filter((entry) => entry.isFile() && STATIC_FILE_NAMES.has(entry.name));
 
-  for (const entry of assetEntries) {
+  for (const entry of assetDirs) {
+    const source = path.join(ACADEMY_DIR, entry.name);
+    const destination = path.join(PUBLIC_ACADEMY_DIR, entry.name);
+    await copyRecursive(source, destination);
+  }
+
+  for (const entry of assetFiles) {
     const source = path.join(ACADEMY_DIR, entry.name);
     const destination = path.join(PUBLIC_ACADEMY_DIR, entry.name);
     await copyRecursive(source, destination);
