@@ -26,7 +26,7 @@ nba_shooting_small <- read_csv('data/nba_shooting_small.csv')
 nba_shooting_small <- mutate(nba_shooting_small, FGP = FGM/FGA, TPP = TPM/TPA, FTP = FTM/FTA)
 ```
 
-5. Compare the script you have written with someone else in your group. See if your codes are similar. Then have your TA or an instructor come and execute the script. If it runs without error and produces the correct output, you can proceed onto Part 2 of this problem set. Otherwise, you will need to go back and edit your script.
+5. Execute the script. If it runs without error and produces the correct output, you can proceed onto Part 2 of this problem set. Otherwise, go back and edit your script.
 
 ## Part 2: Looking ahead to tomorrow
 
@@ -68,7 +68,7 @@ Remember, FGM records the number of 2-point shots made as well as the number of 
 
 ```{r pt2 q6 solution}
 # solution
-nba_shooting <- mutate(nba_shooting, PTS = FTM + 2*FGM + 3*TPM)
+nba_shooting <- mutate(nba_shooting, PTS = FTM + 2*FGM + TPM)
 ```
 
 7. Both field goal percentage and effective field goal percentage totally ignore free throws. One metric that accounts for all field goals, three pointers, and free throws is [true shooting percentage](https://en.wikipedia.org/wiki/True_shooting_percentage), whose formula is given by
