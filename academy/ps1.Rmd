@@ -18,7 +18,7 @@ Welcome to Problem Set 1. This problem set contains two parts. In the first part
 
 3. Create a new R script and save it as "ps1_review.R" in the "scripts" folder within your working directory. In your script, write the following on the first line: `library(tidyverse)`.
 
-4. Following along with the notes in Lecture 1, in your newly created script, write code that (i) reads in the dataset "nba_shooting_small.csv" and (ii) adds columns for field goal percentage (FGP), three point percentage (TPP), and free throw percentage (FTP). **Do not run any part of your script.**
+4. Following along with the notes in Lecture 1, in your newly created script, write code that (i) reads in the dataset "nba_shooting_small.csv" and (ii) adds columns for field goal percentage (FGP), three point percentage (TPP), and free throw percentage (FTP).
 
 ```{r pt1 q4 solution}
 # solution
