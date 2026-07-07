@@ -105,7 +105,7 @@ $$y = a + bx$$
 where $a = \bar{y} - b\bar{x}$ and $b = r \times sd(y)/sd(x)$.
 
 Now that we have our regression line, we can predict a future $y$ value given we know $x$. For example, if we know that a player's 2014 batting average was 0.31, we predict that their 2015 batting average will be:
-$$\widehat{y} = 0.141 + 0.485 \times 0.31 = 0.291.$$
+$$\widehat{y} = 0.141 + 0.485 \times 0.31 = 0.291$$
 Note that we use $\widehat{y}$ for a predicted value of $y$; we can think of this as $\widehat{y} = E[Y|x]$.
 
 ```{r plot predicted y, echo = F, warnings = FALSE}

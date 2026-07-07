@@ -140,7 +140,7 @@ team_boxscore <-
   ungroup()
 ```
 
-3. Use `filter()` to create a new tbl called `reduced_boxscore` that pulls out the rows of `team_boxscore` corresponding to the following teams: BOS, CLE, DAL, DET, GSW, LAL, MIA, and SAS. Then create a line plot of these teams' three point percentage in each season. Be sure to color the points according to the team (*Hint*: to map the `Tm` variable to the points as colors, use the `color =` argument within the `aes` function. We will learn more about this in [Lecture 5](lecture5.html)). What patterns do you notice?
+3. Use `filter()` to create a new tbl called `reduced_boxscore` that pulls out the rows of `team_boxscore` corresponding to the following teams: BOS, CLE, DAL, DET, GSW, LAL, MIA, and SAS. Then create a line plot of these teams' three point percentage in each season.
 
 ```{r pt2 q3 solution}
 # solution
@@ -152,21 +152,18 @@ ggplot(data = reduced_boxscore) +
   geom_line(mapping = aes(x = Season, y = TPP, color = Tm), size = 1) 
 ```
 
-4. Use `pivot_long()` on `reduced_boxscore` to create separate rows for each team's FGP, TPP, and FTP. Create a tibble filtered on one team only and visualize how their FGP, TPP, and FTP have all evolved over time on one plot. *Challenge: use `facet_wrap()` with teams on the entire `reduced_boxscore` table to visualize the percentages for all 8 teams at once. 
+4. Use `pivot_longer()` on `reduced_boxscore` to create separate rows for each team's FGP, TPP, and FTP. Create a tibble filtered on one team only and visualize how their FGP, TPP, and FTP have all evolved over time on one plot.
 ```{r pt2 q4 solution}
 boxscore_long <- reduced_boxscore %>%
   pivot_longer(cols = c(FGP, TPP, FTP), 
                names_to = "Statistic", 
                values_to = "Percentage")
 
-ggplot(boxscore_long, aes(x = Season, y = Percentage, color = Statistic)) +
-  geom_line() +
-  labs(title = "Team Shooting Percentages Over Seasons",
-       x = "Season",
-       y = "Percentage") +
-  theme_minimal() +
-  facet_wrap(~Tm) +
-  scale_color_manual(values = c("FGP" = "palegreen3", "TPP" = "lightblue", "FTP" = "lightcoral"))
+one_team <- boxscore_long %>%
+  filter(Tm == "GSW")
+
+ggplot(one_team, aes(x = Season, y = Percentage, color = Statistic)) +
+  geom_line()
 ```
 
 

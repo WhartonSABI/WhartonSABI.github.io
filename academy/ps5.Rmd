@@ -42,44 +42,26 @@ pbp_pass <- pbp_pass %>%
   ungroup()
 ```
 
-3. Let's take a preliminary look at how location might affect pass outcomes. First, use `!na` with `filter()` to filter out pass attempts without a location label. Then, create a bar plot to visualize the frequency of attempts in each pass location. Feed `pass_location` as a fill argument to make each bar a different color and make sure to use `labs()` to set axis and plot titles. You should see that ggplot automatically adds a legend for you!
+3. Let's take a preliminary look at how location might affect pass outcomes. First, use `!is.na()` with `filter()` to filter out pass attempts without a location label. Then create a bar plot to visualize the frequency of attempts in each pass location.
 
 ```{r bar plot}
 pbp_pass <- pbp_pass %>% 
   filter(!is.na(pass_location))
 
-ggplot(pbp_pass, aes(x = pass_location, fill = pass_location)) +
-  geom_bar(color = 'black') +
-  labs(
-    title = "Frequency of Pass Attempts by Location",
-    x = "Pass Location",
-    y = "Number of Attempts"
-  ) +
-  theme_minimal()
+ggplot(pbp_pass, aes(x = pass_location)) +
+  geom_bar()
 ```
 
-4. Let's look at the distribution of yards gained based on pass location with some box plots. Use `geom_boxplot()` to create a box plot of `yards_gained` by `pass_location`. Continue using fill and labs to format the plots nicely. 
+4. Let's look at the distribution of yards gained based on pass location with some box plots. Use `geom_boxplot()` to create a box plot of `yards_gained` by `pass_location`.
 ```{r}
-ggplot(pbp_pass, aes(x = pass_location, y = yards_gained, fill = pass_location)) +
-  geom_boxplot() +
-  labs(
-    title = "Distribution of Yards Gained by Pass Location",
-    x = "Pass Location",
-    y = "Yards Gained"
-  ) +
-  theme_minimal()
+ggplot(pbp_pass, aes(x = pass_location, y = yards_gained)) +
+  geom_boxplot()
 ```
 
-5. Completion yards over expected is a metric that adjusts for the difficulty of a QB's throw by calculating the yards completed above the expected amount based on throw timing, coverage, and location. Take a look at how `cpoe` may differ based on the pass location alone with `geom_violin()` Discuss your plots for 4 and 5 with other students. What conclusions can you draw about the pass location and how it may affect pass outcomes? 
+5. Completion yards over expected is a metric that adjusts for the difficulty of a QB's throw by calculating the yards completed above the expected amount based on throw timing, coverage, and location. Take a look at how `cpoe` may differ based on the pass location alone with `geom_violin()`. What conclusions can you draw about pass location and pass outcomes?
 ```{r}
-ggplot(pbp_pass, aes(x = pass_location, y = cpoe, fill = pass_location)) +
-  geom_violin() +
-  labs(
-    title = "Distribution of CPOE by Pass Location",
-    x = "Pass Location",
-    y = "Completion Yards Over Expected"
-  ) +
-  theme_minimal()
+ggplot(pbp_pass, aes(x = pass_location, y = cpoe)) +
+  geom_violin()
 ```
 
 6. Let's now turn to aggregated pass statistics per quarterback. Group by `passer_player_name` and create a table called `pbp_grouped` with columns `passer_player_name`, `attempts`, `avg_yards_gained`, and `avg_cpoe` using `reframe()`.  
@@ -95,16 +77,10 @@ pbp_grouped <- pbp_pass %>%
 head(pbp_grouped)
 ```
 
-7. We can first visualize how attempts and avg_yards_gained are related by using a scatterplot. Let's feed a color and size argument to `geom_point()` to visually change the appearance of your plot and make the points take up an appropriate amount of space. Feel free to change the color argument to a color of your choice!
+7. We can first visualize how attempts and avg_yards_gained are related by using a scatterplot.
 ```{r scatter, include = TRUE}
 ggplot(pbp_grouped, aes(x = attempts, y = avg_yards_gained)) +
-  geom_point(color = 'darkseagreen3', size = 3) +
-  labs(
-    title = "Quarterback Attempts vs Average Yards Gained",
-    x = "Attempts",
-    y = "Average Yards Gained"
-  ) +
-  theme_minimal()
+  geom_point()
 ```
 
 8. Next, add an abline to the plot using `geom_abline()` to see how linear the data may be. Use the `slope` and `intercept` arguments to set the slope to 0.005 and the intercept to 5. Set the linetype to dashed, and the color to black. Note: This line was arbitrarily made with a slope and intercept that "looks best", but in lecture 6, you will learn how to fit regression models to the data mathematically to make a line of best fit.
@@ -171,7 +147,7 @@ ggplot(pbp_grouped_2, aes(x = passer_player_name, y = value, fill = metric)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 
 ```
-What have you learned from these graphs? How do quarterbacks differ in their average yards gained vs average completion yards over expected? Is Lamar the GOAT??
+What do these graphs suggest about how quarterbacks differ in their average yards gained and average cpoe?
 
 Let's do one more small case study on explosive plays. 
 
@@ -204,41 +180,28 @@ pbp_explosive <- pbp_2024 %>%
 
 head(pbp_explosive)
 ```
-12. Let's visualize the distribution of explosive plays by defensive team. Use `geom_bar()` to create a bar plot of the number of explosive plays by `defteam`. Use `fill = defteam` to color the bars by team and use `labs()` to set the axis and plot titles.
+12. Let's visualize the distribution of explosive plays by defensive team. Use `geom_bar()` to create a bar plot of the number of explosive plays by `defteam`.
 ```{r}
-ggplot(pbp_explosive, aes(x = defteam, fill = defteam)) +
-  geom_bar() +
-  labs(
-    title = "Number of Explosive Plays Allowed by Defensive Team",
-    x = "Defensive Team",
-    y = "Number of Explosive Plays"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggplot(pbp_explosive, aes(x = defteam)) +
+  geom_bar()
 ```
 
-13. Let's take a closer look at the worst defenses against explosive plays. Group by defensive team and play type, then use reframe to obtain the number of explosive plays in each category, and `slice_max()` to obtain the top 10 teams. Replot the bar graphs and facet by pass or run plays. *Hint: to create a column counting the number of rows, use `n()` with `reframe()`. Additionally, use `scales = 'free'` with `facet_wrap()` to allow each facet to have its own y-axis scale.*
+13. Let's take a closer look at the worst defenses against explosive plays. Group by defensive team and play type, then use `reframe()` to obtain the number of explosive plays in each category. Use `arrange()` and `slice_head()` to obtain the top 10 teams within each play type. Replot the bar graphs and facet by pass or run plays.
 
 ```{r}
 pbp_explosive_slice <- pbp_explosive %>%
   group_by(defteam, play_type) %>%
   reframe(n_explosive = n()) %>%
   group_by(play_type) %>%
-  slice_max(n_explosive, n = 10)
+  arrange(desc(n_explosive), .by_group = TRUE) %>%
+  slice_head(n = 10)
 
-ggplot(pbp_explosive_slice, aes(x = reorder(defteam, -n_explosive), y = n_explosive, fill = defteam)) +
+ggplot(pbp_explosive_slice, aes(x = defteam, y = n_explosive)) +
   geom_col() +
-  labs(
-    title = "Top 10 Teams Allowing Explosive Plays (by Play Type)",
-    x = "Defensive Team",
-    y = "Number of Explosive Plays"
-  ) +
-  theme_minimal() +
-  facet_wrap(~play_type, scales = 'free') +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
+  facet_wrap(~play_type)
 ```
 
-14. *Challenge*: Finally, let's visualize the relationship between explosive plays and yards to go with a heat map. First, run the following code below to obtain the needed columns for this plot.
+14. Finally, let's visualize the relationship between explosive plays and yards to go with a heat map. First, run the following code below to obtain the needed columns for this plot.
 ```{r set up data table, include = TRUE}
 pbp_explosive_rate <- pbp_2024 %>%
   filter(play_type %in% c("pass", "run"),
@@ -265,7 +228,7 @@ pbp_explosive_rate <- pbp_2024 %>%
   )
 ```
 
-Then, group by `defteam` and `ydstogo` and obtain the explosive play *rate*, instead of number of explosive plays. *Hint: You will need to use `n()` and `sum()` for this task.* Then, use `geom_tile()` to create a heat map with `defteam` on the x-axis, `ydstogo` on the y-axis, and fill based on the number of explosive plays. Set a color gradient to your liking.
+Then, group by `defteam` and `ydstogo` and obtain the explosive play *rate*, instead of number of explosive plays. Then use `geom_tile()` to create a heat map with `defteam` on the x-axis, `ydstogo` on the y-axis, and fill based on the explosive play rate.
 
 ```{r explosive rate}
 pbp_explosive_rate <- pbp_explosive_rate %>%
@@ -279,17 +242,8 @@ pbp_explosive_rate <- pbp_explosive_rate %>%
 ```
 
 ```{r heat map}
-ggplot(pbp_explosive_rate, aes(x = ydstogo, y = reorder(defteam, -explosive_rate), fill = explosive_rate)) +
-  geom_tile(color = "white") +
-  scale_fill_viridis_c(option = "C", direction = -1, name = "Explosive Rate") +
-  labs(
-    title = "Explosive Rate Allowed by Down and Defensive Team",
-    x = "Yards to Go",
-    y = "Defensive Team"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(size = 12),
-        axis.text.y = element_text(size = 10))
+ggplot(pbp_explosive_rate, aes(x = defteam, y = ydstogo, fill = explosive_rate)) +
+  geom_tile()
 ```
 
-What conclusions can you draw from the visualizations in this section? How are teams' defenses stacking up against explosive plays? How much should certain bins in this visualization be weighed over others?
+What conclusions can you draw from the visualizations in this section?

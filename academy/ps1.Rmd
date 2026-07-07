@@ -52,7 +52,7 @@ nba_shooting <- mutate(nba_shooting, FGP = FGM/FGA, TPP = TPM/TPA, FTP = FTM/FTA
 
 5. One criticism of FGP is that it treats 2-point shots the same as 3-point shots. As a result, the league leader in FGP is usually a center whose shots mostly come from near the rim.
 [effective Field Goal Percentage](https://en.wikipedia.org/wiki/Effective_field_goal_percentage) is a statistic that adjusts FGP to account for the fact that a made 3-point shots is worth 50% more than a made 2-point shot. The formula for eFGP is
-$$ \text{eFGP} = \frac{\text{FGM} + 0.5 \times \text{TPM}}{\text{FGA}}.$$
+$$ \text{eFGP} = \frac{\text{FGM} + 0.5 \times \text{TPM}}{\text{FGA}} $$
 Write another line of code to your script which will add a column for eFGP to the data. 
 
 ```{r pt2 q5 solution}
@@ -73,7 +73,7 @@ nba_shooting <- mutate(nba_shooting, PTS = FTM + 2*FGM + TPM)
 
 7. Both field goal percentage and effective field goal percentage totally ignore free throws. One metric that accounts for all field goals, three pointers, and free throws is [true shooting percentage](https://en.wikipedia.org/wiki/True_shooting_percentage), whose formula is given by
 $$
-\text{TSP} = \frac{\text{PTS}}{2\times(\text{FGA} + 0.44\times \text{FTA})}.
+\text{TSP} = \frac{\text{PTS}}{2\times(\text{FGA} + 0.44\times \text{FTA})}
 $$
 Add another column to the tbl for TSP
 
