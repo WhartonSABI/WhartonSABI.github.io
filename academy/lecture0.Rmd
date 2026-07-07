@@ -69,6 +69,7 @@ After you get the folders ready and save `Moneyball.Rproj` in the main Moneyball
 
 * [nba_shooting_small.csv](data/nba_shooting_small.csv)
 * [nba_shooting.csv](data/nba_shooting.csv)
+* [mlb_relative_payrolls.csv](data/mlb_relative_payrolls.csv)
 
 We will be working with these datasets early in the course.
 
