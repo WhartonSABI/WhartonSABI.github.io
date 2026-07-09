@@ -943,8 +943,9 @@ our dataset within each year using <code>n()</code>.</p>
 ##  9   1884    19
 ## 10   1885    19
 ## # &#x2139; 137 more rows</code></pre>
-<p><strong>Exercise</strong>: Describe, in words, what the following
-code does.</p>
+<p>For example, the code below keeps only the rows where there are at
+least 90 pitchers and then sorts those rows from largest count to
+smallest.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>pitching <span class="sc">%&gt;%</span> </span>
 <span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
 <span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;=</span> <span class="dv">90</span>) <span class="sc">%&gt;%</span></span>

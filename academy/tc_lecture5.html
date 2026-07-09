@@ -657,8 +657,7 @@ and Prediction</h1>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(Lahman)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>batting <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(Batting)</span></code></pre></div>
 <p>In the code below we&#x2019;ll create a dataset to use that has player
-batting averages from the 2017 and 2018 seasons. <strong>Can you
-describe what this code is doing?</strong></p>
+batting averages from the 2017 and 2018 seasons.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>batting_2017_2018 <span class="ot">&lt;-</span> batting <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">filter</span>(yearID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2017</span>, <span class="dv">2018</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="fu">group_by</span>(playerID, yearID) <span class="sc">%&gt;%</span></span>

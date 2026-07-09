@@ -376,7 +376,7 @@ mlb_payrolls %>%
 
 ## A Challenge Question
 
-Without running the code, see if you can figure out what the code below is doing.
+Run the code below to create the tbl `batting_2014_2015`.
 
 ```{r challenge Q, include=TRUE, eval=FALSE}
 batting_2014_2015 <-
@@ -388,7 +388,7 @@ batting_2014_2015 <-
   arrange(playerID)
 ```
 
-Now, run the code above and save the tbl `batting_2014_2015` to the file `"data/batting_2014_2015.RData"` using the `save()` function. We will return to this dataset in [Lecture 4](lecture4.html).
+Then save the tbl `batting_2014_2015` to the file `"data/batting_2014_2015.RData"` using the `save()` function. We will return to this dataset in [Lecture 4](lecture4.html).
 
 ```{r challenge Q solution}
 # solution

@@ -8,10 +8,6 @@ knitr::opts_chunk$set(cache = TRUE, fig.align = "center", include = FALSE) # set
 library(tidyverse)
 ```
 
-## Review Lecture 3 Notes
-
-Review the notes from [Lecture 3](tc_lecture3.html) and try to explain what each code block is doing.
-
 ## NBA Three-Point Efficiency
 
 In [Lecture 3](tc_lecture3.html) we saw that three-point shot rates have been increasing over time by creating visualizations of the distributions for each season. 

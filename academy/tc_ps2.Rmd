@@ -8,10 +8,6 @@ knitr::opts_chunk$set(cache = TRUE, fig.align = "center", include = FALSE) # set
 library(tidyverse)
 ```
 
-## Review Lecture 2 Notes
-
-Review the notes from [Lecture 2](tc_lecture2.html) and try to explain what each code block is doing.
-
 ## Payroll and Winning Percentage in the MLB
 
 In lecture, Prof. Wyner discussed the relationship between a team's payroll and its winning percentage. We will create plots from his analysis in the following problems using the dataset [mlb_relative_payrolls.csv](data/mlb_relative_payrolls.csv), which you should download into the "data" folder of your working directory. You should save all of the code for this analysis in an R script called "ps2_mlb_payroll.R".

@@ -179,7 +179,7 @@ pitching %>%
   arrange(count)
 ```
 
-**Exercise**: Describe, in words, what the following code does.
+For example, the code below keeps only the rows where there are at least 90 pitchers and then sorts those rows from largest count to smallest.
 ```{r pitching exercise, eval = FALSE}
 pitching %>% 
   reframe(count = n()) %>%

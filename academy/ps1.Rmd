@@ -12,13 +12,11 @@ Welcome to Problem Set 1. This problem set contains two parts. In the first part
 
 ## Part 1: Review of Lecture 1
 
-1. Read through the online notes for [Lecture 1](lecture1.html). Before doing any coding, try to identify what each code block is doing.
+1. Close and re-open RStudio. Navigate to your working directory.
 
-2. Close and re-open RStudio. Navigate to your working directory.
+2. Create a new R script and save it as "ps1_review.R" in the "scripts" folder within your working directory. In your script, write the following on the first line: `library(tidyverse)`.
 
-3. Create a new R script and save it as "ps1_review.R" in the "scripts" folder within your working directory. In your script, write the following on the first line: `library(tidyverse)`.
-
-4. Following along with the notes in Lecture 1, in your newly created script, write code that (i) reads in the dataset "nba_shooting_small.csv" and (ii) adds columns for field goal percentage (FGP), three point percentage (TPP), and free throw percentage (FTP).
+3. Following along with the notes in Lecture 1, in your newly created script, write code that (i) reads in the dataset "nba_shooting_small.csv" and (ii) adds columns for field goal percentage (FGP), three point percentage (TPP), and free throw percentage (FTP).
 
 ```{r pt1 q4 solution}
 # solution
@@ -26,7 +24,7 @@ nba_shooting_small <- read_csv('data/nba_shooting_small.csv')
 nba_shooting_small <- mutate(nba_shooting_small, FGP = FGM/FGA, TPP = TPM/TPA, FTP = FTM/FTA)
 ```
 
-5. Execute the script. If it runs without error and produces the correct output, you can proceed onto Part 2 of this problem set. Otherwise, go back and edit your script.
+4. Execute the script. If it runs without error and produces the correct output, you can proceed onto Part 2 of this problem set. Otherwise, go back and edit your script.
 
 ## Part 2: Looking ahead to tomorrow
 

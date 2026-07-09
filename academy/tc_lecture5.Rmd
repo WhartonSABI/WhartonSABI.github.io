@@ -19,7 +19,7 @@ library(Lahman)
 batting <- as_tibble(Batting)
 ```
 
-In the code below we'll create a dataset to use that has player batting averages from the 2017 and 2018 seasons. **Can you describe what this code is doing?**
+In the code below we'll create a dataset to use that has player batting averages from the 2017 and 2018 seasons.
 
 ```{r batting_2017_2018, message=FALSE}
 batting_2017_2018 <- batting %>%
