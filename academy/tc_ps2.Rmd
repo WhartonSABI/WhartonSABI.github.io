@@ -10,7 +10,7 @@ library(tidyverse)
 
 ## Review Lecture 2 Notes
 
-Please spend a few minutes reading through the notes from [Lecture 2](tc_lecture2.html) and make sure you understand what each code block does.
+Review the notes from [Lecture 2](tc_lecture2.html) and try to explain what each code block is doing.
 
 ## Payroll and Winning Percentage in the MLB
 

@@ -92,8 +92,6 @@ pitching <- pitching %>%
 pitching
 ```
 
-**IMPORTANT**: Before reading any further, make sure you and your team understand completely what is happening in the code above.
-
 Now that we have ERA for all pitchers eligible for our analysis, we can plot the ERAs by year.
 
 ```{r plot ERAs year}

@@ -339,5 +339,4 @@ nba_shooting %>%
 
 This is a completely different style of plotting than you have seen before, but it  is extremely convenient since we don't need to create a separate dataset to display summaries of the data. The `fun.data` part is asking for a type of summary, where here we are using the mean and standard deviation summary indicated by `mean_sdl`. Then the `fun.args` is taking the multiplier for the standard deviation interval.
 
-Now spend time going through this lecture and repeat the same type of analysis for TPP in [Problem Set 3](tc_ps3.html).
-
+Repeat the same type of analysis for `TPP` in [Problem Set 3](tc_ps3.html).

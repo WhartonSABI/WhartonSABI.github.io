@@ -192,8 +192,8 @@ ggplot(pbp_explosive, aes(x = defteam)) +
 pbp_explosive_slice <- pbp_explosive %>%
   group_by(defteam, play_type) %>%
   reframe(n_explosive = n()) %>%
+  arrange(play_type, desc(n_explosive)) %>%
   group_by(play_type) %>%
-  arrange(desc(n_explosive), .by_group = TRUE) %>%
   slice_head(n = 10)
 
 ggplot(pbp_explosive_slice, aes(x = defteam, y = n_explosive)) +

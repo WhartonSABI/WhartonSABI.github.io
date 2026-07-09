@@ -10,7 +10,7 @@ library(tidyverse)
 
 ## Review Lecture 3 Notes
 
-Please spend a few minutes reading through the notes from [Lecture 3](tc_lecture3.html) and make sure you understand what each code block does.
+Review the notes from [Lecture 3](tc_lecture3.html) and try to explain what each code block is doing.
 
 ## NBA Three-Point Efficiency
 

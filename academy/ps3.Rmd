@@ -37,9 +37,9 @@ batting %>% select(playerID, yearID, teamID, AB, BB, HBP, SH, SF, IBB)
 ```
 
 The syntax for `replace_na()` is a bit involved but the basic idea is you have to specify the value you want to replace each `NA`.
-When using `replace_na()` it is very important to remember to include the `list(...)` bit. 
+When using `replace_na()`, remember to include the `list(...)` argument that specifies the replacement value for each column. 
 
-1. Load the Lahman data and run the above code to create the tbl `Batting`, which has replaced all of the `NA`' in the columns `IBB, HBP, SH, SF` and GIDP`. 
+1. Load the Lahman data and run the above code to create the tbl `batting`, which has replaced all of the `NA` values in the columns `IBB`, `HBP`, `SH`, `SF`, and `GIDP`. 
 
 ```{r pt1 q1 solution}
 # solution
@@ -82,21 +82,15 @@ batting <-
 ```
 
 
-3. Standardize each of BA, OBP, OPS, and wOBA using data from all of the years. Name the columns containing these new standardized values `zBA_all`, `zOPB_all`, etc. *Remember, you can do this with the `scale()` function from [Lecture 3](lecture3.html)* Who were the best and worst batters according to these four metrics?
+3. Standardize each of BA, OBP, OPS, and wOBA using data from all of the years. Name the columns containing these new standardized values `zBA_all`, `zOBP_all`, etc. *Remember, you can do this with the `scale()` function from [Lecture 3](lecture3.html).* Who were the best and worst batters according to these four metrics?
 
 ```{r pt1 q3 solution}
 # solution
-standardize <- function(x){
-  mu <- mean(x, na.rm = TRUE)
-  sigma <- sd(x, na.rm = TRUE)
-  return( (x- mu)/sigma)
-}
-
 batting <- batting %>%
-  mutate(zBA_all = standardize(BA),
-         zOBP_all = standardize(OBP),
-         zOPS_all = standardize(OPS),
-         zwOBA_all = standardize(wOBA))
+  mutate(zBA_all = scale(BA),
+         zOBP_all = scale(OBP),
+         zOPS_all = scale(OPS),
+         zwOBA_all = scale(wOBA))
 
 batting %>% 
   arrange(zBA_all) %>%
@@ -137,41 +131,41 @@ batting %>%
 # solution
 batting <- batting %>%
   group_by(yearID) %>%
-  mutate(zBA_year = standardize(BA),
-         zOBP_year = standardize(OBP),
-         zOPS_year = standardize(OPS),
-         zwOBA_year = standardize(wOBA))
+  mutate(zBA_year = scale(BA),
+         zOBP_year = scale(OBP),
+         zOPS_year = scale(OPS),
+         zwOBA_year = scale(wOBA))
 
 batting %>% 
-  arrange(zBA_all) %>%
+  arrange(zBA_year) %>%
   head(5)
 
 batting %>% 
-  arrange(desc(zBA_all)) %>%
+  arrange(desc(zBA_year)) %>%
   head(5)
 
 batting %>% 
-  arrange(zOBP_all) %>%
+  arrange(zOBP_year) %>%
   head(5)
 
 batting %>% 
-  arrange(desc(zOBP_all)) %>%
+  arrange(desc(zOBP_year)) %>%
   head(5)
 
 batting %>% 
-  arrange(zOPS_all) %>%
+  arrange(zOPS_year) %>%
   head(5)
 
 batting %>% 
-  arrange(desc(zOPS_all)) %>%
+  arrange(desc(zOPS_year)) %>%
   head(5)
 
 batting %>% 
-  arrange(zwOBA_all) %>%
+  arrange(zwOBA_year) %>%
   head(5)
 
 batting %>% 
-  arrange(desc(zwOBA_all)) %>%
+  arrange(desc(zwOBA_year)) %>%
   head(5)
 ```
 
@@ -184,45 +178,45 @@ batting <-
   batting %>%
   ungroup() %>% 
   group_by(yearID, lgID) %>%
-  mutate(zBA_year_lg = standardize(BA),
-         zOBP_year_lg = standardize(OBP),
-         zOPS_year_lg = standardize(OPS),
-         zwOBA_year_lg = standardize(wOBA))
+  mutate(zBA_year_lg = scale(BA),
+         zOBP_year_lg = scale(OBP),
+         zOPS_year_lg = scale(OPS),
+         zwOBA_year_lg = scale(wOBA))
 
 batting %>% 
-  arrange(zBA_all) %>%
+  arrange(zBA_year_lg) %>%
   head(5)
 
 batting %>% 
-  arrange(desc(zBA_all)) %>%
+  arrange(desc(zBA_year_lg)) %>%
   head(5)
 
 batting %>% 
-  arrange(zOBP_all) %>%
+  arrange(zOBP_year_lg) %>%
   head(5)
 
 batting %>% 
-  arrange(desc(zOBP_all)) %>%
+  arrange(desc(zOBP_year_lg)) %>%
   head(5)
 
 batting %>% 
-  arrange(zOPS_all) %>%
+  arrange(zOPS_year_lg) %>%
   head(5)
 
 batting %>% 
-  arrange(desc(zOPS_all)) %>%
+  arrange(desc(zOPS_year_lg)) %>%
   head(5)
 
 batting %>% 
-  arrange(zwOBA_all) %>%
+  arrange(zwOBA_year_lg) %>%
   head(5)
 
 batting %>% 
-  arrange(desc(zwOBA_all)) %>%
+  arrange(desc(zwOBA_year_lg)) %>%
   head(5)
 ```
 
-6. Remove the grouping you created in Problem 4. Bill James [divided baseball history into several eras](https://www.billjamesonline.com/dividing_baseball_history_into_eras/) as follows:
+6. Remove the grouping you created in Problem 5. Bill James [divided baseball history into several eras](https://www.billjamesonline.com/dividing_baseball_history_into_eras/) as follows:
     * Pioneer Era: 1871 -- 1892
     * Spitball Era: 1893 -- 1919
     * Landis Era: 1920 -- 1946
@@ -230,7 +224,7 @@ batting %>%
     * Artifical Turf Era: 1969 -- 1992
     * Camden Yards Era: 1993 -- present <p/> 
     
-    Use `mutate()` and `case_when()` (just like we did in [Lecture 2](lecture2.html)) to add a column called Hist_era to `batting` that records the historical era.
+    Use `mutate()` and `case_when()` (just like we did in [Lecture 2](lecture2.html)) to add a column called `HIST_ERA` to `batting` that records the historical era.
 
 ```{r pt1 q6 solution}
 # solution
@@ -251,10 +245,10 @@ batting <- batting %>%
 # solution
 batting <- batting %>%
   group_by(HIST_ERA) %>%
-  mutate(zBA_hist = standardize(BA),
-         zOBP_hist = standardize(OBP),
-         zOPS_hist = standardize(OPS),
-         zwOBA_hist = standardize(wOBA))
+  mutate(zBA_hist = scale(BA),
+         zOBP_hist = scale(OBP),
+         zOPS_hist = scale(OPS),
+         zwOBA_hist = scale(wOBA))
 
 head(batting)
 
@@ -298,7 +292,6 @@ batting %>%
 batting_era <- batting %>% 
   group_by(playerID) %>% 
   summarise(BA = mean(zBA_hist, na.rm = TRUE)) %>% 
-  mutate(playerID = factor(playerID, levels = playerID[order(BA)])) %>%
   arrange(desc(BA)) %>% 
   slice_head(n = 10) 
 
@@ -311,7 +304,7 @@ ggplot(data = batting_era, aes(x = playerID, y = BA)) +
     y = "Mean BA"
   ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  coord_flip()
 ```
 
 
@@ -321,66 +314,46 @@ Recall from [Problem Set 2](ps2.html), we plotted the relative payroll of MLB te
 In that problem set, we read in a file that had included the relative payroll for each team as a separate column.
 To get some additional practice with dplyr, we will read in a different dataset and re-compute these relative payrolls.
 
-1. In [Lecture 3](lecture3.html) we utilized `scale()` to compute z-scores. We can manually recreate this code with a function, as reproduced below:
+1. Read in the [MLB Payroll Data](data/mlb_payrolls.csv) and load it into a tibble called `mlb_payrolls`.
 
-```{r standardize fn, include=TRUE}
-standardize <- function(x){
-  mu <- mean(x, na.rm = TRUE)
-  sigma <- sd(x, na.rm = TRUE)
-  return( (x - mu)/sigma)
-}
-```
-
-* We need to write another function in order to compute "relative payroll". This function will take in a vector `x`, compute its median, and then divides every element of `x` by the median.
-
-```{r relative fn}
-# solution
-relative <- function(x){
-  med <- median(x, na.rm = TRUE)
-  return( x/med )  
-}
-```
-
-
-2. Read in the [MLB Payroll Data](data/mlb_payrolls.csv) and load it into a tibble called `mlb_payrolls`.
-
-```{r pt2 q2 solution}
+```{r pt2 q1 solution}
 # solution
 mlb_payrolls <- read_csv(file = "data/mlb_payrolls.csv")
 ```
 
-3. Using the pipe `%>%`, `group_by()`, and `mutate()`, add a column to `mlb_payrolls` that contains the relative payroll for each team.
+2. Using the pipe `%>%`, `group_by()`, and `mutate()`, add a column to `mlb_payrolls` that contains the relative payroll for each team. To do this, divide each team's payroll by the median payroll in that season.
 
-```{r pt2 q3 solution}
+```{r pt2 q2 solution}
 # solution
 mlb_payrolls <- 
   mlb_payrolls %>%
   group_by(Year) %>%
-  mutate(Relative_Payroll = relative(Team_Payroll))
+  mutate(Relative_Payroll = Team_Payroll / median(Team_Payroll))
 ```
 
-4. Make a scatterplot of winning percentage against relative payrolls. Comment on the relationship. Your scatterplot should be identical to one you made in [Problem Set 2](ps2.html).
+3. Make a scatterplot of winning percentage against relative payrolls. Comment on the relationship. Your scatterplot should be identical to one you made in [Problem Set 2](ps2.html).
 
-```{r pt2 q4 solution}
+```{r pt2 q3 solution}
 # solution
 ggplot(data = mlb_payrolls) +
   geom_point(mapping = aes(x = Relative_Payroll, y = Winning_Percentage))
 ```
 
-5. Using the `reframe()` function, compute the average team payroll and relative payroll for each year. Save these results in a new tbl called `payroll_avg`. 
+4. Using the `reframe()` function, compute the average team payroll and relative payroll for each year. Save these results in a new tbl called `payroll_avg`. 
 
-```{r pt2 q5 solution}
+```{r pt2 q4 solution}
 # solution
 payroll_avg <-
   mlb_payrolls %>% 
+  group_by(Year) %>%
   reframe(avg_team_payroll = mean(Team_Payroll), 
             avg_team_relative_payroll = mean(Relative_Payroll))
 ```
 
 
-6. Make a scatterplot that shows how team payrolls have evolved over the year. Similar to what we did in [Lecture 3](lecture3.html), add a line to this scatterplot that shows the average team payroll. Do the same thing for relative payroll. What do you notice about the average team payroll and relative payroll? 
+5. Make a scatterplot that shows how team payrolls have evolved over the years. Similar to what we did in [Lecture 3](lecture3.html), add a line to this scatterplot that shows the average team payroll. Do the same thing for relative payroll. What do you notice about the average team payroll and relative payroll? 
 
-```{r pt2 q6 solution}
+```{r pt2 q5 solution}
 # solution
 ggplot(data = mlb_payrolls) +
   geom_point(mapping = aes(x = Year, y = Team_Payroll)) +
@@ -392,11 +365,12 @@ ggplot(data = mlb_payrolls) +
 ```
 
 
-7. As you will see in coming lectures, correlation is a measure of the strength of the *linear* relationship between two variables. The closer to +1 or -1 the correlation between two variables is, the more predictable they are of each other. We can compute it using the `cor()` function. Using `summary()` and `cor()`, compute the correlation between relative payroll and winning percentage within each year. What do you notice about how the relationship between winning percentage and relative payroll changes year to year? 
+6. Correlation is a measure of the strength of the *linear* relationship between two variables. The closer to +1 or -1 the correlation between two variables is, the more predictable they are of each other. We can compute it using the `cor()` function. Using `group_by()`, `reframe()`, and `cor()`, compute the correlation between relative payroll and winning percentage within each year. What do you notice about how the relationship between winning percentage and relative payroll changes year to year? 
 
-```{r pt2 q7 solution}
+```{r pt2 q6 solution}
 # solution
 mlb_payrolls %>%
+  group_by(Year) %>%
   reframe(cor = cor(Winning_Percentage, Relative_Payroll))
 ```
 
@@ -414,7 +388,7 @@ batting_2014_2015 <-
   arrange(playerID)
 ```
 
-Now, run the code above and save the tbl `batting_2014_2015` to the file "data/batting_2014_2015.csv" using the `write_csv()` function. We will return to this dataset in [Lecture 4](lecture4.html).
+Now, run the code above and save the tbl `batting_2014_2015` to the file `"data/batting_2014_2015.RData"` using the `save()` function. We will return to this dataset in [Lecture 4](lecture4.html).
 
 ```{r challenge Q solution}
 # solution
@@ -425,5 +399,5 @@ batting_2014_2015 <-
   filter(n() == 2) %>% 
   select(playerID, yearID, BA) %>%
   arrange(playerID)
-write_csv(batting_2014_2015, file = 'data/batting_2014_2015.csv')
+save(batting_2014_2015, file = "data/batting_2014_2015.RData")
 ```

@@ -9,7 +9,7 @@ library(tidyverse)
 ```
 
 We're going to pick up right where we left off yesterday in [Problem Set 1](tc_ps1.html), where you wrote a script to create a `tbl` containing several shooting statistics for NBA players between the 1996-97 season and the 2015-16 season.
-Your script could look something like what is the code block below, and for reasons that will become clear shortly, we are going to call our tbl `raw_shooting` (remember: writing code in script files is good practice!)
+Your script could look something like the code block below, and for reasons that will become clear shortly, we are going to call our tbl `raw_shooting`.
 
 ```{r create raw_shooting}
 library(tidyverse)
@@ -108,7 +108,7 @@ raw_shooting %>%
   geom_histogram(binwidth = 0.05)
 ```
 
-**Now you should spend time making histograms of FTP and TPP, and other variables created in code above. Discuss the differences with others.**
+Try making histograms of `FTP`, `TPP`, and the other variables created above, and compare the shapes of the distributions.
 
 
 ## Filtering

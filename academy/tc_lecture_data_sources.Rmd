@@ -116,7 +116,7 @@ install.packages("devtools")
 
 The `devtools` package has a function, `install_github` that we will use for installing the remaining packages used below.
 
-**An important note to keep in mind is that most of these resources are largely still in development, so you may face challenges with installation and use.**
+Most of these resources are still in development, so installation and use can occasionally be inconsistent.
 
 
 ### `baseballr`
@@ -136,7 +136,7 @@ Using the `baseballr` package we can access all pitches thrown to a hitter in th
 playerid_lookup(last_name = "Judge", first_name = "Aaron")
 ```
 
-This will load up a look-up table with all identifiers joining various sources together (it may take a couple minutes to run and don't worry about the warning messages). We find that Aaron Judge's unique `mlbam_id` is 592450. Using this id, we can grab all pitches thrown to Judge in the current MLB season so far:
+This will load up a look-up table with all identifiers joining various sources together. It may take a couple minutes to run and may print warning messages. We find that Aaron Judge's unique `mlbam_id` is 592450. Using this id, we can grab all pitches thrown to Judge in the current MLB season so far:
 
 ```{r get Judge data, eval = FALSE}
 judge_statcast_data <- scrape_statcast_savant_batter(start_date = "2022-01-01", 

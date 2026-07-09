@@ -651,8 +651,8 @@ display: none;
 
 <div id="review-lecture-2-notes" class="section level2">
 <h2>Review Lecture 2 Notes</h2>
-<p>Please spend a few minutes reading through the notes from <a href="lecture2.html">Lecture 2</a> and make sure you understand what
-each code block does.</p>
+<p>Review the notes from <a href="lecture2.html">Lecture 2</a> and try
+to explain what each code block is doing.</p>
 </div>
 <div id="payroll-and-winning-percentage-in-the-mlb" class="section level2">
 <h2>Payroll and Winning Percentage in the MLB</h2>
@@ -779,9 +779,8 @@ to replace it with a 0. We can do that with <code>mutate()</code> and
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>hitting_qualified <span class="ot">&lt;-</span> <span class="fu">replace_na</span>(hitting_qualified, </span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>                                <span class="fu">list</span>(<span class="at">IBB =</span> <span class="dv">0</span>, <span class="at">HBP =</span> <span class="dv">0</span>, <span class="at">SH =</span> <span class="dv">0</span>, <span class="at">SF =</span> <span class="dv">0</span>, <span class="at">GIDP =</span> <span class="dv">0</span>))</span></code></pre></div>
 <ul>
-<li>We will discuss the syntax for <code>replace_na()</code> later in
-lecture. Now, rerun the <code>select()</code> function from above to
-check that the NAs were replaced with zeros.</li>
+<li>Now rerun the <code>select()</code> function from above to check
+that the NAs were replaced with zeros.</li>
 </ul>
 <ol start="6" style="list-style-type: decimal">
 <li><p>Use <code>mutate()</code> to add a column for the number of

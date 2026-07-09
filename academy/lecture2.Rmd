@@ -74,7 +74,7 @@ ggplot(data = raw_shooting) +
 
 Visually, the histograms look identical but now the vertical (y) axis has a different scale. 
 
-**Now you should spend time making histograms of FTP and TPP, and of other variables created in the code above. Discuss the differences with others.**
+Try making histograms of `FTP`, `TPP`, and the other variables created above, and compare the shapes of the distributions.
 
 
 ### Visualizing bivariate data
@@ -221,6 +221,28 @@ Oftentimes, the dataset you load into R contains many, many more columns than yo
 
 ```{r select}
 select(nba_shooting, PLAYER, SEASON, FGP, TPP, FTP, eFGP, PTS, TSP)
+```
+
+
+## Converting Types and Handling Missing Values
+
+Sometimes a column that should be numeric gets read in as characters, especially when some values are missing.
+We can convert a column to integers with `as.integer()` inside `mutate()`.
+Missing values are recorded as `NA`, and we can replace them with a chosen value using `replace_na()`.
+
+```{r convert missing}
+example_stats <- tibble(
+  IBB = c("12", NA, "4"),
+  HBP = c("3", "1", NA)
+)
+
+example_stats <- example_stats %>%
+  mutate(
+    IBB = as.integer(IBB),
+    HBP = as.integer(HBP)
+  )
+
+replace_na(example_stats, list(IBB = 0, HBP = 0))
 ```
 
 

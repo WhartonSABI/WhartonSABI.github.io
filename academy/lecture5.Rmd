@@ -56,7 +56,7 @@ diving_hist <-
 diving_hist
 ```
 
-In the code above, we first overwrote `diving_hist` so that it is now a histogram of judges' scores where each bin has width 0.25. In the second line, we asked R to display this object. **For ggplot code, it is very important that the `+` goes at the end of a line, just like the pipe `%>%`.**
+In the code above, we first overwrote `diving_hist` so that it is now a histogram of judges' scores where each bin has width 0.25. In the second line, we asked R to display this object. For ggplot code, place the `+` at the end of a line, just like the pipe `%>%`.
 
 Notice that the label for the x-axis is JScore, which is the column name from the tbl. We can change the label by *adding* a layer.
 
@@ -224,6 +224,42 @@ judges <- judges + coord_flip()
 judges
 ```
 
+### Two-dimensional summaries
+
+Sometimes we want to divide the plane into rectangular bins and compute a summary statistic within each bin.
+The function `stat_summary_2d()` does exactly that.
+Below, it computes the average judge score within bins of diver rank and dive difficulty.
+
+```{r stat_summary_2d}
+ggplot(diving, aes(x = Rank, y = Difficulty, z = JScore)) +
+  stat_summary_2d() +
+  labs(x = "Diver Rank", y = "Difficulty", fill = "Mean Score")
+```
+
+If your data are already summarized into a rectangular grid, `geom_tile()` is often the most direct way to build a heat map.
+
+```{r geom_tile}
+diving_tile <- diving %>%
+  group_by(Round, Country) %>%
+  reframe(mean_score = mean(JScore))
+
+ggplot(diving_tile, aes(x = Round, y = Country, fill = mean_score)) +
+  geom_tile() +
+  labs(x = "Round", y = "Country", fill = "Mean Score")
+```
+
+### Annotations
+
+The `annotate()` function lets us add reference shapes or text to a plot.
+For example, we can draw a rectangle to highlight a region of a scatterplot.
+
+```{r annotate}
+ggplot(diving_grouped, aes(x = Rank_mean, y = JScore_mean)) +
+  geom_point() +
+  annotate("rect", xmin = 1, xmax = 10, ymin = 7.5, ymax = 9.5,
+           alpha = 0.1, color = "red")
+```
+
 ### Scales
 
 Scales allow you to adjust the aesthetics or visual aspects of a plot.  We return to the scatter plot of the judges' scores vs rank of the divers. This time, we want to color the points by the difficulty of the dive.
@@ -380,7 +416,7 @@ install.packages("devtools")
 
 The `devtools` package has a function, `install_github` that we will use for installing the remaining packages used below.
 
-**An important note to keep in mind is that most of these resources are largely still in development, so you may face challenges with installation and use.**
+Most of these resources are still in development, so installation and use can occasionally be inconsistent.
 
 
 ### `baseballr`
@@ -400,7 +436,7 @@ Using the `baseballr` package we can access all pitches thrown to a hitter in th
 playerid_lookup(last_name = "Judge", first_name = "Aaron")
 ```
 
-This will load up a look-up table with all identifiers joining various sources together (it may take a couple minutes to run and don't worry about the warning messages). We find that Aaron Judge's unique `mlbam_id` is 592450. Using this id, we can grab all pitches thrown to Judge in the current MLB season so far:
+This will load up a look-up table with all identifiers joining various sources together. It may take a couple minutes to run and may print warning messages. We find that Aaron Judge's unique `mlbam_id` is 592450. Using this id, we can grab all pitches thrown to Judge in the current MLB season so far:
 
 ```{r get Judge data, eval = FALSE}
 judge_statcast_data <- scrape_statcast_savant_batter(start_date = "2022-01-01", 

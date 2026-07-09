@@ -11,7 +11,7 @@ library(tidyverse)
 
 ## Review Lecture 2 Notes
 
-Please spend a few minutes reading through the notes from [Lecture 2](lecture2.html) and make sure you understand what each code block does.
+Review the notes from [Lecture 2](lecture2.html) and try to explain what each code block is doing.
 
 
 ## Payroll and Winning Percentage in the MLB
@@ -158,7 +158,7 @@ hitting_qualified <- replace_na(hitting_qualified,
                                 list(IBB = 0, HBP = 0, SH = 0, SF = 0, GIDP = 0))
 ```
 
-* We will discuss the syntax for `replace_na()` later in lecture. Now, rerun the `select()` function from above to check that the NAs were replaced with zeros. 
+* Now rerun the `select()` function from above to check that the NAs were replaced with zeros. 
 
 ```{r pt2 q5 solution}
 # solution

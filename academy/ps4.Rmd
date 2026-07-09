@@ -55,7 +55,7 @@ ggplot(data = called_pitches) +
   stat_summary_2d(mapping = aes(x = X, y = Z, z = Call))
 ```
 
-5. You'll notice in the plot above that `stat_summary_2d()` has added a legend to our plot. However, the title of the legend is a somewhat non-informative. Moreover, the color scheme does not distinguish between different values particularly well. We can change both the title of the legend and the color scheme inside a function called `scale_fill_distiller`. Don't worry too much about what this function means for now; we will cover it in more depth in [Lecture 5](lecture5.html). 
+5. You'll notice in the plot above that `stat_summary_2d()` has added a legend to our plot. However, the title of the legend is not very informative, and the color scheme can be improved. We can change both the legend title and the color palette using `scale_fill_distiller()`. 
 
 ```{r pt1 q5, include=TRUE}
 ggplot(data = called_pitches) +
@@ -97,10 +97,12 @@ The file [nba_boxscore.csv](data/nba_boxscore.csv) lists detailed box score info
 raw_boxscore <- read_csv("data/nba_boxscore.csv")
 ```
 
-* The column "Tm" lists the team on which each player played. We can look at the relative frequencies of the teams using the `table()` function. This function takes a vector and returns the frequencies of each unique value. 
+* The column "Tm" lists the team on which each player played. We can count the rows for each team with `group_by()` and `reframe()`. 
 
 ```{r pt2 q1 table, include=TRUE}
-raw_boxscore %>% select(Tm) %>% table()
+raw_boxscore %>%
+  group_by(Tm) %>%
+  reframe(n = n())
 ```
 
 * Looking at the list of teams you may see a few that you don't recognize. For instance, there are 15 players listed as playing on "WSB". We can use `filter()` to take a closer look at these players.
@@ -116,7 +118,7 @@ raw_boxscore %>% filter(Tm == "WSB")
 2. Use `filter()`, `group_by()`, `reframe()`, and `mutate()` to create a new tbl called `team_boxscore` that does the following:
 
     * removes the rows corresponding to player totals (i.e. `Tm == "TOT"`)
-    * groups the tbl according to Season and Tm. **Note: it is important to group on season first and team second **
+    * groups the tbl according to `Season` and `Tm`
     * Computes the total number of made and attempted field goals, three pointers, and free throws, along with points scored by each team in each season. 
     * Adds a column for team field goal percentage (FGP), three point percentage (TPP), and free throw percentages (FTP). 
     * Ungroup the resulting tbl <p/>
@@ -169,7 +171,7 @@ ggplot(one_team, aes(x = Season, y = Percentage, color = Statistic)) +
 
 ## Work with new data
 
-Once you finish reviewing the material from earlier this week, we'd like you to use some of the tools we introduced in [Lecture 4](lecture4.html) to read data into R.
+Once you finish reviewing the material from earlier this week, use the tools from the previous lectures to read data into R and make a few exploratory plots.
 
 Choose from some of the following datasets to take a look at:
 
@@ -192,7 +194,7 @@ ggplot(batting_tto, aes(x = ORDER_CT, y = EVENT_WOBA_19)) +
        y = "Event wOBA") +
   theme_minimal()
 ```
-3. Next, try mutating your data with `reframe()`, utilizing `pivot()`, or computing correlation with `cor()` to generate another visualization. For example, plotting the mean event wOBA with `geom_col()`.
+3. Next, try summarizing your data with `reframe()`, reshaping it with `pivot_longer()` or `pivot_wider()`, or computing correlation with `cor()` to generate another visualization. For example, plotting the mean event wOBA with `geom_col()`.
 
 ```{r grouping}
 batting_tto_grouped <- batting_tto %>% 

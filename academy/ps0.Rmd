@@ -25,7 +25,7 @@ Below, is a code-chunk showing the output of typing `2 + 3 * (6 - 4)^5` after th
 Throughout the course, you should try to replicate the code and output in these code chunks. 
 
 We see that R returns the value of the expression $2 + 3 \times (6 - 4)^5$ immediately underneath and the answer is preceded by a [1]. 
-For now, don't worry about this ``[1]''; we'll return to it later.
+This `[1]` indicates where the printed output begins.
 ```{r calculator}
 2 + 3 * (6 - 4)^5
 ```

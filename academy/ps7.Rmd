@@ -34,10 +34,16 @@ payroll <- payroll %>%
 ```
 
 
-2. Then, explore the relationship between payrolls and winning percentage by generating a scatterplot. Use `ifelse()` with the `%in%` operator to mark the Oakland A's and New York Yankees' points on the plot. Be sure to mark them with different colors by using `scale_color_manual()` and to change the alpha values or colors if needed so that overlapping point's don't completely obscure each other.
+2. Then, explore the relationship between payrolls and winning percentage by generating a scatterplot. Use `mutate()` and `case_when()` to create a column that labels the Oakland A's and New York Yankees separately from the other teams, then color the points by this new label.
 ```{r plot}
-ggplot(payroll, aes(x = payroll_norm, y = WP, 
-                    color = ifelse(name %in% c("New York Yankees", "Oakland Athletics"), name, "Other"))) +
+payroll <- payroll %>%
+  mutate(team_label = case_when(
+    name == "New York Yankees" ~ "New York Yankees",
+    name == "Oakland Athletics" ~ "Oakland Athletics",
+    TRUE ~ "Other"
+  ))
+
+ggplot(payroll, aes(x = payroll_norm, y = WP, color = team_label)) +
   geom_point(size = 3, alpha = 0.5) +
   labs(
     title = "MLB Payrolls vs Winning Percentage",
@@ -45,12 +51,7 @@ ggplot(payroll, aes(x = payroll_norm, y = WP,
     y = "Winning Percentage",
     color = "Team"
   ) +
-  theme_minimal() +
-  scale_color_manual(values = c(
-    "New York Yankees" = "navy",
-    "Oakland Athletics" = "lawngreen",
-    "Other" = "black"
-  ))
+  theme_minimal()
 
 ```
 
@@ -147,15 +148,13 @@ payrolls_test_summary <- payrolls_test %>%
   )
 
 # Plot
-ggplot(payrolls_test_summary, aes(x = reorder(name, wins_from_prediction), y = wins_from_prediction)) +
-  geom_bar(stat = "identity", fill = "lightblue4", alpha = 0.6) +
+ggplot(payrolls_test_summary, aes(x = name, y = wins_from_prediction)) +
+  geom_col(fill = "lightblue4", alpha = 0.6) +
   labs(
     title = "Average Wins Above/Below Prediction by Team",
     x = "Team",
     y = "Wins vs Predicted (Payroll Model)"
   ) +
   theme_minimal() +
-  coord_flip() +
-  scale_y_continuous(labels = scales::number_format(accuracy = 1))
+  coord_flip()
 ```
-

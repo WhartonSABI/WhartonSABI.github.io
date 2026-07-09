@@ -57,8 +57,6 @@ pitching <- pitching %>%
 pitching
 ```
 
-**IMPORTANT**: Before reading any further, make sure you and your team understand completely what is happening in the code above.
-
 Now that we have ERA for all pitchers eligible for our analysis, we can plot the ERAs by year.
 
 ```{r plot ERAs year}
@@ -85,7 +83,7 @@ standardize <- function(x){
 }
 ```
 
-For now, don't worry too much about the syntax or the `na.rm = TRUE` bits; we will discuss them in more depth later. Armed with our `standardize()` function, we can add a column called zERA_all which transforms ERA to the standardized scale.
+The `na.rm = TRUE` arguments tell R to ignore missing values when computing the mean and standard deviation. Armed with our `standardize()` function, we can add a column called zERA_all which transforms ERA to the standardized scale.
 
 ```{r mutate zERA}
 pitching <-

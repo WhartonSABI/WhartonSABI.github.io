@@ -8,11 +8,11 @@ knitr::opts_chunk$set(cache = TRUE, fig.align = "center", include = FALSE) # set
 library(tidyverse)
 ```
 
-Welcome to Problem Set 1. This problem set contains two parts. In the first part, you will write an R script that replicates our work with the `tbl` containing NBA shooting statistics that we saw in [Lecture 1](tc_lecture1.html). In the second part, you will begin working with a much larger dataset that we will explore in greater detail in [Lecture 2](tc_lecture2.html). **It is important that you finish the first part completely before moving on to the second part**
+Welcome to Problem Set 1. This problem set contains two parts. In the first part, you will write an R script that replicates our work with the `tbl` containing NBA shooting statistics that we saw in [Lecture 1](tc_lecture1.html). In the second part, you will begin working with a much larger dataset that we will explore in greater detail in [Lecture 2](tc_lecture2.html). Complete Part 1 before moving on to Part 2.
 
 ## Part 1: Review of Lecture 1
 
-1. Take a few minutes to read through the online notes for [Lecture 1](tc_lecture1.html). Without doing any coding, see if you can understand what the code in each code block is doing.
+1. Read through the online notes for [Lecture 1](tc_lecture1.html). Before doing any coding, try to identify what each code block is doing.
 
 2. Close and re-open RStudio. Navigate to your working directory.
 
