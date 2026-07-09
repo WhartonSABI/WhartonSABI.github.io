@@ -10,7 +10,7 @@ library(tidyverse)
 
 ## Visualizing the Strike Zone
 
-In this part, we will continue to use heatmaps (introduced briefly in [Lecture 2](lecture2.html)) to explore the strike zone in baseball. We will focus on data collected by PITCHf/x. At a high-level, PITCHf/x consists of a set of cameras installed at every ballpark which tracks the motion of each pitch. For more information about the system, check out this [article by Mike Fast](http://baseball.physics.illinois.edu/FastPFXGuide.pdf)  The data collected by PITCHf/x is then transmitted to the MLB Gameday application along with contextual information about the pitch. The dataset we'll be using contains the measurements from the PITCHf/x system recorded in 2015.
+In this part, we will use the rectangular-bin summaries and plot annotations from [Lecture 4](lecture4.html) to explore the strike zone in baseball. We will focus on data collected by PITCHf/x. At a high-level, PITCHf/x consists of a set of cameras installed at every ballpark which tracks the motion of each pitch. For more information about the system, check out this [article by Mike Fast](http://baseball.physics.illinois.edu/FastPFXGuide.pdf)  The data collected by PITCHf/x is then transmitted to the MLB Gameday application along with contextual information about the pitch. The dataset we'll be using contains the measurements from the PITCHf/x system recorded in 2015.
 
 1. Download [pitchfx_2015.csv](data/pitchfx_2015.csv) to your "data" folder. Read the CSV file into a tbl called `pitches` using the `read_csv` function. 
 
@@ -43,7 +43,7 @@ called_pitches <- pitches %>%
 ggplot(data = called_pitches)
 ```
 
-4. To estimate the probability of a called strike given the pitch location, we will use a strategy similar to what we used to make heatmaps in [Lecture 2](lecture2.html). Essentially, we divide the plane into several small rectangular bins and compute the proportion of called strikes within each bin. To compute this, we use the `stat_summary_2d()` function, which takes three aesthetics:
+4. To estimate the probability of a called strike given the pitch location, we will divide the plane into several small rectangular bins and compute the proportion of called strikes within each bin. To compute this, we use the `stat_summary_2d()` function, which takes three aesthetics:
     * x: variable on the horizontal axis
     * y: variable on vertical axis
     * z: variable that is passed to the summary function.
@@ -194,7 +194,7 @@ ggplot(batting_tto, aes(x = ORDER_CT, y = EVENT_WOBA_19)) +
        y = "Event wOBA") +
   theme_minimal()
 ```
-3. Next, try summarizing your data with `reframe()`, reshaping it with `pivot_longer()` or `pivot_wider()`, or computing correlation with `cor()` to generate another visualization. For example, plotting the mean event wOBA with `geom_col()`.
+3. Next, try summarizing your data with `reframe()` or reshaping it with `pivot_longer()` or `pivot_wider()` to generate another visualization. For example, plotting the mean event wOBA with `geom_col()`.
 
 ```{r grouping}
 batting_tto_grouped <- batting_tto %>% 

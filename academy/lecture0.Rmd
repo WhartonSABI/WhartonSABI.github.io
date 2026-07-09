@@ -73,6 +73,24 @@ After you get the folders ready and save `Moneyball.Rproj` in the main Moneyball
 
 We will be working with these datasets early in the course.
 
+## Installing and Loading the tidyverse
+
+Throughout the course, we will use the [tidyverse](https://www.tidyverse.org/), a collection of R packages for reading data, wrangling tables, and making visualizations.
+
+You only need to install the tidyverse once:
+
+```{r install tidyverse, eval = FALSE}
+install.packages("tidyverse")
+```
+
+After it is installed, load it at the start of each new R session:
+
+```{r load tidyverse, eval = FALSE}
+library(tidyverse)
+```
+
+When you open `Moneyball.Rproj` for class, a good routine is to open a script and begin by running `library(tidyverse)`.
+
 ## Getting Started With R
 
 We'll come back to these sports datasets later in Lecture 1.

@@ -12,7 +12,7 @@ library(tidyverse)
 
 # Data visualization with nflfastR 
 
-We will now apply our newly acquired plotting skills to make some visualizations working with data from nflfastR. Let's load in our usual libraries, as well as nflfastR.
+We will now apply our newly acquired plotting skills to make some visualizations working with data from nflfastR. If you have not installed `nflfastR` yet, run `install.packages("nflfastR")` once in the console. Then load in our usual libraries, as well as nflfastR.
 
 ```{r load in libraries, include = TRUE}
 library(tidyverse)
@@ -96,13 +96,13 @@ ggplot(pbp_grouped, aes(x = attempts, y = avg_yards_gained)) +
   ) +
   theme_minimal()
 ```
-9. Now, let's add a third variable. Set the color to equal `avg_cpoe` and use `scale_color_viridis_c()` to set the color scale.
+9. Now, let's add a third variable. Set the color to equal `avg_cpoe` and use `scale_color_distiller()` to set the color scale.
 
 ```{r}
 ggplot(pbp_grouped, aes(x = attempts, y = avg_yards_gained, color = avg_cpoe)) +
   geom_point(size = 3) +
   geom_abline(slope = 0.005, intercept = 5, linetype = "dashed", color = "black") +
-  scale_color_viridis_c() +
+  scale_color_distiller(palette = "Spectral") +
   labs(
     title = "Quarterback Attempts vs Average Yards Gained",
     x = "Attempts",

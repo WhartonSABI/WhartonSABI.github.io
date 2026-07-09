@@ -652,8 +652,10 @@ display: none;
 <div id="data-visualization-with-nflfastr" class="section level1">
 <h1>Data visualization with nflfastR</h1>
 <p>We will now apply our newly acquired plotting skills to make some
-visualizations working with data from nflfastR. Let&#x2019;s load in our usual
-libraries, as well as nflfastR.</p>
+visualizations working with data from nflfastR. If you have not
+installed <code>nflfastR</code> yet, run
+<code>install.packages(&quot;nflfastR&quot;)</code> once in the console. Then load
+in our usual libraries, as well as nflfastR.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(nflfastR)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
@@ -729,7 +731,7 @@ Note: This line was arbitrarily made with a slope and intercept that
 &#x201C;looks best&#x201D;, but in lecture 6, you will learn how to fit regression
 models to the data mathematically to make a line of best fit.</p></li>
 <li><p>Now, let&#x2019;s add a third variable. Set the color to equal
-<code>avg_cpoe</code> and use <code>scale_color_viridis_c()</code> to
+<code>avg_cpoe</code> and use <code>scale_color_distiller()</code> to
 set the color scale.</p></li>
 <li><p>Finally, visualize the average yards gained and completion yards
 over expected by quarterback. Choose to arrange either by

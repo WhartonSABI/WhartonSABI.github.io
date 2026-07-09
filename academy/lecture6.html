@@ -699,13 +699,12 @@ the points all lie on a line with negative slope.</p>
 <p>Loosely speaking, we can think of correlation as a measure of how
 well a line fits our data. <a href="http://guessthecorrelation.com/">Let&#x2019;s get some practice!</a></p>
 <p>We can calculate the correlation between two variables in
-<code>R</code> using the function <code>cor()</code>. Note that
-<code>cor()</code> is a Base R function and does not work with the other
-tidyverse functions, so we cannot pipe our data into it. Instead, we
-need to specifically point to each variable within the dataset, using
-the dollar sign symbol we&#x2019;ve seen a couple times before:
-<code>our_dataset$our_variable</code>. This extracts a single column as
-a vector. By contrast,
+<code>R</code> using the function <code>cor()</code>. Since
+<code>cor()</code> expects vectors rather than a tibble, we cannot pipe
+our data into it directly. Instead, we need to specifically point to
+each variable within the dataset, using the dollar sign symbol we&#x2019;ve
+seen a couple times before: <code>our_dataset$our_variable</code>. This
+extracts a single column as a vector. By contrast,
 <code>our_dataset %&gt;% select(our_variable)</code> returns a
 one-column tibble, which is useful in other contexts but is not what we
 want here.</p>

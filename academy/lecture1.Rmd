@@ -1,5 +1,5 @@
 ---
-title: "Lecture 1: R Basics & the Tidyverse"
+title: "Lecture 1: Reading and Wrangling Data"
 output: html_document
 ---
   
@@ -7,63 +7,9 @@ output: html_document
 knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 library(tidyverse)
 ```
-## Opening our project
 
-The *working directory* is the place where R saves output files and where it looks for data that you want to read in.
-In [Lecture 0](lecture0.html), we asked you to create a folder on your Desktop called Moneyball and save <a href="Moneyball.Rproj" download="Moneyball.Rproj">Moneyball.Rproj</a> inside it.
-
-From now on, the easiest way to start your work is to open `Moneyball.Rproj` in RStudio.
-When you open that project, RStudio automatically uses the Moneyball folder as your working directory.
-We can always check the current working directory with the code `getwd()`.
-
-**Important: for the rest of the course, start by opening the Moneyball project rather than resetting the working directory by hand.**
-
-
-## Base R
-Now that we have opened our project, we can work with data. The basic functionality included with R is called Base R. Simple arithmetic such as `2*3` and `mean(3:9)` are included as initial functionality in base R. We can also assign values to vectors and plot graphs.
-
-```{r base R}
-x <- 1:8
-y <- c(5,7,8,10,14,15,18,20)
-plot(x,y)
-```
-In the above code, we assigned the numbers 1-8 to x and assigned the numbers 5, 7, ..., 18, 20 to y. Then we plotted the graph with x and y, as if they were coordinate points.
-
-We did all that with Base R. However, the functionality provided by a fresh install of R is only a small fraction of the computing power available with R. Extra functionality comes from add-ons, or packages, created by developers.
-
-
-## Packages
-So far we have seen only the most basic of R's functionality. Arguably, one of the things that makes R so powerful is the ease with which users are able to define their own functions and release them to the public. As [Hadley Wickham](http://hadley.nz) defines them, "[R] packages are fundamental units of reproducible code. They include reusable R functions, the documentation that describes how to use them, and sample data." As of June 18, 2020, there are 15,805 packages available from the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org). The scope of these packages is vast: there are some designed for scraping data from the web, pre-processing data to get it into an analyzable format, performing standard and specialized statistical analyses, and publishing your results. People have also released packages tailored to very specific applications, like analyzing baseball data. There are also some more whimsical packages, like one that allows you to display your favorite [XKCD](https://xkcd.com) comic strip! 
-
-We can install packages in several ways:  
-
-1. In the top toolbar, Tools/Install Packages allows us to search and install packages to our library.
-
-2. In the bottom right pane, the Packages tab has an install button. After clicking this button, we can search for and install a package and its dependencies (for now, always leave the 'Install dependencies' box checked).  
-3. The code `install.packages("tidyverse")` will install tidyverse, or any other package.
-
-After installing a package, we have to load the package before using it. Again, we have two options for loading a package:  
-
-1. In bottom right pane, the Packages tab allows us to search and scroll for packages. The checkbox to the left of the package name indicates if the package is loaded. By checking that box, we can load the package.  
-2. The code `library(tidyverse)` will load tidyverse, or any other package.
-
-
-## The tidyverse  
-
-For the rest of the course, we will be working within the [tidyverse](https://www.tidyverse.org/), which consists of several R packages for data manipulation, exploration, and visualization. 
-They are all based on a common design philosophy, mostly developed by Hadley Wickham (whose name you will encounter a lot as you gain more experience with R). 
-
-To access tidyverse, first we need to install the tidyverse package:
-```{r install tidyverse, eval = FALSE}
-install.packages("tidyverse")
-```
-The `install.packages()` function is one way of installing packages in R. You can also use Tools/Install Packages or click on the Packages tab in the bottom right pane of your RStudio view and then click on Install to type in the package you want to install.
-
-Now with the `tidyverse` suite of packages installed, we can load them with the following code:
-```{r load tidyverse, eval=FALSE}
-library(tidyverse)
-```
-When you do that, you'll see a lot of output to the console, most of which you can safely ignore for now. **Note that you only need to install the package once. However, each time you open up a new R session and want to use the tidyverse, you will need to run the line** `library(tidyverse)` **at the start.**
+Open `Moneyball.Rproj` and start by loading the tidyverse with `library(tidyverse)`.
+Today we will focus on reading tabular data into R and creating new variables from the columns we load.
 
 
 ## Reading in tabular data

@@ -1025,45 +1025,19 @@ TSP and ignore the rest of the columns.</p>
 ## # &#x2139; 2,244 more rows</code></pre>
 </div>
 </div>
-<div id="converting-types-and-handling-missing-values" class="section level2">
-<h2>Converting Types and Handling Missing Values</h2>
-<p>Sometimes a column that should be numeric gets read in as characters,
-especially when some values are missing. We can convert a column to
-integers with <code>as.integer()</code> inside <code>mutate()</code>.
-Missing values are recorded as <code>NA</code>, and we can replace them
-with a chosen value using <code>replace_na()</code>.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>example_stats <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>  <span class="at">IBB =</span> <span class="fu">c</span>(<span class="st">&quot;12&quot;</span>, <span class="cn">NA</span>, <span class="st">&quot;4&quot;</span>),</span>
-<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>  <span class="at">HBP =</span> <span class="fu">c</span>(<span class="st">&quot;3&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="cn">NA</span>)</span>
-<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>)</span>
-<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a></span>
-<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a>example_stats <span class="ot">&lt;-</span> example_stats <span class="sc">%&gt;%</span></span>
-<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>    <span class="at">IBB =</span> <span class="fu">as.integer</span>(IBB),</span>
-<span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a>    <span class="at">HBP =</span> <span class="fu">as.integer</span>(HBP)</span>
-<span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a>  )</span>
-<span id="cb31-11"><a href="#cb31-11" tabindex="-1"></a></span>
-<span id="cb31-12"><a href="#cb31-12" tabindex="-1"></a><span class="fu">replace_na</span>(example_stats, <span class="fu">list</span>(<span class="at">IBB =</span> <span class="dv">0</span>, <span class="at">HBP =</span> <span class="dv">0</span>))</span></code></pre></div>
-<pre><code>## # A tibble: 3 &#xD7; 2
-##     IBB   HBP
-##   &lt;int&gt; &lt;int&gt;
-## 1    12     3
-## 2     0     1
-## 3     4     0</code></pre>
-</div>
 <div id="summarizing-individual-columns" class="section level2">
 <h2>Summarizing Individual Columns</h2>
 <p>Among eligible players, what was the average field goal percentage in
 the 2015-16 season? To answer this, we can use <code>filter()</code> to
 create a new tbl containing the data only for this season. Then we can
 use the dplyr verb <code>reframe()</code> as follows:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>nba_shooting_2016 <span class="ot">&lt;-</span> <span class="fu">filter</span>(nba_shooting, SEASON <span class="sc">==</span> <span class="dv">2016</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="fu">reframe</span>(nba_shooting_2016, <span class="at">FGP =</span> <span class="fu">mean</span>(FGP))</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>nba_shooting_2016 <span class="ot">&lt;-</span> <span class="fu">filter</span>(nba_shooting, SEASON <span class="sc">==</span> <span class="dv">2016</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">reframe</span>(nba_shooting_2016, <span class="at">FGP =</span> <span class="fu">mean</span>(FGP))</span></code></pre></div>
 <pre><code>## # A tibble: 1 &#xD7; 1
 ##     FGP
 ##   &lt;dbl&gt;
 ## 1 0.438</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">reframe</span>(nba_shooting_2016, <span class="at">FGP =</span> <span class="fu">mean</span>(FGP), <span class="at">TPP =</span> <span class="fu">mean</span>(TPP), <span class="at">FTP =</span> <span class="fu">mean</span>(FTP))</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">reframe</span>(nba_shooting_2016, <span class="at">FGP =</span> <span class="fu">mean</span>(FGP), <span class="at">TPP =</span> <span class="fu">mean</span>(TPP), <span class="at">FTP =</span> <span class="fu">mean</span>(FTP))</span></code></pre></div>
 <pre><code>## # A tibble: 1 &#xD7; 3
 ##     FGP   TPP   FTP
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1091,10 +1065,10 @@ when data analyses become more complicated, it is helpful to save these
 objects. R has its own special file format for efficiently saving data
 on your computer.</p>
 <p>We will use the <code>save()</code> command.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">save</span>(nba_shooting, <span class="at">file =</span> <span class="st">&quot;data/nba_shooting.RData&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">save</span>(nba_shooting, <span class="at">file =</span> <span class="st">&quot;data/nba_shooting.RData&quot;</span>)</span></code></pre></div>
 <p>When we want to <em>load</em> the data back into R, we can use the
 <code>load()</code> function</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/nba_shooting.RData&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/nba_shooting.RData&quot;</span>)</span></code></pre></div>
 </div>
 <div id="thinking-ahead-for-tomorrow" class="section level2">
 <h2>Thinking Ahead for Tomorrow</h2>

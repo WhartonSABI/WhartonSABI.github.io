@@ -43,7 +43,7 @@ If $r = 1$, then the points all lie on a line with positive slope. If $r = -1$, 
 
 Loosely speaking, we can think of correlation as a measure of how well a line fits our data. [Let's get some practice!](http://guessthecorrelation.com/)
 
-We can calculate the correlation between two variables in `R` using the function `cor()`. Note that `cor()` is a Base R function and does not work with the other tidyverse functions, so we cannot pipe our data into it. Instead, we need to specifically point to each variable within the dataset, using the dollar sign symbol we've seen a couple times before: `our_dataset$our_variable`. This extracts a single column as a vector. By contrast, `our_dataset %>% select(our_variable)` returns a one-column tibble, which is useful in other contexts but is not what we want here.
+We can calculate the correlation between two variables in `R` using the function `cor()`. Since `cor()` expects vectors rather than a tibble, we cannot pipe our data into it directly. Instead, we need to specifically point to each variable within the dataset, using the dollar sign symbol we've seen a couple times before: `our_dataset$our_variable`. This extracts a single column as a vector. By contrast, `our_dataset %>% select(our_variable)` returns a one-column tibble, which is useful in other contexts but is not what we want here.
 
 The correlation between the 2014 and 2015 batting averages is:
 

@@ -52,6 +52,28 @@ Let's break down what's happening on the right-hand side of the assignment opera
 There are several conventions for formatting code when using the pipe. See [here](http://style.tidyverse.org/pipes.html) and [here](http://r4ds.had.co.nz/pipes.html) for much more information and for some advanced "special" pipes.
 
 
+## Converting Types and Handling Missing Values
+
+Sometimes a column that should be numeric gets read in as characters, especially when some values are missing.
+We can convert a column to integers with `as.integer()` inside `mutate()`.
+Missing values are recorded as `NA`, and we can replace them with a chosen value using `replace_na()`.
+
+```{r convert missing}
+example_stats <- tibble(
+  IBB = c("12", NA, "4"),
+  HBP = c("3", "1", NA)
+)
+
+example_stats <- example_stats %>%
+  mutate(
+    IBB = as.integer(IBB),
+    HBP = as.integer(HBP)
+  )
+
+replace_na(example_stats, list(IBB = 0, HBP = 0))
+```
+
+
 ## The Lahman Baseball Database
 
 As mentioned above, we will use data from a baseball database maintained by [Sean Lahman](http://www.seanlahman.com). This database contains pitching, hitting, and fielding statistics from Major League Baseball from 1871 to 2016. The data is available as an R package, which we will need to install and load. To install the package, we need to run the following in our console.

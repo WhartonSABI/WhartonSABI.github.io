@@ -76,7 +76,7 @@ We see clearly, now, that our logistic regression model has the best out-of-samp
 
 ## Multiple Regression
 
-Up to this point, we have only talked about regression models with a single predictor (exception: the end of [Problem Set 6](ps6.html) had an example of multiple regression). Though the logistic regression model we just built outperforms all of the ones we had built before, it is still pretty limited. After all, for any specific distance, this model estimates that every kicker has exactly the same chance of making a field goal. The code below fits a logistic regression model that accounts for both the kicker and the distance.
+Up to this point, we have only talked about regression models with a single predictor. Though the logistic regression model we just built outperforms all of the ones we had built before, it is still pretty limited. After all, for any specific distance, this model estimates that every kicker has exactly the same chance of making a field goal. The code below fits a logistic regression model that accounts for both the kicker and the distance.
 
 ```{r logit multiple}
 logit_dist_kicker <- glm(Success ~ Distance + Kicker, family = binomial, data = fg_train)
@@ -132,3 +132,198 @@ reframe(fg_test,
 ```
 
 It turns out that even though accounting for the distance and kicker resulted in even better in-sample performance (i.e. lower Brier score on the training data), the out-of-sample performance was worse than the model that accounted only for the distance.
+
+
+## Project Resources and Data Sources
+
+As you start thinking about project ideas, it helps to know where to find data and where to look for plotting references.
+Below are a few resources that are useful once you are comfortable with the main course material.
+
+### Plot references
+
+The palettes used throughout the course, including "OrRd" and "Spectral", come from [ColorBrewer](http://colorbrewer2.org/).
+This [ggplot guide](https://r-graph-gallery.com/ggplot2-package.html) is also a useful quick reference for many different plot types.
+If you want a long list of built-in R colors, this [alphabetical guide to R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) is handy to bookmark.
+
+### `Lahman`
+
+The [Lahman Baseball Database](http://www.seanlahman.com/baseball-archive/statistics/) is a popular resource created by Sean Lahman with historical data going back to 1871.
+There is an R package we can install to access the data directly:
+
+```{r install Lahman, eval = FALSE}
+install.packages("Lahman")
+```
+
+Next we load the package, and check out what datasets are available:
+
+```{r load Lahman}
+library(Lahman)
+```
+
+```{r Lahman data, eval=FALSE}
+data(package = "Lahman")
+```
+
+There is an incredible amount of data here going up through the 2021 season.
+As an example, we can access the `Teams` dataset, calculate the number of strikeouts each year since 1871, and plot the line over time.
+
+One quick note about missing data: in R, a missing value is recorded as `NA`.
+When you see `na.rm = TRUE`, it means "ignore the missing values when carrying out this calculation."
+More generally, `is.na(x)` checks whether `x` is missing, and `!is.na(x)` keeps only the rows where `x` is not missing.
+
+```{r Lahman strikeouts year}
+Teams %>%
+  group_by(yearID) %>%
+  reframe(n_so = sum(SO, na.rm = TRUE)) %>%
+  ggplot() +
+  geom_line(aes(x = yearID, y = n_so)) +
+  labs(x = "Year", y = "Number of strikeouts",
+       title = "Total number of strikeouts in each baseball season since 1871",
+       caption = "Data courtesy of Lahman") +
+  theme_bw()
+```
+
+### `nflfastR`
+
+The [`nflfastR` package](https://www.nflfastr.com/) provides NFL play-by-play data along with expected points and win probability estimates.
+Here is how to install it, along with `ggimage` for plotting team logos:
+
+```{r install nflfastR ggimage, eval = FALSE}
+install.packages("nflfastR")
+install.packages("ggimage")
+```
+
+```{r load nflfastR ggimage}
+library(nflfastR)
+library(ggimage)
+```
+
+Now we can gather play-by-play data for the 2021 season.
+
+```{r load pbp_2021, warning = FALSE, message = FALSE}
+pbp_2021 <- load_pbp(2021)
+```
+
+With this data, we can summarize the performance of all NFL teams using expected points added (EPA) per game on offense and defense.
+The following code creates offensive and defensive summaries that we will join together to plot.
+
+```{r epa}
+offense_epa_21 <- pbp_2021 %>%
+  filter(!is.na(posteam)) %>%
+  group_by(posteam) %>%
+  summarise(n_games = length(unique(game_id)), off_total_epa = sum(epa, na.rm = TRUE)) %>%
+  mutate(off_epa_per_game = off_total_epa / n_games)
+
+defense_epa_21 <- pbp_2021 %>%
+  filter(!is.na(defteam)) %>%
+  group_by(defteam) %>%
+  summarise(n_games = length(unique(game_id)), def_total_epa = sum(epa, na.rm = TRUE)) %>%
+  mutate(def_epa_per_game = -1 * def_total_epa / n_games)
+```
+
+```{r join epa plot}
+offense_epa_21 %>%
+  inner_join(defense_epa_21, by = c("posteam" = "defteam")) %>%
+  left_join(teams_colors_logos, by = c("posteam" = "team_abbr")) %>%
+  ggplot(aes(x = off_epa_per_game, y = def_epa_per_game)) +
+  geom_image(aes(image = team_logo_espn), size = 0.05) +
+  labs(x = "Offensive EPA per game",
+       y = "Defensive EPA per game",
+       caption = "Data accessed via nflfastR",
+       title = "Offensive and defensive EPA per game for each team in the 2021 NFL season") +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed") +
+  theme_bw()
+```
+
+### Installing GitHub Packages
+
+While most R packages are installed with `install.packages()`, some sports-data packages are hosted only on GitHub.
+To install them, we first install `devtools`:
+
+```{r install devtools, eval = FALSE}
+install.packages("devtools")
+```
+
+The `devtools` package provides the function `install_github()`, which we will use below.
+Most of these resources are still in development, so installation and use can occasionally be inconsistent.
+
+### `baseballr`
+
+The [`baseballr` package](http://billpetti.github.io/baseballr/) gives direct access to baseball data from sites like FanGraphs, Baseball-Reference, and Baseball Savant.
+
+```{r install load baseballr, eval = FALSE}
+devtools::install_github("BillPetti/baseballr")
+library(baseballr)
+```
+
+Using the `baseballr` package, we can access all pitches thrown to a hitter in a season.
+We first use `playerid_lookup()` to find Aaron Judge's Statcast id:
+
+```{r lookup Judge, eval = FALSE}
+playerid_lookup(last_name = "Judge", first_name = "Aaron")
+```
+
+This may take a couple minutes to run and may print warning messages.
+Aaron Judge's unique `mlbam_id` is 592450.
+Using this id, we can grab all pitches thrown to Judge in the 2022 MLB season:
+
+```{r get Judge data, eval = FALSE}
+judge_statcast_data <- scrape_statcast_savant_batter(start_date = "2022-01-01",
+                                                    end_date = "2022-12-31",
+                                                    batterid = 592450)
+```
+
+If you want to reproduce the plot below without scraping the data yourself, download [judge_statcast_data_2022.RDS](data/judge_statcast_data_2022.RDS) and move it into your `data` folder.
+
+```{r load Judge data, include = FALSE}
+judge_statcast_data <- readRDS("data/judge_statcast_data_2022.RDS")
+```
+
+```{r Judge plot, warning=FALSE}
+judge_statcast_data %>%
+  filter(type == "X") %>%
+  ggplot(aes(x = launch_speed, y = launch_angle,
+             color = hit_distance_sc)) +
+  geom_point() +
+  scale_color_viridis_c(option = "A") +
+  labs(x = "Exit velocity (MPH)", y = "Launch angle (degrees)",
+       color = "Distance (feet)",
+       title = "Aaron Judge's launch angle, exit velocity, and distance traveled",
+       caption = "Data accessed via baseballr")
+```
+
+This is just one example of the type of data available using `baseballr`.
+See the package website for more [data acquisition functions](https://billpetti.github.io/baseballr/reference/index.html).
+
+### `nbastatr`
+
+The [`nbastatR` package](http://asbcllc.com/nbastatR/) provides many functions for accessing NBA data from a variety of websites.
+
+```{r install load nbastatR, eval = FALSE}
+devtools::install_github("abresler/nbastatR")
+library(nbastatR)
+```
+
+The code below demonstrates how to get all shot attempts by the 2022 Golden State Warriors.
+
+```{r get Warriors shots, eval = FALSE}
+warriors_shots <- teams_shots(teams = "Golden State Warriors",
+                             seasons = c(2022))
+```
+
+If you want to reproduce the plot below without pulling the data yourself, download [warriors_shots_2022.RDS](data/warriors_shots_2022.RDS) and move it into your `data` folder.
+
+```{r load Warriors shots, include = FALSE}
+warriors_shots <- readRDS("data/warriors_shots_2022.RDS")
+```
+
+```{r Warriors shots plot}
+warriors_shots %>%
+  ggplot(aes(x = locationX, y = locationY, color = isShotMade)) +
+  geom_point(alpha = 0.5) +
+  scale_color_manual(values = c("#FFC72C", "#1D428A")) +
+  theme_bw() +
+  labs(title = "Shot attempts by Golden State Warriors in 2021-22 NBA season",
+       caption = "Data accessed via nbastatR")
+```

@@ -224,28 +224,6 @@ select(nba_shooting, PLAYER, SEASON, FGP, TPP, FTP, eFGP, PTS, TSP)
 ```
 
 
-## Converting Types and Handling Missing Values
-
-Sometimes a column that should be numeric gets read in as characters, especially when some values are missing.
-We can convert a column to integers with `as.integer()` inside `mutate()`.
-Missing values are recorded as `NA`, and we can replace them with a chosen value using `replace_na()`.
-
-```{r convert missing}
-example_stats <- tibble(
-  IBB = c("12", NA, "4"),
-  HBP = c("3", "1", NA)
-)
-
-example_stats <- example_stats %>%
-  mutate(
-    IBB = as.integer(IBB),
-    HBP = as.integer(HBP)
-  )
-
-replace_na(example_stats, list(IBB = 0, HBP = 0))
-```
-
-
 ## Summarizing Individual Columns
 
 Among eligible players, what was the average field goal percentage in the 2015-16 season? To answer this, we can use `filter()` to create a new tbl containing the data only for this season. Then we can use the dplyr verb `reframe()` as follows:

@@ -63,6 +63,30 @@ ggplot(batting_2014_2015_slice, aes(x = playerID, y = BA, fill = yearID)) +
 ```
 These visualizations can be helpful to compare player statistics. We can now move back to using our cleaned, tidy data for predictions. 
 
+## Heat Maps and Plot Annotations
+
+When both axes are quantitative, it can be useful to divide the plane into rectangular bins and summarize a third variable within each bin.
+The function `stat_summary_2d()` does that automatically.
+
+For instance, we can look at how batting average changed from 2014 to 2015 by first creating a column for the year-to-year change.
+
+```{r batting change}
+batting_2014_2015 <- batting_2014_2015 %>%
+  mutate(BA_change = BA_2015 - BA_2014)
+```
+
+Then we can compute the mean change within rectangular bins of 2014 and 2015 batting averages.
+The function `scale_fill_distiller()` lets us control the fill colors and legend title, and `annotate()` lets us draw reference shapes on top of the plot.
+
+```{r stat_summary_2d batting}
+ggplot(batting_2014_2015, aes(x = BA_2014, y = BA_2015, z = BA_change)) +
+  stat_summary_2d() +
+  scale_fill_distiller("Mean change", palette = "RdBu") +
+  annotate("rect", xmin = 0.25, xmax = 0.30, ymin = 0.25, ymax = 0.30,
+           alpha = 0, color = "black") +
+  labs(x = "2014 Batting Average", y = "2015 Batting Average")
+```
+
 ## Predicting Batting Averages
 
 Imagine there's one more player who played in both 2014 and 2015 but who is not in our dataset. Without knowing anything else about the player, how could we predict their 2015 batting average using the data that we have? The simplest thing (and as it turns out the best thing) to do in this case is to use the overall mean of the 2015 batting averages in our dataset to predict the batting average of this extra player. 
