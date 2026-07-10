@@ -8,7 +8,7 @@ knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 library(tidyverse)
 ```
 
-In [Lecture 4](lecture4.html), we looked at predicting an MLB player's 2015 batting average using their 2014 batting average. We did so by binning the data and looking at the average within each bin. What if we wanted to make the bins infinitesimally small? This brings us to the ideas of *correlation* and the *regression method*.
+In [Lecture 5](lecture5.html), we looked at predicting an MLB player's 2015 batting average using their 2014 batting average. We did so by binning the data and looking at the average within each bin. What if we wanted to make the bins infinitesimally small? This brings us to the ideas of *correlation* and the *regression method*.
 
 We again load the data (if you don't have it, you can download it [here](data/batting_2014_2015.RData)) and use the `pivot_wider()` function to separate the 2014 and 2015 batting averages into separate columns. 
 

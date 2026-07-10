@@ -9,7 +9,7 @@ library(tidyverse)
 options(pillar.sigfig = 4) # increase sigfigs of tibble output from 3 to 4, increase width of output to fit more columns
 ```
 
-In [Lecture 4](lecture4.html) and [Lecture 6](lecture6.html), we started building a model for predicting a baseball player's 2015 batting average using his 2014 batting average. We found that some models, even though they fit the data quite well, appeared to *overfit* and may not predict future observations well. Overfitting happens when the model is too complex; the model is improperly describing the random error rather than properly describing the relationship between variables. We will switch gears a little bit and discuss how to diagnose overfit issues using data on field goals in the NFL.
+In [Lecture 5](lecture5.html) and [Lecture 6](lecture6.html), we started building a model for predicting a baseball player's 2015 batting average using his 2014 batting average. We found that some models, even though they fit the data quite well, appeared to *overfit* and may not predict future observations well. Overfitting happens when the model is too complex; the model is improperly describing the random error rather than properly describing the relationship between variables. We will switch gears a little bit and discuss how to diagnose overfit issues using data on field goals in the NFL.
 
 
 ## Training and Testing Paradigm
@@ -100,13 +100,13 @@ Now when we bin our data into 2-yard increments, we find that our forecasts are 
 
 ## Assessing Predictions
 
-We now have several predictive models of field goal success: phat_all, phat_kicker, phat_dist_10, phat_dist_5, and phat_dist_2. Recall from [Lecture 4](lecture4.html) that to assess how well we are predicting a continuous outcome, we could use the RMSE. When predicting a binary outcome, we have a few more options. To set the stage, let $y_{i}$ be the outcome of the $i^{\text{th}}$ observation and let $\hat{p}_{i}$ be the forecasted probability that $y_{i} = 1.$ (i.e. of making the FG)
+We now have several predictive models of field goal success: phat_all, phat_kicker, phat_dist_10, phat_dist_5, and phat_dist_2. Recall from [Lecture 5](lecture5.html) that to assess how well we are predicting a continuous outcome, we could use the RMSE. When predicting a binary outcome, we have a few more options. To set the stage, let $y_{i}$ be the outcome of the $i^{\text{th}}$ observation and let $\hat{p}_{i}$ be the forecasted probability that $y_{i} = 1.$ (i.e. of making the FG)
 
 The [Brier Score](https://en.wikipedia.org/wiki/Brier_score) is defined as
 $$
 BS = \frac{1}{n}\sum_{i = 1}^{n}{(y_{i} - \hat{p}_{i})^{2}}
 $$
-Looking at the formula, we see that the Brier score is just the mean square error of our forecasts. Using code that is very nearly identical to that used to compute RMSE in [Lecture 4](lecture4.html), we can compute the Brier score of each of our prediction models.
+Looking at the formula, we see that the Brier score is just the mean square error of our forecasts. Using code that is very nearly identical to that used to compute RMSE in [Lecture 5](lecture5.html), we can compute the Brier score of each of our prediction models.
 
 ```{r fg_train Brier}
 reframe(fg_train,

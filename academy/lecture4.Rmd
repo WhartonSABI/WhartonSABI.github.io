@@ -1,5 +1,5 @@
 ---
-title: 'Lecture 4: Tidy Data & Regression Introduction'
+title: 'Lecture 4: Advanced Visualization & Tidy Data'
 output: html_document
 ---
 
@@ -8,23 +8,238 @@ knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 library(tidyverse)
 ```
 
-## Tidy Data
+In [Lecture 2](lecture2.html), we saw that visualization using ggplot could provide important insights into large datasets.
+Today, we will learn more about ggplot, reshape data for plotting, and build several more advanced visualizations.
 
-Before we jump into any analysis, we wanted to start by discussing the notion of "tidy data" because not all datasets you find will be organized in a form that's easy to analyze. Thus, you'll often find yourself in a situation where you'll need to manipulate the data into a better form.  The entire `tidyverse` ecosystem of packages and functions is based on analyzing datasets that are in a "tidy" format. This format, at its simplest, must adhere to the following three rules:
+
+## Visualizing the Diving Dataset
+
+In this course, we will be using the package ggplot2 for all of our data visualization. The `gg` stands for "grammar of graphics", a framework for data visualization. This framework separates the process of visualization into different components: data, aesthetic mappings, and geometric objects. These components are then added together (or layered) to produce the final graph. We're going to illustrate these components using the [diving dataset](data/diving.csv) from Prof. Wyner's lecture.
+
+```{r load diving, message=FALSE}
+library(tidyverse)
+diving <- read_csv("data/diving.csv")
+```
+
+
+### Components of a Plot
+
+The first step in any data visualization is to tell R which tbl the data we want to plot lives. This is done using the `ggplot()` function. Notice that we are *assigning* the plot to a new variable, `diving_hist`. Later, we will *add* layers to the plot using the `+` operator.
+
+```{r diving ggplot}
+diving_hist <- ggplot(data = diving)
+```
+
+Aesthetics map the data to the properties of the plot. Examples include:
+
+* `x`: the variable that will be on the x-axis
+* `y`: the variable that will be on the y-axis
+* `color`: the variable that categorizes data by color
+* `shape`: the variable that categorizes data by shape
+
+You can define the `aes` in the `ggplot` call, which will then be used for all later layers, or you can define the `aes` in the `geom` (see below), which will only apply to that `geom`. Geometric objects, or `geoms`, determine the type of plot that will be created. Examples include:
+
+* `geom_point()`: creates a scatterplot
+* `geom_histogram()`: creates a histogram
+* `geom_line()`: creates a line
+* `geom_boxplot()`: creates a boxplot
+
+
+### Putting it All Together
+
+Let's make a histogram of judges' scores.
+
+```{r diving hist}
+diving_hist <- 
+  diving_hist + 
+  geom_histogram(aes(x = JScore), binwidth = 0.25)
+diving_hist
+```
+
+In the code above, we first overwrote `diving_hist` so that it is now a histogram of judges' scores where each bin has width 0.25. In the second line, we asked R to display this object. For ggplot code, place the `+` at the end of a line, just like the pipe `%>%`.
+
+Notice that the label for the x-axis is JScore, which is the column name from the tbl. We can change the label by *adding* a layer.
+
+```{r diving hist x label}
+diving_hist <- 
+  diving_hist + 
+  labs(x = "Judge Score")
+diving_hist
+```
+
+
+### Facets
+
+What if we want to separate the judges' scores by country? We can use *facets*. Facets allow you to separate graphs by category. We do not need to redo our code for the histogram; we only need to add a *facet* layer to our graph `diving_hist`. The first argument of `facet_wrap()` is the column of our dataset that contains the category information. The second argument of `facet_wrap()` specifies the number of rows in which to display the graphs.
+
+```{r facet_wrap}
+diving_hist <- 
+  diving_hist + 
+  facet_wrap("JCountry", nrow = 3)
+diving_hist
+```
+
+To get a sense of whether a particular country's judges are biased, it would be useful to add a reference line at the median score over all judges and countries to each facet. So, we must first calculate the overall median score, which we can do using the `summarize()` function. Then, we can display this median on our plots with `geom_vline()`, which adds a vertical line. We can also pass in a custom color argument to this line so that it will easily stand out from the rest of our values. This website provides a look at all the built-in color arguments in R: [R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf)
+
+```{r facet_wrap median}
+median_score <- diving %>% 
+  reframe(med = median(JScore)) %>%
+  pull(med)
+diving_hist <- 
+  diving_hist + 
+  geom_vline(xintercept = median_score, color = "lightcoral")
+diving_hist
+```
+
+Note that when calculating our `median_score`, the `reframe` function returns a tbl rather than a single value. To "pull" out the single median value from our tbl, we use the `pull` function.
+
+
+### Boxplots and violin plots
+
+Boxplots are also an important visualization tool. We now create boxplots of the judges' scores, separated by diving round. We can also color our boxplots according to the `Round` variable by including the `fill` argument within the `aes()` function. Note that if we included the `fill` argument outside of the `aes()` function, we would only be able to color all boxplots the same color (by putting `fill` inside of the aesthetic, we are able to "map" the variable `Round` to the fill color of the plot based on the values of `Round`).
+
+```{r boxplot fill}
+diving_box <- ggplot(data = diving) + 
+  geom_boxplot(aes(x = Round, y = JScore, fill = Round)) +
+  labs(title = "Diving scores by round", x = "", y = "Judge Score", fill = "Round")
+diving_box
+```
+
+We can also remove the unnecessary x-axis ticks and labels as the legend on the right is sufficient. We do so using the `theme` layer:
+
+```{r boxplot theme}
+diving_box <- diving_box + 
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+diving_box
+```
+
+We can also plot this data as violin plots, which take the same arguments as `geom_boxplot()` but use `geom_violin()` instead. We can also change the "look" of our plots by setting the theme. `theme_minimal()` is frequently used for a much cleaner look. 
+```{r}
+diving_violin <- ggplot(data = diving) + 
+  geom_violin(aes(x = Round, y = JScore, fill = Round)) +
+  labs(title = "Diving scores by round", x = "", y = "Judge Score", fill = "Round") +
+  theme_minimal()
+
+diving_violin
+```
+
+We can see that the boxplots provide more information about statistical features, such as the median and quartiles, but the violin plots provide a better sense of how the data is distributed. We can see the effect of smaller rounds having more binned scores, whereas they are spread much more evenly in the first round. 
+
+### Barplots
+
+We can also create barplots using `geom_bar`. By mapping `fill=JCountry` inside our `aes()`, we can map each bar's color to the country for that judge.
+
+```{r barplot}
+bar <- ggplot(data = diving) +
+  geom_bar(aes(x = JCountry, fill = JCountry)) + 
+  labs(x = "Judge Country") +
+  theme_minimal() +
+  theme(legend.position = "none") 
+bar
+```
+
+
+### Scatterplots
+
+Now let's turn back to scatterplots, which were introduced in [Lecture 2](lecture2.html). We plot judges' score versus rank of the diver. As we expect, divers with better (lower-numbered) ranks tend to receive higher scores.
+```{r scatterplot}
+scatter_raw = ggplot(data = diving) +
+  geom_point(aes(x = Rank, y = JScore, color = Country)) +
+  labs(x = "Diver Rank", y = "Judge Score") + 
+  theme_minimal()
+
+scatter_raw
+```
+We can see that this plot is a little messy and hard to interpret, which may commonly happen with scatterplots when multiple rows correspond to the same thing, such as a diver. We can improve on this visual by grouping per diver and using `reframe()` to calculate the mean of the judge scores, ranks, and difficulties for each diver. We also want to save the country for visualizations, so we use the `first()` command within `reframe()`. 
+
+```{r group diving}
+diving_grouped <- diving %>% 
+  group_by(Diver) %>% 
+  reframe(JScore_mean = mean(JScore), 
+          Rank_mean = mean(Rank),
+          Difficulty_mean = mean(Difficulty),
+          Country = first(Country)) 
+
+head(diving_grouped)  
+```
+
+This will allow us to plot a single point per diver, which will make the plot much easier to interpret.
+
+```{r scatterplot grouped}
+
+scatter = ggplot(data = diving_grouped) +
+  geom_point(aes(x = Rank_mean, y = JScore_mean, color = Country), size = 2) +
+  labs(x = "Diver Rank", y = "Judge Score") + 
+  theme_minimal()
+
+scatter
+```
+We can see here the much clearer negative relationship between judge score and diver rank.
+
+### Lines
+
+We can also add an `abline` to our scatterplot--that is, a line where we specify the y-intercept (`intercept`) and the slope (`slope`):
+
+```{r scatter abline}
+scatter <- scatter + 
+  geom_abline(intercept = 8.5, slope = -0.1, color = "red")
+scatter
+```
+
+*Note*: `geom_abline` is different from `geom_line`: `geom_line` "connects the dots" between your data and so doesn't have to be a straight line, whereas `geom_abline` draws a straight line with the specified slope and y-intercept. A common usage is to add a visual reference line to a scatterplot.
+
+Other `geom` for lines are:
+
+* `geom_vline`: to add a vertical line to a plot
+* `geom_hline`: to add a horizontal line to a plot
+
+
+### Stats
+
+We can also specify a layer using `stat_`, which stands for statistical transformation. This is useful if we want to plot a summary statistic of our data, such as a mean or median. By using a `stat_` layer, we do not have to compute this summary statistic beforehand--`ggplot` will compute the summary statistic for us and then plot the result. 
+
+For example, suppose we want to plot the means of each judge's score and provide error bars of one standard error on either side of the mean. We could use `summarize` and `group_by` to find the mean and standard errors for each judge, *or* we could just use a `stat_` layer!
+
+The layer `stat_summary()` computes and then plots a user-specified summary statistic. We choose the option `mean_se` to calculate the means and standard errors of the scores of each judge.
+
+As always, we set up the plot by calling `ggplot`, specifying `data = diving` and then providing the `aes`. In this case, we want the judge on the `x`-axis and their scores on the `y`-axis. We then add our `stat_summary` layer.
+
+```{r stat_summary}
+judges <- ggplot(data = diving, aes(x = Judge, y = JScore)) + 
+  stat_summary(fun.data = mean_se) + 
+  labs(y = "Judge Score")
+judges
+```
+
+We can see that the judges' names are bunched together... we can make them much more readable by rotating the x-axis labels by 45 degrees using the `theme` layer:
+```{r}
+judges_rotate <- judges + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+judges_rotate
+```
+
+We can also completely flip the coordinates to make a horizontal plot!
+```{r coord_flip}
+judges <- judges + coord_flip()
+judges
+```
+
+## Tidy Data for Visualization
+
+Before we move to a few more advanced plots, it will be useful to reshape a dataset. Many plots become much easier once the data are in a tidy format:
 
 1. Each **variable** must have its own **column**.
 2. Each **observation** must have its own **row**.
 3. Each **value** must have its own **cell**.
 
-To make the above discussion much more concrete, let's go back to the dataset we created in the challenge question at the end of [Problem Set 3](ps3.html). If you haven't yet completed that, you can download the final [batting_2014_2015 dataset here](data/batting_2014_2015.RData) (then save it to your "data" folder). Printing out the tbl, we see that there is a separate row for each "player-season".
+To make this concrete, let's go back to the dataset we created in the challenge question at the end of [Problem Set 3](ps3.html). If you haven't yet completed that, you can download the final [batting_2014_2015 dataset here](data/batting_2014_2015.RData) (then save it to your "data" folder). Printing out the tbl, we see that there is a separate row for each "player-season".
 
 ```{r load batting_2014_2015}
-library(tidyverse)
 load("data/batting_2014_2015.RData")
 batting_2014_2015
 ```
 
-Let's say we want to study the relationship between a player's 2014 batting average and his 2015 batting average. In this case, each observation is a player, and that player has two associated variables; batting average in 2014, and batting average in 2015. We can do this with the `pivot_wider` function. The `names_from` argument indicates the new column(s) in the table - in this case `yearID`. The `values_from` then indicates what values go in our new columns - in this case `BA`. We can use the `names_prefix` argument to easily rename the columns with `BA_` so that our columns don't start with numbers.
+Let's say we want to study the relationship between a player's 2014 batting average and his 2015 batting average. In this case, each observation is a player, and that player has two associated variables: batting average in 2014 and batting average in 2015. We can do this with the `pivot_wider()` function. The `names_from` argument indicates the new column(s) in the table - in this case `yearID`. The `values_from` argument then indicates what values go in our new columns - in this case `BA`. We can use the `names_prefix` argument to rename the columns with `BA_` so that our column names do not start with numbers.
 
 ```{r pivot_wider batting_2014_2015}
 batting_2014_2015 <- batting_2014_2015 %>%
@@ -36,9 +251,8 @@ batting_2014_2015 <- batting_2014_2015 %>%
 head(batting_2014_2015)
 ```
 
-When we print out `batting_2014_2015`, we notice that it is easier to read in this proper "tidy" format. Moreover, many of the `tidyverse` functions that we've covered and will continue to learn are much simpler to implement when used on data of this form. We'll continue to see examples of how to "tidy" up our data as we go through the lectures and problem sets.
+It can also be helpful to work with the original, "long" format of the data when making visualizations. We can easily revert back to this form with `pivot_longer()`, which will take the compact version and unpack it back into one row per year. `cols` represents the column titles that are being converted into a new column, in this case `BA_2014` and `BA_2015`. The `names_to` argument indicates the name of the new column that will contain these values, and the `values_to` argument indicates the name of the new column that will contain the values themselves. We can then `mutate()` to remove the `BA_` prefix and see that our table looks like our original data.
 
-It can also be helpful to work with the original, "long" format of the data when making visualizations. We can easily revert back to this form with `pivot_longer()`, which will take the compact version and unpack it back into one row per year. `cols` represents the column titles that are being converted into a new column, in this case `BA_2014` and `BA_2015`. The `names_to` argument indicates the name of the new column that will contain these values, and the `values_to` argument indicates the name of the new column that will contain the values themselves. We can then `mutate()` to remove the `BA_` prefix and see that our table looks like our original data. 
 ```{r pivot_longer batting_2014_2015}
 batting_2014_2015_long <- batting_2014_2015 %>%
   pivot_longer(
@@ -51,7 +265,7 @@ batting_2014_2015_long <- batting_2014_2015 %>%
 head(batting_2014_2015_long)
 ```
 
-We can use this `batting_2014_2015_long` tbl to make a bar plot with `geom_col` which shows the batting averages of each player in 2014 and 2015.
+We can use this `batting_2014_2015_long` tbl to make a bar plot with `geom_col()` which shows the batting averages of each player in 2014 and 2015.
 ```{r}
 batting_2014_2015_slice <- batting_2014_2015_long %>%
   slice_head(n = 20) # take the first 20 players alphabetically 
@@ -61,12 +275,10 @@ ggplot(batting_2014_2015_slice, aes(x = playerID, y = BA, fill = yearID)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-These visualizations can be helpful to compare player statistics. We can now move back to using our cleaned, tidy data for predictions. 
 
 ## Heat Maps and Plot Annotations
 
-When both axes are quantitative, it can be useful to divide the plane into rectangular bins and summarize a third variable within each bin.
-The function `stat_summary_2d()` does that automatically.
+When both axes are quantitative, it can be useful to divide the plane into rectangular bins and summarize a third variable within each bin. The function `stat_summary_2d()` does that automatically.
 
 For instance, we can look at how batting average changed from 2014 to 2015 by first creating a column for the year-to-year change.
 
@@ -75,8 +287,7 @@ batting_2014_2015 <- batting_2014_2015 %>%
   mutate(BA_change = BA_2015 - BA_2014)
 ```
 
-Then we can compute the mean change within rectangular bins of 2014 and 2015 batting averages.
-The function `scale_fill_distiller()` lets us control the fill colors and legend title, and `annotate()` lets us draw reference shapes on top of the plot.
+Then we can compute the mean change within rectangular bins of 2014 and 2015 batting averages. The function `scale_fill_distiller()` lets us control the fill colors and legend title, and `annotate()` lets us draw reference shapes on top of the plot.
 
 ```{r stat_summary_2d batting}
 ggplot(batting_2014_2015, aes(x = BA_2014, y = BA_2015, z = BA_change)) +
@@ -87,142 +298,45 @@ ggplot(batting_2014_2015, aes(x = BA_2014, y = BA_2015, z = BA_change)) +
   labs(x = "2014 Batting Average", y = "2015 Batting Average")
 ```
 
-## Predicting Batting Averages
+If your data are already summarized into a rectangular grid, `geom_tile()` is a direct way to build a heat map.
 
-Imagine there's one more player who played in both 2014 and 2015 but who is not in our dataset. Without knowing anything else about the player, how could we predict their 2015 batting average using the data that we have? The simplest thing (and as it turns out the best thing) to do in this case is to use the overall mean of the 2015 batting averages in our dataset to predict the batting average of this extra player. 
+```{r geom_tile}
+diving_tile <- diving %>%
+  group_by(Round, Country) %>%
+  reframe(mean_score = mean(JScore))
 
-Now what if we also told you this extra player's 2014 batting average? Can we improve on this simple prediction? In this section, we will propose several different ways of predicting 2015 batting average using 2014 batting average. In order to pick the best one, we can assess how well each method predicts the actual 2015 batting averages in our tbl.  We will add columns to our tbl containing these predictions. To get things started, let's add a column containing the overall mean of the 2015 batting averages. It turns out that this mean is 0.273, whereas the mean 2014 batting average is 0.272. We will set these values equal to the variables `avg_2014`, and `avg_2015`, respectively, to use in our plots. We can do this by utilizing the `$` operator to feed an entire column into our `mean()` function.
-
-```{r batting yhat_0}
-batting_2014_2015 <-
-  batting_2014_2015 %>% 
-  mutate(yhat_0 = mean(BA_2015))
-batting_2014_2015
-
-avg_2014 = mean(batting_2014_2015$BA_2014)
-avg_2015 = mean(batting_2014_2015$BA_2015)
+ggplot(diving_tile, aes(x = Round, y = Country, fill = mean_score)) +
+  geom_tile() +
+  labs(x = "Round", y = "Country", fill = "Mean Score")
 ```
 
-If the 2014 batting average had no predictive power at all, then this overall mean will be the best prediction model possible, given what data we have. Plotting the 2015 batting averages against the 2014 batting averages allows us to assess visually whether there is any relationship between the two variables. We have added dashed red horizontal and vertical lines at the overall means of the 2014 and 2015 data, respectively.
+## Scales and 2D Histograms
 
-```{r plot batting yhat_0}
-ggplot(batting_2014_2015) +
-  geom_point(aes(x = BA_2014, y = BA_2015), col = 'black', size = 1) +
-  geom_hline(yintercept = avg_2015, col = 'red', lty = 2) +
-  geom_vline(xintercept = avg_2014, col = 'red', lty = 2)
+We already used `scale_fill_distiller()` to control the fill colors in a heat map. We can also use scales to control point colors. We return to the scatter plot of the judges' scores vs rank of the divers. This time, we want to color the points by the difficulty of the dive.
+
+We use the layer `scale_color_distiller()`. The second word, `color`, is the `aes` we want to change. We can replace it with `x`, `y` or `fill`, depending on the `aes` we want to change. 
+
+The third word is `distiller`, which we use because our `color` variable, `Difficulty`, is continuous. If it were discrete, we would write `brewer` instead.
+
+```{r scales scatter}
+scatter <- ggplot(data = diving_grouped) +
+  geom_point(aes(x = Rank_mean, y = JScore_mean, color = Difficulty_mean)) +
+  scale_color_distiller(palette = "OrRd", direction = 1) 
+  
+scatter
 ```
 
-It certainly looks like there is a relationship! So it's at least plausible that if we use the 2014 batting averages to make predictions for 2015, we can do better than relying on just the average of the 2015 averages.
+Interestingly, it seems that some of the highest ranked divers perform most of the less difficult dives, but perform these easy dives very well. 
 
-Looking carefully at the plot, we see that most players with below average batting averages in 2014 tended to also have below average batting averages in 2015. Similarly, most players with above average batting averages in 2014 tended to have above average batting averages in 2015. 
+To further investigate, we plot a 2D histogram of Rank vs Difficulty.
 
-One way to improve on the simple prediction above would be as follows:
-
-1. Divide the players into two groups, one for those with above average BA in 2014 and one for those with below average BA in 2014.
-2. Average the 2015 BA within each of these groups and use these averages as the prediction for each member of the group.
-
-In order to do this, we will need to mutate our tbl `batting_2014_2015` with a column indicating to which group each player belongs. Then we can pass this column to `group_by()` and compute the average BA_2015 within each group. To create the column indicating group membership, we will use the powerful `cut()` function, which divides the range of a numerical vector into intervals and recodes the numerical values according to which interval they fall.
-
-The following code chunk does precisely that with two more steps: once we have made our predictions, we ungroup the tbl and we can drop the column indicating the interval in which our observation falls.
-
-```{r batting yhat_1}
-batting_2014_2015 <- 
-  batting_2014_2015 %>%
-  mutate(bins = cut(BA_2014, breaks = c(0.15, 0.272, 0.40))) %>%
-  group_by(bins) %>%
-  mutate(yhat_1 = mean(BA_2015)) %>%
-  ungroup() %>%
-  select(-bins)
-batting_2014_2015
+```{r scales hist}
+hist <- ggplot(data = diving)  + 
+  geom_bin2d(aes(x = Rank, y = Difficulty), bins = 10) + 
+  scale_fill_distiller(palette = "Spectral")
+hist
 ```
 
-When we run this code and print out our tbl, we see that there is a new column called "yhat_1" that contains our new predictions. Before proceeding, we should talk a bit about the syntax used in `cut()`. The first argument is the variable we want to discretize. The next argument, `breaks =`, is a vector that tells R where the endpoints of these intervals are. These are often called "cut points." In this particular case, we wanted to divide the players into those with below-average batting averages in 2014 and above-average batting averages in 2014. The first element of the cut point vector, 0.15, is much less than the smallest BA_2014 value, whereas the second element, 0.272, is the overall mean of the BA_2014 values. The last element, 0.40, is much greater than the largest BA_2014 value.
+Note that we use `fill` instead of `color` in `scale_fill_distiller()` to control the fill of the histogram bins.
 
-Now that we have two different ways of predicting 2015 batting averages, let us see how they compare, visually.
-
-```{r plot batting yhat_1}
-ggplot(batting_2014_2015) +
-  geom_point(aes(x = BA_2014, y = BA_2015), col = 'black', size = 2) +
-  geom_point(aes(x = BA_2014, y = yhat_0), col = 'lightcoral', size = 2) + 
-  geom_point(aes(x = BA_2014, y = yhat_1), col = 'lightblue', size = 2)
-```
-
-Visually it appears that the blue points (corresponding to yhat_1) are a bit closer to the actual values than the red points (corresponding to yhat_0).  This would suggest that dividing the players into the two bins according to their 2014 batting average and using the average BA_2015 value within each bin as our forecast was better than using the overall average BA_2015 value for all players.
-
-Of course, we can continue with this line of reasoning and divide the players into even more bins. When we do that, instead of hand-coding the vector of cut points, we can use the function `seq()` which generates a vector of equally spaced numbers. To demonstrate, suppose we wanted to divide the interval [0,1] into 10 equally sized intervals: (0,0.1], (0.1, 0.2], ..., (0.9, 1].  To get the vector of cutpoints, we need to tell `seq()` either how many points we wanted or the spacing between the points:
-
-```{r seq fn}
-seq(from = 0, to = 1, length = 11)
-seq(from = 0, to = 1, by = 0.1)
-```
-
-So let's say we wanted to divide the 2014 batting averages into intervals of length 0.05 and predict 2015 batting averages using the average BA_2015 values within the resulting bins. We could run the following:
-
-```{r batting yhat_2}
-batting_2014_2015 <- 
-  batting_2014_2015 %>%
-  mutate(bins = cut(BA_2014, breaks = seq(from = 0.15, to = 0.4, by = 0.05))) %>%
-  group_by(bins) %>%
-  mutate(yhat_2 = mean(BA_2015)) %>%
-  ungroup() %>%
-  select(-bins)
-batting_2014_2015
-```
-
-We can also visualize our new predictions, this time with green points.
-
-```{r plot batting yhat_2}
-ggplot(batting_2014_2015) +
-  geom_point(aes(x = BA_2014, y = BA_2015), size = 2) + 
-  geom_point(aes(x = BA_2014, y = yhat_0), col = 'lightcoral', size = 2, alpha = 0.8) + 
-  geom_point(aes(x = BA_2014, y = yhat_1), col = 'lightblue',  size = 2, alpha = 0.8) +
-  geom_point(aes(x = BA_2014, y = yhat_2), col = 'darkseagreen3', size = 2, alpha = 0.8)
-```
-
-It appears that we are able to perfectly predict the 2015 batting average of the player with the lowest batting average in 2014. Why do you think this was the case?
-
-Let's add two more predictions in which we divide the 2014 batting averages into bins of length 0.005 and 0.001. The code below generates these predictions, saves them to columns called "yhat_3" and "yhat_4" in our tbl, and then adds the predictions to the plot in pink and orange.
-
-```{r batting yhat_3 yhat_4 plot}
-batting_2014_2015 <- 
-  batting_2014_2015 %>%
-  mutate(bins = cut(BA_2014, breaks = seq(from = 0.15, to = 0.4, by = 0.005))) %>%
-  group_by(bins) %>%
-  mutate(yhat_3 = mean(BA_2015)) %>%
-  ungroup() %>%
-  select(-bins)
-
-batting_2014_2015 <- 
-  batting_2014_2015 %>%
-  mutate(bins = cut(BA_2014, breaks = seq(from = 0.15, to = 0.4, by = 0.001))) %>%
-  group_by(bins) %>%
-  mutate(yhat_4 = mean(BA_2015)) %>%
-  ungroup() %>%
-  select(-bins)
-
-ggplot(batting_2014_2015) +
-  geom_point(aes(x = BA_2014, y = BA_2015), size = 2) + 
-  geom_point(aes(x = BA_2014, y = yhat_0), col = 'lightcoral', size = 2) + 
-  geom_point(aes(x = BA_2014, y = yhat_1), col = 'lightblue', size = 2) +
-  geom_point(aes(x = BA_2014, y = yhat_2), col = 'darkseagreen3', size = 2) +
-  geom_point(aes(x = BA_2014, y = yhat_3), col = 'hotpink', size = 2) + 
-  geom_point(aes(x = BA_2014, y = yhat_4), col = 'darkorange', size = 1.5, alpha = .7) 
-```
-Here, we can see that some of the orange points are directly on top of the actual values.
-
-## Assessing Predictive Performance
-
-We now have a couple of different ways of predicting BA_2015. Qualitatively, the predictions in yellow (formed by binning BA_2014 into very small intervals) appear to fit the observed data better than the blue, green, and red predictions. To assess the predictions quantitatively, we often rely on the root mean square error or RMSE. This is the square root of the mean square error (MSE), which is computed by averaging the squared difference between the actual values and the predicted values.
-
-```{r summarize rmse}
-reframe(batting_2014_2015, 
-          rmse_0 = sqrt(mean((BA_2015 - yhat_0)^2)),
-          rmse_1 = sqrt(mean((BA_2015 - yhat_1)^2)),
-          rmse_2 = sqrt(mean((BA_2015 - yhat_2)^2)),
-          rmse_3 = sqrt(mean((BA_2015 - yhat_3)^2)),
-          rmse_4 = sqrt(mean((BA_2015 - yhat_4)^2)))
-```
- 
-We see that the orange predictions have the lowest RMSE, followed by the pink, green, blue, and red predictions. This tells us that the predictions formed by binning into smaller intervals fit the data better than the predictions formed by binning into larger intervals, confirming what we could see visually. 
-
-Now, what if we continued this process and formed bins that are infinitesimally small? Should we expect our predictions to be even better? But think about the potential issues of doing so: most of the bins (an infinite number of them, in fact) would contain no data points. How could we remedy this issue? Perhaps we could impose a constraint that our predictions must lie along a straight line, thus allowing the bins with data to help make predictions for the bins without data. You'll have some time to think about this concept, and then in [Lecture 6](lecture6.html) we will introduce linear regression, which addresses this exact issue. 
+From the 2D histogram, we can see that the higher ranked divers attempt both more difficult and less difficult dives, unlike the lower ranked divers who only attempt more difficult dives. 

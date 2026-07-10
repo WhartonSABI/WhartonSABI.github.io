@@ -12,7 +12,7 @@ library(tidyverse)
 
 In this example analysis, we're going to examine Super Bowl LII to gain insight into how the Philadelphia Eagles beat the New England Patriots.
 
-We start by loading the `nflfastR` package (you should have downloaded it back in [Lecture 5](lecture5.html)).
+We start by loading the `nflfastR` package.
 
 ```{r load nflfastR, message=FALSE}
 library(nflfastR)
@@ -218,4 +218,3 @@ pbp_2017 %>%
 Congratulations, you now have what it takes to cover NFL games for the Athletic!
 
 For more information on `nflfastR`, check out its [website](https://www.nflfastr.com/), which also has a [good tutorial](https://www.nflfastr.com/articles/nflfastR.html) on the main functions and data available within the package. 
-
