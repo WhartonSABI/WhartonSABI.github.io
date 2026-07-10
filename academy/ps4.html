@@ -732,15 +732,12 @@ make a line of best fit.</p></li>
 <li><p>Now, add a third variable. Set the color to equal
 <code>avg_cpoe</code> and use <code>scale_color_distiller()</code> to
 set the color scale.</p></li>
-<li><p>Finally, visualize average yards gained and completion percentage
-over expected by quarterback. Choose either
-<code>avg_yards_gained</code> or <code>avg_cpoe</code>, obtain the top
-10 quarterbacks for that metric, pivot longer to create a table similar
-to the one shown in <a href="lecture4.html">Lecture 4</a>, and then
-generate a bar plot with <code>geom_col()</code>. Make sure to use
-<code>dodge</code> and to either use 45 degree axis labels or flip the
-coordinates with <code>coord_flip()</code> so that the QB names are
-visible.</p></li>
+<li><p>Finally, visualize the quarterbacks with the highest
+<code>avg_yards_gained</code>. Use <code>arrange()</code> and
+<code>slice_head()</code> to obtain the top 10 quarterbacks, then
+generate a bar plot with <code>geom_col()</code>. Make sure to either
+use 45 degree axis labels or flip the coordinates with
+<code>coord_flip()</code> so that the QB names are visible.</p></li>
 <li><p>Let&#x2019;s do one more small case study on explosive plays. First,
 start by filtering the data as below to get the appropriate
 columns.</p></li>

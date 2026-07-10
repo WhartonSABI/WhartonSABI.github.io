@@ -388,7 +388,7 @@ batting_2014_2015 <-
   arrange(playerID)
 ```
 
-Then save the tbl `batting_2014_2015` to the file `"data/batting_2014_2015.RData"` using the `save()` function. We will return to this dataset in [Lecture 4](lecture4.html).
+Then save the tbl `batting_2014_2015` to the file `"data/batting_2014_2015.RData"` using the `save()` function. We will return to this dataset in [Lecture 5](lecture5.html).
 
 ```{r challenge Q solution}
 # solution

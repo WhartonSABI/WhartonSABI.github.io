@@ -114,40 +114,21 @@ ggplot(pbp_grouped, aes(x = attempts, y = avg_yards_gained, color = avg_cpoe)) +
   theme_minimal()
 ```
 
-11. Finally, visualize average yards gained and completion percentage over expected by quarterback. Choose either `avg_yards_gained` or `avg_cpoe`, obtain the top 10 quarterbacks for that metric, pivot longer to create a table similar to the one shown in [Lecture 4](lecture4.html), and then generate a bar plot with `geom_col()`. Make sure to use `dodge` and to either use 45 degree axis labels or flip the coordinates with `coord_flip()` so that the QB names are visible.
+11. Finally, visualize the quarterbacks with the highest `avg_yards_gained`. Use `arrange()` and `slice_head()` to obtain the top 10 quarterbacks, then generate a bar plot with `geom_col()`. Make sure to either use 45 degree axis labels or flip the coordinates with `coord_flip()` so that the QB names are visible.
 
-```{r arrange by avg_yards_gained}
+```{r top avg_yards_gained}
 pbp_grouped %>% 
   arrange(desc(avg_yards_gained)) %>% 
   slice_head(n = 10) %>% 
-  pivot_longer(cols = c(avg_yards_gained, avg_cpoe), names_to = "metric", values_to = "value") %>% 
-  ggplot(aes(x = passer_player_name, y = value, fill = metric)) +
-  geom_col(position = "dodge") +
+  ggplot(aes(x = passer_player_name, y = avg_yards_gained)) +
+  geom_col(fill = "darkseagreen3") +
   labs(
-    title = "Top 10 Quarterbacks by Average Yards",
-    x = "Quarterback",
-    y = "Value"
-  ) +
-  coord_flip() +
-  theme_minimal()
-```
-
-```{r arrange by cpoe}
-pbp_grouped_2 <- pbp_grouped %>% 
-  arrange(desc(avg_cpoe)) %>% 
-  slice_head(n = 10) %>% 
-  pivot_longer(cols = c(avg_yards_gained, avg_cpoe), names_to = "metric", values_to = "value") 
-
-ggplot(pbp_grouped_2, aes(x = passer_player_name, y = value, fill = metric)) +
-  geom_col(position = 'dodge') +
-  labs(
-    title = "Top 10 Quarterbacks by CPOE",
+    title = "Top 10 Quarterbacks by Average Yards Gained",
     x = "Quarterback",
     y = "Average Yards Gained"
   ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
-
+  coord_flip() +
+  theme_minimal()
 ```
 
 12. Let's do one more small case study on explosive plays. First, start by filtering the data as below to get the appropriate columns.

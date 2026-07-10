@@ -1,5 +1,5 @@
 ---
-title: 'Lecture 4: Advanced Visualization & Tidy Data'
+title: 'Lecture 4: Advanced Visualization'
 output: html_document
 ---
 
@@ -222,78 +222,19 @@ judges <- judges + coord_flip()
 judges
 ```
 
-## Tidy Data for Visualization
-
-Before we move to a few more advanced plots, it will be useful to reshape a dataset. Many plots become much easier once the data are in a tidy format:
-
-1. Each **variable** must have its own **column**.
-2. Each **observation** must have its own **row**.
-3. Each **value** must have its own **cell**.
-
-To make this concrete, let's go back to the dataset we created in the challenge question at the end of [Problem Set 3](ps3.html). If you haven't yet completed that, you can download the final [batting_2014_2015 dataset here](data/batting_2014_2015.RData) (then save it to your "data" folder). Printing out the tbl, we see that there is a separate row for each "player-season".
-
-```{r load batting_2014_2015}
-load("data/batting_2014_2015.RData")
-batting_2014_2015
-```
-
-Let's say we want to study the relationship between a player's 2014 batting average and his 2015 batting average. In this case, each observation is a player, and that player has two associated variables: batting average in 2014 and batting average in 2015. We can do this with the `pivot_wider()` function. The `names_from` argument indicates the new column(s) in the table - in this case `yearID`. The `values_from` argument then indicates what values go in our new columns - in this case `BA`. We can use the `names_prefix` argument to rename the columns with `BA_` so that our column names do not start with numbers.
-
-```{r pivot_wider batting_2014_2015}
-batting_2014_2015 <- batting_2014_2015 %>%
-  pivot_wider(
-    names_from = yearID,
-    values_from = BA,
-    names_prefix = "BA_"
-  )
-head(batting_2014_2015)
-```
-
-It can also be helpful to work with the original, "long" format of the data when making visualizations. We can easily revert back to this form with `pivot_longer()`, which will take the compact version and unpack it back into one row per year. `cols` represents the column titles that are being converted into a new column, in this case `BA_2014` and `BA_2015`. The `names_to` argument indicates the name of the new column that will contain these values, and the `values_to` argument indicates the name of the new column that will contain the values themselves. We can then `mutate()` to remove the `BA_` prefix and see that our table looks like our original data.
-
-```{r pivot_longer batting_2014_2015}
-batting_2014_2015_long <- batting_2014_2015 %>%
-  pivot_longer(
-    cols = starts_with("BA_"),
-    names_to = "yearID",
-    values_to = "BA"
-  ) %>% 
-  mutate(yearID = sub("BA_", "", yearID))
-
-head(batting_2014_2015_long)
-```
-
-We can use this `batting_2014_2015_long` tbl to make a bar plot with `geom_col()` which shows the batting averages of each player in 2014 and 2015.
-```{r}
-batting_2014_2015_slice <- batting_2014_2015_long %>%
-  slice_head(n = 20) # take the first 20 players alphabetically 
-
-ggplot(batting_2014_2015_slice, aes(x = playerID, y = BA, fill = yearID)) +
-  geom_col(position = "dodge", color = "black", alpha = 0.8) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-
 ## Heat Maps and Plot Annotations
 
 When both axes are quantitative, it can be useful to divide the plane into rectangular bins and summarize a third variable within each bin. The function `stat_summary_2d()` does that automatically.
 
-For instance, we can look at how batting average changed from 2014 to 2015 by first creating a column for the year-to-year change.
+Here, we divide the plot of average diver rank and average dive difficulty into rectangular bins and compute the mean judge score within each bin. The function `scale_fill_distiller()` lets us control the fill colors and legend title, and `annotate()` lets us draw reference shapes on top of the plot.
 
-```{r batting change}
-batting_2014_2015 <- batting_2014_2015 %>%
-  mutate(BA_change = BA_2015 - BA_2014)
-```
-
-Then we can compute the mean change within rectangular bins of 2014 and 2015 batting averages. The function `scale_fill_distiller()` lets us control the fill colors and legend title, and `annotate()` lets us draw reference shapes on top of the plot.
-
-```{r stat_summary_2d batting}
-ggplot(batting_2014_2015, aes(x = BA_2014, y = BA_2015, z = BA_change)) +
+```{r stat_summary_2d diving}
+ggplot(diving_grouped, aes(x = Rank_mean, y = Difficulty_mean, z = JScore_mean)) +
   stat_summary_2d() +
-  scale_fill_distiller("Mean change", palette = "RdBu") +
-  annotate("rect", xmin = 0.25, xmax = 0.30, ymin = 0.25, ymax = 0.30,
+  scale_fill_distiller("Mean score", palette = "RdBu") +
+  annotate("rect", xmin = 5, xmax = 15, ymin = 2.5, ymax = 3.2,
            alpha = 0, color = "black") +
-  labs(x = "2014 Batting Average", y = "2015 Batting Average")
+  labs(x = "Average Rank", y = "Average Difficulty")
 ```
 
 If your data are already summarized into a rectangular grid, `geom_tile()` is a direct way to build a heat map.

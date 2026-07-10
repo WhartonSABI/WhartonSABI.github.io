@@ -8,12 +8,26 @@ knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 library(tidyverse)
 ```
 
-In [Lecture 4](lecture4.html), we used `pivot_wider()` and `pivot_longer()` to reshape batting data and build more advanced visualizations. Today, we will return to that dataset, start making predictions, and introduce the ideas that lead to linear regression.
+Today, we will return to the batting dataset from [Problem Set 3](ps3.html), reshape it in a way that is useful for plotting and prediction, and then introduce the ideas that lead to linear regression.
 
 If you have not yet completed the challenge at the end of [Problem Set 3](ps3.html), you can download the final [batting_2014_2015 dataset here](data/batting_2014_2015.RData) and save it to your `data` folder.
 
 ```{r load batting_2014_2015}
 load("data/batting_2014_2015.RData")
+batting_2014_2015
+```
+
+## Tidy Data
+
+Many analyses become easier once the data are in a tidy format:
+
+1. Each **variable** must have its own **column**.
+2. Each **observation** must have its own **row**.
+3. Each **value** must have its own **cell**.
+
+Right now, our tbl has one row per player-season. To compare a player's 2014 and 2015 batting averages side by side, it will be more useful to have one row per player and a separate column for each season. We can do that with `pivot_wider()`. The `names_from` argument tells R which column should supply the new column names, and `values_from` tells R which values should fill those new columns.
+
+```{r pivot_wider batting_2014_2015}
 batting_2014_2015 <- batting_2014_2015 %>%
   pivot_wider(
     names_from = yearID,
@@ -22,6 +36,34 @@ batting_2014_2015 <- batting_2014_2015 %>%
   )
 head(batting_2014_2015)
 ```
+
+Sometimes the long format is more useful for plotting. We can return to that structure with `pivot_longer()`, which takes several columns and stacks them into a pair of columns.
+
+```{r pivot_longer batting_2014_2015}
+batting_2014_2015_long <- batting_2014_2015 %>%
+  pivot_longer(
+    cols = starts_with("BA_"),
+    names_to = "yearID",
+    values_to = "BA"
+  ) %>%
+  mutate(yearID = sub("BA_", "", yearID))
+
+head(batting_2014_2015_long)
+```
+
+We can use this long table to make a side-by-side bar plot of batting averages in 2014 and 2015.
+
+```{r batting bar plot}
+batting_2014_2015_slice <- batting_2014_2015_long %>%
+  slice_head(n = 20)
+
+ggplot(batting_2014_2015_slice, aes(x = playerID, y = BA, fill = yearID)) +
+  geom_col(position = "dodge", color = "black", alpha = 0.8) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+For prediction, we will return to the wide version of the data, where each row is one player.
 
 ## Predicting Batting Averages
 
