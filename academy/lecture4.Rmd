@@ -16,6 +16,8 @@ Today, we will learn more about ggplot, reshape data for plotting, and build sev
 
 In this course, we will be using the package ggplot2 for all of our data visualization. The `gg` stands for "grammar of graphics", a framework for data visualization. This framework separates the process of visualization into different components: data, aesthetic mappings, and geometric objects. These components are then added together (or layered) to produce the final graph. We're going to illustrate these components using the [diving dataset](data/diving.csv) from Prof. Wyner's lecture.
 
+Download [diving.csv](data/diving.csv) and save it to your `data` folder.
+
 ```{r load diving, message=FALSE}
 library(tidyverse)
 diving <- read_csv("data/diving.csv")
