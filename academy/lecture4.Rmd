@@ -8,13 +8,9 @@ knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 library(tidyverse)
 ```
 
-In [Lecture 2](lecture2.html), we saw that visualization using ggplot could provide important insights into large datasets.
-Today, we will learn more about ggplot, reshape data for plotting, and build several more advanced visualizations.
-
-
 ## Visualizing the Diving Dataset
 
-In this course, we will be using the package ggplot2 for all of our data visualization. The `gg` stands for "grammar of graphics", a framework for data visualization. This framework separates the process of visualization into different components: data, aesthetic mappings, and geometric objects. These components are then added together (or layered) to produce the final graph. We're going to illustrate these components using the [diving dataset](data/diving.csv) from Prof. Wyner's lecture.
+We introduced ggplot2 in [Lecture 2](lecture2.html) and used it again in [Lecture 3](lecture3.html) when combining raw data with summarized layers. Here we will keep building on that same workflow, using the [diving dataset](data/diving.csv) to add facets, boxplots, violin plots, barplots, and statistical summary layers.
 
 Download [diving.csv](data/diving.csv) and save it to your `data` folder.
 
@@ -24,27 +20,27 @@ diving <- read_csv("data/diving.csv")
 ```
 
 
-### Components of a Plot
+### A Quick Recap
 
-The first step in any data visualization is to tell R which tbl the data we want to plot lives. This is done using the `ggplot()` function. Notice that we are *assigning* the plot to a new variable, `diving_hist`. Later, we will *add* layers to the plot using the `+` operator.
+We have already been writing ggplot code directly in earlier lectures. Here, we will start by saving the base plot to an object so that we can keep adding layers to it.
 
 ```{r diving ggplot}
 diving_hist <- ggplot(data = diving)
 ```
 
-Aesthetics map the data to the properties of the plot. Examples include:
+Recall that aesthetics map variables to visual properties of the plot. Examples include:
 
 * `x`: the variable that will be on the x-axis
 * `y`: the variable that will be on the y-axis
 * `color`: the variable that categorizes data by color
+* `fill`: the variable that controls filled regions
 * `shape`: the variable that categorizes data by shape
 
-You can define the `aes` in the `ggplot` call, which will then be used for all later layers, or you can define the `aes` in the `geom` (see below), which will only apply to that `geom`. Geometric objects, or `geoms`, determine the type of plot that will be created. Examples include:
+You can define the `aes()` in the `ggplot()` call, which will then be used for later layers, or you can define the `aes()` inside a specific `geom()` when it only applies there. Geometric objects, or `geoms`, determine what gets drawn. We have already used `geom_histogram()`, `geom_point()`, and `geom_line()`. In this lecture, we will add a few more:
 
-* `geom_point()`: creates a scatterplot
-* `geom_histogram()`: creates a histogram
-* `geom_line()`: creates a line
 * `geom_boxplot()`: creates a boxplot
+* `geom_violin()`: creates a violin plot
+* `geom_bar()`: creates a bar plot
 
 
 ### Putting it All Together
@@ -81,7 +77,7 @@ diving_hist <-
 diving_hist
 ```
 
-To get a sense of whether a particular country's judges are biased, it would be useful to add a reference line at the median score over all judges and countries to each facet. So, we must first calculate the overall median score, which we can do using the `summarize()` function. Then, we can display this median on our plots with `geom_vline()`, which adds a vertical line. We can also pass in a custom color argument to this line so that it will easily stand out from the rest of our values. This website provides a look at all the built-in color arguments in R: [R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf)
+To get a sense of whether a particular country's judges are biased, it would be useful to add a reference line at the median score over all judges and countries to each facet. So, we must first calculate the overall median score, which we can do using the `reframe()` function. Then, we can display this median on our plots with `geom_vline()`, which adds a vertical line. We can also pass in a custom color argument to this line so that it will easily stand out from the rest of our values. This website provides a look at all the built-in color arguments in R: [R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf)
 
 ```{r facet_wrap median}
 median_score <- diving %>% 
@@ -200,7 +196,7 @@ Other `geom` for lines are:
 
 We can also specify a layer using `stat_`, which stands for statistical transformation. This is useful if we want to plot a summary statistic of our data, such as a mean or median. By using a `stat_` layer, we do not have to compute this summary statistic beforehand--`ggplot` will compute the summary statistic for us and then plot the result. 
 
-For example, suppose we want to plot the means of each judge's score and provide error bars of one standard error on either side of the mean. We could use `summarize` and `group_by` to find the mean and standard errors for each judge, *or* we could just use a `stat_` layer!
+For example, suppose we want to plot the means of each judge's score and provide error bars of one standard error on either side of the mean. We could use `reframe` and `group_by` to find the mean and standard errors for each judge, *or* we could just use a `stat_` layer!
 
 The layer `stat_summary()` computes and then plots a user-specified summary statistic. We choose the option `mean_se` to calculate the means and standard errors of the scores of each judge.
 
