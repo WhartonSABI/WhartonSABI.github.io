@@ -225,107 +225,6 @@ ul.task-list{list-style: none;}
 
 
 
-<style type="text/css">
-code {
-white-space: pre;
-}
-.sourceCode {
-overflow: visible;
-}
-</style>
-<style type="text/css" data-origin="pandoc">
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-{ counter-reset: source-line 0; }
-pre.numberSource code > span
-{ position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-{ content: counter(source-line);
-position: relative; left: -1em; text-align: right; vertical-align: baseline;
-border: none; display: inline-block;
--webkit-touch-callout: none; -webkit-user-select: none;
--khtml-user-select: none; -moz-user-select: none;
--ms-user-select: none; user-select: none;
-padding: 0 4px; width: 4em;
-color: #aaaaaa;
-}
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
-div.sourceCode
-{ background-color: #f8f8f8; }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ef2929; } 
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.at { color: #204a87; } 
-code span.bn { color: #0000cf; } 
-code span.cf { color: #204a87; font-weight: bold; } 
-code span.ch { color: #4e9a06; } 
-code span.cn { color: #8f5902; } 
-code span.co { color: #8f5902; font-style: italic; } 
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.dt { color: #204a87; } 
-code span.dv { color: #0000cf; } 
-code span.er { color: #a40000; font-weight: bold; } 
-code span.ex { } 
-code span.fl { color: #0000cf; } 
-code span.fu { color: #204a87; font-weight: bold; } 
-code span.im { } 
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.kw { color: #204a87; font-weight: bold; } 
-code span.op { color: #ce5c00; font-weight: bold; } 
-code span.ot { color: #8f5902; } 
-code span.pp { color: #8f5902; font-style: italic; } 
-code span.sc { color: #ce5c00; font-weight: bold; } 
-code span.ss { color: #4e9a06; } 
-code span.st { color: #4e9a06; } 
-code span.va { color: #000000; } 
-code span.vs { color: #4e9a06; } 
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
-</script>
 
 
 
@@ -565,6 +464,9 @@ display: none;
     <li>
       <a href="lecture8.html">Lecture 8</a>
     </li>
+    <li>
+      <a href="project_resources.html">Project Resources</a>
+    </li>
     <li class="divider"></li>
     <li>
       <a href="ps1.html">Problem Set 1</a>
@@ -651,72 +553,75 @@ display: none;
 
 <div id="testing-regression-models" class="section level1">
 <h1>Testing Regression Models</h1>
-<p>We will now continue modeling data with regression, but we can now
-test and compare different models more efficiently. We will use this
-dataset on mlb payrolls: <a href="data/mlb_payrolls_train.csv">mlb_payrolls_train.csv</a> to analyze
-general manager performance based on team payrolls and winning
-percentages.</p>
+<p>The files <a href="data/mlb_payrolls_train.csv"><code>mlb_payrolls_train.csv</code></a>
+and <a href="data/mlb_payrolls_test.csv"><code>mlb_payrolls_test.csv</code></a>
+contain team-season payroll and winning records. The rows were randomly
+divided into training and testing sets. We will compare two models of
+the relationship between team payroll and winning percentage.</p>
+<div id="training-data" class="section level2">
+<h2>Training Data</h2>
 <ol style="list-style-type: decimal">
-<li>First, load in the data to R. Let&#x2019;s see the range of seasons that
-are included in this data</li>
+<li>Load <code>mlb_payrolls_train.csv</code> as
+<code>payroll_train</code>. Remove the shortened 2020 season. Use
+<code>glimpse()</code> and <code>range()</code> to inspect the variables
+and seasons.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>payroll <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/mlb_payrolls_train.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 603 Columns: 9
-## &#x2500;&#x2500; Column specification &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;
-## Delimiter: &quot;,&quot;
-## chr (2): teamID, name
-## dbl (7): yearID, G, W, L, wins_162, payroll_norm, log_payroll_norm
-## 
-## &#x2139; Use `spec()` to retrieve the full column specification for this data.
-## &#x2139; Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">unique</span>(payroll<span class="sc">$</span>yearID)</span></code></pre></div>
-<pre><code>##  [1] 1998 1999 2000 2002 2003 2004 2005 2006 2007 2008 2010 2011 2013 2014 2017
-## [16] 2018 2020 2021 2022 2001 2009 2012 2015 2019 2023 2016</code></pre>
-<ol style="list-style-type: decimal">
-<li><p>We can see that the data ranges from 1998 to 2023. Since the 2020
-season was shortened due to Covid, filter it out. Then use
-<code>mutate()</code> to create a column named <code>WP</code> based on
-wins (W) and games (G).</p></li>
-<li><p>Then, explore the relationship between payrolls and winning
-percentage by generating a scatterplot. Use <code>mutate()</code> and
-<code>case_when()</code> to create a column that labels the Oakland A&#x2019;s
-and New York Yankees separately from the other teams, then color the
-points by this new label.</p></li>
-<li><p>Now, fit a regression line to the data as a function of
-<code>payroll_norm</code>, then add it to the plot.</p></li>
-<li><p>Next, try fitting a model based on <code>log_payroll_norm</code>
-and adding that to the plot.</p></li>
+<p><code>payroll_norm</code> is a team&#x2019;s payroll divided by the average
+payroll in that season. A value of 1 is average, 2 is twice the average,
+and 0.5 is half the average. <code>log_payroll_norm</code> is the
+natural logarithm of that value.</p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Plot <code>payroll_norm</code> against winning percentage
+(<code>WP</code>). Label the New York Yankees and Oakland Athletics
+separately from all other teams, and color the points by that
+label.</p></li>
+<li><p>Fit two models using only <code>payroll_train</code>:</p></li>
 </ol>
-<p>Just by looking at the plots from 3 and 4, which seems to fit the
-data better?</p>
-<ol start="5" style="list-style-type: decimal">
-<li>In Lecture 6, we defined a residual as the observed outcome minus
-the predicted outcome. Use <code>mutate()</code> to add a residual
-column for each model to <code>payroll</code>. Then generate a scatter
-plot of the residuals from both models.</li>
+<ul>
+<li><code>raw_model</code>: winning percentage as a function of
+<code>payroll_norm</code></li>
+<li><code>log_model</code>: winning percentage as a function of
+<code>log_payroll_norm</code></li>
+</ul>
+<p>Add both models&#x2019; fitted values to <code>payroll_train</code> as
+<code>raw_fitted</code> and <code>log_fitted</code>.</p>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Reshape the two fitted-value columns into a long table. Plot the
+observed data and the two fitted lines in separate panels. Arrange the
+rows by <code>payroll_norm</code> before drawing the lines.</p></li>
+<li><p>Calculate a residual for each model. Reshape the residuals into a
+long table and make a faceted residual plot with a horizontal line at
+zero. Do either of the plots show a clear pattern?</p></li>
 </ol>
-<p>An indication of a poor model fit is a non-uniform residual plot.
-This would indicate that perhaps a linear model is being used when the
-underlying trend is instead logarithmic, or polynomial. Do you observe
-this?</p>
+</div>
+<div id="training-and-testing-error" class="section level2">
+<h2>Training and Testing Error</h2>
 <ol start="6" style="list-style-type: decimal">
-<li>Finally, we can directly compare our models with out-of-sample
-performance. Load in <a href="data/mlb_payrolls_test.csv">mlb_payrolls_test.csv</a> and call it
-<code>payrolls_test</code>. Do not refit your model but instead use
-<code>predict</code> with the models you have already created to
-generate predictions for the test data set called <code>test_pred</code>
-and <code>test_log_pred</code>, similar to its usage in Lecture 6. Then,
-use the line below to compute the RMSE for each model.</li>
+<li><p>Add a baseline model that predicts the mean winning percentage
+from <code>payroll_train</code> for every team-season. Calculate the
+training RMSE for the baseline, raw-payroll, and log-payroll
+models.</p></li>
+<li><p>Load <code>mlb_payrolls_test.csv</code> as
+<code>payroll_test</code> and remove 2020. Do not refit either model.
+Use the models fitted in Question 3 to add <code>raw_prediction</code>
+and <code>log_prediction</code>. Add the training-set mean as
+<code>baseline_prediction</code>.</p></li>
+<li><p>Calculate the testing RMSE for all three models. Combine the
+training and testing scores in one table, then plot them. Which model
+has the lowest testing RMSE? How large is its advantage over the other
+payroll model?</p></li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>rmse <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((payrolls_test<span class="sc">$</span>WP <span class="sc">-</span> payrolls_test<span class="sc">$</span>test_pred)<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>rmse_log <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((payrolls_test<span class="sc">$</span>WP <span class="sc">-</span> payrolls_test<span class="sc">$</span>test_log_pred)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
-<p>Based on the RMSE values, which model is better?</p>
-<p><em>Challenge</em>: Find the difference between the actual WP values
-and predictions of the <em>log model</em> in the test data and add them
-to <code>payrolls_test</code>. Group by team and find the mean
-difference across all years. Multiply their percentages by 162 to obtain
-number of wins. Make a bar plot showing teams&#x2019; mean performance compared
-to predictions.</p>
+<p>The two payroll models should have very similar testing RMSEs. A
+small numerical difference is not strong evidence that one functional
+form will always predict better.</p>
+</div>
+<div id="challenge" class="section level2">
+<h2>Challenge</h2>
+<p>Use the payroll model with the lowest testing RMSE. For each test-set
+team-season, convert the prediction error in winning percentage to wins
+over 162 games. Then calculate each team&#x2019;s average wins above or below
+its prediction and make a horizontal bar plot.</p>
+</div>
 </div>
 
 

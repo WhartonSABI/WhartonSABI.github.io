@@ -4,136 +4,158 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, fig.align = "center", include = FALSE) # set include = TRUE to see solutions in knitted RMarkdown
+knitr::opts_chunk$set(cache = FALSE, fig.align = "center", include = FALSE)
 library(tidyverse)
 ```
 
 # Regression with Triathlon Data
 
-Now that we've seen linear regression in R applied to MLB batting averages, let's practice what we've learned in a context we haven't worked with before. We will look at past results of the Ironman Triathlon and investigate relationships between racing splits and demographic variables. First let us download the [Ironman Data](data/Ironman Data.csv) and save it to our "data" folder.
+The file [`ironman_florida_2017.csv`](data/ironman_florida_2017.csv) contains results from the 2017 Ironman Florida race. Each row is one athlete. Swim, bike, run, and overall times are measured in minutes.
 
-Let's read in the data and take a look at the variables.
+## Explore the Relationship
 
-```{r read Ironman data, include=TRUE}
-data <- read_csv('data/Ironman Data.csv')
+1. Read the data and save it as `ironman`. Use `glimpse()` to inspect the variables.
+
+```{r q1 prompt, include=TRUE, eval=FALSE}
+ironman <- read_csv("data/ironman_florida_2017.csv")
+glimpse(ironman)
 ```
 
-This is a large data set with hundreds of variables. Digging deeper, we can see that many of the variables seem to be repeated and many have data only in certain rows. In our case, this analysis will focus on the results from the 2017 Florida race, and we will use the swim, bike, run, and overall finishing times along with a few demographic variables.
-
-The finishing times are stored as character strings, so we need to convert them to numeric values before using regression. Run the setup code below to create the cleaned dataset `results_2017`.
-
-```{r clean Ironman data, include=TRUE, message=FALSE}
-#install.packages("lubridate")
-library(lubridate)
-results_2017 <- data %>% 
-  filter(`Source Table` == '2017 - Florida') %>% 
-  select(Country, Gender, Division, Swim, Bike, Run, Overall) %>%
-  drop_na() %>%
-  mutate(Swim = period_to_seconds(ms(Swim))/60, 
-         Bike = period_to_seconds(ms(Bike))/60, 
-         Run = period_to_seconds(ms(Run))/60, 
-         Overall = period_to_seconds(ms(Overall))/60)
+```{r q1 solution}
+ironman <- read_csv("data/ironman_florida_2017.csv", show_col_types = FALSE)
+glimpse(ironman)
 ```
 
+2. Plot bike time on the horizontal axis and run time on the vertical axis. Use transparent points so that dense parts of the plot remain visible. Give both axes clear labels with units.
 
-## Simple Linear Regression
-
-Now that we have our tidy dataset, let's start looking at the relationships between each leg of the triathlon.
-
-1. Create scatterplots of swim times vs. bike times, bike times vs. run times, and swim times vs. run times. Save them as variables titled 'plot.swim_bike', etc.
-
-```{r pt1 q1 solution}
-# solution
-plot.swim_bike<-ggplot(results_2017) +
-  geom_point(aes(Swim, Bike))
-plot.bike_run<-ggplot(results_2017) +
-  geom_point(aes(Bike, Run))
-plot.swim_run<-ggplot(results_2017) +
-  geom_point(aes(Swim, Run))
+```{r q2 solution}
+ggplot(ironman, aes(x = Bike, y = Run)) +
+  geom_point(alpha = 0.25) +
+  labs(x = "Bike Time (minutes)", y = "Run Time (minutes)")
 ```
 
+3. Calculate the correlation between bike and run times. Describe the direction and strength of the linear relationship using the scatterplot and the correlation together.
 
-2. Print the three plots you created above and compare the relationships visually.
-
-```{r pt1 q2, include=TRUE}
-plot.swim_bike
-plot.bike_run
-plot.swim_run
+```{r q3 solution}
+cor(ironman$Bike, ironman$Run)
 ```
 
-* Can you visually compare these associations by looking at the scatterplots? Which legs of the race seem to be more highly correlated?
+## Fit and Interpret a Model
 
+4. Fit a linear model with run time as the response and bike time as the predictor. Save it as `bike_model` and display its coefficients.
 
-3. Another way to display three continuous variables at once is by creating a scatterplot for two of the variables and then coloring the points by the values of the third variable. Try doing so with different combinations of our variables to create plots like the one below.
-
-```{r pt1 q3 solution, include=TRUE, echo=FALSE}
-# solution
-ggplot(results_2017) +
-  geom_point(aes(Bike, Swim, color = Run))
+```{r q4 solution}
+bike_model <- lm(Run ~ Bike, data = ironman)
+bike_model$coefficients
 ```
 
-* From this one, we can see that the racers with faster swim and bike times tended to have faster run times; however, the specific relationship between Swim vs. Run and Bike vs. Run is less clear than in the individual scatter plots.
+5. Interpret the slope in minutes. The intercept corresponds to a bike time of zero minutes. Explain why that intercept is not meaningful for these data.
 
+```{r q5 solution}
+# The slope is the fitted difference in run time associated with a
+# one-minute difference in bike time.
 
-4. To numerically evaluate these relationships, compute the correlation between each of the variables (you should compute 3 different correlations). 
-
-```{r pt1 q4 solution, include=TRUE, echo = FALSE}
-# solution
-cor(results_2017$Swim, results_2017$Bike)
-cor(results_2017$Bike, results_2017$Run)
-cor(results_2017$Swim, results_2017$Run)
+range(ironman$Bike)
+# A bike time of zero is far outside the observed range.
 ```
 
+6. Add the model's fitted values and residuals to `ironman`. Save them as `bike_fitted` and `bike_residual`.
 
-5. Now, let's fit our linear model. Right now, we are doing simple linear regression, which involves one response variable and one predictor variable. So, let's start by running a regression with Swim as our predictor and Bike as our response.
-
-```{r pt1 q5, include=TRUE, eval=FALSE}
-lm.swim_bike <- lm( ... ) # fill this part in
+```{r q6 solution}
+ironman <- ironman %>%
+  mutate(
+    bike_fitted = predict(bike_model),
+    bike_residual = Run - bike_fitted
+  )
 ```
 
-```{r pt1 q5 solution}
-# solution
-lm.swim_bike <- lm(data = results_2017, formula = Bike ~ Swim)
+7. Recreate the scatterplot from Question 2 and add the fitted line with `geom_line()`. Remember to arrange the rows by bike time before drawing the line.
+
+```{r q7 solution}
+ggplot(arrange(ironman, Bike)) +
+  geom_point(aes(x = Bike, y = Run), alpha = 0.25) +
+  geom_line(
+    aes(x = Bike, y = bike_fitted),
+    color = "lightcoral",
+    linewidth = 1
+  ) +
+  labs(x = "Bike Time (minutes)", y = "Run Time (minutes)")
 ```
 
-* We obtain the following slope and intercept for this regression.
+8. Plot the residuals against the fitted values. Add a horizontal line at zero. Does the residual plot reveal a clear curve, a changing spread, or unusual observations?
 
-```{r  pt1 q5 2, include=TRUE}
-lm.swim_bike$coefficients
+```{r q8 solution}
+ggplot(ironman, aes(x = bike_fitted, y = bike_residual)) +
+  geom_hline(yintercept = 0, color = "lightcoral", linewidth = 1) +
+  geom_point(alpha = 0.25) +
+  labs(x = "Fitted Run Time (minutes)", y = "Residual (minutes)")
 ```
 
+## Measure Fit and Predict New Rows
 
-6. We also want to add the regression line to our plot. Use `predict()` to generate predictions based on the model, and `mutate()` to add them to your data. Then, use `geom_line()` to add this predicted line to the plot. You may need to increase the size to increase the visibility of the line.
-```{r pt1 q6, include=TRUE}
-results_2017 <- results_2017 %>% 
-  mutate(swim_bike_pred = predict(lm.swim_bike))
+9. Calculate the model's $R^2$ and training RMSE. Interpret each value. RMSE is measured in minutes because run time is measured in minutes.
 
-ggplot(results_2017) +
-  geom_point(aes(Swim, Bike)) +
-  geom_line(aes(x = Swim, y = swim_bike_pred), color = 'lightcoral', size = 1.5)
+```{r q9 solution}
+summary(bike_model)$r.squared
+
+ironman %>%
+  summarize(RMSE = sqrt(mean(bike_residual^2)))
 ```
 
+10. Create a tibble called `new_bike_times` containing bike times of 300, 360, and 420 minutes. Use `predict()` with `newdata` to add each fitted run time.
 
-7. Repeat steps 5 and 6 for the two other combinations of the three race legs. Note that since we're only investigating associations between variables (as opposed to causal relations) it doesn't really matter which variable we choose to be our predictor and response; the resulting plots will be the same, except with flipped axes. If, instead, we were trying to determine causality, we would put the independent/predictor variable on the x-axis and the dependent/response variable on the y-axis.
+```{r q10 solution}
+new_bike_times <- tibble(Bike = c(300, 360, 420)) %>%
+  mutate(predicted_Run = predict(bike_model, newdata = .))
 
-```{r  pt1 q7 solution}
-# solution
-lm.bike_run <- lm(data = results_2017, formula = Run ~ Bike)
-lm.bike_run$coefficients
-results_2017 <- results_2017 %>% 
-  mutate(bike_run_pred = predict(lm.bike_run))
-ggplot(results_2017) +
-  geom_point(aes(Bike, Run)) +
-  geom_line( aes(x = Bike, y = bike_run_pred), color = 'lightcoral')
-
-lm.run_swim <- lm(data = results_2017, formula = Swim ~ Run)
-lm.run_swim$coefficients
-results_2017 <- results_2017 %>% 
-  mutate(run_swim_pred = predict(lm.run_swim))
-ggplot(results_2017) +
-  geom_point(aes(Run, Swim)) +
-  geom_line(aes(x = Run, y = run_swim_pred), color = 'lightcoral')
+new_bike_times
 ```
 
+## Compare Two Predictors
 
-After you finish this problem set, you should be comfortable fitting simple linear regression models, adding predicted lines to scatterplots, and comparing several linear relationships with correlation and RMSE.
+11. Fit a second model with run time as the response and swim time as the predictor. Add its fitted values and residuals to `ironman`.
+
+```{r q11 solution}
+swim_model <- lm(Run ~ Swim, data = ironman)
+
+ironman <- ironman %>%
+  mutate(
+    swim_fitted = predict(swim_model),
+    swim_residual = Run - swim_fitted
+  )
+```
+
+12. Create a table containing the $R^2$ and training RMSE for both models. Which predictor has the stronger linear relationship with run time? Support your answer with both measures.
+
+```{r q12 solution}
+model_comparison <- tibble(
+  Model = c("Bike time", "Swim time"),
+  R_squared = c(
+    summary(bike_model)$r.squared,
+    summary(swim_model)$r.squared
+  ),
+  RMSE = c(
+    sqrt(mean(ironman$bike_residual^2)),
+    sqrt(mean(ironman$swim_residual^2))
+  )
+)
+
+model_comparison
+```
+
+13. Reshape `model_comparison` into a long table with one row for each model and measure. Plot the values in two side-by-side panels. Since $R^2$ and RMSE have different scales and units, give each panel its own vertical scale.
+
+```{r q13 solution}
+model_comparison %>%
+  pivot_longer(
+    cols = c(R_squared, RMSE),
+    names_to = "Measure",
+    values_to = "Value"
+  ) %>%
+  ggplot(aes(x = Model, y = Value, fill = Model)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ Measure, scales = "free_y") +
+  labs(x = NULL, y = NULL)
+```
+
+After this problem set, you should be able to fit and interpret a simple linear regression, calculate fitted values and residuals, assess fit with $R^2$ and RMSE, use `newdata`, and compare two models.

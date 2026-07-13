@@ -4,136 +4,229 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, fig.align = "center", include = FALSE) # set include = TRUE to see solutions in knitted RMarkdown
+knitr::opts_chunk$set(cache = FALSE, fig.align = "center", include = FALSE)
 library(tidyverse)
-library(ggplot2)
 ```
 
+# Logistic Regression and Win Probability
 
-# Logistic Regression
+The data contain one row for each NFL play. `label_win` indicates whether the team in possession eventually won the game. `score_differential` is that team's current lead or deficit, and `posteam_spread` is its pregame point spread. Negative spreads indicate a pregame favorite.
 
-We will now continue modeling data with logistic regression using [nfl_wp.csv](data/nfl_wp.csv) to analyze win percentages as a function of multiple variables. The dataset includes `game_id`; `season`; `label_win`, which is a binary (0 or 1) indicator on whether the possessing team won the game; `score_differential`, which is the current score differential between the team in possession and the team on defense; `posteam_spread`, which is the +- spread for the possessing team prior to the game start, `yardline_100`; `down`; and `ydstogo`. 
+The training file contains the 2016--2020 seasons. The testing file contains the 2021 season. Games do not appear in both samples.
 
-1. First, load in the training and testing data.
-```{r split data, include = TRUE}
+## Explore the Data
+
+1. Load [`nfl_wp_train.csv`](data/nfl_wp_train.csv) as `nfl_train` and [`nfl_wp_test.csv`](data/nfl_wp_test.csv) as `nfl_test`. Count the rows and distinct games in each sample. Confirm that their game IDs do not overlap.
+
+```{r q1 prompt, include=TRUE, eval=FALSE}
 nfl_train <- read_csv("data/nfl_wp_train.csv")
 nfl_test <- read_csv("data/nfl_wp_test.csv")
 ```
 
+```{r q1 solution}
+nfl_train <- read_csv("data/nfl_wp_train.csv", show_col_types = FALSE)
+nfl_test <- read_csv("data/nfl_wp_test.csv", show_col_types = FALSE)
 
-2. Next, do some exploratory data analysis (EDA) to understand the data. First, plot a histogram of `score_differential` to show the distribution of the variable. Then, make a separate data table grouped by game and select the first instance of `posteam_spread` so that we have only one per game. Plot the distribution of this variable.
+nfl_train %>%
+  summarize(plays = n(), games = n_distinct(game_id))
 
-```{r}
+nfl_test %>%
+  summarize(plays = n(), games = n_distinct(game_id))
 
-nfl_wp_grouped <- nfl_train %>%
-  group_by(game_id) %>%
-  reframe(
-    spread = first(posteam_spread)
-  ) 
+intersect(unique(nfl_train$game_id), unique(nfl_test$game_id))
+```
 
-ggplot(nfl_wp_grouped, aes(x = spread)) +
-  geom_histogram(binwidth = 2, fill = "lightblue4") +
-  labs(title = "Distribution of Team Spread",
-       x = "Spread",
-       y = "Count") +
-  theme_minimal()
+2. Plot the training distribution of `score_differential`. Then use `distinct(game_id, posteam_spread)` to keep one row per game and team spread before plotting the distribution of `posteam_spread`. Give both plots accurate axis labels.
 
+```{r q2 solution}
 ggplot(nfl_train, aes(x = score_differential)) +
-  geom_histogram(binwidth = 1, fill = "lightcoral") +
-  labs(title = "Distribution of Score Differential",
-       x = "Spread",
-       y = "Count") +
-  theme_minimal()
+  geom_histogram(binwidth = 2, fill = "lightcoral") +
+  labs(x = "Score Differential", y = "Plays")
+
+game_team_spreads <- nfl_train %>%
+  distinct(game_id, posteam_spread)
+
+ggplot(game_team_spreads, aes(x = posteam_spread)) +
+  geom_histogram(binwidth = 1, fill = "lightblue4") +
+  labs(x = "Pregame Team Spread", y = "Team-Games")
 ```
 
-3. Then fit a logistic model called `diff_model` using `glm()` to predict `label_win` based on `score_differential`. Call the model after you fit it to see the coefficients and then add its predictions to the training dataset.
-```{r model and predictions.}
-diff_model = glm(label_win ~ score_differential, family = binomial, data = nfl_train)
-diff_model 
-nfl_train <- nfl_train %>% 
-  mutate(diff_predicted_win = predict(diff_model, type = "response"))
-nfl_train
+## Fit and Visualize Logistic Models
+
+3. Fit `diff_model`, a logistic regression of `label_win` on `score_differential`. Create a grid covering the observed score differentials, add predicted probabilities with `type = "response"`, and plot the fitted curve.
+
+```{r q3 solution}
+diff_model <- glm(
+  label_win ~ score_differential,
+  family = binomial,
+  data = nfl_train
+)
+
+score_grid <- tibble(
+  score_differential = seq(
+    min(nfl_train$score_differential),
+    max(nfl_train$score_differential),
+    by = 1
+  )
+) %>%
+  mutate(
+    predicted_win_probability = predict(
+      diff_model,
+      newdata = ., 
+      type = "response"
+    )
+  )
+
+ggplot(score_grid, aes(x = score_differential, y = predicted_win_probability)) +
+  geom_line(color = "dodgerblue4", linewidth = 1) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "Score Differential", y = "Predicted Win Probability")
 ```
 
-4. Repeat step 3 but predicting with `posteam_spread` instead. 
-```{r}
-spread_model = glm(label_win ~ posteam_spread, family = binomial, data = nfl_train)
-spread_model 
-nfl_train <- nfl_train %>% 
-  mutate(spread_predicted_win = predict(spread_model, type = "response"))
-nfl_train
+4. Fit `spread_model`, a logistic regression of `label_win` on `posteam_spread`. Create a prediction grid and plot its fitted probability curve. How does being a larger pregame favorite change the fitted win probability?
+
+```{r q4 solution}
+spread_model <- glm(
+  label_win ~ posteam_spread,
+  family = binomial,
+  data = nfl_train
+)
+
+spread_grid <- tibble(
+  posteam_spread = seq(
+    min(nfl_train$posteam_spread),
+    max(nfl_train$posteam_spread),
+    by = 0.5
+  )
+) %>%
+  mutate(
+    predicted_win_probability = predict(
+      spread_model,
+      newdata = ., 
+      type = "response"
+    )
+  )
+
+ggplot(spread_grid, aes(x = posteam_spread, y = predicted_win_probability)) +
+  geom_line(color = "dodgerblue4", linewidth = 1) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "Pregame Team Spread", y = "Predicted Win Probability")
 ```
 
-5. Now, plot the predicted probabilities of winning based on the two models you created in steps 3 and 4. Put the predictor variable on the x-axis and the predicted win probability on the y axis. Create a label column with `case_when()` so that the points are colored by whether the team eventually won or lost. Which variable seems to predict better? 
-```{r}
+5. Fit `combined_model` using both `score_differential` and `posteam_spread`. Create a grid containing every score differential and three pregame spreads: -7, 0, and 7. Predict on the grid and plot three probability curves. Explain how the pregame spread changes win probability for teams with the same current score differential.
+
+```{r q5 solution}
+combined_model <- glm(
+  label_win ~ score_differential + posteam_spread,
+  family = binomial,
+  data = nfl_train
+)
+
+combined_grid <- expand_grid(
+  score_differential = seq(
+    min(nfl_train$score_differential),
+    max(nfl_train$score_differential),
+    by = 1
+  ),
+  posteam_spread = c(-7, 0, 7)
+) %>%
+  mutate(
+    predicted_win_probability = predict(
+      combined_model,
+      newdata = ., 
+      type = "response"
+    ),
+    spread_label = factor(posteam_spread)
+  )
+
+ggplot(
+  combined_grid,
+  aes(
+    x = score_differential,
+    y = predicted_win_probability,
+    color = spread_label
+  )
+) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(
+    x = "Score Differential",
+    y = "Predicted Win Probability",
+    color = "Pregame Spread"
+  )
+```
+
+## Compare Training and Testing Performance
+
+6. Use all three fitted models to add predicted probabilities to both `nfl_train` and `nfl_test`. Do not refit the models on the testing data.
+
+```{r q6 solution}
 nfl_train <- nfl_train %>%
-  mutate(win_label = case_when(
-    label_win == 1 ~ "Win",
-    TRUE ~ "Loss"
-  ))
+  mutate(
+    `Score differential` = predict(diff_model, newdata = ., type = "response"),
+    `Pregame spread` = predict(spread_model, newdata = ., type = "response"),
+    Combined = predict(combined_model, newdata = ., type = "response")
+  )
 
-ggplot(nfl_train, aes(x = score_differential, y = diff_predicted_win, color = win_label)) +
-  geom_point(alpha = 0.5) +
-  labs(title = "Predicted Win Probability vs Score Differential",
-       x = "Score Differential",
-       y = "Predicted Win Probability",
-       color = "Actual Win") +
-  theme_minimal()
-
-ggplot(nfl_train, aes(x = posteam_spread, y = spread_predicted_win, color = win_label)) +
-  geom_point(alpha = 0.5) +
-  labs(title = "Predicted Win Probability vs Spread",
-       x = "Spread",
-       y = "Predicted Win Probability",
-       color = "Actual Win") +
-  theme_minimal()
-```
-
-6. Finally, let's make a model to account for both variables. Name your model `spread_diff_model` and follow the previous steps to obtain predictions and plot the data as a function of score differential (since this variable is more continuous than spread as we saw with our histogram). How does this model compare to the previous two?
-```{r}
-spread_diff_model = glm(label_win ~ score_differential + posteam_spread, family = binomial, data = nfl_train)
-nfl_train <- nfl_train %>% 
-  mutate(spread_diff_predicted_win = predict(spread_diff_model, type = "response"))
-ggplot(nfl_train, aes(x = score_differential, y = spread_diff_predicted_win, color = win_label)) +
-  geom_point(alpha = 0.5) +
-  labs(title = "Predicted Win Probability vs Score Differential (with Spread)",
-       x = "Score Differential",
-       y = "Predicted Win Probability",
-       color = "Actual Win") +
-  theme_minimal()
-```
-
-7. Let's test all of our models. Use `predict()` on the test data with the previously created models, then add them to the test dataset. Then, run the following code below to convert from win probability to a predicted win or loss and then calculate the accuracy. Print your results. Which model ended up being the best?
-```{r predictions}
 nfl_test <- nfl_test %>%
   mutate(
-    diff_pred_prob = predict(diff_model, newdata = nfl_test, type = "response"),
-    spread_pred_prob = predict(spread_model, newdata = nfl_test, type = "response"),
-    spread_diff_pred_prob = predict(spread_diff_model, newdata = nfl_test, type = "response")
+    `Score differential` = predict(diff_model, newdata = ., type = "response"),
+    `Pregame spread` = predict(spread_model, newdata = ., type = "response"),
+    Combined = predict(combined_model, newdata = ., type = "response")
   )
-
 ```
 
-```{r accuracy, include = TRUE}
-nfl_test <- nfl_test %>% 
-  mutate(
-    diff_pred_label = case_when(diff_pred_prob >= 0.5 ~ 1, TRUE ~ 0),
-    spread_pred_label = case_when(spread_pred_prob >= 0.5 ~ 1, TRUE ~ 0),
-    spread_diff_pred_label = case_when(spread_diff_pred_prob >= 0.5 ~ 1, TRUE ~ 0)
-  )
+7. Calculate the training and testing Brier scores for all three models. Combine them in one table and plot them. Which model has the lowest testing Brier score? Does the ranking match the training results?
 
-acc_diff  <- mean(nfl_test$label_win == nfl_test$diff_pred_label)
-acc_spread <- mean(nfl_test$label_win == nfl_test$spread_pred_label)
-acc_both  <- mean(nfl_test$label_win == nfl_test$spread_diff_pred_label)
+```{r q7 solution}
+training_scores <- nfl_train %>%
+  summarize(
+    across(
+      c(`Score differential`, `Pregame spread`, Combined),
+      ~ mean((label_win - .x)^2)
+    )
+  ) %>%
+  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
+  mutate(Sample = "Training")
 
+testing_scores <- nfl_test %>%
+  summarize(
+    across(
+      c(`Score differential`, `Pregame spread`, Combined),
+      ~ mean((label_win - .x)^2)
+    )
+  ) %>%
+  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
+  mutate(Sample = "Testing")
+
+brier_comparison <- bind_rows(training_scores, testing_scores)
+brier_comparison
+
+ggplot(brier_comparison, aes(x = Model, y = Brier, fill = Sample)) +
+  geom_col(position = "dodge") +
+  labs(x = NULL, y = "Brier Score", fill = NULL)
 ```
 
-```{r results}
+## Challenge
 
-tibble(
-  Model = c("Score Differential", "Spread", "Score Differential + Spread"),
-  Accuracy = c(acc_diff, acc_spread, acc_both)
+Fit another logistic regression that adds `down`, `ydstogo`, and `yardline_100` to the combined model. Predict on the testing data and compare its testing Brier score with the three models above. Does the added complexity improve out-of-sample probability forecasts?
+
+```{r challenge solution}
+expanded_model <- glm(
+  label_win ~ score_differential + posteam_spread + down + ydstogo + yardline_100,
+  family = binomial,
+  data = nfl_train
 )
-```
 
-*Challenge: Can you make an even better model with the other variables in the dataset or with numerical transformations to variables? Additionally, feel free to explore other metrics for out-of-sample performance, such as log-loss or AUC!*
+nfl_test <- nfl_test %>%
+  mutate(
+    expanded_prediction = predict(
+      expanded_model,
+      newdata = ., 
+      type = "response"
+    )
+  )
+
+nfl_test %>%
+  summarize(Brier = mean((label_win - expanded_prediction)^2))
+```

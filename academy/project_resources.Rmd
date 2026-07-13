@@ -1,0 +1,180 @@
+---
+title: 'Project Resources and Data Sources'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = FALSE, fig.align = "center")
+library(tidyverse)
+```
+
+These references can help you find data and build plots for the final project. Package functions that download live data may change or temporarily fail, so the examples also link to local copies when possible.
+
+## Plot References
+
+- [ColorBrewer](https://colorbrewer2.org/) shows palettes such as `OrRd` and `Spectral`.
+- The [R Graph Gallery's ggplot2 guide](https://r-graph-gallery.com/ggplot2-package.html) provides examples of many plot types.
+- This [alphabetical guide to R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) lists built-in color names.
+
+## Lahman Baseball Database
+
+The [Lahman package](https://cran.r-project.org/package=Lahman) contains historical baseball data beginning in 1871.
+
+```{r install Lahman, eval=FALSE}
+install.packages("Lahman")
+```
+
+```{r load Lahman, message=FALSE}
+library(Lahman)
+```
+
+Use `data(package = "Lahman")` to list its datasets. The installed version used to build this page contains team data through the `r max(Teams$yearID)` season.
+
+`NA` denotes a missing value. `is.na(x)` checks for missing values, and `na.rm = TRUE` tells a summary function to ignore them.
+
+```{r Lahman strikeouts}
+Teams %>%
+  filter(!is.na(SO)) %>%
+  group_by(yearID) %>%
+  summarize(strikeouts = sum(SO, na.rm = TRUE)) %>%
+  ggplot(aes(x = yearID, y = strikeouts)) +
+  geom_line() +
+  labs(
+    x = "Year",
+    y = "Recorded Strikeouts",
+    title = "Recorded MLB Strikeouts by Season",
+    caption = "Data: Lahman"
+  )
+```
+
+## NFL Play-by-Play with `nflreadr`
+
+The [`nflreadr` package](https://nflreadr.nflverse.com/) downloads NFL play-by-play data containing `nflfastR` variables such as expected points added (EPA).
+
+```{r install nflreadr, eval=FALSE}
+install.packages("nflreadr")
+library(nflreadr)
+```
+
+The following call downloads the 2021 season. It is not run while this page renders because the file is large.
+
+```{r load pbp, eval=FALSE}
+pbp_2021 <- load_pbp(2021)
+```
+
+```{r calculate team EPA, eval=FALSE}
+offense_epa_21 <- pbp_2021 %>%
+  filter(!is.na(posteam)) %>%
+  group_by(posteam) %>%
+  summarize(
+    games = n_distinct(game_id),
+    off_epa_per_game = sum(epa, na.rm = TRUE) / games
+  )
+
+defense_epa_21 <- pbp_2021 %>%
+  filter(!is.na(defteam)) %>%
+  group_by(defteam) %>%
+  summarize(
+    games = n_distinct(game_id),
+    def_epa_per_game = -sum(epa, na.rm = TRUE) / games
+  )
+
+team_epa_21 <- offense_epa_21 %>%
+  inner_join(defense_epa_21, by = c("posteam" = "defteam"))
+```
+
+The completed team summary is available as [`nfl_team_epa_2021.csv`](data/nfl_team_epa_2021.csv).
+
+```{r plot team EPA}
+team_epa_21 <- read_csv(
+  "data/nfl_team_epa_2021.csv",
+  show_col_types = FALSE
+)
+
+ggplot(team_epa_21, aes(x = off_epa_per_game, y = def_epa_per_game)) +
+  geom_hline(yintercept = 0, color = "lightcoral", linetype = "dashed") +
+  geom_vline(xintercept = 0, color = "lightcoral", linetype = "dashed") +
+  geom_point(color = "dodgerblue4", size = 2) +
+  geom_text(aes(label = posteam), nudge_y = 0.5, size = 3, check_overlap = TRUE) +
+  labs(
+    x = "Offensive EPA per Game",
+    y = "Defensive EPA per Game",
+    title = "NFL Team EPA per Game, 2021",
+    caption = "Data accessed with nflreadr"
+  )
+```
+
+## Baseball Statcast with `baseballr`
+
+The [`baseballr` package](https://billpetti.github.io/baseballr/) accesses baseball data from sources including Baseball Savant, FanGraphs, and Baseball-Reference.
+
+```{r install baseballr, eval=FALSE}
+install.packages("baseballr")
+library(baseballr)
+```
+
+Look up a player's MLB identifier, then use it to request Statcast pitches.
+
+```{r get Judge data, eval=FALSE}
+playerid_lookup(last_name = "Judge", first_name = "Aaron")
+
+judge_statcast_data <- statcast_search_batters(
+  start_date = "2022-01-01",
+  end_date = "2022-12-31",
+  batterid = 592450
+)
+```
+
+The local copy is available as [`judge_statcast_data_2022.RDS`](data/judge_statcast_data_2022.RDS).
+
+```{r Judge plot, warning=FALSE}
+judge_statcast_data <- readRDS("data/judge_statcast_data_2022.RDS")
+
+judge_statcast_data %>%
+  filter(type == "X") %>%
+  ggplot(aes(x = launch_speed, y = launch_angle, color = hit_distance_sc)) +
+  geom_point() +
+  scale_color_viridis_c(option = "A") +
+  labs(
+    x = "Exit Velocity (MPH)",
+    y = "Launch Angle (degrees)",
+    color = "Distance (feet)",
+    title = "Aaron Judge's Batted Balls, 2022",
+    caption = "Data accessed with baseballr"
+  )
+```
+
+## NBA Shots with `nbastatR`
+
+The [`nbastatR` package](https://github.com/abresler/nbastatR) provides functions for NBA data. It is installed from GitHub, and its live data requests may occasionally fail when the NBA changes its site.
+
+```{r install nbastatR, eval=FALSE}
+install.packages("remotes")
+remotes::install_github("abresler/nbastatR")
+library(nbastatR)
+```
+
+```{r get Warriors shots, eval=FALSE}
+warriors_shots <- teams_shots(
+  teams = "Golden State Warriors",
+  seasons = 2022
+)
+```
+
+The local copy is available as [`warriors_shots_2022.RDS`](data/warriors_shots_2022.RDS).
+
+```{r Warriors shots plot}
+warriors_shots <- readRDS("data/warriors_shots_2022.RDS")
+
+warriors_shots %>%
+  ggplot(aes(x = locationX, y = locationY, color = isShotMade)) +
+  geom_point(alpha = 0.5) +
+  scale_color_manual(values = c("#FFC72C", "#1D428A")) +
+  labs(
+    x = NULL,
+    y = NULL,
+    color = "Shot Made",
+    title = "Golden State Warriors Shot Attempts, 2021--22",
+    caption = "Data accessed with nbastatR"
+  )
+```

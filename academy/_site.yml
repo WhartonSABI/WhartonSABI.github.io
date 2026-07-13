@@ -35,6 +35,8 @@ navbar:
           href: lecture7.html
         - text: "Lecture 8"
           href: lecture8.html
+        - text: "Project Resources"
+          href: project_resources.html
         - text: "---"
         - text: "Problem Set 1"
           href: ps1.html

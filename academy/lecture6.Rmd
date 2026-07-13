@@ -4,230 +4,178 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
+knitr::opts_chunk$set(cache = FALSE, fig.align = "center")
 library(tidyverse)
 ```
 
-In [Lecture 5](lecture5.html), we predicted an MLB player's 2015 batting average using their 2014 batting average. Binning helped us see the relationship, but it required us to choose arbitrary bin widths. In this lecture, we will use *correlation* to measure the strength of the linear relationship and *linear regression* to fit a smooth prediction line without choosing bins.
+In [Lecture 5](lecture5.html), we used bins to summarize how players' batting averages changed from 2014 to 2015. The bin averages described the pattern in the data. Linear regression gives us a single smooth line for that pattern, without requiring us to choose bin widths.
 
-We again load the data (if you don't have it, you can download it [here](data/batting_2014_2015.RData)) and use the `pivot_wider()` function to separate the 2014 and 2015 batting averages into separate columns. 
+Load the data (you can download it [here](data/batting_2014_2015.RData)) and reshape it so that each player has separate columns for 2014 and 2015.
 
-```{r load batting_2014_2015, message = FALSE, cache = FALSE}
+```{r load batting_2014_2015, message=FALSE}
 load("data/batting_2014_2015.RData")
+
 batting_2014_2015 <- batting_2014_2015 %>%
   pivot_wider(
     names_from = yearID,
     values_from = BA,
     names_prefix = "BA_"
   )
+
 head(batting_2014_2015)
 ```
 
-Again, we plot the 2014 batting averages against the 2015 batting averages:
-
 ```{r plot batting_2014_2015}
-g <- ggplot(data = batting_2014_2015) +
-  geom_point(aes(x = BA_2014, y = BA_2015)) + 
+ggplot(batting_2014_2015, aes(x = BA_2014, y = BA_2015)) +
+  geom_point() +
   labs(x = "2014 Batting Average", y = "2015 Batting Average")
-g
 ```
-
 
 ## Correlation
 
-We can see a positive trend between the 2014 and 2015 batting averages. How can we quantify the relationship between the 2014 and 2015 data? 
+The **correlation coefficient**, *r*, summarizes the direction and strength of a linear relationship. It ranges from -1 to 1.
 
-The **correlation coefficient**, *r*, is one way to summarize the dependence between two seasons with one number. *r* is a standardized measure of the *linear* dependence between two variables (usually called $x$ and $y$) and can take values between -1 and +1.  
+- A correlation near 1 describes a strong positive linear relationship.
+- A correlation near -1 describes a strong negative linear relationship.
+- A correlation near 0 describes a weak linear relationship.
 
-If $r = 1$, then the points all lie on a line with positive slope. If $r = -1$, the points all lie on a line with negative slope. 
+We calculate a correlation with `cor()`. The function expects two vectors, so we use `$` to extract each column.
 
-Loosely speaking, we can think of correlation as a measure of how well a line fits our data. [Let's get some practice!](https://guessthecorrelation.com/)
-
-We can calculate the correlation between two variables in `R` using the function `cor()`. Since `cor()` expects vectors rather than a tibble, we cannot pipe our data into it directly. Instead, we need to specifically point to each variable within the dataset, using the dollar sign symbol we've seen a couple times before: `our_dataset$our_variable`. This extracts a single column as a vector. By contrast, `our_dataset %>% select(our_variable)` returns a one-column tibble, which is useful in other contexts but is not what we want here.
-
-The correlation between the 2014 and 2015 batting averages is:
-
-```{r cor}
+```{r correlation}
 cor(batting_2014_2015$BA_2014, batting_2014_2015$BA_2015)
 ```
 
-We have a moderate amount of correlation between 2014 and 2015 batting averages, but there is still a lot of noise. 
+There is a positive relationship between the two seasons, but there is also considerable variation among players with similar 2014 batting averages.
 
-It is important to remember that correlation is only a measure of *linear* dependence between two variables. The below example shows data where $y = x^2$ exactly. 
+Correlation measures only *linear* dependence. In the data below, `y` is determined exactly by `x`, but the relationship is curved and the correlation is near zero.
 
-```{r quadratic plot, echo = FALSE}
+```{r quadratic plot, echo=FALSE}
 set.seed(1234)
 x <- runif(50, -1, 1)
-y <- x^2
-dat <- tibble(x = x, y = y)
-r_quadratic <- cor(x, y)
-eg <- ggplot(data = dat, aes(x, y)) +
+quadratic_data <- tibble(x = x, y = x^2)
+
+ggplot(quadratic_data, aes(x, y)) +
   geom_point() +
-  labs(title = expression(paste("y = ", x^2)))
-eg
-```
-
-Even though $y$ is determined exactly by $x$, $r = `r round(r_quadratic, 2)`$, indicating a weak *linear* relationship. A straight line fit to these data will therefore be nearly flat.
-
-```{r quadratic plot line, echo = FALSE}
-quadratic_line <- lm(y ~ x, data = dat)
-eg <- eg +
-  geom_abline(
-    intercept = coef(quadratic_line)[1],
-    slope = coef(quadratic_line)[2],
-    color = "red"
+  labs(
+    title = paste("Correlation =", round(cor(quadratic_data$x, quadratic_data$y), 2)),
+    subtitle = "A strong relationship does not have to be linear"
   )
-eg
 ```
 
-```{r slope intercept, echo=FALSE}
-best_fit <- lm(BA_2015 ~ BA_2014, data = batting_2014_2015)
-a_best <- best_fit$coefficients[1]
-b_best <- best_fit$coefficients[2]
-x_example <- 0.31
-y_example <- predict(best_fit, newdata = tibble(BA_2014 = x_example))[[1]]
+## Fitting a Linear Model
+
+Use `lm()` to fit the line relating 2014 batting average to 2015 batting average.
+
+```{r fit model}
+batting_model <- lm(BA_2015 ~ BA_2014, data = batting_2014_2015)
+batting_model$coefficients
 ```
 
-Now let's go back to the 2014 and 2015 batting data. To visualize their linear relationship, we draw the *line of best fit*. In this example, the line has a $y$-intercept of `r round(a_best, 3)` and a slope of `r round(b_best, 3)`. We will see how to estimate these values below.
+The formula has the form `response ~ predictor`. Here, `BA_2015` is the response on the vertical axis and `BA_2014` is the predictor on the horizontal axis.
 
-```{r slope intercept plot}
-g <- g + geom_abline(intercept = a_best, slope = b_best, color = "red") + 
-  labs(title = paste0("y = ", round(a_best, 3), " + ", round(b_best, 3), "x"))
-g
+A fitted line has an intercept and a slope:
+
+$$\widehat{y} = a + bx$$
+
+The intercept, *a*, is the fitted value when the predictor is zero. That is far outside the batting averages in these data, so it is not substantively useful here.
+
+The slope, *b*, is the fitted change in 2015 batting average associated with a one-unit increase in 2014 batting average. Since a one-unit change is enormous for batting average, it is clearer to interpret a 0.010 increase.
+
+```{r slope interpretation}
+coef(batting_model)["BA_2014"] * 0.010
 ```
 
-**Question:** Which feature of the best fit line, $a$ or $b$, quantifies the linear dependence between 2014 and 2015 batting average?
+**Question:** According to the model, how much higher is the fitted 2015 batting average when the 2014 batting average is 10 points higher?
 
-How does correlation relate to our line of best fit? This brings us to the *regression method*.
+## Fitted Values
 
+`predict()` returns the fitted value for every row used to estimate the model. Add those values to the data and draw the line.
 
-## The Regression Method
-
-If we standardize both variables, $x$ and $y$, the correlation is the *slope* of the line of best fit:
-
-$$\frac{y - \bar{y}}{sd(y)} = r \times \frac{x - \bar{x}}{sd(x)}$$
-
-We can unpack this equation to get the formula for our unstandardized line of best fit:
-
-$$y = a + bx$$
-where $a = \bar{y} - b\bar{x}$ and $b = r \times sd(y)/sd(x)$.
-
-Now that we have our regression line, we can predict $y$ when we know $x$. For example, if a player's 2014 batting average was `r x_example`, their predicted 2015 batting average is:
-$$\widehat{y} = `r round(a_best, 3)` + `r round(b_best, 3)` \times `r x_example` = `r round(y_example, 3)`$$
-We use $\widehat{y}$ for a predicted value of $y$. The regression line estimates the average value of $Y$ for players with a given value of $x$.
-
-```{r plot predicted y, echo = FALSE, warning = FALSE}
-g <- ggplot(data = batting_2014_2015) + 
-  geom_point(aes(x = BA_2014, y = BA_2015)) + 
-  labs(x = "2014 Batting Average", y = "2015 Batting Average") + 
-  geom_abline(intercept = a_best, slope = b_best, color = "red") +
-  labs(title = paste0("y = ", round(a_best, 3), " + ", round(b_best, 3), "x")) +
-  annotate(
-    "segment",
-    x = 0.19, xend = x_example,
-    y = y_example, yend = y_example,
-    linetype = "dashed", color = "dodgerblue"
-  ) +
-  annotate(
-    "segment",
-    x = x_example, xend = x_example,
-    y = 0.20, yend = y_example,
-    linetype = "dashed", color = "dodgerblue"
-  ) +
-  annotate("point", x = x_example, y = y_example, color = "dodgerblue", size = 2) +
-  coord_cartesian(xlim = c(0.19, 0.355), ylim = c(0.20, 0.35), expand = FALSE)
-g
-```
-
-**Question:** What is the interpretation of the slope coefficient, $b$?
-
-
-## Fitting Linear Models
-
-To find the regression coefficients, $a$ and $b$, we use the function `lm()`. The usage of `lm()` is as follows:
-
-```{r lm fn}
-model <- lm(BA_2015 ~ BA_2014, data = batting_2014_2015)
-```
-
-The first argument in the `lm()` call is called a `formula`. It takes the form `y ~ x`, where `y` is our response and `x` is our predictor. In the `lm()` call above, `BA_2015` is our response and `BA_2014` is our predictor.
-
-The second argument in `lm()` is where we specify our data: `batting_2014_2015`. `R` then looks for the columns `BA_2014` and `BA_2015` in the given dataset to calculate the regression coefficients.
-
-Our new object, `model`, contains a lot of information about our regression line. At the moment, we just want the coefficients. We can access the coefficients as follows:
-```{r get coefficients}
-model$coefficients
-```
-
-We could plot the fitted line by passing these coefficients to `geom_abline()`. A more general approach is to use `predict()` to add fitted values to our dataset, sort the rows by the predictor, and plot those values with `geom_line()`:
-```{r plot predictions, warning = FALSE }
+```{r add fitted values}
 batting_2014_2015 <- batting_2014_2015 %>%
-  mutate(pred = predict(model))
+  mutate(fitted = predict(batting_model))
 
-ggplot(data = arrange(batting_2014_2015, BA_2014)) +
-  geom_point(aes(x = BA_2014, y = BA_2015)) + 
-  geom_line(aes(x = BA_2014, y = pred), color = "lightcoral", linewidth = 1) +
-  labs(x = "2014 Batting Average", y = "2015 Batting Average") +
-  labs(title = "Batting Average with Regression Line")
-```
-
-## Measuring Fit and Calculating Residuals
-
-For a linear regression with one predictor, $R^2$ is the square of the correlation, $r^2$. It measures the proportion of variation in the response explained by the model. We can retrieve it from the model summary:
-
-```{r rsquare}
-summary(model)$r.squared
-```
-
-The *residual* for a row is its observed outcome minus its predicted outcome. Because we already have the predictions in `pred`, we can calculate residuals directly with `mutate()`:
-
-```{r add predictions residuals}
-batting_2014_2015 <- batting_2014_2015 %>% 
-  mutate(
-    pred = predict(model),
-    resid = BA_2015 - pred
-  )
-batting_2014_2015
-```
-
-We can display each residual as the vertical distance between an observed value and the regression line:
-
-```{r plot residuals}
-g <- ggplot(batting_2014_2015) +
-  geom_segment(aes(x = BA_2014, xend = BA_2014, y = BA_2015, yend = pred), color = "dodgerblue") + 
-  geom_point(aes(x = BA_2014, y = BA_2015)) + 
-  geom_abline(intercept = a_best, slope = b_best, color = "red") +
-  labs(x = "2014 Batting Average", y = "2015 Batting Average")
-g
-```
-
-
-## Predicting New Observations
-
-So far, we have looked at fitted values for the *training* data: the data used to fit our linear model. Suppose we have more players' batting averages from 2014 but do not have their batting averages from 2015. We can use `predict()` to obtain predictions for these new players.
-
-Below, we enter the players' 2014 batting averages in a tibble called `new_data`. The first argument of `predict()` is the fitted model. The `newdata` argument supplies the rows for which we want predictions.
-
-```{r new_data predict}
-new_data <- tibble(BA_2014 = c(0.241, 0.31, 0.265))
-new_pred <- predict(model, newdata = new_data)
-new_pred
-```
-
-We can add those predictions to `new_data` with `mutate()`:
-
-```{r new_data add predictions}
-new_data <- new_data %>%
-  mutate(pred = predict(model, newdata = new_data))
-new_data
-```
-
-We add these predictions to our plot:
-
-```{r plot new predictions}
 ggplot(arrange(batting_2014_2015, BA_2014)) +
   geom_point(aes(x = BA_2014, y = BA_2015)) +
-  geom_line(aes(x = BA_2014, y = pred), color = "lightcoral", linewidth = 1) +
-  geom_point(data = new_data, mapping = aes(x = BA_2014, y = pred), color = "dodgerblue") +
-  labs(x = "2014 Batting Average", y = "2015 Batting Average")
+  geom_line(
+    aes(x = BA_2014, y = fitted),
+    color = "lightcoral",
+    linewidth = 1
+  ) +
+  labs(
+    x = "2014 Batting Average",
+    y = "2015 Batting Average",
+    title = "Batting Average with Fitted Regression Line"
+  )
 ```
+
+These are fitted values for players whose 2015 batting averages are already in the data. They summarize the average relationship between the two seasons; they are not out-of-sample forecasts.
+
+For example, the fitted value for a 2014 batting average of 0.310 is:
+
+```{r fitted example}
+predict(batting_model, newdata = tibble(BA_2014 = 0.310))
+```
+
+## Residuals and Model Fit
+
+A **residual** is the observed value minus the fitted value. A positive residual means the observed 2015 batting average is above the line; a negative residual means it is below the line.
+
+```{r add residuals}
+batting_2014_2015 <- batting_2014_2015 %>%
+  mutate(residual = BA_2015 - fitted)
+
+head(batting_2014_2015)
+```
+
+```{r plot residuals}
+ggplot(batting_2014_2015, aes(x = fitted, y = residual)) +
+  geom_hline(yintercept = 0, color = "lightcoral", linewidth = 1) +
+  geom_point() +
+  labs(x = "Fitted 2015 Batting Average", y = "Residual")
+```
+
+A useful residual plot has points scattered around zero without a clear pattern. A curve or funnel shape would tell us that a straight line or constant spread does not describe the data well.
+
+Two numbers summarize different aspects of model fit:
+
+- $R^2$ is the proportion of variation in the response explained by the fitted line.
+- RMSE is the typical size of a residual, in the same units as the response.
+
+```{r fit statistics}
+summary(batting_model)$r.squared
+
+batting_2014_2015 %>%
+  summarize(RMSE = sqrt(mean(residual^2)))
+```
+
+For a linear regression with one predictor, $R^2$ equals the squared correlation. A larger $R^2$ means the line explains more of the variation. A smaller RMSE means the fitted values are closer to the observed values.
+
+## Predicting New Rows
+
+Supply a new data frame to the `newdata` argument when the response is not already observed. Its predictor column must have the same name used in the model.
+
+```{r predict new rows}
+new_players <- tibble(BA_2014 = c(0.241, 0.310, 0.265)) %>%
+  mutate(predicted_BA_2015 = predict(batting_model, newdata = .))
+
+new_players
+```
+
+These predictions still describe the fitted relationship learned from the 2014--2015 data. Lecture 7 will separate the data used to fit a model from the data used to evaluate its predictions.
+
+## How Correlation Determines the Line
+
+If both variables are standardized, the correlation is the slope of the fitted line:
+
+$$
+\frac{y - \bar{y}}{sd(y)} = r \times \frac{x - \bar{x}}{sd(x)}
+$$
+
+Rearranging gives the unstandardized slope and intercept:
+
+$$
+b = r \times \frac{sd(y)}{sd(x)}, \qquad a = \bar{y} - b\bar{x}
+$$
+
+This explains why the sign of the slope always matches the sign of the correlation. In practice, `lm()` calculates the coefficients for us.

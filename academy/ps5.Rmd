@@ -6,7 +6,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, fig.align = "center", include = FALSE) # set include = TRUE to see solutions in knitted RMarkdown
+knitr::opts_chunk$set(cache = FALSE, fig.align = "center", include = FALSE) # set include = TRUE to see solutions in knitted RMarkdown
 library(tidyverse)
 ```
 

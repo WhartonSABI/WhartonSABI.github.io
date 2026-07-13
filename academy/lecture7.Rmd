@@ -4,12 +4,12 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
+knitr::opts_chunk$set(cache = FALSE, fig.align = "center")
 library(tidyverse)
 options(pillar.sigfig = 4, width = 100)
 ```
 
-In [Lecture 5](lecture5.html) and [Lecture 6](lecture6.html), we predicted a baseball player's 2015 batting average using their 2014 batting average. We found that some models fit the observed data well but might not predict new observations well. This is called *overfitting*: the model has learned random variation in the training data as though it were a repeatable pattern. We will now use NFL field-goal data to learn how a testing set can reveal overfitting.
+In [Lecture 5](lecture5.html) and [Lecture 6](lecture6.html), we fitted a baseball player's 2015 batting average to their 2014 batting average. A model can fit observed data well but perform poorly on new observations. This is called *overfitting*: the model has learned random variation in the training data as though it were a repeatable pattern. We will use NFL field-goal data to see how a testing set reveals overfitting.
 
 
 ## Training and Testing Paradigm
@@ -128,13 +128,21 @@ $$
 The Brier score is the mean squared error of the probability forecasts. Lower values indicate more accurate predictions. Using code similar to our RMSE calculation in [Lecture 5](lecture5.html), we can compute the training-set Brier score for each model.
 
 ```{r fg_train Brier}
-reframe(fg_train,
+train_brier <- reframe(fg_train,
   phat_all = mean((Success - phat_all)^2),
   phat_kicker = mean((Success - phat_kicker)^2),
   phat_dist_10 = mean((Success - phat_dist_10)^2),
   phat_dist_5 = mean((Success - phat_dist_5)^2),
   phat_dist_2 = mean((Success - phat_dist_2)^2)
-)
+) %>%
+  pivot_longer(
+    everything(),
+    names_to = "Model",
+    values_to = "Brier"
+  ) %>%
+  mutate(Sample = "Training")
+
+train_brier
 ```
 
 Which model has the lowest training-set Brier score? Do you think this model may be overfitting?
@@ -217,14 +225,47 @@ fg_test <-
 
 Now, we can compute the out-of-sample Brier scores for each of our models. Which has the best out-of-sample performance?
 
-```{r fg_test Brier, echo = FALSE}
-reframe(fg_test,
+```{r fg_test Brier}
+test_brier <- reframe(fg_test,
   phat_all = mean((Success - phat_all)^2),
   phat_kicker = mean((Success - phat_kicker)^2),
   phat_dist_10 = mean((Success - phat_dist_10)^2),
   phat_dist_5 = mean((Success - phat_dist_5)^2),
   phat_dist_2 = mean((Success - phat_dist_2)^2)
-)
+) %>%
+  pivot_longer(
+    everything(),
+    names_to = "Model",
+    values_to = "Brier"
+  ) %>%
+  mutate(Sample = "Testing")
+
+test_brier
+```
+
+Put the training and testing scores side by side. The 2-yard bins have the smallest training error, but the 5-yard bins have the smallest testing error. The extra flexibility improved the fit to the training sample without improving predictions for new attempts.
+
+```{r compare Brier scores}
+brier_comparison <- bind_rows(train_brier, test_brier) %>%
+  mutate(
+    Model = factor(
+      Model,
+      levels = c(
+        "phat_all", "phat_kicker", "phat_dist_10",
+        "phat_dist_5", "phat_dist_2"
+      ),
+      labels = c(
+        "Overall", "Kicker", "10-yard bins",
+        "5-yard bins", "2-yard bins"
+      )
+    )
+  )
+
+ggplot(brier_comparison, aes(x = Model, y = Brier, color = Sample, group = Sample)) +
+  geom_point(size = 2) +
+  geom_line() +
+  labs(x = NULL, y = "Brier score", color = NULL) +
+  theme(axis.text.x = element_text(angle = 25, hjust = 1))
 ```
 
 

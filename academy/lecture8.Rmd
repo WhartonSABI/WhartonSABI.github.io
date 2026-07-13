@@ -4,50 +4,63 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
+knitr::opts_chunk$set(cache = FALSE, fig.align = "center")
 library(tidyverse)
 options(pillar.sigfig = 5, width = 100)
 ```
 
-In [Lecture 7](lecture7.html), we predicted field-goal success by dividing distance into bins and averaging the outcomes within each bin. Narrower bins captured more detail, but their predictions also became noisier. Today, we will use *logistic regression* to estimate a smooth probability curve for a binary response. In the field-goal context, our goal is to estimate the probability that a kicker makes an attempt from a given distance.
+In [Lecture 7](lecture7.html), we estimated field-goal success by dividing distance into bins and averaging the outcomes within each bin. Narrow bins captured more detail but also followed more of the training sample's noise. Logistic regression replaces the steps with a smooth probability curve for a binary response.
 
+## Why Logistic Regression?
 
-## Logistic Regression with glm()
+Field-goal success is either 0 or 1. A linear regression can produce fitted values below 0 or above 1, which cannot be probabilities. Logistic regression fits a curve that stays between 0 and 1.
 
-First, load the tidyverse and the [tibbles](data/nfl_fg.RData) saved at the end of [Lecture 7](lecture7.html). If you do not already have that file, download it and move it into your `data` folder.
+Load the [training and testing tibbles](data/nfl_fg.RData) saved at the end of [Lecture 7](lecture7.html).
 
-```{r load nfl_fg, message = FALSE, cache = FALSE}
-library(tidyverse)
+```{r load nfl_fg, message=FALSE}
 load("data/nfl_fg.RData")
 ```
 
-We can fit a logistic regression model using the function `glm()`. In the code block below, we fit a model of the success probability as a function of distance. You'll notice that the syntax is very similar to the `lm()` syntax we saw in [Lecture 6](lecture6.html). The major difference is that we have to include an argument `family = binomial`. This tells R that we are fitting a regression model for *binary* outcomes.
+## Logistic Regression with `glm()`
 
-```{r logit}
-logit_distance <- glm(Success ~ Distance, family = binomial, data = fg_train)
+Fit a logistic regression with `glm()`. The formula still has the form `response ~ predictor`. The additional argument `family = binomial` tells R that the response is binary.
+
+```{r logit distance}
+logit_distance <- glm(
+  Success ~ Distance,
+  family = binomial,
+  data = fg_train
+)
 ```
 
-We can visualize the fitted model by creating a grid of distance values, using `predict()` at each distance, and plotting the resulting probabilities. For logistic regression, `type = "response"` tells `predict()` to return probabilities rather than log-odds.
+To draw the curve, create a grid of distances and predict at every value. For logistic regression, `type = "response"` returns probabilities rather than the model's internal log-odds scale.
 
-```{r add logit preds}
-distance_preds <- tibble(
+```{r distance prediction grid}
+distance_grid <- tibble(
   Distance = seq(min(fg_train$Distance), max(fg_train$Distance), by = 1)
-)
-distance_preds <- distance_preds %>%
+) %>%
   mutate(
-    preds = predict(logit_distance, newdata = distance_preds, type = "response")
+    predicted_probability = predict(
+      logit_distance,
+      newdata = ., 
+      type = "response"
+    )
   )
 
-ggplot(data = distance_preds) + 
-  geom_line(mapping = aes(x = Distance, y = preds)) + 
+ggplot(distance_grid, aes(x = Distance, y = predicted_probability)) +
+  geom_line(linewidth = 1, color = "dodgerblue4") +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Distance (yards)", y = "Predicted probability of success")
+  labs(x = "Distance (yards)", y = "Predicted Probability of Success")
 ```
 
-The plot looks reasonable: short field goals are nearly always made, and the fitted probability decreases smoothly as distance increases. To compare this model with the binned models from [Lecture 7](lecture7.html), we add predictions to `fg_train` and `fg_test`. Because `glm()` created a fitted model object, `predict()` can calculate these values directly; the binned models required joins because their forecasts were stored in summary tables. We save the logistic-regression predictions in `phat_dist_logit`.
+Short field goals have high fitted probabilities, and the probability decreases smoothly with distance.
 
-```{r compare preds train}
-fg_train <- fg_train %>% 
+## Comparing the Smooth and Binned Models
+
+Add the logistic model's probabilities to both samples. The model is fitted only on `fg_train`; `newdata = fg_test` applies that fitted relationship to the held-out attempts.
+
+```{r add distance predictions}
+fg_train <- fg_train %>%
   mutate(
     phat_dist_logit = predict(
       logit_distance,
@@ -56,19 +69,6 @@ fg_train <- fg_train %>%
     )
   )
 
-reframe(fg_train,
-  phat_all = mean((Success - phat_all)^2),
-  phat_kicker = mean((Success - phat_kicker)^2),
-  phat_dist_10 = mean((Success - phat_dist_10)^2),
-  phat_dist_5 = mean((Success - phat_dist_5)^2),
-  phat_dist_2 = mean((Success - phat_dist_2)^2),
-  phat_dist_logit = mean((Success - phat_dist_logit)^2)
-)
-```
-
-The logistic model has a lower training-set Brier score than `phat_all`, `phat_kicker`, and the 10-yard-bin model. It has a higher training-set Brier score than the 5-yard- and 2-yard-bin models. To assess which model is more likely to predict new observations well, we compare their performance on the **testing** set.
-
-```{r compare preds test}
 fg_test <- fg_test %>%
   mutate(
     phat_dist_logit = predict(
@@ -77,305 +77,129 @@ fg_test <- fg_test %>%
       type = "response"
     )
   )
-
-reframe(fg_test,
-  phat_all = mean((Success - phat_all)^2),
-  phat_kicker = mean((Success - phat_kicker)^2),
-  phat_dist_10 = mean((Success - phat_dist_10)^2),
-  phat_dist_5 = mean((Success - phat_dist_5)^2),
-  phat_dist_2 = mean((Success - phat_dist_2)^2),
-  phat_dist_logit = mean((Success - phat_dist_logit)^2)
-)
 ```
 
-On the testing set, the logistic-regression model has the lowest Brier score. The 5-yard- and 2-yard-bin models fit the training data more closely but predict the testing data less accurately, which is evidence that they overfit.
+Calculate the Brier score for every model from Lecture 7 and for the new logistic model.
 
+```{r distance model Brier comparison}
+distance_train_scores <- fg_train %>%
+  summarize(
+    Overall = mean((Success - phat_all)^2),
+    Kicker = mean((Success - phat_kicker)^2),
+    `10-yard bins` = mean((Success - phat_dist_10)^2),
+    `5-yard bins` = mean((Success - phat_dist_5)^2),
+    `2-yard bins` = mean((Success - phat_dist_2)^2),
+    `Logistic curve` = mean((Success - phat_dist_logit)^2)
+  ) %>%
+  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
+  mutate(Sample = "Training")
+
+distance_test_scores <- fg_test %>%
+  summarize(
+    Overall = mean((Success - phat_all)^2),
+    Kicker = mean((Success - phat_kicker)^2),
+    `10-yard bins` = mean((Success - phat_dist_10)^2),
+    `5-yard bins` = mean((Success - phat_dist_5)^2),
+    `2-yard bins` = mean((Success - phat_dist_2)^2),
+    `Logistic curve` = mean((Success - phat_dist_logit)^2)
+  ) %>%
+  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
+  mutate(Sample = "Testing")
+
+bind_rows(distance_train_scores, distance_test_scores)
+```
+
+The narrow bins fit the training data more closely, but the logistic curve has the lowest testing Brier score. Its smoothness keeps it from following every small fluctuation in the training sample.
 
 ## Multiple Logistic Regression
 
-Up to this point, we have only talked about regression models with a single predictor. Though the logistic regression model we just built outperforms all of the ones we had built before, it is still pretty limited. After all, for any specific distance, this model estimates that every kicker has exactly the same chance of making a field goal. The code below fits a logistic regression model that accounts for both the kicker and the distance.
+A distance-only model assigns the same probability to every kicker attempting from the same distance. Add `Kicker` to fit separate curves for individual kickers.
 
-```{r logit multiple}
-logit_dist_kicker <- glm(Success ~ Distance + Kicker, family = binomial, data = fg_train)
+```{r logit distance kicker}
+logit_dist_kicker <- glm(
+  Success ~ Distance + Kicker,
+  family = binomial,
+  data = fg_train
+)
 ```
 
-The syntax is similar to the single-predictor model. In both cases, we use `glm()` with `family = binomial` and `data = fg_train`. The difference is on the right-hand side of the formula: `Distance + Kicker` tells R to use both the attempt distance and the kicker's identity.
+`Distance + Kicker` tells R to use both predictors. To visualize the model, create every combination of distance and three kickers, then predict for each row.
 
-To visualize this model, we create a tibble containing every combination of distance and three selected kickers, then use `predict()` to add a probability for each row.
-
-```{r plot logit multiple}
-dist_kick_grid <- expand_grid(
+```{r kicker prediction grid}
+dist_kicker_grid <- expand_grid(
   Distance = seq(min(fg_train$Distance), max(fg_train$Distance), by = 1),
   Kicker = c("Bailey", "Vinatieri", "Zuerlein")
-)
-dist_kick_grid <- dist_kick_grid %>%
+) %>%
   mutate(
-    preds = predict(
+    predicted_probability = predict(
       logit_dist_kicker,
-      newdata = dist_kick_grid,
+      newdata = ., 
       type = "response"
     )
   )
- 
-ggplot(data = dist_kick_grid) +
-  geom_line(mapping = aes(x = Distance, y = preds, color = Kicker)) +
+
+ggplot(
+  dist_kicker_grid,
+  aes(x = Distance, y = predicted_probability, color = Kicker)
+) +
+  geom_line(linewidth = 1) +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Distance (yards)", y = "Predicted probability of success")
+  labs(x = "Distance (yards)", y = "Predicted Probability of Success")
 ```
 
-`expand_grid()` creates every combination of the supplied `Distance` and `Kicker` values. In `geom_line()`, `color = Kicker` gives each kicker a separate probability curve. The fitted model predicts a higher success probability for Dan Bailey than for Greg Zuerlein or Adam Vinatieri at the same distance.
+The curves have the same shape but different heights. At the same distance, the model assigns Dan Bailey a higher fitted success probability than Greg Zuerlein or Adam Vinatieri.
 
-We can assess the training-set and testing-set performance of this model by computing its Brier scores:
+## Does the Additional Predictor Help?
 
-```{r compare preds train 2}
+Add predictions from the multiple logistic regression and compare its Brier score with the distance-only model.
+
+```{r multiple model predictions}
 fg_train <- fg_train %>%
   mutate(
-    phat_dist_kick_logit = predict(
+    phat_dist_kicker = predict(
       logit_dist_kicker,
       newdata = fg_train,
       type = "response"
     )
   )
 
-reframe(fg_train,
-  phat_all = mean((Success - phat_all)^2),
-  phat_kicker = mean((Success - phat_kicker)^2),
-  phat_dist_10 = mean((Success - phat_dist_10)^2),
-  phat_dist_5 = mean((Success - phat_dist_5)^2),
-  phat_dist_2 = mean((Success - phat_dist_2)^2),
-  phat_dist_logit = mean((Success - phat_dist_logit)^2),
-  phat_dist_kick_logit = mean((Success - phat_dist_kick_logit)^2)
-)
-```
-
-```{r compare preds test 2}
 fg_test <- fg_test %>%
   mutate(
-    phat_dist_kick_logit = predict(
+    phat_dist_kicker = predict(
       logit_dist_kicker,
       newdata = fg_test,
       type = "response"
     )
   )
-
-reframe(fg_test,
-  phat_all = mean((Success - phat_all)^2),
-  phat_kicker = mean((Success - phat_kicker)^2),
-  phat_dist_10 = mean((Success - phat_dist_10)^2),
-  phat_dist_5 = mean((Success - phat_dist_5)^2),
-  phat_dist_2 = mean((Success - phat_dist_2)^2),
-  phat_dist_logit = mean((Success - phat_dist_logit)^2),
-  phat_dist_kick_logit = mean((Success - phat_dist_kick_logit)^2)
-)
 ```
 
-Accounting for both distance and kicker lowers the training-set Brier score, but its testing-set Brier score is slightly higher than that of the distance-only model. The extra predictor improves training fit without improving out-of-sample prediction.
+```{r final Brier comparison}
+final_train_scores <- fg_train %>%
+  summarize(
+    `Distance only` = mean((Success - phat_dist_logit)^2),
+    `Distance + kicker` = mean((Success - phat_dist_kicker)^2)
+  ) %>%
+  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
+  mutate(Sample = "Training")
 
+final_test_scores <- fg_test %>%
+  summarize(
+    `Distance only` = mean((Success - phat_dist_logit)^2),
+    `Distance + kicker` = mean((Success - phat_dist_kicker)^2)
+  ) %>%
+  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
+  mutate(Sample = "Testing")
 
-## Project Resources and Data Sources
+final_scores <- bind_rows(final_train_scores, final_test_scores)
+final_scores
 
-As you start thinking about project ideas, it helps to know where to find data and where to look for plotting references.
-Below are a few resources that are useful once you are comfortable with the main course material.
-
-### Plot references
-
-The palettes used throughout the course, including "OrRd" and "Spectral", come from [ColorBrewer](https://colorbrewer2.org/).
-This [ggplot guide](https://r-graph-gallery.com/ggplot2-package.html) is also a useful quick reference for many different plot types.
-If you want a long list of built-in R colors, this [alphabetical guide to R colors](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) is handy to bookmark.
-
-### `Lahman`
-
-The [Lahman Baseball Database](https://cran.r-project.org/package=Lahman) is a popular resource created by Sean Lahman with historical data going back to 1871.
-There is an R package we can install to access the data directly:
-
-```{r install Lahman, eval = FALSE}
-install.packages("Lahman")
+ggplot(final_scores, aes(x = Model, y = Brier, fill = Sample)) +
+  geom_col(position = "dodge") +
+  labs(x = NULL, y = "Brier Score", fill = NULL)
 ```
 
-Next we load the package, and check out what datasets are available:
+Adding the kicker lowers training error but slightly raises testing error. The additional predictor does not improve out-of-sample performance in this split.
 
-```{r load Lahman, cache = FALSE}
-library(Lahman)
-```
+Across Lectures 5--8, the central workflow has been: define a response, build candidate models on training data, visualize what each model is doing, and compare predictions on testing data. Complexity is useful only when it improves performance on observations the model did not fit.
 
-```{r Lahman data, eval=FALSE}
-data(package = "Lahman")
-```
-
-The package contains many datasets. The installed version of `Lahman` currently includes data through the `r max(Teams$yearID)` season.
-As an example, we can use the `Teams` dataset to calculate the number of recorded strikeouts in each season and plot the totals over time.
-
-One quick note about missing data: in R, a missing value is recorded as `NA`.
-When you see `na.rm = TRUE`, it means "ignore the missing values when carrying out this calculation."
-More generally, `is.na(x)` checks whether `x` is missing, and `!is.na(x)` keeps only the rows where `x` is not missing.
-
-```{r Lahman strikeouts year}
-Teams %>%
-  filter(!is.na(SO)) %>%
-  group_by(yearID) %>%
-  reframe(n_so = sum(SO, na.rm = TRUE)) %>%
-  ggplot() +
-  geom_line(aes(x = yearID, y = n_so)) +
-  labs(x = "Year", y = "Number of strikeouts",
-       title = "Total number of recorded strikeouts by baseball season",
-       caption = "Data courtesy of Lahman") +
-  theme_bw()
-```
-
-### `nflreadr`
-
-The [`nflreadr` package](https://nflreadr.nflverse.com/) provides access to NFL play-by-play data containing `nflfastR` variables such as expected points added (EPA).
-Install and load the package as follows:
-
-```{r install nflreadr, eval = FALSE}
-install.packages("nflreadr")
-```
-
-```{r load nflreadr, eval = FALSE}
-library(nflreadr)
-```
-
-The following call downloads play-by-play data for the 2021 season. It is not run when this page is rendered because the download is large.
-
-```{r load pbp_2021, eval = FALSE}
-pbp_2021 <- load_pbp(2021)
-```
-
-With these data, we can summarize each team's expected points added per game on offense and defense. The following code creates the two summaries and joins them.
-
-```{r epa, eval = FALSE}
-offense_epa_21 <- pbp_2021 %>%
-  filter(!is.na(posteam)) %>%
-  group_by(posteam) %>%
-  reframe(
-    n_games = n_distinct(game_id),
-    off_total_epa = sum(epa, na.rm = TRUE),
-    off_epa_per_game = off_total_epa / n_games
-  )
-
-defense_epa_21 <- pbp_2021 %>%
-  filter(!is.na(defteam)) %>%
-  group_by(defteam) %>%
-  reframe(
-    n_games = n_distinct(game_id),
-    def_total_epa = sum(epa, na.rm = TRUE),
-    def_epa_per_game = -def_total_epa / n_games
-  )
-
-team_epa_21 <- offense_epa_21 %>%
-  inner_join(defense_epa_21, by = c("posteam" = "defteam"))
-```
-
-To keep the rendered lecture reproducible, the completed team-level summary is also available as [nfl_team_epa_2021.csv](data/nfl_team_epa_2021.csv).
-
-```{r load team epa, include = FALSE, cache = FALSE}
-team_epa_21 <- read_csv("data/nfl_team_epa_2021.csv", show_col_types = FALSE)
-```
-
-```{r join epa plot}
-team_epa_21 %>%
-  ggplot(aes(x = off_epa_per_game, y = def_epa_per_game)) +
-  geom_point(color = "dodgerblue4", size = 2) +
-  geom_text(aes(label = posteam), nudge_y = 0.5, size = 3, check_overlap = TRUE) +
-  labs(x = "Offensive EPA per game",
-       y = "Defensive EPA per game",
-       caption = "Data accessed via nflreadr",
-       title = "Offensive and defensive EPA per game for each team in the 2021 NFL season") +
-  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
-  geom_vline(xintercept = 0, color = "red", linetype = "dashed") +
-  theme_bw()
-```
-
-### Installing GitHub Packages
-
-While most R packages are installed with `install.packages()`, some sports-data packages are hosted only on GitHub.
-To install them, we first install `devtools`:
-
-```{r install devtools, eval = FALSE}
-install.packages("devtools")
-```
-
-The `devtools` package provides the function `install_github()`, which we will use below.
-Most of these resources are still in development, so installation and use can occasionally be inconsistent.
-
-### `baseballr`
-
-The [`baseballr` package](https://billpetti.github.io/baseballr/) gives direct access to baseball data from sites like FanGraphs, Baseball-Reference, and Baseball Savant.
-
-```{r install load baseballr, eval = FALSE}
-devtools::install_github("BillPetti/baseballr")
-library(baseballr)
-```
-
-Using the `baseballr` package, we can access all pitches thrown to a hitter in a season.
-We first use `playerid_lookup()` to find Aaron Judge's Statcast id:
-
-```{r lookup Judge, eval = FALSE}
-playerid_lookup(last_name = "Judge", first_name = "Aaron")
-```
-
-This may take a couple minutes to run and may print warning messages.
-Aaron Judge's unique `mlbam_id` is 592450.
-Using this id, we can grab all pitches thrown to Judge in the 2022 MLB season:
-
-```{r get Judge data, eval = FALSE}
-judge_statcast_data <- statcast_search_batters(
-  start_date = "2022-01-01",
-  end_date = "2022-12-31",
-  batterid = 592450
-)
-```
-
-If you want to reproduce the plot below without scraping the data yourself, download [judge_statcast_data_2022.RDS](data/judge_statcast_data_2022.RDS) and move it into your `data` folder.
-
-```{r load Judge data, include = FALSE}
-judge_statcast_data <- readRDS("data/judge_statcast_data_2022.RDS")
-```
-
-```{r Judge plot, warning=FALSE}
-judge_statcast_data %>%
-  filter(type == "X") %>%
-  ggplot(aes(x = launch_speed, y = launch_angle,
-             color = hit_distance_sc)) +
-  geom_point() +
-  scale_color_viridis_c(option = "A") +
-  labs(x = "Exit velocity (MPH)", y = "Launch angle (degrees)",
-       color = "Distance (feet)",
-       title = "Aaron Judge's launch angle, exit velocity, and distance traveled",
-       caption = "Data accessed via baseballr")
-```
-
-This is just one example of the type of data available using `baseballr`.
-See the package website for more [data acquisition functions](https://billpetti.github.io/baseballr/reference/index.html).
-
-### `nbastatR`
-
-The [`nbastatR` package](https://github.com/abresler/nbastatR) provides functions for accessing NBA data from several websites.
-
-```{r install load nbastatR, eval = FALSE}
-devtools::install_github("abresler/nbastatR")
-library(nbastatR)
-```
-
-The code below demonstrates how to get all shot attempts by the 2022 Golden State Warriors.
-
-```{r get Warriors shots, eval = FALSE}
-warriors_shots <- teams_shots(teams = "Golden State Warriors",
-                             seasons = c(2022))
-```
-
-If you want to reproduce the plot below without pulling the data yourself, download [warriors_shots_2022.RDS](data/warriors_shots_2022.RDS) and move it into your `data` folder.
-
-```{r load Warriors shots, include = FALSE}
-warriors_shots <- readRDS("data/warriors_shots_2022.RDS")
-```
-
-```{r Warriors shots plot}
-warriors_shots %>%
-  ggplot(aes(x = locationX, y = locationY, color = isShotMade)) +
-  geom_point(alpha = 0.5) +
-  scale_color_manual(values = c("#FFC72C", "#1D428A")) +
-  theme_bw() +
-  labs(title = "Shot attempts by Golden State Warriors in 2021-22 NBA season",
-       caption = "Data accessed via nbastatR")
-```
+Sports-data packages, plotting references, and project datasets are collected on the separate [Project Resources](project_resources.html) page.
