@@ -42,7 +42,7 @@ distance_grid <- tibble(
   mutate(
     predicted_probability = predict(
       logit_distance,
-      newdata = ., 
+      newdata = .,
       type = "response"
     )
   )
@@ -133,7 +133,7 @@ dist_kicker_grid <- expand_grid(
   mutate(
     predicted_probability = predict(
       logit_dist_kicker,
-      newdata = ., 
+      newdata = .,
       type = "response"
     )
   )

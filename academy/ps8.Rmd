@@ -72,7 +72,7 @@ score_grid <- tibble(
   mutate(
     predicted_win_probability = predict(
       diff_model,
-      newdata = ., 
+      newdata = .,
       type = "response"
     )
   )
@@ -102,7 +102,7 @@ spread_grid <- tibble(
   mutate(
     predicted_win_probability = predict(
       spread_model,
-      newdata = ., 
+      newdata = .,
       type = "response"
     )
   )
@@ -133,7 +133,7 @@ combined_grid <- expand_grid(
   mutate(
     predicted_win_probability = predict(
       combined_model,
-      newdata = ., 
+      newdata = .,
       type = "response"
     ),
     spread_label = factor(posteam_spread)
@@ -222,7 +222,7 @@ nfl_test <- nfl_test %>%
   mutate(
     expanded_prediction = predict(
       expanded_model,
-      newdata = ., 
+      newdata = .,
       type = "response"
     )
   )

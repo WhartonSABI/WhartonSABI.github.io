@@ -269,34 +269,34 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } 
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.at { color: #204a87; } 
-code span.bn { color: #0000cf; } 
-code span.cf { color: #204a87; font-weight: bold; } 
-code span.ch { color: #4e9a06; } 
-code span.cn { color: #8f5902; } 
-code span.co { color: #8f5902; font-style: italic; } 
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.dt { color: #204a87; } 
-code span.dv { color: #0000cf; } 
-code span.er { color: #a40000; font-weight: bold; } 
-code span.ex { } 
-code span.fl { color: #0000cf; } 
-code span.fu { color: #204a87; font-weight: bold; } 
-code span.im { } 
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
-code span.kw { color: #204a87; font-weight: bold; } 
-code span.op { color: #ce5c00; font-weight: bold; } 
-code span.ot { color: #8f5902; } 
-code span.pp { color: #8f5902; font-style: italic; } 
-code span.sc { color: #ce5c00; font-weight: bold; } 
-code span.ss { color: #4e9a06; } 
-code span.st { color: #4e9a06; } 
-code span.va { color: #000000; } 
-code span.vs { color: #4e9a06; } 
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.al { color: #ef2929; }
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; }
+code span.at { color: #204a87; }
+code span.bn { color: #0000cf; }
+code span.cf { color: #204a87; font-weight: bold; }
+code span.ch { color: #4e9a06; }
+code span.cn { color: #8f5902; }
+code span.co { color: #8f5902; font-style: italic; }
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; }
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; }
+code span.dt { color: #204a87; }
+code span.dv { color: #0000cf; }
+code span.er { color: #a40000; font-weight: bold; }
+code span.ex { }
+code span.fl { color: #0000cf; }
+code span.fu { color: #204a87; font-weight: bold; }
+code span.im { }
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; }
+code span.kw { color: #204a87; font-weight: bold; }
+code span.op { color: #ce5c00; font-weight: bold; }
+code span.ot { color: #8f5902; }
+code span.pp { color: #8f5902; font-style: italic; }
+code span.sc { color: #ce5c00; font-weight: bold; }
+code span.ss { color: #4e9a06; }
+code span.st { color: #4e9a06; }
+code span.va { color: #000000; }
+code span.vs { color: #4e9a06; }
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; }
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -511,16 +511,16 @@ display: none;
         <li>
   <a href="index.html">
     <span class="fa fa-home"></span>
-     
+
     Home
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-sign-in"></span>
-     
+
     Get Started
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -535,9 +535,9 @@ display: none;
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-institution"></span>
-     
+
     Academy
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -598,9 +598,9 @@ display: none;
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-dribbble"></span>
-     
+
     Training Camp
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -637,7 +637,7 @@ display: none;
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -713,7 +713,7 @@ relationship is curved and the correlation is near zero.</p>
 to 2015 batting average.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>batting_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(BA_2015 <span class="sc">~</span> BA_2014, <span class="at">data =</span> batting_2014_2015)</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>batting_model<span class="sc">$</span>coefficients</span></code></pre></div>
-<pre><code>## (Intercept)     BA_2014 
+<pre><code>## (Intercept)     BA_2014
 ##   0.1409779   0.4851417</code></pre>
 <p>The formula has the form <code>response ~ predictor</code>. Here,
 <code>BA_2015</code> is the response on the vertical axis and
@@ -729,7 +729,7 @@ associated with a one-unit increase in 2014 batting average. Since a
 one-unit change is enormous for batting average, it is clearer to
 interpret a 0.010 increase.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">coef</span>(batting_model)[<span class="st">&quot;BA_2014&quot;</span>] <span class="sc">*</span> <span class="fl">0.010</span></span></code></pre></div>
-<pre><code>##     BA_2014 
+<pre><code>##     BA_2014
 ## 0.004851417</code></pre>
 <p><strong>Question:</strong> According to the model, how much higher is
 the fitted 2015 batting average when the 2014 batting average is 10
@@ -761,7 +761,7 @@ two seasons; they are not out-of-sample forecasts.</p>
 <p>For example, the fitted value for a 2014 batting average of 0.310
 is:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">predict</span>(batting_model, <span class="at">newdata =</span> <span class="fu">tibble</span>(<span class="at">BA_2014 =</span> <span class="fl">0.310</span>))</span></code></pre></div>
-<pre><code>##         1 
+<pre><code>##         1
 ## 0.2913719</code></pre>
 </div>
 <div id="residuals-and-model-fit" class="section level2">
@@ -778,9 +778,9 @@ above the line; a negative residual means it is below the line.</p>
 ##   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 abreujo02   0.317   0.290  0.295 -0.00417
 ## 2 altuvjo01   0.341   0.313  0.306  0.00711
-## 3 andruel01   0.263   0.258  0.269 -0.0103 
+## 3 andruel01   0.263   0.258  0.269 -0.0103
 ## 4 aybarer01   0.278   0.270  0.276 -0.00638
-## 5 bautijo02   0.286   0.250  0.280 -0.0291 
+## 5 bautijo02   0.286   0.250  0.280 -0.0291
 ## 6 beltrad01   0.324   0.287  0.298 -0.0108</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">ggplot</span>(batting_2014_2015, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> residual)) <span class="sc">+</span></span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;lightcoral&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
