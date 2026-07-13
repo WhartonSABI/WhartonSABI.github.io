@@ -1,5 +1,5 @@
 ---
-title: 'Lecture 5: Prediction and Regression Introduction'
+title: 'Lecture 5: Model Fit and Introduction to Regression'
 output: html_document
 ---
 
@@ -8,7 +8,7 @@ knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 library(tidyverse)
 ```
 
-Today, we will return to the batting dataset from [Problem Set 3](ps3.html), reshape it in a way that is useful for plotting and prediction, and then introduce the ideas that lead to linear regression.
+Today, we will return to the batting dataset from [Problem Set 3](ps3.html), reshape it in a way that is useful for plotting and modeling, and then introduce the ideas that lead to linear regression.
 
 If you have not yet completed the challenge at the end of [Problem Set 3](ps3.html), you can download the final [batting_2014_2015 dataset here](data/batting_2014_2015.RData) and save it to your `data` folder.
 
@@ -64,13 +64,13 @@ ggplot(batting_2014_2015_slice, aes(x = playerID, y = BA, fill = yearID)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-For prediction, we will return to the wide version of the data, where each row is one player.
+To model the relationship between the two seasons, we will return to the wide version of the data, where each row is one player.
 
-## Predicting Batting Averages
+## Fitting Batting Averages
 
-Imagine there's one more player who played in both 2014 and 2015 but who is not in our dataset. Without knowing anything else about the player, how could we predict their 2015 batting average using the data that we have? The simplest thing (and as it turns out the best thing) to do in this case is to use the overall mean of the 2015 batting averages in our dataset to predict the batting average of this extra player. 
+We know each player's batting average in both 2014 and 2015. We will use `BA_2014` to group players with similar earlier-season performance, then assign each player a fitted 2015 value based on the observed `BA_2015` values in that group. Comparing the fitted values with the observed 2015 values measures how closely a method fits these players. It does not measure how accurately the method would forecast a future season or a new player.
 
-Now what if we also told you this extra player's 2014 batting average? Can we improve on this simple prediction? In this section, we will propose several different ways of predicting 2015 batting average using 2014 batting average. In order to pick the best one, we can assess how well each method predicts the actual 2015 batting averages in our tbl. We will add columns to our tbl containing these predictions. To get things started, let's add a column containing the overall mean of the 2015 batting averages. It turns out that this mean is 0.273, whereas the mean 2014 batting average is 0.272. We will set these values equal to the variables `avg_2014`, and `avg_2015`, respectively, to use in our plots. We can do this by utilizing the `$` operator to feed an entire column into our `mean()` function.
+The simplest model ignores `BA_2014` and assigns every player the overall mean of `BA_2015`. This mean is 0.273, whereas the mean 2014 batting average is 0.272. We will save these means as `avg_2014` and `avg_2015` for use in our plots. We can do this by using the `$` operator to feed an entire column into `mean()`.
 
 ```{r batting yhat_0}
 batting_2014_2015 <-
@@ -82,7 +82,7 @@ avg_2014 = mean(batting_2014_2015$BA_2014)
 avg_2015 = mean(batting_2014_2015$BA_2015)
 ```
 
-If the 2014 batting average had no predictive power at all, then this overall mean will be the best prediction model possible, given what data we have. Plotting the 2015 batting averages against the 2014 batting averages allows us to assess visually whether there is any relationship between the two variables. We have added dashed red horizontal and vertical lines at the overall means of the 2014 and 2015 data, respectively.
+The overall mean provides a baseline fit in which every player receives the same fitted value. Plotting the 2015 batting averages against the 2014 batting averages allows us to assess visually whether there is a relationship that a more flexible model could capture. We have added dashed red horizontal and vertical lines at the overall means of the 2014 and 2015 data, respectively.
 
 ```{r plot batting yhat_0}
 ggplot(batting_2014_2015) +
@@ -91,18 +91,18 @@ ggplot(batting_2014_2015) +
   geom_vline(xintercept = avg_2014, col = 'red', lty = 2)
 ```
 
-It certainly looks like there is a relationship! So it's at least plausible that if we use the 2014 batting averages to make predictions for 2015, we can do better than relying on just the average of the 2015 averages.
+It certainly looks like there is a relationship! Using the 2014 batting averages may allow us to fit the observed 2015 values more closely than assigning every player the same 2015 average.
 
 Looking carefully at the plot, we see that most players with below average batting averages in 2014 tended to also have below average batting averages in 2015. Similarly, most players with above average batting averages in 2014 tended to have above average batting averages in 2015. 
 
-One way to improve on the simple prediction above would be as follows:
+One way to improve on the baseline fit would be as follows:
 
 1. Divide the players into two groups, one for those with above average BA in 2014 and one for those with below average BA in 2014.
-2. Average the 2015 BA within each of these groups and use these averages as the prediction for each member of the group.
+2. Average the 2015 BA within each group and use that average as the fitted value for every member of the group.
 
 In order to do this, we will need to mutate our tbl `batting_2014_2015` with a column indicating to which group each player belongs. Then we can pass this column to `group_by()` and compute the average `BA_2015` within each group. To create the column indicating group membership, we will use the powerful `cut()` function, which divides the range of a numerical vector into intervals and recodes the numerical values according to which interval they fall.
 
-The following code chunk does precisely that with two more steps: once we have made our predictions, we ungroup the tbl and we can drop the column indicating the interval in which our observation falls.
+The following code chunk does precisely that with two more steps: once we have calculated the fitted values, we ungroup the tbl and drop the column indicating the interval in which each observation falls.
 
 ```{r batting yhat_1}
 batting_2014_2015 <- 
@@ -115,9 +115,9 @@ batting_2014_2015 <-
 batting_2014_2015
 ```
 
-When we run this code and print out our tbl, we see that there is a new column called `yhat_1` that contains our new predictions. Before proceeding, we should talk a bit about the syntax used in `cut()`. The first argument is the variable we want to discretize. The next argument, `breaks =`, is a vector that tells R where the endpoints of these intervals are. These are often called "cut points." In this particular case, we wanted to divide the players into those with below-average batting averages in 2014 and above-average batting averages in 2014. The first element of the cut point vector, 0.15, is much less than the smallest `BA_2014` value, whereas the second element, 0.272, is the overall mean of the `BA_2014` values. The last element, 0.40, is much greater than the largest `BA_2014` value.
+When we run this code and print out our tbl, we see that there is a new column called `yhat_1` that contains our new fitted values. Before proceeding, we should talk a bit about the syntax used in `cut()`. The first argument is the variable we want to discretize. The next argument, `breaks =`, is a vector that tells R where the endpoints of these intervals are. These are often called "cut points." In this particular case, we wanted to divide the players into those with below-average batting averages in 2014 and above-average batting averages in 2014. The first element of the cut point vector, 0.15, is much less than the smallest `BA_2014` value, whereas the second element, 0.272, is the overall mean of the `BA_2014` values. The last element, 0.40, is much greater than the largest `BA_2014` value.
 
-Now that we have two different ways of predicting 2015 batting averages, let us see how they compare, visually.
+Now that we have two different ways of fitting the 2015 batting averages, let us compare them visually.
 
 ```{r plot batting yhat_1}
 ggplot(batting_2014_2015) +
@@ -126,7 +126,7 @@ ggplot(batting_2014_2015) +
   geom_point(aes(x = BA_2014, y = yhat_1), col = 'lightblue', size = 2)
 ```
 
-Visually it appears that the blue points (corresponding to `yhat_1`) are a bit closer to the actual values than the red points (corresponding to `yhat_0`). This would suggest that dividing the players into the two bins according to their 2014 batting average and using the average `BA_2015` value within each bin as our forecast was better than using the overall average `BA_2015` value for all players.
+Visually, the blue points (corresponding to `yhat_1`) appear a bit closer to the observed values than the red points (corresponding to `yhat_0`). Dividing the players into two bins according to their 2014 batting average therefore fits these data better than assigning every player the overall average `BA_2015` value.
 
 Of course, we can continue with this line of reasoning and divide the players into even more bins. When we do that, instead of hand-coding the vector of cut points, we can use the function `seq()`, which generates a vector of equally spaced numbers. To demonstrate, suppose we wanted to divide the interval [0,1] into 10 equally sized intervals: (0,0.1], (0.1, 0.2], ..., (0.9, 1]. To get the vector of cut points, we need to tell `seq()` either how many points we wanted or the spacing between the points:
 
@@ -135,7 +135,7 @@ seq(from = 0, to = 1, length = 11)
 seq(from = 0, to = 1, by = 0.1)
 ```
 
-So let's say we wanted to divide the 2014 batting averages into intervals of length 0.05 and predict 2015 batting averages using the average `BA_2015` values within the resulting bins. We could run the following:
+Suppose we divide the 2014 batting averages into intervals of length 0.05 and use the average `BA_2015` within each bin as its fitted value. We could run the following:
 
 ```{r batting yhat_2}
 batting_2014_2015 <- 
@@ -148,7 +148,7 @@ batting_2014_2015 <-
 batting_2014_2015
 ```
 
-We can also visualize our new predictions, this time with green points.
+We can also visualize our new fitted values, this time with green points.
 
 ```{r plot batting yhat_2}
 ggplot(batting_2014_2015) +
@@ -158,9 +158,9 @@ ggplot(batting_2014_2015) +
   geom_point(aes(x = BA_2014, y = yhat_2), col = 'darkseagreen3', size = 2, alpha = 0.8)
 ```
 
-It appears that we are able to perfectly predict the 2015 batting average of the player with the lowest batting average in 2014. Why do you think this was the case?
+The fitted value exactly matches the observed 2015 batting average of the player with the lowest 2014 batting average. Why do you think this happened?
 
-Let's add two more predictions in which we divide the 2014 batting averages into bins of length 0.005 and 0.001. The code below generates these predictions, saves them to columns called `yhat_3` and `yhat_4` in our tbl, and then adds the predictions to the plot in pink and orange.
+Let's add two more fitted-value columns by dividing the 2014 batting averages into bins of length 0.005 and 0.001. The code below saves them as `yhat_3` and `yhat_4`, then adds them to the plot in pink and orange.
 
 ```{r batting yhat_3 yhat_4 plot}
 batting_2014_2015 <- 
@@ -189,9 +189,9 @@ ggplot(batting_2014_2015) +
 ```
 Here, we can see that some of the orange points are directly on top of the actual values.
 
-## Assessing Predictive Performance
+## Assessing Fit with RMSE
 
-We now have a couple of different ways of predicting `BA_2015`. Qualitatively, the predictions in orange (formed by binning `BA_2014` into very small intervals) appear to fit the observed data better than the green, blue, and red predictions. To assess the predictions quantitatively, we often rely on the root mean square error or RMSE. This is the square root of the mean square error (MSE), which is computed by averaging the squared difference between the actual values and the predicted values.
+We now have several ways of fitting `BA_2015`. Qualitatively, the orange fitted values (formed by binning `BA_2014` into very small intervals) appear to fit the observed data better than the green, blue, and red fitted values. To assess fit quantitatively, we often rely on root mean square error, or RMSE. RMSE is the square root of the mean square error (MSE), which averages the squared differences between the observed and fitted values.
 
 ```{r summarize rmse}
 reframe(batting_2014_2015, 
@@ -202,6 +202,6 @@ reframe(batting_2014_2015,
           rmse_4 = sqrt(mean((BA_2015 - yhat_4)^2)))
 ```
  
-We see that the orange predictions have the lowest RMSE, followed by the pink, green, blue, and red predictions. This tells us that the predictions formed by binning into smaller intervals fit the data better than the predictions formed by binning into larger intervals, confirming what we could see visually. 
+The orange fitted values have the lowest RMSE, followed by the pink, green, blue, and red fitted values. Binning into smaller intervals gives the model more flexibility to follow the observed data. Because these RMSE values are calculated on the same players used to form the bin averages, they measure training fit rather than performance on new players or a future season.
 
-Now, what if we continued this process and formed bins that are infinitesimally small? Should we expect our predictions to be even better? But think about the potential issues of doing so: most of the bins (an infinite number of them, in fact) would contain no data points. How could we remedy this issue? Perhaps we could impose a constraint that our predictions must lie along a straight line, thus allowing the bins with data to help make predictions for the bins without data. You'll have some time to think about this concept, and then in [Lecture 6](lecture6.html) we will introduce linear regression, which addresses this exact issue. 
+Why not keep shrinking the bins? A bin containing one player reproduces that player's 2015 batting average exactly, reducing training error without establishing a pattern that must hold for anyone else. Empty bins also provide no fitted value. A straight line avoids these abrupt jumps and lets all of the observed players inform the fit across the range of 2014 batting averages. In [Lecture 6](lecture6.html), we will use linear regression to fit that line.

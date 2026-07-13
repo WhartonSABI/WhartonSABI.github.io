@@ -649,12 +649,17 @@ display: none;
 </div>
 
 
-<div id="predicting-nba-three-point-percentage" class="section level1">
-<h1>Predicting NBA Three-Point Percentage</h1>
-<p>In this problem set, we will predict an NBA player&#x2019;s 2016 three-point
-percentage using their 2015 three-point percentage. We will begin with
-the same prediction for every player and then divide the players into
-increasingly small groups based on their 2015 percentage.</p>
+<div id="fitting-nba-three-point-percentage" class="section level1">
+<h1>Fitting NBA Three-Point Percentage</h1>
+<p>Group players according to their 2015 three-point percentages, then
+assign every player in a group the average observed 2016 percentage for
+that group. Narrower groups give the model more flexibility to follow
+the observed 2016 percentages.</p>
+<p>Both seasons are already observed. The same players&#x2019; 2016 percentages
+are used to calculate the group averages and to assess how closely the
+fitted values match the data. The resulting RMSE is training error: it
+describes fit to these players, not how accurately 2015 percentage would
+forecast a new player or a future season.</p>
 <p>The dataset contains one row for every NBA player-season from 1997
 through 2016. It has <strong>not</strong> been filtered according to
 season or number of three-point attempts. Statistics for players who
@@ -715,29 +720,29 @@ labels.</li>
 </div>
 <div id="model-0-the-overall-mean" class="section level2">
 <h2>Model 0: The Overall Mean</h2>
-<p>Suppose we had to predict a player&#x2019;s 2016 three-point percentage
-without using their 2015 percentage. A reasonable starting point would
-be the overall mean of <code>TPP_2016</code>.</p>
+<p>Begin with a constant model that does not use <code>TPP_2015</code>:
+assign every player the overall mean of <code>TPP_2016</code> as a
+fitted value.</p>
 <ol start="5" style="list-style-type: decimal">
 <li>Use <code>mutate()</code> and <code>mean()</code> to add a column
-called <code>yhat_0</code> containing this prediction for every
+called <code>yhat_0</code> containing this fitted value for every
 player.</li>
 </ol>
-<p>The prediction plots in this problem set use the same layered
-structure as the plots in Lecture 5: the first <code>geom_point()</code>
-layer shows the observed 2016 percentages, and the second
-<code>geom_point()</code> layer shows the model&#x2019;s predictions.</p>
+<p>The fitted-value plots use the same layered structure as the plots in
+Lecture 5: the first <code>geom_point()</code> layer shows the observed
+2016 percentages, and the second <code>geom_point()</code> layer shows
+the model&#x2019;s fitted values.</p>
 <ol start="6" style="list-style-type: decimal">
 <li><p>Create the first layered plot. Plot the observed
 <code>TPP_2016</code> values in transparent gray and the
-<code>yhat_0</code> predictions in red. Save the result as
+<code>yhat_0</code> fitted values in red. Save the result as
 <code>plot_0</code>.</p></li>
-<li><p>Compute the root mean square error of <code>yhat_0</code>. Save
-the result as a one-row tbl called <code>rmse_0</code>.</p></li>
+<li><p>Compute the training RMSE of <code>yhat_0</code>. Save the result
+as a one-row tbl called <code>rmse_0</code>.</p></li>
 </ol>
-<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>R</mi><mi>M</mi><mi>S</mi><mi>E</mi><mo>=</mo><msqrt><mrow><mtext>mean</mtext><mrow><mo fence="true">(</mo><mo stretchy="false">(</mo><mtext>actual</mtext><mo>&#x2212;</mo><mtext>prediction</mtext><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo fence="true">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">RMSE =
-\sqrt{\text{mean}\left((\text{actual} -
-\text{prediction})^2\right)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">RMSE</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.2561em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9839em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord text"><span class="mord">mean</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mopen">(</span><span class="mord text"><span class="mord">actual</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">prediction</span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span><span style="top:-2.9439em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewbox="0 0 400000 1296" preserveaspectratio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>R</mi><mi>M</mi><mi>S</mi><mi>E</mi><mo>=</mo><msqrt><mrow><mtext>mean</mtext><mrow><mo fence="true">(</mo><mo stretchy="false">(</mo><mtext>observed</mtext><mo>&#x2212;</mo><mtext>fitted&#xA0;value</mtext><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo fence="true">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">RMSE =
+\sqrt{\text{mean}\left((\text{observed} - \text{fitted
+value})^2\right)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">RMSE</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.2561em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9839em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord text"><span class="mord">mean</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mopen">(</span><span class="mord text"><span class="mord">observed</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2212;</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">fitted&#xA0;value</span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span><span style="top:-2.9439em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewbox="0 0 400000 1296" preserveaspectratio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
 c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
 c340,-704.7,510.7,-1060.3,512,-1067
 l0 -0
@@ -753,12 +758,12 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">&
 <h2>Model 1: Two Groups</h2>
 <p>We can use 2015 three-point percentage by dividing the players into
 two groups: those below the overall 2015 average and those above it.
-Within each group, we will use the average <code>TPP_2016</code> as the
-prediction.</p>
+Within each group, we will use the average observed
+<code>TPP_2016</code> as the fitted value.</p>
 <ol start="8" style="list-style-type: decimal">
 <li>Use <code>cut()</code> to divide <code>TPP_2015</code> at its
 overall mean. Then group the data by the resulting intervals and add the
-prediction as a column called <code>yhat_1</code>. Remember to ungroup
+fitted value as a column called <code>yhat_1</code>. Remember to ungroup
 the data and remove the temporary <code>bins</code> column when you
 finish.</li>
 </ol>
@@ -777,7 +782,7 @@ percentages in this dataset. The middle cut point should be
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>bins)</span></code></pre></div>
 <ol start="9" style="list-style-type: decimal">
 <li>Recreate the same layered plot, but replace <code>yhat_0</code> with
-<code>yhat_1</code>. Use blue for the prediction layer, change the
+<code>yhat_1</code>. Use blue for the fitted-value layer, change the
 title, and save the result as <code>plot_1</code>.</li>
 </ol>
 </div>
@@ -788,46 +793,46 @@ intervals. The <code>seq()</code> function will create evenly spaced cut
 points between 0.15 and 0.60.</p>
 <ol start="10" style="list-style-type: decimal">
 <li>Divide <code>TPP_2015</code> into intervals of width 0.05 and add
-the within-bin prediction as <code>yhat_2</code>. Then create
+the within-bin fitted value as <code>yhat_2</code>. Then create
 <code>plot_2</code> using the same two layers as above, with green
-points for the predictions.</li>
+points for the fitted values.</li>
 </ol>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">seq</span>(<span class="at">from =</span> <span class="fl">0.15</span>, <span class="at">to =</span> <span class="fl">0.60</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <ol start="11" style="list-style-type: decimal">
 <li><p>Repeat the process using intervals of width 0.025. Call the
-predictions <code>yhat_3</code>, use purple prediction points, and save
-the plot as <code>plot_3</code>.</p></li>
+fitted values <code>yhat_3</code>, use purple fitted-value points, and
+save the plot as <code>plot_3</code>.</p></li>
 <li><p>Repeat the process one more time using intervals of width 0.01.
-Call the predictions <code>yhat_4</code>, use orange prediction points,
-and save the plot as <code>plot_4</code>.</p></li>
+Call the fitted values <code>yhat_4</code>, use orange fitted-value
+points, and save the plot as <code>plot_4</code>.</p></li>
 </ol>
 </div>
-<div id="compare-the-predictions-visually" class="section level2">
-<h2>Compare the Predictions Visually</h2>
+<div id="compare-the-fitted-values-visually" class="section level2">
+<h2>Compare the Fitted Values Visually</h2>
 <ol start="13" style="list-style-type: decimal">
-<li>Run the code below to reshape the five prediction columns into a
-long tbl called <code>prediction_plot_data</code>. We will use this long
-tbl only for the faceted plot in this question.</li>
+<li>Run the code below to reshape the five fitted-value columns into a
+long tbl called <code>fit_plot_data</code>. We will use this long tbl
+only for the faceted plot in this question.</li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>prediction_plot_data <span class="ot">&lt;-</span> shooting <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>fit_plot_data <span class="ot">&lt;-</span> shooting <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">select</span>(Player, TPP_2015, TPP_2016, <span class="fu">starts_with</span>(<span class="st">&quot;yhat_&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;yhat_&quot;</span>),</span>
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;Model&quot;</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;Prediction&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;Fitted_Value&quot;</span></span>
 <span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  )</span></code></pre></div>
-<p>Use <code>prediction_plot_data</code> to make a faceted plot with one
-panel for each model. In every panel, use one point layer for the
-observed <code>TPP_2016</code> values in transparent gray and another
-point layer for the corresponding <code>Prediction</code> values in
-blue. Use <code>facet_wrap()</code> with <code>Model</code> as the
-faceting variable.</p>
+<p>Use <code>fit_plot_data</code> to make a faceted plot with one panel
+for each model. In every panel, use one point layer for the observed
+<code>TPP_2016</code> values in transparent gray and another point layer
+for the corresponding <code>Fitted_Value</code> values in blue. Use
+<code>facet_wrap()</code> with <code>Model</code> as the faceting
+variable.</p>
 </div>
-<div id="compare-predictive-error" class="section level2">
-<h2>Compare Predictive Error</h2>
+<div id="compare-training-error" class="section level2">
+<h2>Compare Training Error</h2>
 <ol start="14" style="list-style-type: decimal">
-<li><p>Using <code>shooting</code>, compute the RMSE of all five
-prediction columns in a one-row tbl called
+<li><p>Using <code>shooting</code>, compute the training RMSE of all
+five fitted-value columns in a one-row tbl called
 <code>model_rmse</code>.</p></li>
 <li><p>Reshape the one-row <code>model_rmse</code> tbl from Question 14
 into a two-column tbl named <code>model_rmse_long</code>, with columns
@@ -836,13 +841,13 @@ point-and-line plot of RMSE across the five models. The model names
 should appear on the horizontal axis in order from <code>rmse_0</code>
 through <code>rmse_4</code>.</p></li>
 </ol>
-<p>These RMSE values are calculated using the same 163 players whose
-2016 percentages were averaged to create the predictions. As the bins
-become narrower, the predictions can follow these observed outcomes
-increasingly closely. The RMSE plot demonstrates that fit to the
-observed data improves, but it does not tell us how the models would
-perform on a new season. In the next lecture, we will replace these
-abrupt jumps with predictions constrained to follow a straight line.</p>
+<p>As the bins become narrower, the fitted values can follow the
+observed outcomes increasingly closely, so training RMSE decreases. A
+bin containing one player would reproduce that player&#x2019;s 2016 percentage
+exactly, but that does not establish a pattern that will hold for
+another player or season. In the next lecture, a straight line will
+replace these abrupt jumps and allow all of the players to inform the
+fit across the range of 2015 percentages.</p>
 </div>
 </div>
 

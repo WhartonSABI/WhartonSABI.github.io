@@ -25,9 +25,11 @@ read_csv("data/nba_boxscore.csv", show_col_types = FALSE) %>%
   write_csv("data/nba_player_tpp.csv")
 ```
 
-# Predicting NBA Three-Point Percentage
+# Fitting NBA Three-Point Percentage
 
-In this problem set, we will predict an NBA player's 2016 three-point percentage using their 2015 three-point percentage. We will begin with the same prediction for every player and then divide the players into increasingly small groups based on their 2015 percentage.
+Group players according to their 2015 three-point percentages, then assign every player in a group the average observed 2016 percentage for that group. Narrower groups give the model more flexibility to follow the observed 2016 percentages.
+
+Both seasons are already observed. The same players' 2016 percentages are used to calculate the group averages and to assess how closely the fitted values match the data. The resulting RMSE is training error: it describes fit to these players, not how accurately 2015 percentage would forecast a new player or a future season.
 
 The dataset contains one row for every NBA player-season from 1997 through 2016. It has **not** been filtered according to season or number of three-point attempts. Statistics for players who appeared on multiple teams in one season have already been combined so that each player has at most one row per season.
 
@@ -108,9 +110,9 @@ ggplot(shooting) +
 
 ## Model 0: The Overall Mean
 
-Suppose we had to predict a player's 2016 three-point percentage without using their 2015 percentage. A reasonable starting point would be the overall mean of `TPP_2016`.
+Begin with a constant model that does not use `TPP_2015`: assign every player the overall mean of `TPP_2016` as a fitted value.
 
-5. Use `mutate()` and `mean()` to add a column called `yhat_0` containing this prediction for every player.
+5. Use `mutate()` and `mean()` to add a column called `yhat_0` containing this fitted value for every player.
 
 ```{r overall mean solution}
 # solution
@@ -118,9 +120,9 @@ shooting <- shooting %>%
   mutate(yhat_0 = mean(TPP_2016))
 ```
 
-The prediction plots in this problem set use the same layered structure as the plots in Lecture 5: the first `geom_point()` layer shows the observed 2016 percentages, and the second `geom_point()` layer shows the model's predictions.
+The fitted-value plots use the same layered structure as the plots in Lecture 5: the first `geom_point()` layer shows the observed 2016 percentages, and the second `geom_point()` layer shows the model's fitted values.
 
-6. Create the first layered plot. Plot the observed `TPP_2016` values in transparent gray and the `yhat_0` predictions in red. Save the result as `plot_0`.
+6. Create the first layered plot. Plot the observed `TPP_2016` values in transparent gray and the `yhat_0` fitted values in red. Save the result as `plot_0`.
 
 ```{r overall mean plot solution}
 # solution
@@ -137,9 +139,9 @@ plot_0 <- ggplot(shooting) +
 plot_0
 ```
 
-7. Compute the root mean square error of `yhat_0`. Save the result as a one-row tbl called `rmse_0`.
+7. Compute the training RMSE of `yhat_0`. Save the result as a one-row tbl called `rmse_0`.
 
-$$RMSE = \sqrt{\text{mean}\left((\text{actual} - \text{prediction})^2\right)}$$
+$$RMSE = \sqrt{\text{mean}\left((\text{observed} - \text{fitted value})^2\right)}$$
 
 ```{r overall mean rmse solution}
 # solution
@@ -151,9 +153,9 @@ rmse_0
 
 ## Model 1: Two Groups
 
-We can use 2015 three-point percentage by dividing the players into two groups: those below the overall 2015 average and those above it. Within each group, we will use the average `TPP_2016` as the prediction.
+We can use 2015 three-point percentage by dividing the players into two groups: those below the overall 2015 average and those above it. Within each group, we will use the average observed `TPP_2016` as the fitted value.
 
-8. Use `cut()` to divide `TPP_2015` at its overall mean. Then group the data by the resulting intervals and add the prediction as a column called `yhat_1`. Remember to ungroup the data and remove the temporary `bins` column when you finish.
+8. Use `cut()` to divide `TPP_2015` at its overall mean. Then group the data by the resulting intervals and add the fitted value as a column called `yhat_1`. Remember to ungroup the data and remove the temporary `bins` column when you finish.
 
 The endpoints 0.15 and 0.60 are slightly beyond the range of percentages in this dataset. The middle cut point should be `mean(shooting$TPP_2015)`.
 
@@ -184,7 +186,7 @@ shooting <- shooting %>%
   select(-bins)
 ```
 
-9. Recreate the same layered plot, but replace `yhat_0` with `yhat_1`. Use blue for the prediction layer, change the title, and save the result as `plot_1`.
+9. Recreate the same layered plot, but replace `yhat_0` with `yhat_1`. Use blue for the fitted-value layer, change the title, and save the result as `plot_1`.
 
 ```{r two groups plot solution}
 # solution
@@ -205,7 +207,7 @@ plot_1
 
 We will now repeat the same process with increasingly narrow intervals. The `seq()` function will create evenly spaced cut points between 0.15 and 0.60.
 
-10. Divide `TPP_2015` into intervals of width 0.05 and add the within-bin prediction as `yhat_2`. Then create `plot_2` using the same two layers as above, with green points for the predictions.
+10. Divide `TPP_2015` into intervals of width 0.05 and add the within-bin fitted value as `yhat_2`. Then create `plot_2` using the same two layers as above, with green points for the fitted values.
 
 ```{r width 005 starter, include=TRUE, eval=FALSE}
 seq(from = 0.15, to = 0.60, by = 0.05)
@@ -237,7 +239,7 @@ plot_2 <- ggplot(shooting) +
 plot_2
 ```
 
-11. Repeat the process using intervals of width 0.025. Call the predictions `yhat_3`, use purple prediction points, and save the plot as `plot_3`.
+11. Repeat the process using intervals of width 0.025. Call the fitted values `yhat_3`, use purple fitted-value points, and save the plot as `plot_3`.
 
 ```{r width 0025 solution}
 # solution
@@ -265,7 +267,7 @@ plot_3 <- ggplot(shooting) +
 plot_3
 ```
 
-12. Repeat the process one more time using intervals of width 0.01. Call the predictions `yhat_4`, use orange prediction points, and save the plot as `plot_4`.
+12. Repeat the process one more time using intervals of width 0.01. Call the fitted values `yhat_4`, use orange fitted-value points, and save the plot as `plot_4`.
 
 ```{r width 001 solution}
 # solution
@@ -293,50 +295,50 @@ plot_4 <- ggplot(shooting) +
 plot_4
 ```
 
-## Compare the Predictions Visually
+## Compare the Fitted Values Visually
 
-13. Run the code below to reshape the five prediction columns into a long tbl called `prediction_plot_data`. We will use this long tbl only for the faceted plot in this question.
+13. Run the code below to reshape the five fitted-value columns into a long tbl called `fit_plot_data`. We will use this long tbl only for the faceted plot in this question.
 
 ```{r reshape predictions, include=TRUE, eval=FALSE}
-prediction_plot_data <- shooting %>%
+fit_plot_data <- shooting %>%
   select(Player, TPP_2015, TPP_2016, starts_with("yhat_")) %>%
   pivot_longer(
     cols = starts_with("yhat_"),
     names_to = "Model",
-    values_to = "Prediction"
+    values_to = "Fitted_Value"
   )
 ```
 
 ```{r reshape predictions solution}
 # solution
-prediction_plot_data <- shooting %>%
+fit_plot_data <- shooting %>%
   select(Player, TPP_2015, TPP_2016, starts_with("yhat_")) %>%
   pivot_longer(
     cols = starts_with("yhat_"),
     names_to = "Model",
-    values_to = "Prediction"
+    values_to = "Fitted_Value"
   )
 ```
 
-Use `prediction_plot_data` to make a faceted plot with one panel for each model. In every panel, use one point layer for the observed `TPP_2016` values in transparent gray and another point layer for the corresponding `Prediction` values in blue. Use `facet_wrap()` with `Model` as the faceting variable.
+Use `fit_plot_data` to make a faceted plot with one panel for each model. In every panel, use one point layer for the observed `TPP_2016` values in transparent gray and another point layer for the corresponding `Fitted_Value` values in blue. Use `facet_wrap()` with `Model` as the faceting variable.
 
 ```{r faceted predictions solution}
 # solution
-ggplot(prediction_plot_data, aes(x = TPP_2015)) +
+ggplot(fit_plot_data, aes(x = TPP_2015)) +
   geom_point(aes(y = TPP_2016), color = "gray40", alpha = 0.25) +
-  geom_point(aes(y = Prediction), color = "dodgerblue3", size = 2) +
+  geom_point(aes(y = Fitted_Value), color = "dodgerblue3", size = 2) +
   facet_wrap(~Model, ncol = 2) +
   labs(
-    title = "Predictions from Increasingly Fine Bins",
+    title = "Fitted Values from Increasingly Fine Bins",
     x = "2015 Three-Point Percentage",
     y = "2016 Three-Point Percentage"
   ) +
   theme_minimal()
 ```
 
-## Compare Predictive Error
+## Compare Training Error
 
-14. Using `shooting`, compute the RMSE of all five prediction columns in a one-row tbl called `model_rmse`.
+14. Using `shooting`, compute the training RMSE of all five fitted-value columns in a one-row tbl called `model_rmse`.
 
 ```{r all rmse solution}
 # solution
@@ -368,10 +370,10 @@ ggplot(model_rmse_long, aes(x = Model, y = RMSE, group = 1)) +
   geom_point(color = "dodgerblue3", size = 3) +
   labs(
     title = "RMSE on the Observed Data as the Bins Become Narrower",
-    x = "Prediction Model",
+    x = "Model",
     y = "RMSE"
   ) +
   theme_minimal()
 ```
 
-These RMSE values are calculated using the same 163 players whose 2016 percentages were averaged to create the predictions. As the bins become narrower, the predictions can follow these observed outcomes increasingly closely. The RMSE plot demonstrates that fit to the observed data improves, but it does not tell us how the models would perform on a new season. In the next lecture, we will replace these abrupt jumps with predictions constrained to follow a straight line.
+As the bins become narrower, the fitted values can follow the observed outcomes increasingly closely, so training RMSE decreases. A bin containing one player would reproduce that player's 2016 percentage exactly, but that does not establish a pattern that will hold for another player or season. In the next lecture, a straight line will replace these abrupt jumps and allow all of the players to inform the fit across the range of 2015 percentages.
