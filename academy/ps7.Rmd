@@ -65,7 +65,7 @@ payroll <- payroll %>%
 # Plot with predicted line
 ggplot(payroll, aes(x = payroll_norm, y = WP)) +
   geom_point() +
-  geom_line(aes(y = predicted_wp), color = "lightcoral", size = 1) +
+  geom_line(aes(y = predicted_wp), color = "lightcoral", linewidth = 1) +
   labs(
     title = "MLB Payrolls vs Winning Percentage (with Regression Line)",
     x = "Normalized Payroll",
@@ -76,12 +76,12 @@ ggplot(payroll, aes(x = payroll_norm, y = WP)) +
 
 4. Next, try fitting a model based on `log_payroll_norm` and adding that to the plot. 
 ```{r log model}
-log_model = lm(WP ~ (log_payroll_norm), data = payroll)
+log_model <- lm(WP ~ log_payroll_norm, data = payroll)
 payroll <- payroll %>%
   mutate(log_predicted_wp = predict(log_model))
 ggplot(payroll, aes(x = payroll_norm, y = WP)) +
   geom_point() +
-  geom_line(aes(y = log_predicted_wp), color = "lightcoral", size = 1) +
+  geom_line(aes(y = log_predicted_wp), color = "lightcoral", linewidth = 1) +
   labs(
     title = "MLB Payrolls vs Winning Percentage (with Regression Line)",
     x = "Normalized Payroll",
@@ -91,12 +91,13 @@ ggplot(payroll, aes(x = payroll_norm, y = WP)) +
 ```
 Just by looking at the plots from 3 and 4, which seems to fit the data better? 
 
-5. We saw that in lecture 6, one way to potentially look at model performance is with the residuals. Using `add_residuals` from `modelr`, add a column of residuals from each model to your payroll table. Then, generate a scatter plot of the residuals for each model. 
+5. In Lecture 6, we defined a residual as the observed outcome minus the predicted outcome. Use `mutate()` to add a residual column for each model to `payroll`. Then generate a scatter plot of the residuals from both models.
 ```{r}
-library(modelr)
 payroll <- payroll %>%
-  add_residuals(payroll_model, var = "residuals") %>%
-  add_residuals(log_model, var = "log_residuals")
+  mutate(
+    residuals = WP - predicted_wp,
+    log_residuals = WP - log_predicted_wp
+  )
 
 ggplot(payroll, aes(x = payroll_norm)) +
   geom_point(aes(y = residuals), color = "lightblue4") +

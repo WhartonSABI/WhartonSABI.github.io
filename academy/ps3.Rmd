@@ -383,7 +383,8 @@ batting_2014_2015 <-
   batting %>%
   filter(yearID %in% c(2014, 2015)) %>%
   group_by(playerID) %>%
-  filter(n() == 2) %>% 
+  filter(n() == 2) %>%
+  ungroup() %>%
   select(playerID, yearID, BA) %>%
   arrange(playerID)
 ```
@@ -396,7 +397,8 @@ batting_2014_2015 <-
   batting %>%
   filter(yearID %in% c(2014, 2015)) %>%
   group_by(playerID) %>%
-  filter(n() == 2) %>% 
+  filter(n() == 2) %>%
+  ungroup() %>%
   select(playerID, yearID, BA) %>%
   arrange(playerID)
 save(batting_2014_2015, file = "data/batting_2014_2015.RData")

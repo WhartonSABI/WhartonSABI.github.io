@@ -656,9 +656,9 @@ linear regression.</p>
 <p>If you have not yet completed the challenge at the end of <a href="ps3.html">Problem Set 3</a>, you can download the final <a href="data/batting_2014_2015.RData">batting_2014_2015 dataset here</a>
 and save it to your <code>data</code> folder.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/batting_2014_2015.RData&quot;</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>batting_2014_2015</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>batting_2014_2015 <span class="ot">&lt;-</span> batting_2014_2015 <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>batting_2014_2015</span></code></pre></div>
 <pre><code>## # A tibble: 140 &#xD7; 3
-## # Groups:   yearID [2]
 ##    playerID  yearID    BA
 ##    &lt;chr&gt;      &lt;int&gt; &lt;dbl&gt;
 ##  1 abreujo02   2014 0.317

@@ -690,11 +690,10 @@ and adding that to the plot.</p></li>
 <p>Just by looking at the plots from 3 and 4, which seems to fit the
 data better?</p>
 <ol start="5" style="list-style-type: decimal">
-<li>We saw that in lecture 6, one way to potentially look at model
-performance is with the residuals. Using <code>add_residuals</code> from
-<code>modelr</code>, add a column of residuals from each model to your
-payroll table. Then, generate a scatter plot of the residuals for each
-model.</li>
+<li>In Lecture 6, we defined a residual as the observed outcome minus
+the predicted outcome. Use <code>mutate()</code> to add a residual
+column for each model to <code>payroll</code>. Then generate a scatter
+plot of the residuals from both models.</li>
 </ol>
 <p>An indication of a poor model fit is a non-uniform residual plot.
 This would indicate that perhaps a linear model is being used when the

@@ -141,6 +141,15 @@ export function extractAcademyContent(htmlPath: string, slug: string): { title: 
   const mainContainer = $('.main-container').first();
   if (!mainContainer.length) throw new Error(`No main-container in ${htmlPath}`);
 
+  // KaTeX emits both accessible MathML and visual HTML. Its stylesheet
+  // normally visually hides the MathML copy, but that stylesheet is stripped
+  // above when Academy content is embedded in the site. Preserve the MathML
+  // for screen readers while applying the relevant hiding rule inline.
+  mainContainer.find('.katex-mathml').attr(
+    'style',
+    'position:absolute;clip:rect(1px,1px,1px,1px);padding:0;border:0;height:1px;width:1px;overflow:hidden;'
+  );
+
   const header = mainContainer.find('#header').first();
   const title = header.find('h1').text().trim() || $('title').text().trim();
   // Keep header (with h1 title) in content so it displays on the page

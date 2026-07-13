@@ -9,3 +9,8 @@ stringr
 forcats
 lubridate
 modelr
+Lahman
+nflfastR
+ggbeeswarm
+ggimage
+plotly
