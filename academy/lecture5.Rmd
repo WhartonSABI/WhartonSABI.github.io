@@ -1,5 +1,5 @@
 ---
-title: 'Lecture 5: Model Fit and Introduction to Regression'
+title: 'Lecture 5: Model Fit and Intro to Regression'
 output: html_document
 ---
 
