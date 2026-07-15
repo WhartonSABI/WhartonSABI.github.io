@@ -10,11 +10,11 @@ options(pillar.sigfig = 4, width = 100)
 set.seed(2026)
 ```
 
-Linear regression with one untransformed predictor fits a straight line. Transforming a predictor changes the fitted shape, while adding predictors produces a multiple regression. All of these models use `lm()`.
+A linear regression with one untransformed predictor fits a straight line. Transformations allow curved relationships, while multiple regression adds predictors. All of these models use `lm()`.
 
 ## Statcast Fly Ball Data {#statcastflyballdata}
 
-The files [`statcast_models_train.csv`](data/statcast_models_train.csv) and [`statcast_models_test.csv`](data/statcast_models_test.csv) contain a subset of fly balls from the 2019 MLB regular season with complete Statcast measurements. The subset includes exit velocities from 66 to 111 miles per hour and launch angles from 20 to 60 degrees. These limits remove a small number of extreme measurements that would stretch the plot axes. The training data cover March through July, and the testing data cover August and September.
+The files [`statcast_models_train.csv`](data/statcast_models_train.csv) and [`statcast_models_test.csv`](data/statcast_models_test.csv) contain a subset of fly balls from the 2019 MLB regular season with complete Statcast measurements. The subset includes exit velocities from 66 to 111 miles per hour and launch angles from 20 to 60 degrees. The training data cover March through July, and the testing data cover August and September.
 
 Each row is one fly ball. The models use three variables:
 
@@ -22,7 +22,7 @@ Each row is one fly ball. The models use three variables:
 - `launch_angle`: vertical angle off the bat, in degrees
 - `hit_distance`: projected distance traveled, in feet
 
-All six candidate models are fit with the training data. The testing data remain unopened until the candidates are fixed, then testing RMSE measures how well the fitted relationships carry forward to later observations.
+We will fit each model with the training data and leave the testing data unopened until the candidates are fixed. Testing RMSE will then measure how well the fitted relationships carry forward to later observations. Let's load the training data first.
 
 ```{r load Statcast training data, message=FALSE}
 statcast_train <- read_csv(
@@ -31,7 +31,7 @@ statcast_train <- read_csv(
 )
 ```
 
-The plots use a random sample so that the point cloud remains visible. The model fits and RMSE calculations use every training fly ball.
+Let's visualize a random sample of 10,000 fly balls so that the point cloud remains visible. We will still fit the models and calculate RMSE using every training fly ball.
 
 ```{r sample Statcast data for plots}
 statcast_plot <- statcast_train %>%
@@ -44,11 +44,11 @@ ggplot(statcast_plot, aes(x = exit_velocity, y = hit_distance)) +
   labs(x = "Exit Velocity (mph)", y = "Hit Distance (feet)")
 ```
 
-Fly balls hit harder generally travel farther, but a straight line is only one possible shape.
+Fly balls hit harder generally travel farther, but a straight line is only one possible specification. We will now consider logarithmic and quadratic alternatives.
 
 ## Exit Velocity Transformations {#exitvelocitytransformations}
 
-The linear model assumes that one additional mile per hour produces the same fitted difference at 70 mph as at 100 mph. The logarithmic and quadratic models allow that difference to change.
+The linear model assumes that one additional mile per hour produces the same fitted difference at 70 mph as at 100 mph. The logarithmic and quadratic models allow that difference to change. Let's fit all three specifications with the training data.
 
 ```{r fit exit velocity candidate models}
 lin_velo_model <- lm(
@@ -73,7 +73,7 @@ The linear, logarithmic, and quadratic forms are `a + b * x`, `a + b * log(x)`, 
 
 ## Comparing the Exit Velocity Curves {#comparingexitvelocitycurves}
 
-The same evenly spaced prediction grid is used for every model, so differences among the curves reflect the fitted shapes.
+To compare the fitted shapes directly, let's predict each model at the same evenly spaced exit velocity values. Keeping the exit velocity values fixed makes the differences among the curves easier to see.
 
 ```{r create exit velocity prediction grid}
 speed_grid <- tibble(
@@ -102,7 +102,7 @@ speed_grid <- tibble(
   )
 ```
 
-`pivot_longer()` places the three sets of predictions in one column and records their source in `model`. Mapping `model` to color draws the three curves together and creates the legend automatically.
+`pivot_longer()` places the three sets of predictions in one column and records their source in `model`. The resulting long table lets us map `model` to color and draw all three curves together.
 
 ```{r plot exit velocity candidate curves}
 ggplot() +
@@ -131,7 +131,7 @@ ggplot() +
 
 The linear curve has a constant slope, the logarithmic curve flattens, and the quadratic curve becomes steeper.
 
-RMSE measures the typical prediction error in feet. Lower values are better. Each model's fitted values are stored in a column, then reshaped so that `reframe()` can apply the same RMSE calculation to every model.
+The curves compare shape, not accuracy. Let's calculate training RMSE, the typical prediction error in feet; lower is better. We will add fitted values for every training fly ball, define `rmse()`, and use `.by = model` inside `reframe()` to calculate one score per model.
 
 ```{r add exit velocity training predictions}
 statcast_train <- statcast_train %>%
@@ -161,13 +161,11 @@ speed_training_scores <- statcast_train %>%
 speed_training_scores
 ```
 
-Within `reframe()`, `.by = model` calculates one RMSE for each model.
-
 `lm()` chooses coefficients to reduce error on the training data. The quadratic model can reproduce the linear model by setting the coefficient on the squared term to zero, so its training RMSE cannot be larger. Testing data determine whether that added flexibility improves predictions on later observations.
 
 ## Adding Launch Angle
 
-The residual from `lin_velo_model` is observed hit distance minus fitted hit distance. Positive residuals mark fly balls that traveled farther than fitted; negative residuals mark fly balls that traveled less far. Plotting residuals against launch angle shows whether angle explains errors left by the model using only exit velocity.
+Training RMSE ranks the three exit velocity specifications, but it does not show what the models are missing. Let's plot the residuals from `lin_velo_model` against launch angle. Each residual is observed hit distance minus fitted hit distance. A positive residual means the fly ball traveled farther than fitted; a negative residual means it traveled less far.
 
 ```{r sample exit velocity residuals}
 statcast_residual_plot <- statcast_train %>%
@@ -197,9 +195,7 @@ ggplot(
 
 The residuals rise and then fall. The model using only exit velocity underpredicts many fly balls near the middle of the angle range and overpredicts many fly balls with high launch angles.
 
-Representing this rise and fall requires `launch_angle` together with `I(launch_angle^2)`. The squared term follows directly from the residual pattern.
-
-The same quadratic launch angle specification is paired with each exit velocity shape. Holding the launch angle terms fixed isolates the consequence of the exit velocity transformation.
+This pattern motivates a quadratic launch angle specification using `launch_angle` and `I(launch_angle^2)`. Let's add that same angle specification to each exit velocity model. Holding the angle terms fixed keeps the comparison focused on the exit velocity transformation.
 
 ```{r fit multiple regression models}
 lin_velo_quad_angle_model <- lm(
@@ -219,7 +215,7 @@ quad_velo_quad_angle_model <- lm(
 )
 ```
 
-These are multiple regressions because each model uses exit velocity and launch angle. The exit velocity terms compare fly balls with the same launch angle. The two launch angle terms allow fitted distance to rise and then fall as launch angle increases.
+These are multiple regressions because each model uses exit velocity and launch angle. The exit velocity terms compare fly balls with the same launch angle. The two launch angle terms allow fitted distance to rise and then fall as launch angle increases. Let's add fitted values from these models to the training data.
 
 ```{r add multiple regression training predictions}
 statcast_train <- statcast_train %>%
@@ -240,7 +236,7 @@ Each multiple regression contains its counterpart using only exit velocity when 
 
 ## Selecting a Model with Testing Data
 
-The six candidates are fixed: three use exit velocity alone, and three add quadratic launch angle. They are applied to the later months without refitting, so every testing prediction comes from a relationship learned through July.
+The six candidates are now fixed: three use exit velocity alone, and three add quadratic launch angle. Let's load the later months and generate predictions without refitting. Every testing prediction will come from a relationship learned through July.
 
 ```{r load Statcast testing data, message=FALSE}
 statcast_test <- read_csv(
@@ -266,7 +262,7 @@ statcast_test <- read_csv(
   )
 ```
 
-Stacking the training and testing predictions allows the same RMSE calculation for both samples. After the predictions are reshaped, `.by = c(sample, model)` produces one score for each combination of sample and model.
+To compare training and testing error directly, let's stack the two samples, reshape the six prediction columns, and calculate RMSE for each combination of `sample` and `model`. We will then plot the training and testing scores next to each other.
 
 ```{r compare model RMSE}
 model_comparison <- bind_rows(

@@ -11,7 +11,7 @@ options(pillar.sigfig = 6, width = 100)
 
 # Transformations and Multiple Regression
 
-The files [`mlb_models_train.csv`](data/mlb_models_train.csv) and [`mlb_models_test.csv`](data/mlb_models_test.csv) contain observations for MLB teams and seasons with complete payroll and winning percentages for the current and previous seasons. The payroll source does not cover every team and season. The training file contains 1999--2018, and the testing file contains 2019 and 2021--2023. The shortened 2020 season is excluded as an outcome, but its winning percentages provide `previous_wp` for the 2021 rows.
+The files [`mlb_payrolls_train.csv`](data/mlb_payrolls_train.csv) and [`mlb_payrolls_test.csv`](data/mlb_payrolls_test.csv) contain observations for MLB teams and seasons with complete payroll and winning percentages for the current and previous seasons. The payroll source does not cover every team and season. The training file contains 1999--2018, and the testing file contains 2019 and 2021--2023. The shortened 2020 season is excluded as an outcome, but its winning percentages provide `previous_wp` for the 2021 rows.
 
 The variables are:
 
@@ -27,15 +27,15 @@ Fit all six candidate models with `mlb_train`. Load `mlb_test` only after all si
 
 ## Candidate Transformations
 
-1. Load `mlb_models_train.csv` as `mlb_train`. Report the ranges of `season` and `relative_payroll`, then plot `relative_payroll` against `winning_percentage`.
+1. Load `mlb_payrolls_train.csv` as `mlb_train`. Report the ranges of `season` and `relative_payroll`, then plot `relative_payroll` against `winning_percentage`.
 
 ```{r q1 prompt, include=TRUE, eval=FALSE}
-mlb_train <- read_csv("data/mlb_models_train.csv")
+mlb_train <- read_csv("data/mlb_payrolls_train.csv")
 ```
 
 ```{r q1 solution}
 mlb_train <- read_csv(
-  "data/mlb_models_train.csv",
+  "data/mlb_payrolls_train.csv",
   show_col_types = FALSE
 )
 
@@ -306,11 +306,11 @@ training_scores
 
 The later seasons measure whether relationships fitted through 2018 carry forward in time.
 
-12. Load `mlb_models_test.csv` as `mlb_test`. Do not refit any model. Add predictions from all six fitted models.
+12. Load `mlb_payrolls_test.csv` as `mlb_test`. Do not refit any model. Add predictions from all six fitted models.
 
 ```{r q12 solution}
 mlb_test <- read_csv(
-  "data/mlb_models_test.csv",
+  "data/mlb_payrolls_test.csv",
   show_col_types = FALSE
 ) %>%
   mutate(

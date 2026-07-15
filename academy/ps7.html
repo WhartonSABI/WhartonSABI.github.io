@@ -654,8 +654,8 @@ display: none;
 
 <div id="transformations-and-multiple-regression" class="section level1">
 <h1>Transformations and Multiple Regression</h1>
-<p>The files <a href="data/mlb_models_train.csv"><code>mlb_models_train.csv</code></a>
-and <a href="data/mlb_models_test.csv"><code>mlb_models_test.csv</code></a>
+<p>The files <a href="data/mlb_payrolls_train.csv"><code>mlb_payrolls_train.csv</code></a>
+and <a href="data/mlb_payrolls_test.csv"><code>mlb_payrolls_test.csv</code></a>
 contain observations for MLB teams and seasons with complete payroll and
 winning percentages for the current and previous seasons. The payroll
 source does not cover every team and season. The training file contains
@@ -683,12 +683,12 @@ scores.</p>
 <div id="candidate-transformations" class="section level2">
 <h2>Candidate Transformations</h2>
 <ol style="list-style-type: decimal">
-<li>Load <code>mlb_models_train.csv</code> as <code>mlb_train</code>.
+<li>Load <code>mlb_payrolls_train.csv</code> as <code>mlb_train</code>.
 Report the ranges of <code>season</code> and
 <code>relative_payroll</code>, then plot <code>relative_payroll</code>
 against <code>winning_percentage</code>.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>mlb_train <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/mlb_models_train.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>mlb_train <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/mlb_payrolls_train.csv&quot;</span>)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li><p>Fit three models of <code>winning_percentage</code> using
 <code>relative_payroll</code>. Save them with the names below.</p>
@@ -783,7 +783,7 @@ load the testing data.</p></li>
 <p>The later seasons measure whether relationships fitted through 2018
 carry forward in time.</p>
 <ol start="12" style="list-style-type: decimal">
-<li><p>Load <code>mlb_models_test.csv</code> as <code>mlb_test</code>.
+<li><p>Load <code>mlb_payrolls_test.csv</code> as <code>mlb_test</code>.
 Do not refit any model. Add predictions from all six fitted
 models.</p></li>
 <li><p>Calculate testing RMSE for all six models and combine those
