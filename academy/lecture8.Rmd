@@ -9,35 +9,35 @@ library(tidyverse)
 options(pillar.sigfig = 5, width = 100)
 ```
 
-In [Lecture 7](lecture7.html), we estimated field-goal success by dividing distance into bins and averaging the outcomes within each bin. Narrow bins captured more detail but also followed more of the training sample's noise. Logistic regression replaces the steps with a smooth probability curve for a binary response.
+Linear regression with `lm()` models a continuous response. Field-goal success is binary: an attempt is made or missed. Logistic regression fits probabilities for a binary response.
 
-## Why Logistic Regression?
+## Binary Outcomes and Logistic Regression
 
-Field-goal success is either 0 or 1. A linear regression can produce fitted values below 0 or above 1, which cannot be probabilities. Logistic regression fits a curve that stays between 0 and 1.
+A linear regression can produce fitted values below 0 or above 1, which cannot be probabilities. Logistic regression fits a curve that stays between 0 and 1.
 
-Load the [training and testing tibbles](data/nfl_fg.RData) saved at the end of [Lecture 7](lecture7.html).
+The files [`nfl_fg_train.csv`](data/nfl_fg_train.csv) and [`nfl_fg_test.csv`](data/nfl_fg_test.csv) contain NFL field-goal attempts from 2005 through 2015. The response `success` equals 1 for a made field goal and 0 for a miss. Fit both candidate models with the training file, then use the testing file to select between them.
 
-```{r load nfl_fg, message=FALSE}
-load("data/nfl_fg.RData")
+```{r load field goal training data, message=FALSE}
+fg_train <- read_csv("data/nfl_fg_train.csv", show_col_types = FALSE)
 ```
 
 ## Logistic Regression with `glm()`
 
-Fit a logistic regression with `glm()`. The formula still has the form `response ~ predictor`. The additional argument `family = binomial` tells R that the response is binary.
+Fit a logistic regression with `glm()`. The formula still has the form `response ~ predictor`. The argument `family = binomial` tells R that the response is binary.
 
 ```{r logit distance}
 logit_distance <- glm(
-  Success ~ Distance,
+  success ~ distance,
   family = binomial,
   data = fg_train
 )
 ```
 
-To draw the curve, create a grid of distances and predict at every value. For logistic regression, `type = "response"` returns probabilities rather than the model's internal log-odds scale.
+Create a grid of distances and predict at every value. For logistic regression, `type = "response"` returns probabilities rather than the model's internal log-odds scale.
 
 ```{r distance prediction grid}
 distance_grid <- tibble(
-  Distance = seq(min(fg_train$Distance), max(fg_train$Distance), by = 1)
+  distance = seq(min(fg_train$distance), max(fg_train$distance), by = 1)
 ) %>%
   mutate(
     predicted_probability = predict(
@@ -47,88 +47,32 @@ distance_grid <- tibble(
     )
   )
 
-ggplot(distance_grid, aes(x = Distance, y = predicted_probability)) +
+ggplot(distance_grid, aes(x = distance, y = predicted_probability)) +
   geom_line(linewidth = 1, color = "dodgerblue4") +
   scale_y_continuous(limits = c(0, 1)) +
   labs(x = "Distance (yards)", y = "Predicted Probability of Success")
 ```
 
-Short field goals have high fitted probabilities, and the probability decreases smoothly with distance.
-
-## Comparing the Smooth and Binned Models
-
-Add the logistic model's probabilities to both samples. The model is fitted only on `fg_train`; `newdata = fg_test` applies that fitted relationship to the held-out attempts.
-
-```{r add distance predictions}
-fg_train <- fg_train %>%
-  mutate(
-    phat_dist_logit = predict(
-      logit_distance,
-      newdata = fg_train,
-      type = "response"
-    )
-  )
-
-fg_test <- fg_test %>%
-  mutate(
-    phat_dist_logit = predict(
-      logit_distance,
-      newdata = fg_test,
-      type = "response"
-    )
-  )
-```
-
-Calculate the Brier score for every model from Lecture 7 and for the new logistic model.
-
-```{r distance model Brier comparison}
-distance_train_scores <- fg_train %>%
-  summarize(
-    Overall = mean((Success - phat_all)^2),
-    Kicker = mean((Success - phat_kicker)^2),
-    `10-yard bins` = mean((Success - phat_dist_10)^2),
-    `5-yard bins` = mean((Success - phat_dist_5)^2),
-    `2-yard bins` = mean((Success - phat_dist_2)^2),
-    `Logistic curve` = mean((Success - phat_dist_logit)^2)
-  ) %>%
-  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
-  mutate(Sample = "Training")
-
-distance_test_scores <- fg_test %>%
-  summarize(
-    Overall = mean((Success - phat_all)^2),
-    Kicker = mean((Success - phat_kicker)^2),
-    `10-yard bins` = mean((Success - phat_dist_10)^2),
-    `5-yard bins` = mean((Success - phat_dist_5)^2),
-    `2-yard bins` = mean((Success - phat_dist_2)^2),
-    `Logistic curve` = mean((Success - phat_dist_logit)^2)
-  ) %>%
-  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
-  mutate(Sample = "Testing")
-
-bind_rows(distance_train_scores, distance_test_scores)
-```
-
-The narrow bins fit the training data more closely, but the logistic curve has the lowest testing Brier score. Its smoothness keeps it from following every small fluctuation in the training sample.
+Short field goals have high fitted probabilities, and the probability decreases smoothly as distance increases.
 
 ## Multiple Logistic Regression
 
-A distance-only model assigns the same probability to every kicker attempting from the same distance. Add `Kicker` to fit separate curves for individual kickers.
+The distance-only model gives every kicker the same probability from a given distance. Add `kicker` to account for systematic differences among kickers.
 
 ```{r logit distance kicker}
 logit_dist_kicker <- glm(
-  Success ~ Distance + Kicker,
+  success ~ distance + kicker,
   family = binomial,
   data = fg_train
 )
 ```
 
-`Distance + Kicker` tells R to use both predictors. To visualize the model, create every combination of distance and three kickers, then predict for each row.
+`distance + kicker` tells R to use both predictors. Create every combination of distance and three kickers, then predict for each row.
 
 ```{r kicker prediction grid}
 dist_kicker_grid <- expand_grid(
-  Distance = seq(min(fg_train$Distance), max(fg_train$Distance), by = 1),
-  Kicker = c("Bailey", "Vinatieri", "Zuerlein")
+  distance = seq(min(fg_train$distance), max(fg_train$distance), by = 1),
+  kicker = c("Bailey", "Vinatieri", "Zuerlein")
 ) %>%
   mutate(
     predicted_probability = predict(
@@ -140,66 +84,106 @@ dist_kicker_grid <- expand_grid(
 
 ggplot(
   dist_kicker_grid,
-  aes(x = Distance, y = predicted_probability, color = Kicker)
+  aes(x = distance, y = predicted_probability, color = kicker)
 ) +
   geom_line(linewidth = 1) +
   scale_y_continuous(limits = c(0, 1)) +
   labs(x = "Distance (yards)", y = "Predicted Probability of Success")
 ```
 
-The curves have the same shape but different heights. At the same distance, the model assigns Dan Bailey a higher fitted success probability than Greg Zuerlein or Adam Vinatieri.
+At the same distance, the model assigns Dan Bailey a higher fitted success probability than Greg Zuerlein or Adam Vinatieri.
 
-## Does the Additional Predictor Help?
+## Training Fit
 
-Add predictions from the multiple logistic regression and compare its Brier score with the distance-only model.
+A baseline prediction assigns every attempt the overall success rate from the training data. Add the baseline and both logistic predictions to the training rows.
 
-```{r multiple model predictions}
+```{r add training predictions}
+overall_success <- mean(fg_train$success)
+
 fg_train <- fg_train %>%
   mutate(
-    phat_dist_kicker = predict(
+    overall = overall_success,
+    distance_only = predict(
+      logit_distance,
+      newdata = .,
+      type = "response"
+    ),
+    distance_kicker = predict(
       logit_dist_kicker,
-      newdata = fg_train,
+      newdata = .,
       type = "response"
     )
   )
+```
 
-fg_test <- fg_test %>%
+Calculate RMSE using the observed 0/1 outcome and each predicted probability. Lower RMSE means that the predicted probabilities are closer to the observed outcomes.
+
+```{r training RMSE}
+training_scores <- fg_train %>%
+  summarize(
+    overall = sqrt(mean((success - overall)^2)),
+    distance_only = sqrt(mean((success - distance_only)^2)),
+    distance_kicker = sqrt(mean((success - distance_kicker)^2))
+  ) %>%
+  pivot_longer(everything(), names_to = "model", values_to = "rmse") %>%
+  mutate(sample = "Training")
+
+training_scores
+```
+
+The distance-plus-kicker model has the lowest training RMSE. The testing data determine whether the added predictor improves predictions for held-out attempts.
+
+## Selecting a Logistic Model
+
+Load the testing data after both logistic models have been fit. Apply the baseline and both models without refitting.
+
+```{r load field goal testing data, message=FALSE}
+fg_test <- read_csv("data/nfl_fg_test.csv", show_col_types = FALSE) %>%
   mutate(
-    phat_dist_kicker = predict(
+    overall = overall_success,
+    distance_only = predict(
+      logit_distance,
+      newdata = .,
+      type = "response"
+    ),
+    distance_kicker = predict(
       logit_dist_kicker,
-      newdata = fg_test,
+      newdata = .,
       type = "response"
     )
   )
 ```
 
-```{r final Brier comparison}
-final_train_scores <- fg_train %>%
+```{r testing RMSE}
+testing_scores <- fg_test %>%
   summarize(
-    `Distance only` = mean((Success - phat_dist_logit)^2),
-    `Distance + kicker` = mean((Success - phat_dist_kicker)^2)
+    overall = sqrt(mean((success - overall)^2)),
+    distance_only = sqrt(mean((success - distance_only)^2)),
+    distance_kicker = sqrt(mean((success - distance_kicker)^2))
   ) %>%
-  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
-  mutate(Sample = "Training")
+  pivot_longer(everything(), names_to = "model", values_to = "rmse") %>%
+  mutate(sample = "Testing")
 
-final_test_scores <- fg_test %>%
-  summarize(
-    `Distance only` = mean((Success - phat_dist_logit)^2),
-    `Distance + kicker` = mean((Success - phat_dist_kicker)^2)
-  ) %>%
-  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
-  mutate(Sample = "Testing")
+model_comparison <- bind_rows(training_scores, testing_scores) %>%
+  mutate(
+    model = factor(
+      model,
+      levels = c("overall", "distance_only", "distance_kicker"),
+      labels = c("Training mean", "Distance", "Distance + kicker")
+    )
+  )
 
-final_scores <- bind_rows(final_train_scores, final_test_scores)
-final_scores
+model_comparison
 
-ggplot(final_scores, aes(x = Model, y = Brier, fill = Sample)) +
-  geom_col(position = "dodge") +
-  labs(x = NULL, y = "Brier Score", fill = NULL)
+ggplot(
+  model_comparison,
+  aes(x = model, y = rmse, color = sample, group = sample)
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2.5) +
+  labs(x = NULL, y = "RMSE", color = NULL)
 ```
 
-Adding the kicker lowers training error but slightly raises testing error. The additional predictor does not improve out-of-sample performance in this split.
-
-Across Lectures 5--8, the central workflow has been: define a response, build candidate models on training data, visualize what each model is doing, and compare predictions on testing data. Complexity is useful only when it improves performance on observations the model did not fit.
+The distance-only model has the lowest testing RMSE. Adding `kicker` lowers training RMSE but slightly raises testing RMSE, so the held-out results select the distance-only model.
 
 Sports-data packages, plotting references, and project datasets are collected on the separate [Project Resources](project_resources.html) page.

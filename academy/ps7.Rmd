@@ -6,200 +6,393 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = FALSE, fig.align = "center", include = FALSE)
 library(tidyverse)
+options(pillar.sigfig = 6, width = 100)
 ```
 
-# Testing Regression Models
+# Transformations and Multiple Regression
 
-The files [`mlb_payrolls_train.csv`](data/mlb_payrolls_train.csv) and [`mlb_payrolls_test.csv`](data/mlb_payrolls_test.csv) contain team-season payroll and winning records. The rows were randomly divided into training and testing sets. We will compare two models of the relationship between team payroll and winning percentage.
+The files [`mlb_models_train.csv`](data/mlb_models_train.csv) and [`mlb_models_test.csv`](data/mlb_models_test.csv) contain observations for MLB teams and seasons with complete payroll and winning percentages for the current and previous seasons. The payroll source does not cover every team and season. The training file contains 1999--2018, and the testing file contains 2019 and 2021--2023. The shortened 2020 season is excluded as an outcome, but its winning percentages provide `previous_wp` for the 2021 rows.
 
-## Training Data
+The variables are:
 
-1. Load `mlb_payrolls_train.csv` as `payroll_train`. Remove the shortened 2020 season. Use `glimpse()` and `range()` to inspect the variables and seasons.
+- `team`: team name
+- `season`: season of the outcome and payroll
+- `winning_percentage`: wins divided by games played
+- `relative_payroll`: team payroll divided by the MLB average in that season
+- `previous_wp`: the team's winning percentage in the previous season
+
+Relative payroll makes payroll comparable across seasons with different spending levels across MLB. Winning percentage from the previous season adds a measure of recent team performance that current payroll does not contain.
+
+Fit all six candidate models with `mlb_train`. Load `mlb_test` only after all six models are fixed. Select the final model using testing RMSE, without refitting after viewing the scores.
+
+## Candidate Transformations
+
+1. Load `mlb_models_train.csv` as `mlb_train`. Report the ranges of `season` and `relative_payroll`, then plot `relative_payroll` against `winning_percentage`.
+
+```{r q1 prompt, include=TRUE, eval=FALSE}
+mlb_train <- read_csv("data/mlb_models_train.csv")
+```
 
 ```{r q1 solution}
-payroll_train <- read_csv(
-  "data/mlb_payrolls_train.csv",
+mlb_train <- read_csv(
+  "data/mlb_models_train.csv",
   show_col_types = FALSE
-) %>%
-  filter(yearID != 2020)
+)
 
-glimpse(payroll_train)
-range(payroll_train$yearID)
+range(mlb_train$season)
+range(mlb_train$relative_payroll)
+
+ggplot(mlb_train, aes(x = relative_payroll, y = winning_percentage)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    x = "Payroll Relative to MLB Average",
+    y = "Winning Percentage"
+  )
 ```
 
-`payroll_norm` is a team's payroll divided by the average payroll in that season. A value of 1 is average, 2 is twice the average, and 0.5 is half the average. `log_payroll_norm` is the natural logarithm of that value.
+2. Fit three models of `winning_percentage` using `relative_payroll`. Save them with the names below.
 
-2. Plot `payroll_norm` against winning percentage (`WP`). Label the New York Yankees and Oakland Athletics separately from all other teams, and color the points by that label.
+    - `lin_payroll_model`: `relative_payroll`
+    - `log_payroll_model`: `log(relative_payroll)`
+    - `quad_payroll_model`: `relative_payroll` and `relative_payroll^2`
+
+    Use `I()` around the squared term.
+
+```{r q2 starter, include=TRUE, eval=FALSE}
+lin_payroll_model <- lm(winning_percentage ~ relative_payroll, data = mlb_train)
+log_payroll_model <- lm(winning_percentage ~ log(relative_payroll), data = mlb_train)
+quad_payroll_model <- lm(winning_percentage ~ ..., data = mlb_train)
+```
 
 ```{r q2 solution}
-payroll_train <- payroll_train %>%
-  mutate(
-    team_label = case_when(
-      name == "New York Yankees" ~ "New York Yankees",
-      name == "Oakland Athletics" ~ "Oakland Athletics",
-      TRUE ~ "Other"
-    )
-  )
+lin_payroll_model <- lm(
+  winning_percentage ~ relative_payroll,
+  data = mlb_train
+)
 
-ggplot(payroll_train, aes(x = payroll_norm, y = WP, color = team_label)) +
-  geom_point(alpha = 0.55) +
-  labs(
-    x = "Payroll Relative to League Average",
-    y = "Winning Percentage",
-    color = "Team"
-  )
+log_payroll_model <- lm(
+  winning_percentage ~ log(relative_payroll),
+  data = mlb_train
+)
+
+quad_payroll_model <- lm(
+  winning_percentage ~ relative_payroll + I(relative_payroll^2),
+  data = mlb_train
+)
 ```
 
-3. Fit two models using only `payroll_train`:
-
-- `raw_model`: winning percentage as a function of `payroll_norm`
-- `log_model`: winning percentage as a function of `log_payroll_norm`
-
-Add both models' fitted values to `payroll_train` as `raw_fitted` and `log_fitted`.
+3. Create `payroll_grid`, a tibble containing 150 evenly spaced `relative_payroll` values from the observed minimum to the observed maximum. Use each model to add a column of fitted winning percentages. Reshape the three columns of fitted values into a long table called `payroll_grid_long`.
 
 ```{r q3 solution}
-raw_model <- lm(WP ~ payroll_norm, data = payroll_train)
-log_model <- lm(WP ~ log_payroll_norm, data = payroll_train)
-
-payroll_train <- payroll_train %>%
-  mutate(
-    raw_fitted = predict(raw_model),
-    log_fitted = predict(log_model)
+payroll_grid <- tibble(
+  relative_payroll = seq(
+    min(mlb_train$relative_payroll),
+    max(mlb_train$relative_payroll),
+    length.out = 150
   )
-```
+) %>%
+  mutate(
+    lin_payroll = predict(lin_payroll_model, newdata = .),
+    log_payroll = predict(log_payroll_model, newdata = .),
+    quad_payroll = predict(quad_payroll_model, newdata = .)
+  )
 
-4. Reshape the two fitted-value columns into a long table. Plot the observed data and the two fitted lines in separate panels. Arrange the rows by `payroll_norm` before drawing the lines.
-
-```{r q4 solution}
-payroll_fitted_long <- payroll_train %>%
-  select(payroll_norm, WP, raw_fitted, log_fitted) %>%
+payroll_grid_long <- payroll_grid %>%
   pivot_longer(
-    cols = c(raw_fitted, log_fitted),
-    names_to = "Model",
-    values_to = "Fitted"
+    cols = c(lin_payroll, log_payroll, quad_payroll),
+    names_to = "model",
+    values_to = "fitted_wp"
   ) %>%
   mutate(
-    Model = recode(
-      Model,
-      raw_fitted = "Raw payroll",
-      log_fitted = "Log payroll"
+    model = factor(
+      model,
+      levels = c("lin_payroll", "log_payroll", "quad_payroll"),
+      labels = c("Lin. payroll", "Log payroll", "Quad. payroll")
     )
   )
+```
 
-ggplot(arrange(payroll_fitted_long, payroll_norm)) +
-  geom_point(aes(x = payroll_norm, y = WP), alpha = 0.35) +
+4. Plot the observed training data and add all three curves from `payroll_grid_long`. Map `model` to color so that each curve has a different color and the plot includes a legend.
+
+```{r q4 solution}
+ggplot() +
+  geom_point(
+    data = mlb_train,
+    mapping = aes(x = relative_payroll, y = winning_percentage),
+    color = "gray40",
+    alpha = 0.4
+  ) +
   geom_line(
-    aes(x = payroll_norm, y = Fitted),
-    color = "lightcoral",
+    data = payroll_grid_long,
+    mapping = aes(
+      x = relative_payroll,
+      y = fitted_wp,
+      color = model
+    ),
     linewidth = 1
   ) +
-  facet_wrap(~ Model) +
-  labs(x = "Payroll Relative to League Average", y = "Winning Percentage")
+  labs(
+    x = "Payroll Relative to MLB Average",
+    y = "Winning Percentage",
+    color = NULL
+  )
 ```
 
-5. Calculate a residual for each model. Reshape the residuals into a long table and make a faceted residual plot with a horizontal line at zero. Do either of the plots show a clear pattern?
+## Training Fit
+
+5. Add fitted values from the three models to `mlb_train`, using the same fitted value column names as in `payroll_grid`.
 
 ```{r q5 solution}
-payroll_residuals_long <- payroll_train %>%
-  transmute(
-    payroll_norm,
-    `Raw payroll` = WP - raw_fitted,
-    `Log payroll` = WP - log_fitted
-  ) %>%
-  pivot_longer(
-    cols = c(`Raw payroll`, `Log payroll`),
-    names_to = "Model",
-    values_to = "Residual"
+mlb_train <- mlb_train %>%
+  mutate(
+    lin_payroll = predict(lin_payroll_model),
+    log_payroll = predict(log_payroll_model),
+    quad_payroll = predict(quad_payroll_model)
   )
-
-ggplot(payroll_residuals_long, aes(x = payroll_norm, y = Residual)) +
-  geom_hline(yintercept = 0, color = "lightcoral", linewidth = 1) +
-  geom_point(alpha = 0.4) +
-  facet_wrap(~ Model) +
-  labs(x = "Payroll Relative to League Average", y = "Residual")
 ```
 
-## Training and Testing Error
-
-6. Add a baseline model that predicts the mean winning percentage from `payroll_train` for every team-season. Calculate the training RMSE for the baseline, raw-payroll, and log-payroll models.
+6. Define `rmse()`, a function with `predicted` and `actual` arguments that returns RMSE. Use it to calculate the training RMSE for all three models and put the results in a long table called `payroll_train_scores`.
 
 ```{r q6 solution}
-training_scores <- payroll_train %>%
-  summarize(
-    Baseline = sqrt(mean((WP - mean(WP))^2)),
-    `Raw payroll` = sqrt(mean((WP - raw_fitted)^2)),
-    `Log payroll` = sqrt(mean((WP - log_fitted)^2))
+rmse <- function(predicted, actual) {
+  sqrt(mean((actual - predicted)^2))
+}
+
+payroll_train_scores <- mlb_train %>%
+  pivot_longer(
+    cols = c(lin_payroll, log_payroll, quad_payroll),
+    names_to = "model",
+    values_to = "prediction"
+  ) %>%
+  reframe(
+    rmse = rmse(prediction, winning_percentage),
+    .by = model
+  )
+
+payroll_train_scores
+```
+
+7. Run the supplied code to add a column of random values, include it in the regression with linear payroll, and add the fitted values as `lin_payroll_random`. Use `rmse()` and `reframe()` to create `random_training_scores`, a long table comparing the training RMSE of `lin_payroll` and `lin_payroll_random`.
+
+```{r q7 starter, include=TRUE, eval=FALSE}
+set.seed(2026)
+
+mlb_train <- mlb_train %>%
+  mutate(random_value = rnorm(n()))
+
+lin_payroll_random_model <- lm(
+  winning_percentage ~ relative_payroll + random_value,
+  data = mlb_train
+)
+
+mlb_train <- mlb_train %>%
+  mutate(lin_payroll_random = predict(lin_payroll_random_model))
+```
+
+```{r q7 solution}
+set.seed(2026)
+
+mlb_train <- mlb_train %>%
+  mutate(random_value = rnorm(n()))
+
+lin_payroll_random_model <- lm(
+  winning_percentage ~ relative_payroll + random_value,
+  data = mlb_train
+)
+
+mlb_train <- mlb_train %>%
+  mutate(lin_payroll_random = predict(lin_payroll_random_model))
+
+random_training_scores <- mlb_train %>%
+  reframe(
+    lin_payroll = rmse(lin_payroll, winning_percentage),
+    lin_payroll_random = rmse(lin_payroll_random, winning_percentage)
   ) %>%
   pivot_longer(
     everything(),
-    names_to = "Model",
-    values_to = "RMSE"
+    names_to = "model",
+    values_to = "rmse"
+  )
+
+random_training_scores
+```
+
+`random_value` contains no baseball information. Its model still has slightly lower training RMSE because `lm()` has another coefficient to fit. A lower training RMSE alone does not identify the better model. The random predictor model is not a candidate for testing.
+
+## Adding Previous Season Winning Percentage
+
+8. Calculate the residuals from `lin_payroll_model` as observed winning percentage minus `lin_payroll`. Plot the residuals against `previous_wp`, add a horizontal line at zero, and add a fitted straight line with `geom_smooth()`. The fitted line should slope upward.
+
+```{r q8 solution}
+training_residuals <- mlb_train %>%
+  mutate(residual = winning_percentage - lin_payroll)
+
+ggplot(training_residuals, aes(x = previous_wp, y = residual)) +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_point(alpha = 0.35) +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    color = "lightcoral",
+    linewidth = 1
+  ) +
+  labs(x = "Previous Season Winning Percentage", y = "Residual")
+```
+
+9. Fit three multiple regression models by adding the untransformed `previous_wp` predictor to each payroll specification. Save them as `lin_payroll_prev_wp_model`, `log_payroll_prev_wp_model`, and `quad_payroll_prev_wp_model`. Add their fitted values to `mlb_train` as `lin_payroll_prev_wp`, `log_payroll_prev_wp`, and `quad_payroll_prev_wp`.
+
+```{r q9 solution}
+lin_payroll_prev_wp_model <- lm(
+  winning_percentage ~ relative_payroll + previous_wp,
+  data = mlb_train
+)
+
+log_payroll_prev_wp_model <- lm(
+  winning_percentage ~ log(relative_payroll) + previous_wp,
+  data = mlb_train
+)
+
+quad_payroll_prev_wp_model <- lm(
+  winning_percentage ~ relative_payroll + I(relative_payroll^2) +
+    previous_wp,
+  data = mlb_train
+)
+
+mlb_train <- mlb_train %>%
+  mutate(
+    lin_payroll_prev_wp = predict(lin_payroll_prev_wp_model),
+    log_payroll_prev_wp = predict(log_payroll_prev_wp_model),
+    quad_payroll_prev_wp = predict(quad_payroll_prev_wp_model)
+  )
+```
+
+10. Display the coefficients of `log_payroll_prev_wp_model`. Calculate the fitted difference in current winning percentage associated with a 0.100 increase in `previous_wp`, holding relative payroll constant.
+
+```{r q10 solution}
+log_payroll_prev_wp_model$coefficients
+
+coef(log_payroll_prev_wp_model)["previous_wp"] * 0.100
+```
+
+11. Calculate the training RMSE for the three multiple regression models. Combine these results with `payroll_train_scores` in a table called `training_scores`. Do not select a model or load the testing data.
+
+```{r q11 solution}
+multiple_train_scores <- mlb_train %>%
+  pivot_longer(
+    cols = c(
+      lin_payroll_prev_wp,
+      log_payroll_prev_wp,
+      quad_payroll_prev_wp
+    ),
+    names_to = "model",
+    values_to = "prediction"
   ) %>%
-  mutate(Sample = "Training")
+  reframe(
+    rmse = rmse(prediction, winning_percentage),
+    .by = model
+  )
+
+training_scores <- bind_rows(
+  payroll_train_scores,
+  multiple_train_scores
+) %>%
+  mutate(sample = "Training")
 
 training_scores
 ```
 
-7. Load `mlb_payrolls_test.csv` as `payroll_test` and remove 2020. Do not refit either model. Use the models fitted in Question 3 to add `raw_prediction` and `log_prediction`. Add the training-set mean as `baseline_prediction`.
+## Testing on Later Seasons
 
-```{r q7 solution}
-payroll_test <- read_csv(
-  "data/mlb_payrolls_test.csv",
+The later seasons measure whether relationships fitted through 2018 carry forward in time.
+
+12. Load `mlb_models_test.csv` as `mlb_test`. Do not refit any model. Add predictions from all six fitted models.
+
+```{r q12 solution}
+mlb_test <- read_csv(
+  "data/mlb_models_test.csv",
   show_col_types = FALSE
 ) %>%
-  filter(yearID != 2020) %>%
   mutate(
-    baseline_prediction = mean(payroll_train$WP),
-    raw_prediction = predict(raw_model, newdata = .),
-    log_prediction = predict(log_model, newdata = .)
+    lin_payroll = predict(lin_payroll_model, newdata = .),
+    log_payroll = predict(log_payroll_model, newdata = .),
+    quad_payroll = predict(quad_payroll_model, newdata = .),
+    lin_payroll_prev_wp = predict(lin_payroll_prev_wp_model, newdata = .),
+    log_payroll_prev_wp = predict(log_payroll_prev_wp_model, newdata = .),
+    quad_payroll_prev_wp = predict(quad_payroll_prev_wp_model, newdata = .)
   )
 ```
 
-8. Calculate the testing RMSE for all three models. Combine the training and testing scores in one table, then plot them. Which model has the lowest testing RMSE? How large is its advantage over the other payroll model?
+13. Calculate testing RMSE for all six models and combine those scores with `training_scores`. Make a bar chart with the training and testing bars next to each other for each model, and label every bar with its RMSE. Create `best_payroll_model` containing the model using only payroll with the lowest testing RMSE and `best_overall_model` containing the model with the lowest testing RMSE overall.
 
-```{r q8 solution}
-testing_scores <- payroll_test %>%
-  summarize(
-    Baseline = sqrt(mean((WP - baseline_prediction)^2)),
-    `Raw payroll` = sqrt(mean((WP - raw_prediction)^2)),
-    `Log payroll` = sqrt(mean((WP - log_prediction)^2))
-  ) %>%
+```{r q13 solution}
+testing_scores <- mlb_test %>%
   pivot_longer(
-    everything(),
-    names_to = "Model",
-    values_to = "RMSE"
+    cols = c(
+      lin_payroll, log_payroll, quad_payroll,
+      lin_payroll_prev_wp, log_payroll_prev_wp,
+      quad_payroll_prev_wp
+    ),
+    names_to = "model",
+    values_to = "prediction"
   ) %>%
-  mutate(Sample = "Testing")
+  reframe(
+    rmse = rmse(prediction, winning_percentage),
+    .by = model
+  ) %>%
+  mutate(sample = "Testing")
 
-rmse_comparison <- bind_rows(training_scores, testing_scores)
-rmse_comparison
+model_comparison <- bind_rows(training_scores, testing_scores) %>%
+  mutate(
+    sample = factor(sample, levels = c("Training", "Testing")),
+    model = factor(
+      model,
+      levels = c(
+        "lin_payroll",
+        "log_payroll",
+        "quad_payroll",
+        "lin_payroll_prev_wp",
+        "log_payroll_prev_wp",
+        "quad_payroll_prev_wp"
+      ),
+      labels = c(
+        "Lin. payroll",
+        "Log payroll",
+        "Quad. payroll",
+        "Lin. payroll + prev. win %",
+        "Log payroll + prev. win %",
+        "Quad. payroll + prev. win %"
+      )
+    )
+  )
 
-ggplot(rmse_comparison, aes(x = Model, y = RMSE, fill = Sample)) +
-  geom_col(position = "dodge") +
-  labs(x = NULL, y = "RMSE", fill = NULL)
-```
-
-The two payroll models should have very similar testing RMSEs. A small numerical difference is not strong evidence that one functional form will always predict better.
-
-## Challenge
-
-Use the payroll model with the lowest testing RMSE. For each test-set team-season, convert the prediction error in winning percentage to wins over 162 games. Then calculate each team's average wins above or below its prediction and make a horizontal bar plot.
-
-```{r challenge solution}
-# The log-payroll model has the slightly lower testing RMSE in this split.
-payroll_test_summary <- payroll_test %>%
-  mutate(wins_vs_prediction = (WP - log_prediction) * 162) %>%
-  group_by(name) %>%
-  summarize(mean_wins_vs_prediction = mean(wins_vs_prediction))
+model_comparison
 
 ggplot(
-  payroll_test_summary,
-  aes(x = reorder(name, mean_wins_vs_prediction), y = mean_wins_vs_prediction)
+  model_comparison,
+  aes(x = model, y = rmse, fill = sample)
 ) +
-  geom_col(fill = "lightblue4", alpha = 0.7) +
-  coord_flip() +
-  labs(
-    x = "Team",
-    y = "Average Wins Above or Below Prediction"
-  )
+  geom_col(position = position_dodge(width = 0.9)) +
+  geom_text(
+    aes(label = scales::number(rmse, accuracy = 0.0001)),
+    position = position_dodge(width = 0.9),
+    vjust = -0.4,
+    size = 3
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(18),
+    guide = guide_axis(n.dodge = 2)
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  labs(x = NULL, y = "RMSE", fill = NULL)
+
+best_payroll_model <- testing_scores %>%
+  filter(!str_detect(model, "prev_wp")) %>%
+  slice_min(rmse, n = 1)
+
+best_overall_model <- testing_scores %>%
+  slice_min(rmse, n = 1)
+
+best_payroll_model
+best_overall_model
 ```

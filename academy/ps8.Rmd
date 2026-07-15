@@ -10,45 +10,38 @@ library(tidyverse)
 
 # Logistic Regression and Win Probability
 
-The data contain one row for each NFL play. `label_win` indicates whether the team in possession eventually won the game. `score_differential` is that team's current lead or deficit, and `posteam_spread` is its pregame point spread. Negative spreads indicate a pregame favorite.
+The files [`nfl_wp_train.csv`](data/nfl_wp_train.csv) and [`nfl_wp_test.csv`](data/nfl_wp_test.csv) contain one row for each NFL play. `label_win` indicates whether the team in possession eventually won the game. `score_differential` is that team's current lead or deficit, and `posteam_spread` is its pregame point spread. Negative spreads indicate a pregame favorite.
 
-The training file contains the 2016--2020 seasons. The testing file contains the 2021 season. Games do not appear in both samples.
+The training file contains the 2016--2020 seasons. The testing file contains the 2021 season. Games do not appear in both samples. Fit all candidate models before loading the testing data, then use testing RMSE to select among them.
 
 ## Explore the Data
 
-1. Load [`nfl_wp_train.csv`](data/nfl_wp_train.csv) as `nfl_train` and [`nfl_wp_test.csv`](data/nfl_wp_test.csv) as `nfl_test`. Count the rows and distinct games in each sample. Confirm that their game IDs do not overlap.
+1. Read `nfl_wp_train.csv` and save it as `nfl_train`. Count its rows and distinct games.
 
 ```{r q1 prompt, include=TRUE, eval=FALSE}
 nfl_train <- read_csv("data/nfl_wp_train.csv")
-nfl_test <- read_csv("data/nfl_wp_test.csv")
 ```
 
 ```{r q1 solution}
 nfl_train <- read_csv("data/nfl_wp_train.csv", show_col_types = FALSE)
-nfl_test <- read_csv("data/nfl_wp_test.csv", show_col_types = FALSE)
 
 nfl_train %>%
   summarize(plays = n(), games = n_distinct(game_id))
-
-nfl_test %>%
-  summarize(plays = n(), games = n_distinct(game_id))
-
-intersect(unique(nfl_train$game_id), unique(nfl_test$game_id))
 ```
 
-2. Plot the training distribution of `score_differential`. Then use `distinct(game_id, posteam_spread)` to keep one row per game and team spread before plotting the distribution of `posteam_spread`. Give both plots accurate axis labels.
+2. Plot the training distribution of `score_differential`. Then use `distinct(game_id, posteam_spread)` to keep one row per unique game-spread combination before plotting the distribution of `posteam_spread`. Give both plots accurate axis labels.
 
 ```{r q2 solution}
 ggplot(nfl_train, aes(x = score_differential)) +
   geom_histogram(binwidth = 2, fill = "lightcoral") +
   labs(x = "Score Differential", y = "Plays")
 
-game_team_spreads <- nfl_train %>%
+game_spread_combinations <- nfl_train %>%
   distinct(game_id, posteam_spread)
 
-ggplot(game_team_spreads, aes(x = posteam_spread)) +
+ggplot(game_spread_combinations, aes(x = posteam_spread)) +
   geom_histogram(binwidth = 1, fill = "lightblue4") +
-  labs(x = "Pregame Team Spread", y = "Team-Games")
+  labs(x = "Pregame Team Spread", y = "Game-Spread Combinations")
 ```
 
 ## Fit and Visualize Logistic Models
@@ -83,7 +76,7 @@ ggplot(score_grid, aes(x = score_differential, y = predicted_win_probability)) +
   labs(x = "Score Differential", y = "Predicted Win Probability")
 ```
 
-4. Fit `spread_model`, a logistic regression of `label_win` on `posteam_spread`. Create a prediction grid and plot its fitted probability curve. How does being a larger pregame favorite change the fitted win probability?
+4. Fit `spread_model`, a logistic regression of `label_win` on `posteam_spread`. Create a prediction grid and plot its fitted probability curve. How does moving from an underdog toward a larger favorite—a more negative spread—change the fitted win probability?
 
 ```{r q4 solution}
 spread_model <- glm(
@@ -136,7 +129,11 @@ combined_grid <- expand_grid(
       newdata = .,
       type = "response"
     ),
-    spread_label = factor(posteam_spread)
+    spread_label = factor(
+      posteam_spread,
+      levels = c(-7, 0, 7),
+      labels = c("7-point favorite", "Even", "7-point underdog")
+    )
   )
 
 ggplot(
@@ -156,67 +153,135 @@ ggplot(
   )
 ```
 
+## Optional Challenge
+
+Before loading the testing data, fit `expanded_model` by adding `factor(down)`, `ydstogo`, and `yardline_100` to `combined_model`. Treating `down` as categorical allows each down to have its own fitted difference rather than imposing equal steps from one down to the next.
+
+```{r challenge model solution}
+expanded_model <- glm(
+  label_win ~ score_differential + posteam_spread + factor(down) +
+    ydstogo + yardline_100,
+  family = binomial,
+  data = nfl_train
+)
+```
+
 ## Compare Training and Testing Performance
 
-6. Use all three fitted models to add predicted probabilities to both `nfl_train` and `nfl_test`. Do not refit the models on the testing data.
+6. Load `nfl_wp_test.csv` as `nfl_test`. Count its rows and distinct games, and confirm that its game IDs do not overlap with `nfl_train`. Then use all three fitted models to add predicted probabilities to both data frames. Do not refit the models on the testing data.
 
 ```{r q6 solution}
+nfl_test <- read_csv("data/nfl_wp_test.csv", show_col_types = FALSE)
+
+nfl_test %>%
+  summarize(plays = n(), games = n_distinct(game_id))
+
+length(intersect(unique(nfl_train$game_id), unique(nfl_test$game_id)))
+
 nfl_train <- nfl_train %>%
   mutate(
-    `Score differential` = predict(diff_model, newdata = ., type = "response"),
-    `Pregame spread` = predict(spread_model, newdata = ., type = "response"),
-    Combined = predict(combined_model, newdata = ., type = "response")
+    score_differential_prediction = predict(
+      diff_model,
+      newdata = .,
+      type = "response"
+    ),
+    pregame_spread_prediction = predict(
+      spread_model,
+      newdata = .,
+      type = "response"
+    ),
+    combined_prediction = predict(combined_model, newdata = ., type = "response")
   )
 
 nfl_test <- nfl_test %>%
   mutate(
-    `Score differential` = predict(diff_model, newdata = ., type = "response"),
-    `Pregame spread` = predict(spread_model, newdata = ., type = "response"),
-    Combined = predict(combined_model, newdata = ., type = "response")
+    score_differential_prediction = predict(
+      diff_model,
+      newdata = .,
+      type = "response"
+    ),
+    pregame_spread_prediction = predict(
+      spread_model,
+      newdata = .,
+      type = "response"
+    ),
+    combined_prediction = predict(combined_model, newdata = ., type = "response")
   )
 ```
 
-7. Calculate the training and testing Brier scores for all three models. Combine them in one table and plot them. Which model has the lowest testing Brier score? Does the ranking match the training results?
+7. Calculate training and testing RMSE for all three models. Combine the six RMSE values in one table and plot training and testing RMSE at the same position for each model, with one dot per sample. Use testing RMSE—not training RMSE—to select the final model. Does the testing ranking match the training ranking?
 
 ```{r q7 solution}
 training_scores <- nfl_train %>%
   summarize(
     across(
-      c(`Score differential`, `Pregame spread`, Combined),
-      ~ mean((label_win - .x)^2)
+      c(
+        score_differential_prediction,
+        pregame_spread_prediction,
+        combined_prediction
+      ),
+      ~ sqrt(mean((label_win - .x)^2))
     )
   ) %>%
-  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
-  mutate(Sample = "Training")
+  pivot_longer(everything(), names_to = "model", values_to = "rmse") %>%
+  mutate(sample = "Training")
 
 testing_scores <- nfl_test %>%
   summarize(
     across(
-      c(`Score differential`, `Pregame spread`, Combined),
-      ~ mean((label_win - .x)^2)
+      c(
+        score_differential_prediction,
+        pregame_spread_prediction,
+        combined_prediction
+      ),
+      ~ sqrt(mean((label_win - .x)^2))
     )
   ) %>%
-  pivot_longer(everything(), names_to = "Model", values_to = "Brier") %>%
-  mutate(Sample = "Testing")
+  pivot_longer(everything(), names_to = "model", values_to = "rmse") %>%
+  mutate(sample = "Testing")
 
-brier_comparison <- bind_rows(training_scores, testing_scores)
-brier_comparison
+rmse_comparison <- bind_rows(training_scores, testing_scores) %>%
+  mutate(
+    model = factor(
+      model,
+      levels = c(
+        "score_differential_prediction",
+        "pregame_spread_prediction",
+        "combined_prediction"
+      ),
+      labels = c(
+        "Score differential",
+        "Pregame spread",
+        "Score differential + pregame spread"
+      )
+    )
+  )
 
-ggplot(brier_comparison, aes(x = Model, y = Brier, fill = Sample)) +
-  geom_col(position = "dodge") +
-  labs(x = NULL, y = "Brier Score", fill = NULL)
+rmse_comparison
+
+ggplot(
+  rmse_comparison,
+  aes(x = model, y = rmse, color = sample, group = sample)
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2.5) +
+  scale_x_discrete(labels = scales::label_wrap(18)) +
+  labs(x = NULL, y = "RMSE", color = NULL)
 ```
 
-## Challenge
+## Challenge Comparison
 
-Fit another logistic regression that adds `down`, `ydstogo`, and `yardline_100` to the combined model. Predict on the testing data and compare its testing Brier score with the three models above. Does the added complexity improve out-of-sample probability forecasts?
+If you fitted `expanded_model` before loading the testing data, apply it to both samples. Compare its training and testing RMSE with `combined_model`. Does the expanded model have lower testing RMSE?
 
-```{r challenge solution}
-expanded_model <- glm(
-  label_win ~ score_differential + posteam_spread + down + ydstogo + yardline_100,
-  family = binomial,
-  data = nfl_train
-)
+```{r challenge comparison solution}
+nfl_train <- nfl_train %>%
+  mutate(
+    expanded_prediction = predict(
+      expanded_model,
+      newdata = .,
+      type = "response"
+    )
+  )
 
 nfl_test <- nfl_test %>%
   mutate(
@@ -227,6 +292,22 @@ nfl_test <- nfl_test %>%
     )
   )
 
-nfl_test %>%
-  summarize(Brier = mean((label_win - expanded_prediction)^2))
+challenge_scores <- bind_rows(
+  nfl_train %>%
+    summarize(
+      combined = sqrt(mean((label_win - combined_prediction)^2)),
+      expanded = sqrt(mean((label_win - expanded_prediction)^2))
+    ) %>%
+    pivot_longer(everything(), names_to = "model", values_to = "rmse") %>%
+    mutate(sample = "Training"),
+  nfl_test %>%
+    summarize(
+      combined = sqrt(mean((label_win - combined_prediction)^2)),
+      expanded = sqrt(mean((label_win - expanded_prediction)^2))
+    ) %>%
+    pivot_longer(everything(), names_to = "model", values_to = "rmse") %>%
+    mutate(sample = "Testing")
+)
+
+challenge_scores
 ```

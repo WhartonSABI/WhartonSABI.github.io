@@ -1,5 +1,5 @@
 ---
-title: 'Lecture 7: More About Regression'
+title: 'Lecture 7: Transformations and Multiple Regression'
 output: html_document
 ---
 
@@ -7,272 +7,332 @@ output: html_document
 knitr::opts_chunk$set(cache = FALSE, fig.align = "center")
 library(tidyverse)
 options(pillar.sigfig = 4, width = 100)
+set.seed(2026)
 ```
 
-In [Lecture 5](lecture5.html) and [Lecture 6](lecture6.html), we fitted a baseball player's 2015 batting average to their 2014 batting average. A model can fit observed data well but perform poorly on new observations. This is called *overfitting*: the model has learned random variation in the training data as though it were a repeatable pattern. We will use NFL field-goal data to see how a testing set reveals overfitting.
+Linear regression with one untransformed predictor fits a straight line. Transforming a predictor changes the fitted shape, while adding predictors produces a multiple regression. All of these models use `lm()`.
 
+## Statcast Fly Ball Data {#statcastflyballdata}
 
-## Training and Testing Paradigm
+The files [`statcast_models_train.csv`](data/statcast_models_train.csv) and [`statcast_models_test.csv`](data/statcast_models_test.csv) contain a subset of fly balls from the 2019 MLB regular season with complete Statcast measurements. The subset includes exit velocities from 66 to 111 miles per hour and launch angles from 20 to 60 degrees. These limits remove a small number of extreme measurements that would stretch the plot axes. The training data cover March through July, and the testing data cover August and September.
 
-Suppose we have fit multiple models to a given dataset. How should we choose which model is the best?  
+Each row is one fly ball. The models use three variables:
 
-One strategy is to see how well each model predicts the data used to fit it. However, a flexible model can "over-learn" patterns in this *training set* that will not repeat in new data.
+- `exit_velocity`: speed off the bat, in miles per hour
+- `launch_angle`: vertical angle off the bat, in degrees
+- `hit_distance`: projected distance traveled, in feet
 
-A common alternative is to split the original dataset into two parts: a *training set* and a *testing set*. We fit our models using only the training set, then evaluate their predictions on the testing set. Both sets are samples; the testing set acts as a stand-in for future, out-of-sample observations.
+All six candidate models are fit with the training data. The testing data remain unopened until the candidates are fixed, then testing RMSE measures how well the fitted relationships carry forward to later observations.
 
-
-## Field Goal Success in the NFL
-
-The file [nfl_fg_train.csv](data/nfl_fg_train.csv) contains data on NFL field goals attempted between 2005 and 2015. We will train several models of field-goal success with these data, then evaluate their predictions using the held-out attempts in [nfl_fg_test.csv](data/nfl_fg_test.csv). Download both files and move them to your `data` folder.
-
-```{r load fg_train, message = FALSE}
-fg_train <- read_csv("data/nfl_fg_train.csv")
+```{r load Statcast training data, message=FALSE}
+statcast_train <- read_csv(
+  "data/statcast_models_train.csv",
+  show_col_types = FALSE
+)
 ```
 
-The simplest forecast of field-goal success is the overall success rate. This forecast does not differentiate between kickers or account for distance or game context. The code below adds this forecast to the tibble in a column called `phat_all`.
+The plots use a random sample so that the point cloud remains visible. The model fits and RMSE calculations use every training fly ball.
 
-```{r phat_all}
-fg_train <- 
-  fg_train %>%
-  mutate(phat_all = mean(Success))
+```{r sample Statcast data for plots}
+statcast_plot <- statcast_train %>%
+  slice_sample(n = 10000)
 ```
 
-Kickers make just over 83% of the attempts in the training set, but some kickers have higher success rates than others. Instead of using the overall average for every attempt, we can use each kicker's training-set success rate. The code below adds that forecast as `phat_kicker`. Because we create a grouping for this calculation, we remove it with `ungroup()` when we are done.
-
-```{r phat_kicker}
-fg_train <- 
-  fg_train %>% 
-  group_by(Kicker) %>%
-  mutate(phat_kicker = mean(Success)) %>%
-  ungroup()
+```{r plot exit velocity and distance}
+ggplot(statcast_plot, aes(x = exit_velocity, y = hit_distance)) +
+  geom_point(alpha = 0.15) +
+  labs(x = "Exit Velocity (mph)", y = "Hit Distance (feet)")
 ```
 
-Distance is an important predictor of whether a field goal is made. We will use `cut()` to bin the attempts by distance, then compute the success rate across all kickers within each bin. This calculation works as intended because we removed the previous kicker grouping with `ungroup()`.
+Fly balls hit harder generally travel farther, but a straight line is only one possible shape.
 
-In our training set, the shortest attempt was 18 yards and the longest was 76 yards. We will begin with 10-yard intervals: $(10, 20]$, $(20, 30]$, ..., $(70, 80]$. We save the bin label in `Dist_10` and the corresponding prediction in `phat_dist_10`.
+## Exit Velocity Transformations {#exitvelocitytransformations}
 
-```{r phat_dist_10}
-fg_train <-
-  fg_train %>%
-  mutate(Dist_10 = cut(Distance, breaks = seq(from = 10, to = 80, by = 10))) %>%
-  group_by(Dist_10) %>%
-  mutate(phat_dist_10 = mean(Success)) %>%
-  ungroup()
+The linear model assumes that one additional mile per hour produces the same fitted difference at 70 mph as at 100 mph. The logarithmic and quadratic models allow that difference to change.
+
+```{r fit exit velocity candidate models}
+lin_velo_model <- lm(
+  hit_distance ~ exit_velocity,
+  data = statcast_train
+)
+
+log_velo_model <- lm(
+  hit_distance ~ log(exit_velocity),
+  data = statcast_train
+)
+
+quad_velo_model <- lm(
+  hit_distance ~ exit_velocity + I(exit_velocity^2),
+  data = statcast_train
+)
 ```
 
-We can now plot distance against `phat_dist_10`. Every attempt in the same bin receives the same prediction, so the plot forms a sequence of horizontal steps. We use alpha blending (see [Lecture 2](lecture2.html)) to make repeated points visible: locations with more overlapping attempts appear darker.
+The logarithm compresses larger exit velocities more than smaller ones, so its fitted curve flattens as exit velocity increases. The quadratic model allows the slope to increase or decrease.
 
-It certainly looks like our predictions make some intuitive sense: the estimated probability of making a field goal decreases as the distance increases. 
+The linear, logarithmic, and quadratic forms are `a + b * x`, `a + b * log(x)`, and `a + b1 * x + b2 * x^2`. Inside a model formula, `I()` tells R to perform ordinary arithmetic.
 
-```{r plot phat_dist_10}
-fg_plot <- ggplot(fg_train) +
-  geom_point(aes(x = Distance, y = phat_dist_10), alpha = 0.2) +
-  scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Distance (yards)", y = "Predicted probability")
-fg_plot
-```
+## Comparing the Exit Velocity Curves {#comparingexitvelocitycurves}
 
-We could instead use 5-yard or 2-yard intervals, saving the bin labels in `Dist_5` and `Dist_2`. As before, we add a prediction equal to the training-set success rate within each bin.
+The same evenly spaced prediction grid is used for every model, so differences among the curves reflect the fitted shapes.
 
-```{r dist_5 dist_2}
-fg_train <- fg_train %>%
-  mutate(Dist_5 = cut(Distance, breaks = seq(from = 10, to = 80, by = 5))) %>%
-  group_by(Dist_5) %>%
-  mutate(phat_dist_5 = mean(Success)) %>%
-  ungroup()
-fg_train <- fg_train %>%
-  mutate(Dist_2 = cut(Distance, breaks = seq(from = 10, to = 80, by = 2))) %>%
-  group_by(Dist_2) %>%
-  mutate(phat_dist_2 = mean(Success)) %>%
-  ungroup()
-```
-
-The faceted plot below makes it easier to compare the three bin widths. Each point represents the prediction for one observed distance.
-
-```{r plot 3 bins}
-fg_bin_predictions <- fg_train %>%
-  select(Distance, phat_dist_10, phat_dist_5, phat_dist_2) %>%
+```{r create exit velocity prediction grid}
+speed_grid <- tibble(
+  exit_velocity = seq(
+    min(statcast_train$exit_velocity),
+    max(statcast_train$exit_velocity),
+    by = 0.5
+  )
+) %>%
+  mutate(
+    lin_velo = predict(lin_velo_model, newdata = .),
+    log_velo = predict(log_velo_model, newdata = .),
+    quad_velo = predict(quad_velo_model, newdata = .)
+  ) %>%
   pivot_longer(
-    cols = starts_with("phat_dist"),
+    cols = c(lin_velo, log_velo, quad_velo),
     names_to = "model",
-    values_to = "predicted_probability"
+    values_to = "fitted_distance"
   ) %>%
   mutate(
     model = factor(
       model,
-      levels = c("phat_dist_10", "phat_dist_5", "phat_dist_2"),
-      labels = c("10-yard bins", "5-yard bins", "2-yard bins")
+      levels = c("lin_velo", "log_velo", "quad_velo"),
+      labels = c("Lin. velo.", "Log velo.", "Quad. velo.")
     )
-  ) %>%
-  distinct()
-
-ggplot(fg_bin_predictions, aes(x = Distance, y = predicted_probability)) +
-  geom_line(color = "dodgerblue4") +
-  geom_point(color = "dodgerblue4", size = 1.5) +
-  facet_wrap(vars(model), ncol = 1) +
-  scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Distance (yards)", y = "Predicted probability")
+  )
 ```
 
-With 2-yard bins, the forecasts are no longer monotonically decreasing: although success generally becomes less likely as distance increases, a few adjacent bins move upward. Narrow bins use fewer attempts, so their averages are more sensitive to random variation. In [Lecture 8](lecture8.html), we will fit a smooth probability curve with logistic regression.
+`pivot_longer()` places the three sets of predictions in one column and records their source in `model`. Mapping `model` to color draws the three curves together and creates the legend automatically.
 
-
-## Assessing Predictions
-
-We now have several models of field-goal success: `phat_all`, `phat_kicker`, `phat_dist_10`, `phat_dist_5`, and `phat_dist_2`. Recall from [Lecture 5](lecture5.html) that we used RMSE to assess predictions of a continuous outcome. For a binary outcome, let $y_i$ be the outcome of observation $i$ and let $\hat{p}_i$ be its predicted probability of success.
-
-The [Brier Score](https://en.wikipedia.org/wiki/Brier_score) is defined as
-$$
-BS = \frac{1}{n}\sum_{i = 1}^{n}{(y_{i} - \hat{p}_{i})^{2}}
-$$
-The Brier score is the mean squared error of the probability forecasts. Lower values indicate more accurate predictions. Using code similar to our RMSE calculation in [Lecture 5](lecture5.html), we can compute the training-set Brier score for each model.
-
-```{r fg_train Brier}
-train_brier <- reframe(fg_train,
-  phat_all = mean((Success - phat_all)^2),
-  phat_kicker = mean((Success - phat_kicker)^2),
-  phat_dist_10 = mean((Success - phat_dist_10)^2),
-  phat_dist_5 = mean((Success - phat_dist_5)^2),
-  phat_dist_2 = mean((Success - phat_dist_2)^2)
-) %>%
-  pivot_longer(
-    everything(),
-    names_to = "Model",
-    values_to = "Brier"
-  ) %>%
-  mutate(Sample = "Training")
-
-train_brier
+```{r plot exit velocity candidate curves}
+ggplot() +
+  geom_point(
+    data = statcast_plot,
+    mapping = aes(x = exit_velocity, y = hit_distance),
+    color = "gray40",
+    alpha = 0.1,
+    inherit.aes = FALSE
+  ) +
+  geom_line(
+    data = speed_grid,
+    mapping = aes(
+      x = exit_velocity,
+      y = fitted_distance,
+      color = model
+    ),
+    linewidth = 1
+  ) +
+  labs(
+    x = "Exit Velocity (mph)",
+    y = "Hit Distance (feet)",
+    color = NULL
+  )
 ```
 
-Which model has the lowest training-set Brier score? Do you think this model may be overfitting?
+The linear curve has a constant slope, the logarithmic curve flattens, and the quadratic curve becomes steeper.
 
-Before assessing out-of-sample predictions, we will create tibbles that summarize each model's forecasts. For the kicker model, for example, we need only one row per kicker. The tibble `phat_kicker` therefore contains a kicker identifier and that kicker's training-set forecast:
+RMSE measures the typical prediction error in feet. Lower values are better. Each model's fitted values are stored in a column, then reshaped so that `reframe()` can apply the same RMSE calculation to every model.
 
-```{r group_by kicker}
-phat_kicker <- 
-  fg_train %>%
-  group_by(Kicker) %>%
-  reframe(phat_kicker = mean(Success))
-```
-
-Create similar tibbles for `phat_dist_10`, `phat_dist_5`, and `phat_dist_2`.
-
-```{r group_by dists}
-phat_dist_10 <- 
-  fg_train %>%
-  group_by(Dist_10) %>%
-  reframe(phat_dist_10 = mean(Success))
-phat_dist_5 <- 
-  fg_train %>%
-  group_by(Dist_5) %>%
-  reframe(phat_dist_5 = mean(Success))
-phat_dist_2 <- 
-  fg_train %>%
-  group_by(Dist_2) %>%
-  reframe(phat_dist_2 = mean(Success))
-```
-
-The file `nfl_fg_test.csv` contains held-out field goals from the same period. Because these attempts were not used to train our models, their predictions give us an estimate of *out-of-sample* performance. We first load the data into a tibble called `fg_test`.
-
-```{r load fg_test, message = FALSE}
-fg_test <- read_csv("data/nfl_fg_test.csv")
-```
-
-Using `mutate()` and `cut()`, add `Dist_10`, `Dist_5`, and `Dist_2` to `fg_test` using the same breaks as the training data.
-
-```{r fg_test add bins}
-fg_test <-
-  fg_test %>%
-  mutate(Dist_10 = cut(Distance, breaks = seq(from = 10, to = 80, by = 10)),
-         Dist_5 = cut(Distance, breaks = seq(from = 10, to = 80, by = 5)),
-         Dist_2 = cut(Distance, breaks = seq(from = 10, to = 80, by = 2)))
-```
-
-We are now ready to apply the forecasts learned from `fg_train` to `fg_test`. For `phat_all`, we use the overall success rate from `fg_train`—not the outcomes in `fg_test`.
-
-```{r fg_test phat_all}
-fg_test <-
-  fg_test %>%
-  mutate(phat_all = mean(fg_train$Success))
-```
-
-A join combines two tables using a *key*. Here, `Kicker` is the key: for each attempt in `fg_test`, the join finds the matching kicker in `phat_kicker` and appends that kicker's forecast. We use `left_join()` so every row of `fg_test` is retained.
-
-```{r fg_test join}
-fg_test <-
-  fg_test %>%
-  left_join(phat_kicker, by = "Kicker")
-```
-
-To verify that we have successfully performed this join, we can print out a few rows of `fg_test`:
-
-```{r verify join}
-select(fg_test, Kicker, Success, phat_all, phat_kicker)
-```
-
-Let's unpack the code. First, we overwrite `fg_test` with the result. We pipe `fg_test` to `left_join()`, pass `phat_kicker` as the table containing the additional data, and use `by = "Kicker"` to identify the matching key.
-
-By mimicking the code above, we can add columns to `fg_test` for the remaining three predictive models: `phat_dist_10`, `phat_dist_5`, and `phat_dist_2`.
-
-```{r fg_test add phat_dist}
-fg_test <- 
-  fg_test %>%
-  left_join(phat_dist_10, by = "Dist_10") %>%
-  left_join(phat_dist_5, by = "Dist_5") %>%
-  left_join(phat_dist_2, by = "Dist_2")
-```
-
-Now, we can compute the out-of-sample Brier scores for each of our models. Which has the best out-of-sample performance?
-
-```{r fg_test Brier}
-test_brier <- reframe(fg_test,
-  phat_all = mean((Success - phat_all)^2),
-  phat_kicker = mean((Success - phat_kicker)^2),
-  phat_dist_10 = mean((Success - phat_dist_10)^2),
-  phat_dist_5 = mean((Success - phat_dist_5)^2),
-  phat_dist_2 = mean((Success - phat_dist_2)^2)
-) %>%
-  pivot_longer(
-    everything(),
-    names_to = "Model",
-    values_to = "Brier"
-  ) %>%
-  mutate(Sample = "Testing")
-
-test_brier
-```
-
-Put the training and testing scores side by side. The 2-yard bins have the smallest training error, but the 5-yard bins have the smallest testing error. The extra flexibility improved the fit to the training sample without improving predictions for new attempts.
-
-```{r compare Brier scores}
-brier_comparison <- bind_rows(train_brier, test_brier) %>%
+```{r add exit velocity training predictions}
+statcast_train <- statcast_train %>%
   mutate(
-    Model = factor(
-      Model,
+    lin_velo = predict(lin_velo_model),
+    log_velo = predict(log_velo_model),
+    quad_velo = predict(quad_velo_model)
+  )
+```
+
+```{r exit velocity training RMSE}
+rmse <- function(predicted, actual) {
+  sqrt(mean((actual - predicted)^2))
+}
+
+speed_training_scores <- statcast_train %>%
+  pivot_longer(
+    cols = c(lin_velo, log_velo, quad_velo),
+    names_to = "model",
+    values_to = "prediction"
+  ) %>%
+  reframe(
+    rmse = rmse(prediction, hit_distance),
+    .by = model
+  )
+
+speed_training_scores
+```
+
+Within `reframe()`, `.by = model` calculates one RMSE for each model.
+
+`lm()` chooses coefficients to reduce error on the training data. The quadratic model can reproduce the linear model by setting the coefficient on the squared term to zero, so its training RMSE cannot be larger. Testing data determine whether that added flexibility improves predictions on later observations.
+
+## Adding Launch Angle
+
+The residual from `lin_velo_model` is observed hit distance minus fitted hit distance. Positive residuals mark fly balls that traveled farther than fitted; negative residuals mark fly balls that traveled less far. Plotting residuals against launch angle shows whether angle explains errors left by the model using only exit velocity.
+
+```{r sample exit velocity residuals}
+statcast_residual_plot <- statcast_train %>%
+  mutate(residual_distance = hit_distance - lin_velo) %>%
+  slice_sample(n = 10000)
+```
+
+```{r plot exit velocity residuals against launch angle}
+ggplot(
+  statcast_residual_plot,
+  aes(x = launch_angle, y = residual_distance)
+) +
+  geom_hline(yintercept = 0, color = "gray50") +
+  geom_point(alpha = 0.15) +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x + I(x^2),
+    se = FALSE,
+    color = "lightcoral",
+    linewidth = 1
+  ) +
+  labs(
+    x = "Launch Angle (degrees)",
+    y = "Residual Hit Distance (feet)"
+  )
+```
+
+The residuals rise and then fall. The model using only exit velocity underpredicts many fly balls near the middle of the angle range and overpredicts many fly balls with high launch angles.
+
+Representing this rise and fall requires `launch_angle` together with `I(launch_angle^2)`. The squared term follows directly from the residual pattern.
+
+The same quadratic launch angle specification is paired with each exit velocity shape. Holding the launch angle terms fixed isolates the consequence of the exit velocity transformation.
+
+```{r fit multiple regression models}
+lin_velo_quad_angle_model <- lm(
+  hit_distance ~ exit_velocity + launch_angle + I(launch_angle^2),
+  data = statcast_train
+)
+
+log_velo_quad_angle_model <- lm(
+  hit_distance ~ log(exit_velocity) + launch_angle + I(launch_angle^2),
+  data = statcast_train
+)
+
+quad_velo_quad_angle_model <- lm(
+  hit_distance ~ exit_velocity + I(exit_velocity^2) +
+    launch_angle + I(launch_angle^2),
+  data = statcast_train
+)
+```
+
+These are multiple regressions because each model uses exit velocity and launch angle. The exit velocity terms compare fly balls with the same launch angle. The two launch angle terms allow fitted distance to rise and then fall as launch angle increases.
+
+```{r add multiple regression training predictions}
+statcast_train <- statcast_train %>%
+  mutate(
+    lin_velo_quad_angle = predict(
+      lin_velo_quad_angle_model
+    ),
+    log_velo_quad_angle = predict(
+      log_velo_quad_angle_model
+    ),
+    quad_velo_quad_angle = predict(
+      quad_velo_quad_angle_model
+    )
+  )
+```
+
+Each multiple regression contains its counterpart using only exit velocity when both launch angle coefficients are zero. Adding launch angle therefore cannot increase training RMSE. Testing RMSE determines whether the improvement carries forward.
+
+## Selecting a Model with Testing Data
+
+The six candidates are fixed: three use exit velocity alone, and three add quadratic launch angle. They are applied to the later months without refitting, so every testing prediction comes from a relationship learned through July.
+
+```{r load Statcast testing data, message=FALSE}
+statcast_test <- read_csv(
+  "data/statcast_models_test.csv",
+  show_col_types = FALSE
+) %>%
+  mutate(
+    lin_velo = predict(lin_velo_model, newdata = .),
+    log_velo = predict(log_velo_model, newdata = .),
+    quad_velo = predict(quad_velo_model, newdata = .),
+    lin_velo_quad_angle = predict(
+      lin_velo_quad_angle_model,
+      newdata = .
+    ),
+    log_velo_quad_angle = predict(
+      log_velo_quad_angle_model,
+      newdata = .
+    ),
+    quad_velo_quad_angle = predict(
+      quad_velo_quad_angle_model,
+      newdata = .
+    )
+  )
+```
+
+Stacking the training and testing predictions allows the same RMSE calculation for both samples. After the predictions are reshaped, `.by = c(sample, model)` produces one score for each combination of sample and model.
+
+```{r compare model RMSE}
+model_comparison <- bind_rows(
+  Training = statcast_train,
+  Testing = statcast_test,
+  .id = "sample"
+) %>%
+  pivot_longer(
+    cols = c(
+      lin_velo, log_velo, quad_velo,
+      lin_velo_quad_angle, log_velo_quad_angle,
+      quad_velo_quad_angle
+    ),
+    names_to = "model",
+    values_to = "prediction"
+  ) %>%
+  reframe(
+    rmse = rmse(prediction, hit_distance),
+    .by = c(sample, model)
+  ) %>%
+  mutate(
+    sample = factor(sample, levels = c("Training", "Testing")),
+    model = factor(
+      model,
       levels = c(
-        "phat_all", "phat_kicker", "phat_dist_10",
-        "phat_dist_5", "phat_dist_2"
+        "lin_velo",
+        "log_velo",
+        "quad_velo",
+        "lin_velo_quad_angle",
+        "log_velo_quad_angle",
+        "quad_velo_quad_angle"
       ),
       labels = c(
-        "Overall", "Kicker", "10-yard bins",
-        "5-yard bins", "2-yard bins"
+        "Lin. velo.",
+        "Log velo.",
+        "Quad. velo.",
+        "Lin. velo. + quad. angle",
+        "Log velo. + quad. angle",
+        "Quad. velo. + quad. angle"
       )
     )
   )
 
-ggplot(brier_comparison, aes(x = Model, y = Brier, color = Sample, group = Sample)) +
-  geom_point(size = 2) +
-  geom_line() +
-  labs(x = NULL, y = "Brier score", color = NULL) +
-  theme(axis.text.x = element_text(angle = 25, hjust = 1))
+model_comparison
+
+ggplot(
+  model_comparison,
+  aes(x = model, y = rmse, fill = sample)
+) +
+  geom_col(position = position_dodge(width = 0.9)) +
+  geom_text(
+    aes(label = scales::number(rmse, accuracy = 0.01)),
+    position = position_dodge(width = 0.9),
+    vjust = -0.4,
+    size = 3
+  ) +
+  scale_x_discrete(
+    labels = scales::label_wrap(18),
+    guide = guide_axis(n.dodge = 2)
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  labs(x = NULL, y = "RMSE (feet)", fill = NULL)
 ```
 
+Training RMSE measures fit to the observations used to estimate a model. Testing RMSE measures errors on later observations and provides the basis for selection.
 
-## Looking Ahead
+Adding the curved launch angle relationship reduces testing RMSE from more than 30 feet to less than 15.3 feet. Launch angle explains substantial, repeatable information left by the models using only exit velocity.
 
-In [Lecture 8](lecture8.html), we will use *logistic regression* to replace these discrete bins with a smooth probability curve. To prepare, save the tibbles `fg_train` and `fg_test`:
-
-```{r save train test}
-save(fg_train, fg_test, file = "data/nfl_fg.RData")
-```
+Once launch angle enters the model, the exit velocity shape matters little. The quadratic velocity model has the smallest testing RMSE, but it beats the linear velocity model by only about 0.015 feet. The large improvement comes from adding launch angle, not from choosing a more complicated exit velocity shape.

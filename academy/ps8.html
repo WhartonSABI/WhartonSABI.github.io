@@ -269,34 +269,34 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; }
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; }
-code span.at { color: #204a87; }
-code span.bn { color: #0000cf; }
-code span.cf { color: #204a87; font-weight: bold; }
-code span.ch { color: #4e9a06; }
-code span.cn { color: #8f5902; }
-code span.co { color: #8f5902; font-style: italic; }
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; }
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; }
-code span.dt { color: #204a87; }
-code span.dv { color: #0000cf; }
-code span.er { color: #a40000; font-weight: bold; }
-code span.ex { }
-code span.fl { color: #0000cf; }
-code span.fu { color: #204a87; font-weight: bold; }
-code span.im { }
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; }
-code span.kw { color: #204a87; font-weight: bold; }
-code span.op { color: #ce5c00; font-weight: bold; }
-code span.ot { color: #8f5902; }
-code span.pp { color: #8f5902; font-style: italic; }
-code span.sc { color: #ce5c00; font-weight: bold; }
-code span.ss { color: #4e9a06; }
-code span.st { color: #4e9a06; }
-code span.va { color: #000000; }
-code span.vs { color: #4e9a06; }
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; }
+code span.al { color: #ef2929; } 
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.at { color: #204a87; } 
+code span.bn { color: #0000cf; } 
+code span.cf { color: #204a87; font-weight: bold; } 
+code span.ch { color: #4e9a06; } 
+code span.cn { color: #8f5902; } 
+code span.co { color: #8f5902; font-style: italic; } 
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.dt { color: #204a87; } 
+code span.dv { color: #0000cf; } 
+code span.er { color: #a40000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #0000cf; } 
+code span.fu { color: #204a87; font-weight: bold; } 
+code span.im { } 
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.kw { color: #204a87; font-weight: bold; } 
+code span.op { color: #ce5c00; font-weight: bold; } 
+code span.ot { color: #8f5902; } 
+code span.pp { color: #8f5902; font-style: italic; } 
+code span.sc { color: #ce5c00; font-weight: bold; } 
+code span.ss { color: #4e9a06; } 
+code span.st { color: #4e9a06; } 
+code span.va { color: #000000; } 
+code span.vs { color: #4e9a06; } 
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -511,16 +511,16 @@ display: none;
         <li>
   <a href="index.html">
     <span class="fa fa-home"></span>
-
+     
     Home
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-sign-in"></span>
-
+     
     Get Started
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -535,9 +535,9 @@ display: none;
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-institution"></span>
-
+     
     Academy
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -598,9 +598,9 @@ display: none;
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-dribbble"></span>
-
+     
     Training Camp
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -637,7 +637,7 @@ display: none;
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -654,27 +654,27 @@ display: none;
 
 <div id="logistic-regression-and-win-probability" class="section level1">
 <h1>Logistic Regression and Win Probability</h1>
-<p>The data contain one row for each NFL play. <code>label_win</code>
-indicates whether the team in possession eventually won the game.
-<code>score_differential</code> is that team&#x2019;s current lead or deficit,
-and <code>posteam_spread</code> is its pregame point spread. Negative
-spreads indicate a pregame favorite.</p>
+<p>The files <a href="data/nfl_wp_train.csv"><code>nfl_wp_train.csv</code></a> and <a href="data/nfl_wp_test.csv"><code>nfl_wp_test.csv</code></a> contain one
+row for each NFL play. <code>label_win</code> indicates whether the team
+in possession eventually won the game. <code>score_differential</code>
+is that team&#x2019;s current lead or deficit, and <code>posteam_spread</code>
+is its pregame point spread. Negative spreads indicate a pregame
+favorite.</p>
 <p>The training file contains the 2016&#x2013;2020 seasons. The testing file
-contains the 2021 season. Games do not appear in both samples.</p>
+contains the 2021 season. Games do not appear in both samples. Fit all
+candidate models before loading the testing data, then use testing RMSE
+to select among them.</p>
 <div id="explore-the-data" class="section level2">
 <h2>Explore the Data</h2>
 <ol style="list-style-type: decimal">
-<li>Load <a href="data/nfl_wp_train.csv"><code>nfl_wp_train.csv</code></a> as
-<code>nfl_train</code> and <a href="data/nfl_wp_test.csv"><code>nfl_wp_test.csv</code></a> as
-<code>nfl_test</code>. Count the rows and distinct games in each sample.
-Confirm that their game IDs do not overlap.</li>
+<li>Read <code>nfl_wp_train.csv</code> and save it as
+<code>nfl_train</code>. Count its rows and distinct games.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>nfl_train <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/nfl_wp_train.csv&quot;</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>nfl_test <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/nfl_wp_test.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>nfl_train <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/nfl_wp_train.csv&quot;</span>)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Plot the training distribution of <code>score_differential</code>.
 Then use <code>distinct(game_id, posteam_spread)</code> to keep one row
-per game and team spread before plotting the distribution of
+per unique game-spread combination before plotting the distribution of
 <code>posteam_spread</code>. Give both plots accurate axis labels.</li>
 </ol>
 </div>
@@ -687,8 +687,9 @@ covering the observed score differentials, add predicted probabilities
 with <code>type = &quot;response&quot;</code>, and plot the fitted curve.</p></li>
 <li><p>Fit <code>spread_model</code>, a logistic regression of
 <code>label_win</code> on <code>posteam_spread</code>. Create a
-prediction grid and plot its fitted probability curve. How does being a
-larger pregame favorite change the fitted win probability?</p></li>
+prediction grid and plot its fitted probability curve. How does moving
+from an underdog toward a larger favorite&#x2014;a more negative spread&#x2014;change
+the fitted win probability?</p></li>
 <li><p>Fit <code>combined_model</code> using both
 <code>score_differential</code> and <code>posteam_spread</code>. Create
 a grid containing every score differential and three pregame spreads:
@@ -697,25 +698,36 @@ Explain how the pregame spread changes win probability for teams with
 the same current score differential.</p></li>
 </ol>
 </div>
+<div id="optional-challenge" class="section level2">
+<h2>Optional Challenge</h2>
+<p>Before loading the testing data, fit <code>expanded_model</code> by
+adding <code>factor(down)</code>, <code>ydstogo</code>, and
+<code>yardline_100</code> to <code>combined_model</code>. Treating
+<code>down</code> as categorical allows each down to have its own fitted
+difference rather than imposing equal steps from one down to the
+next.</p>
+</div>
 <div id="compare-training-and-testing-performance" class="section level2">
 <h2>Compare Training and Testing Performance</h2>
 <ol start="6" style="list-style-type: decimal">
-<li><p>Use all three fitted models to add predicted probabilities to
-both <code>nfl_train</code> and <code>nfl_test</code>. Do not refit the
-models on the testing data.</p></li>
-<li><p>Calculate the training and testing Brier scores for all three
-models. Combine them in one table and plot them. Which model has the
-lowest testing Brier score? Does the ranking match the training
-results?</p></li>
+<li><p>Load <code>nfl_wp_test.csv</code> as <code>nfl_test</code>. Count
+its rows and distinct games, and confirm that its game IDs do not
+overlap with <code>nfl_train</code>. Then use all three fitted models to
+add predicted probabilities to both data frames. Do not refit the models
+on the testing data.</p></li>
+<li><p>Calculate training and testing RMSE for all three models. Combine
+the six RMSE values in one table and plot training and testing RMSE at
+the same position for each model, with one dot per sample. Use testing
+RMSE&#x2014;not training RMSE&#x2014;to select the final model. Does the testing
+ranking match the training ranking?</p></li>
 </ol>
 </div>
-<div id="challenge" class="section level2">
-<h2>Challenge</h2>
-<p>Fit another logistic regression that adds <code>down</code>,
-<code>ydstogo</code>, and <code>yardline_100</code> to the combined
-model. Predict on the testing data and compare its testing Brier score
-with the three models above. Does the added complexity improve
-out-of-sample probability forecasts?</p>
+<div id="challenge-comparison" class="section level2">
+<h2>Challenge Comparison</h2>
+<p>If you fitted <code>expanded_model</code> before loading the testing
+data, apply it to both samples. Compare its training and testing RMSE
+with <code>combined_model</code>. Does the expanded model have lower
+testing RMSE?</p>
 </div>
 </div>
 
