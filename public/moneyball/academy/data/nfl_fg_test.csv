@@ -1,4 +1,4 @@
-"Team","Year","GameMinute","Kicker","Distance","ScoreDiff","Grass","Success"
+"team","year","game_minute","kicker","distance","score_diff","grass","success"
 "PHI",2005,42,"Akers",31,-9,FALSE,1
 "PHI",2005,37,"Akers",35,0,TRUE,1
 "TEN",2005,17,"Bironas",39,7,TRUE,1
