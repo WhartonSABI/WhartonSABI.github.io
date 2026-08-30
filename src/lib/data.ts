@@ -19,6 +19,7 @@ export interface Project {
   name: string;
   repo: string;
   description: string;
+  hide_code?: boolean;
   org_override?: string;
   /** Optional external URL (e.g. arXiv, OSF) for preprint. */
   preprint?: string;
@@ -65,16 +66,18 @@ export interface Person {
 export interface PeopleConfig {
   year: number;
   program: string;
+  placeholder?: boolean;
   instructors?: Person[];  // optional – shown first per year
   headTAs?: Person[];      // optional – Head Teaching Assistants, shown after instructors
   leadership?: Person[];   // optional – Teaching Assistants, shown after headTAs
+  associates?: Person[];   // optional – Seminar associates, shown after members
   people: Person[];
 }
 
 interface ProgramEntry {
   program: string;
   year: number;
-  type?: 'instructor' | 'organizer' | 'head-ta' | 'leadership';
+  type?: 'instructor' | 'organizer' | 'head-ta' | 'leadership' | 'associate';
   role?: string;
 }
 
@@ -102,7 +105,7 @@ function parseProgramEntry(entry: string | ProgramEntry): ProgramEntry {
   if (parts.length < 2) throw new Error(`Invalid program entry: ${entry}`);
   const program = parts[0];
   const year = parseInt(parts[1], 10);
-  const type = parts[2] === 'instructor' || parts[2] === 'organizer' || parts[2] === 'head-ta' || parts[2] === 'leadership' ? parts[2] : undefined;
+  const type = parts[2] === 'instructor' || parts[2] === 'organizer' || parts[2] === 'head-ta' || parts[2] === 'leadership' || parts[2] === 'associate' ? parts[2] : undefined;
   return { program, year, type };
 }
 
@@ -238,6 +241,9 @@ export function loadPeople(): PeopleConfig[] {
       } else if (parsed.type === 'leadership') {
         config.leadership = config.leadership || [];
         config.leadership.push(person);
+      } else if (parsed.type === 'associate') {
+        config.associates = config.associates || [];
+        config.associates.push(person);
       } else {
         config.people.push(person);
       }
@@ -248,7 +254,19 @@ export function loadPeople(): PeopleConfig[] {
     if (config.instructors) sortPeopleByFirstName(config.instructors);
     if (config.headTAs) sortPeopleByFirstName(config.headTAs);
     if (config.leadership) sortPeopleByFirstName(config.leadership);
+    if (config.associates) sortPeopleByFirstName(config.associates);
     sortPeopleByFirstName(config.people);
+  }
+
+  const seminar2026Key = key('seminar', 2026);
+  if (!configMap.has(seminar2026Key)) {
+    configMap.set(seminar2026Key, {
+      year: 2026,
+      program: 'seminar',
+      placeholder: true,
+      instructors: [],
+      people: [],
+    });
   }
 
   const configs = Array.from(configMap.values());
@@ -261,7 +279,7 @@ const PROJECT_LINKS: Record<string, { href: string; display: string }> = {
   'rugby-ep': { href: '/seminar/projects', display: 'Rugby Expected Points' },
   halo2026: { href: '/seminar/projects', display: 'Hockey Forechecking' },
   'nba-lineups': { href: '/lab/projects', display: 'NBA Player Acquisition' },
-  'nfl-elo': { href: '/lab/projects', display: 'Pass Rush Ratings' },
+  'nfl-elo': { href: '/lab/projects', display: 'Pass Block Ratings' },
   'server-quality': { href: '/lab/projects', display: 'Server Quality' },
   'xg-plus': { href: '/lab/projects', display: 'xG+' },
   'nba-draft-lottery': { href: '/moneyball/projects', display: 'NBA Draft Lottery' },

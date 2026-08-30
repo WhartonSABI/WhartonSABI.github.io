@@ -1,0 +1,1036 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import Nav from '../../../../components/Nav.astro';
+
+const dataUrl = `${import.meta.env.BASE_URL}abs/data.json`;
+---
+
+<Layout
+  title="MLB ABS Challenge Decisions"
+  description="An interactive look at the run value gained, missed, and lost to challenge inventory in MLB's 2026 ABS system."
+>
+  <Nav />
+  <main class="abs-dashboard">
+    <header class="abs-hero">
+      <div class="abs-wrap">
+        <p class="eyebrow">WSABI Research · 2026 MLB regular season</p>
+        <h1>The value of an ABS challenge</h1>
+        <p class="dek">
+          What clubs gained by overturning calls, what they left on the table,
+          and what disappeared after their challenge inventory reached zero.
+        </p>
+        <p class="snapshot">Frozen through July 19 · 1,490 completed games</p>
+      </div>
+    </header>
+
+    <nav class="section-nav" aria-label="Dashboard sections">
+      <div class="abs-wrap nav-row">
+        <a href="#league">League</a>
+        <a href="#teams">Teams</a>
+        <a href="#players">Players</a>
+        <a href="#situations">Situations</a>
+        <a href="#methods">Definitions</a>
+      </div>
+    </nav>
+
+    <div class="abs-wrap dashboard-body">
+      <div id="abs-loading" class="loading-state">Loading the validated challenge ledger&hellip;</div>
+      <div id="abs-error" class="error-state" hidden>Dashboard data could not be loaded.</div>
+
+      <div id="abs-app" hidden>
+        <section id="league" class="dashboard-section">
+          <div class="section-heading">
+            <p class="section-number">01</p>
+            <div>
+              <h2>The league-wide answer</h2>
+              <p>Most uncorrected value was lost by choosing not to challenge, not by running out.</p>
+            </div>
+          </div>
+
+          <div class="kpi-grid" aria-label="League summary">
+            <article class="kpi-card">
+              <span>Gained by overturns</span>
+              <strong id="kpi-gained">&mdash;</strong>
+              <small id="kpi-gained-note"></small>
+            </article>
+            <article class="kpi-card">
+              <span>Missed with inventory</span>
+              <strong id="kpi-missed">&mdash;</strong>
+              <small id="kpi-missed-note"></small>
+            </article>
+            <article class="kpi-card danger-card">
+              <span>Lost at zero inventory</span>
+              <strong id="kpi-out">&mdash;</strong>
+              <small id="kpi-out-note"></small>
+            </article>
+            <article class="kpi-card">
+              <span>Official success rate</span>
+              <strong id="kpi-success">&mdash;</strong>
+              <small id="kpi-success-note"></small>
+            </article>
+          </div>
+
+          <div class="league-answer">
+            <div>
+              <span class="answer-label">The decision gap</span>
+              <strong id="decision-gap">&mdash;</strong>
+            </div>
+            <p id="decision-gap-text"></p>
+          </div>
+
+          <div class="visual-grid two-up">
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>Run value: corrected versus left uncorrected</h3>
+                <p>Immediate RE from the affected team's perspective.</p>
+              </div>
+              <div class="chart-wrap" id="value-chart-wrap">
+                <svg id="value-chart" role="img" aria-label="Run value gained and potential run value left uncorrected"></svg>
+                <div class="chart-tooltip" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>What happened to every correctable call?</h3>
+                <p>Geometry-inferred wrong calls, including those that were never challenged.</p>
+              </div>
+              <div class="flow-visual" id="opportunity-flow" aria-label="Allocation of correctable opportunities"></div>
+              <div class="benchmark-note">
+                <strong id="inventory-benchmark">&mdash;</strong>
+                <span>modeled failed-challenge inventory cost, versus the larger realized value encountered at zero.</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="teams" class="dashboard-section">
+          <div class="section-heading">
+            <p class="section-number">02</p>
+            <div>
+              <h2>Teams</h2>
+              <p>Separate the quality of actual challenges from the value a club never tried to recover.</p>
+            </div>
+          </div>
+
+          <div class="team-control-row">
+            <label for="team-select">Inspect a team
+              <select id="team-select"></select>
+            </label>
+            <label for="team-sort">Order the loss chart
+              <select id="team-sort">
+                <option value="totalForgoneRe">Total uncorrected RE</option>
+                <option value="outRe">Out-of-challenges RE</option>
+                <option value="missedRe">Missed-with-inventory RE</option>
+                <option value="netRe">Net challenge RE</option>
+              </select>
+            </label>
+          </div>
+
+          <article class="selected-team" aria-live="polite">
+            <div class="selected-team-heading">
+              <span>Selected club</span>
+              <strong id="selected-team-name">&mdash;</strong>
+            </div>
+            <div class="selected-team-grid" id="selected-team-grid"></div>
+            <p id="selected-team-summary"></p>
+          </article>
+
+          <div class="visual-grid two-up team-grid">
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>Potential RE left uncorrected</h3>
+                <p>Blue: challenge available. Red: no inventory.</p>
+              </div>
+              <div class="chart-wrap tall-wrap" id="team-loss-wrap">
+                <svg id="team-loss-chart" role="img" aria-label="Potential run value left uncorrected by all MLB teams"></svg>
+                <div class="chart-tooltip" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>Challenge return versus forgone value</h3>
+                <p>Right is more value gained. Up is more value left uncorrected. Point size is attempts.</p>
+              </div>
+              <div class="chart-wrap" id="team-scatter-wrap">
+                <svg id="team-scatter" role="img" aria-label="Team challenge value versus potential uncorrected run value"></svg>
+                <div class="chart-tooltip" aria-hidden="true"></div>
+              </div>
+              <p class="chart-footnote">Click a club to update the selected-team profile.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="players" class="dashboard-section">
+          <div class="section-heading">
+            <p class="section-number">03</p>
+            <div>
+              <h2>Players</h2>
+              <p>Catchers supplied the volume; individual leaderboards reveal who converted it into runs.</p>
+            </div>
+          </div>
+
+          <div class="visual-grid two-up">
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>Challenge performance by role</h3>
+                <p>Official attempts, success rate, and net immediate RE.</p>
+              </div>
+              <div id="role-comparison" class="role-comparison"></div>
+            </article>
+
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>Volume and accuracy</h3>
+                <p>Each point is a player. Filters protect success-rate comparisons from tiny samples.</p>
+              </div>
+              <div class="player-controls">
+                <label for="player-role">Role
+                  <select id="player-role">
+                    <option value="all">All roles</option>
+                    <option value="catcher">Catchers</option>
+                    <option value="batter">Batters</option>
+                    <option value="pitcher">Pitchers</option>
+                  </select>
+                </label>
+                <label for="player-min">Minimum attempts
+                  <select id="player-min">
+                    <option value="10">10</option>
+                    <option value="20" selected>20</option>
+                    <option value="40">40</option>
+                    <option value="60">60</option>
+                  </select>
+                </label>
+              </div>
+              <div class="chart-wrap" id="player-scatter-wrap">
+                <svg id="player-scatter" role="img" aria-label="Player challenge volume and official success rate"></svg>
+                <div class="chart-tooltip" aria-hidden="true"></div>
+              </div>
+            </article>
+          </div>
+
+          <article class="visual-block leaderboard-block">
+            <div class="visual-title leaderboard-title">
+              <div>
+                <h3>Player leaderboard</h3>
+                <p id="leaderboard-caption">Net challenge RE, official Savant publication set.</p>
+              </div>
+              <label for="player-ranking">Rank by
+                <select id="player-ranking">
+                  <option value="netRe">Net run value</option>
+                  <option value="successRate">Success rate</option>
+                  <option value="attempts">Attempts</option>
+                </select>
+              </label>
+            </div>
+            <div class="table-scroll">
+              <table class="leaderboard-table">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>Role</th>
+                    <th class="numeric">Attempts</th>
+                    <th class="numeric">Success</th>
+                    <th class="numeric">Net RE</th>
+                  </tr>
+                </thead>
+                <tbody id="player-table-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section id="situations" class="dashboard-section">
+          <div class="section-heading">
+            <p class="section-number">04</p>
+            <div>
+              <h2>Situations</h2>
+              <p>The value of a missed decision changes sharply with count, inning, and game state.</p>
+            </div>
+          </div>
+
+          <div class="visual-grid two-up">
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>Potential RE lost by count</h3>
+                <p>Totals in each cell. The darker cell within each panel carries more value.</p>
+              </div>
+              <div class="heatmap-pair">
+                <div>
+                  <h4>Missed with inventory</h4>
+                  <div id="count-missed" class="count-heatmap" aria-label="Missed run value by count"></div>
+                </div>
+                <div>
+                  <h4>Out of challenges</h4>
+                  <div id="count-out" class="count-heatmap" aria-label="Out-of-challenges run value by count"></div>
+                </div>
+              </div>
+              <p class="chart-footnote">A 3&ndash;2 mistake costs about 0.56 RE on average; 0&ndash;0 leads in total only because it is far more common.</p>
+            </article>
+
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>When zero inventory starts to hurt</h3>
+                <p>Potential RE by inning. Extra innings are grouped as 10+ after replenishment.</p>
+              </div>
+              <div class="chart-wrap" id="inning-wrap">
+                <svg id="inning-chart" role="img" aria-label="Potential run value lost by inning and challenge availability"></svg>
+                <div class="chart-tooltip" aria-hidden="true"></div>
+              </div>
+              <p class="chart-footnote" id="late-inning-note"></p>
+            </article>
+          </div>
+
+          <div class="visual-grid two-up">
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>Game-state explorer</h3>
+                <p>Compare missed and zero-inventory loss across score, outs, bases, or offense/defense.</p>
+              </div>
+              <label class="dimension-control" for="situation-dimension">Group by
+                <select id="situation-dimension">
+                  <option value="score">Score differential</option>
+                  <option value="outs">Outs</option>
+                  <option value="bases">Base state</option>
+                  <option value="side">Offense / defense</option>
+                </select>
+              </label>
+              <div class="chart-wrap" id="situation-wrap">
+                <svg id="situation-chart" role="img" aria-label="Potential run value lost by game situation"></svg>
+                <div class="chart-tooltip" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <article class="visual-block">
+              <div class="visual-title">
+                <h3>Where uncorrected calls lived</h3>
+                <p>Pitch height is normalized to each batter's zone; the outline is the ABS rectangle.</p>
+              </div>
+              <div class="zone-pair">
+                <div>
+                  <h4>Missed with inventory</h4>
+                  <svg id="zone-missed" role="img" aria-label="Location density of missed correctable calls"></svg>
+                </div>
+                <div>
+                  <h4>Out of challenges</h4>
+                  <svg id="zone-out" role="img" aria-label="Location density of correctable calls at zero inventory"></svg>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="methods" class="dashboard-section methods-section">
+          <div class="section-heading">
+            <p class="section-number">05</p>
+            <div>
+              <h2>What these numbers mean</h2>
+              <p>The dashboard separates observed rulings from geometry-based counterfactuals.</p>
+            </div>
+          </div>
+          <div class="methods-grid">
+            <div>
+              <h3>Observed challenge results</h3>
+              <p>Overturned and upheld outcomes come from explicit MLB review records and match Savant's official analytical set.</p>
+            </div>
+            <div>
+              <h3>Missed with inventory</h3>
+              <p>A wrong adverse call inferred from validated ABS geometry when the team still had at least one challenge but did not use it.</p>
+            </div>
+            <div>
+              <h3>Out of challenges</h3>
+              <p>A wrong adverse call encountered at reconstructed zero inventory. It is potential correctable value, not a claim that every pitch would have been challenged.</p>
+            </div>
+            <div>
+              <h3>Inventory cost</h3>
+              <p>The smaller modeled cost of a failed challenge accounts for the chance that a future correctable pitch would actually be recognized and challenged.</p>
+            </div>
+          </div>
+          <p class="methods-footer">219,405 called pitches · 99.893% geometry coverage · zero unresolved published challenges · 50-event stratified audit</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script define:vars={{ dataUrl }}>
+    const NS = 'http://www.w3.org/2000/svg';
+    const COLORS = {
+      blue: '#011F5B',
+      blue2: '#4F6DA8',
+      red: '#990000',
+      red2: '#C95F5F',
+      gold: '#B57C00',
+      grid: '#D9D4C9',
+      text: '#011F5B',
+      muted: '#5C564C',
+      warm: '#F5F2EB',
+      white: '#FFFFFF'
+    };
+
+    let DATA = null;
+    let selectedTeam = 'WSH';
+
+    const fmt1 = (value) => Number(value).toFixed(1);
+    const fmt2 = (value) => Number(value).toFixed(2);
+    const pct = (value, digits = 1) => `${(Number(value) * 100).toFixed(digits)}%`;
+    const comma = (value) => Number(value).toLocaleString('en-US');
+    const signed = (value, digits = 1) => `${Number(value) > 0 ? '+' : ''}${Number(value).toFixed(digits)}`;
+    const clamp = (value, lo, hi) => Math.max(lo, Math.min(hi, value));
+
+    function svgNode(name, attributes = {}, text = null) {
+      const node = document.createElementNS(NS, name);
+      Object.entries(attributes).forEach(([key, value]) => node.setAttribute(key, String(value)));
+      if (text !== null) node.textContent = text;
+      return node;
+    }
+
+    function setupSvg(svg, width, height) {
+      svg.replaceChildren();
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      svg.setAttribute('width', String(width));
+      svg.setAttribute('height', String(height));
+      svg.style.width = '100%';
+      svg.style.height = `${height}px`;
+    }
+
+    function chartWidth(svg, fallback = 520) {
+      const width = svg.parentElement?.clientWidth || fallback;
+      return Math.max(300, Math.floor(width));
+    }
+
+    function linear(domainMin, domainMax, rangeMin, rangeMax) {
+      const span = Math.max(1e-9, domainMax - domainMin);
+      return (value) => rangeMin + ((value - domainMin) / span) * (rangeMax - rangeMin);
+    }
+
+    function showTooltip(wrapper, target, html) {
+      const tip = wrapper.querySelector('.chart-tooltip');
+      if (!tip) return;
+      tip.innerHTML = html;
+      tip.style.display = 'block';
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const proposed = (targetRect.left + targetRect.right) / 2 - wrapperRect.left - tip.offsetWidth / 2;
+      tip.style.left = `${clamp(proposed, 6, wrapperRect.width - tip.offsetWidth - 6)}px`;
+      const above = targetRect.top - wrapperRect.top - tip.offsetHeight - 8;
+      tip.style.top = `${Math.max(4, above)}px`;
+      tip.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideTooltip(wrapper) {
+      const tip = wrapper.querySelector('.chart-tooltip');
+      if (!tip) return;
+      tip.style.display = 'none';
+      tip.setAttribute('aria-hidden', 'true');
+    }
+
+    function addHover(wrapper, target, html) {
+      target.addEventListener('mouseenter', () => showTooltip(wrapper, target, html));
+      target.addEventListener('mouseleave', () => hideTooltip(wrapper));
+    }
+
+    function renderKpis() {
+      const m = DATA.meta;
+      document.getElementById('kpi-gained').textContent = `${fmt1(m.actualGrossRe)} RE`;
+      document.getElementById('kpi-gained-note').textContent = `${comma(m.overturns)} overturned calls`;
+      document.getElementById('kpi-missed').textContent = `${fmt1(m.missedRe)} RE`;
+      document.getElementById('kpi-missed-note').textContent = `${comma(m.missedCount)} correctable calls passed`;
+      document.getElementById('kpi-out').textContent = `${fmt1(m.outRe)} RE`;
+      document.getElementById('kpi-out-note').textContent = `${comma(m.outCount)} correctable calls at zero`;
+      document.getElementById('kpi-success').textContent = pct(m.successRate);
+      document.getElementById('kpi-success-note').textContent = `${comma(m.overturns)} of ${comma(m.officialAttempts)} official attempts`;
+
+      document.getElementById('decision-gap').textContent = `${pct(1 - m.outForgoneReShare, 1)} vs ${pct(m.outForgoneReShare, 1)}`;
+      document.getElementById('decision-gap-text').textContent =
+        `${pct(1 - m.outForgoneReShare, 1)} of uncorrected potential RE came while a challenge was still available. ` +
+        `Only ${pct(m.outForgoneReShare, 1)} came after inventory reached zero.`;
+      document.getElementById('inventory-benchmark').textContent = `${fmt1(m.failedInventoryRe)} RE`;
+    }
+
+    function renderValueChart() {
+      const svg = document.getElementById('value-chart');
+      const wrapper = document.getElementById('value-chart-wrap');
+      const width = chartWidth(svg);
+      const height = 300;
+      setupSvg(svg, width, height);
+      const margin = { top: 16, right: 62, bottom: 36, left: width < 430 ? 112 : 150 };
+      const data = [
+        { label: 'Corrected', value: DATA.meta.actualGrossRe, color: COLORS.blue, note: 'Gross RE gained by official overturns' },
+        { label: 'Missed available', value: DATA.meta.missedRe, color: COLORS.blue2, note: 'Potential RE on wrong calls passed with inventory' },
+        { label: 'At zero', value: DATA.meta.outRe, color: COLORS.red, note: 'Potential RE encountered with no inventory' }
+      ];
+      const x = linear(0, Math.max(...data.map((d) => d.value)) * 1.12, margin.left, width - margin.right);
+      const rowHeight = 62;
+
+      data.forEach((d, i) => {
+        const y = margin.top + i * rowHeight;
+        const label = svgNode('text', { x: margin.left - 10, y: y + 23, 'text-anchor': 'end', class: 'svg-label' }, d.label);
+        const rect = svgNode('rect', { x: margin.left, y, width: Math.max(2, x(d.value) - margin.left), height: 34, rx: 3, fill: d.color });
+        const value = svgNode('text', { x: x(d.value) + 8, y: y + 23, class: 'svg-value' }, `${fmt1(d.value)} RE`);
+        svg.append(label, rect, value);
+        addHover(wrapper, rect, `<strong>${d.label}</strong><br>${fmt1(d.value)} RE<br><span>${d.note}</span>`);
+      });
+
+      const axisY = margin.top + data.length * rowHeight + 2;
+      svg.append(svgNode('line', { x1: margin.left, x2: width - margin.right, y1: axisY, y2: axisY, stroke: COLORS.grid }));
+      [0, 500, 1000].filter((v) => v <= Math.max(...data.map((d) => d.value)) * 1.12).forEach((tick) => {
+        const tx = x(tick);
+        svg.append(svgNode('line', { x1: tx, x2: tx, y1: axisY, y2: axisY + 5, stroke: COLORS.grid }));
+        svg.append(svgNode('text', { x: tx, y: axisY + 20, 'text-anchor': 'middle', class: 'svg-tick' }, String(tick)));
+      });
+    }
+
+    function renderOpportunityFlow() {
+      const m = DATA.meta;
+      const rows = [
+        { label: 'Challenged', value: m.challengedCorrectable, color: 'var(--abs-blue)', note: 'corrected opportunities' },
+        { label: 'Missed', value: m.missedCount, color: 'var(--abs-blue-2)', note: 'with inventory available' },
+        { label: 'At zero', value: m.outCount, color: 'var(--abs-red)', note: 'without inventory' }
+      ];
+      const root = document.getElementById('opportunity-flow');
+      root.innerHTML = `
+        <div class="flow-bar">
+          ${rows.map((r) => `<div style="width:${(r.value / m.correctable) * 100}%;background:${r.color}" aria-label="${r.label}: ${comma(r.value)}"></div>`).join('')}
+        </div>
+        <div class="flow-legend">
+          ${rows.map((r) => `<div><span style="background:${r.color}"></span><strong>${r.label}</strong><b>${comma(r.value)}</b><small>${pct(r.value / m.correctable)} · ${r.note}</small></div>`).join('')}
+        </div>
+        <p class="flow-answer">Teams challenged ${pct(m.availableOpportunityChallengeRate)} of geometry-correctable calls they encountered while inventory existed.</p>
+      `;
+    }
+
+    function renderTeamControls() {
+      const select = document.getElementById('team-select');
+      select.innerHTML = [...DATA.teams]
+        .sort((a, b) => a.team.localeCompare(b.team))
+        .map((team) => `<option value="${team.team}">${team.team}</option>`)
+        .join('');
+      select.value = selectedTeam;
+      select.addEventListener('change', () => selectTeam(select.value));
+      document.getElementById('team-sort').addEventListener('change', renderTeamLossChart);
+    }
+
+    function selectTeam(team) {
+      selectedTeam = team;
+      const select = document.getElementById('team-select');
+      if (select.value !== team) select.value = team;
+      renderSelectedTeam();
+      renderTeamScatter();
+      renderTeamLossChart();
+    }
+
+    function renderSelectedTeam() {
+      const team = DATA.teams.find((d) => d.team === selectedTeam);
+      if (!team) return;
+      document.getElementById('selected-team-name').textContent = team.team;
+      document.getElementById('selected-team-grid').innerHTML = [
+        ['Net challenge RE', fmt1(team.netRe)],
+        ['Official success', pct(team.successRate)],
+        ['Missed available', `${fmt1(team.missedRe)} RE`],
+        ['At zero', `${fmt1(team.outRe)} RE`],
+        ['Attempts', comma(team.attempts)],
+        ['Adjusted activity', `${signed(team.challengeResidual, 1)} attempts`]
+      ].map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('');
+      const outRank = [...DATA.teams].sort((a, b) => b.outRe - a.outRe).findIndex((d) => d.team === team.team) + 1;
+      const missedRank = [...DATA.teams].sort((a, b) => b.missedRe - a.missedRe).findIndex((d) => d.team === team.team) + 1;
+      document.getElementById('selected-team-summary').textContent =
+        `${team.team} ranks ${missedRank}${ordinalSuffix(missedRank)} in potential RE missed with inventory and ` +
+        `${outRank}${ordinalSuffix(outRank)} in value encountered at zero.`;
+    }
+
+    function ordinalSuffix(value) {
+      const mod100 = value % 100;
+      if (mod100 >= 11 && mod100 <= 13) return 'th';
+      return value % 10 === 1 ? 'st' : value % 10 === 2 ? 'nd' : value % 10 === 3 ? 'rd' : 'th';
+    }
+
+    function renderTeamLossChart() {
+      const svg = document.getElementById('team-loss-chart');
+      const wrapper = document.getElementById('team-loss-wrap');
+      const width = chartWidth(svg);
+      const sortKey = document.getElementById('team-sort')?.value || 'totalForgoneRe';
+      const data = [...DATA.teams].sort((a, b) => b[sortKey] - a[sortKey]);
+      const row = 25;
+      const margin = { top: 12, right: 45, bottom: 32, left: 42 };
+      const height = margin.top + data.length * row + margin.bottom;
+      setupSvg(svg, width, height);
+      const max = Math.max(...data.map((d) => d.totalForgoneRe)) * 1.08;
+      const x = linear(0, max, margin.left, width - margin.right);
+
+      data.forEach((d, i) => {
+        const y = margin.top + i * row;
+        const selected = d.team === selectedTeam;
+        const missedWidth = x(d.missedRe) - margin.left;
+        const outWidth = x(d.missedRe + d.outRe) - x(d.missedRe);
+        const label = svgNode('text', {
+          x: margin.left - 7, y: y + 15, 'text-anchor': 'end',
+          class: selected ? 'svg-team selected' : 'svg-team'
+        }, d.team);
+        const missed = svgNode('rect', { x: margin.left, y: y + 3, width: missedWidth, height: 15, rx: 2, fill: COLORS.blue2, opacity: selected ? 1 : 0.84 });
+        const out = svgNode('rect', { x: x(d.missedRe), y: y + 3, width: Math.max(1, outWidth), height: 15, rx: 2, fill: COLORS.red, opacity: selected ? 1 : 0.9 });
+        svg.append(label, missed, out);
+        const html = `<strong>${d.team}</strong><br>${fmt1(d.missedRe)} RE missed with inventory<br>${fmt1(d.outRe)} RE at zero<br><span>${fmt1(d.totalForgoneRe)} total potential RE</span>`;
+        addHover(wrapper, missed, html);
+        addHover(wrapper, out, html);
+        [missed, out, label].forEach((node) => node.addEventListener('click', () => selectTeam(d.team)));
+      });
+      const axisY = height - margin.bottom + 4;
+      svg.append(svgNode('line', { x1: margin.left, x2: width - margin.right, y1: axisY, y2: axisY, stroke: COLORS.grid }));
+      [0, 20, 40, 60].filter((v) => v <= max).forEach((tick) => {
+        svg.append(svgNode('text', { x: x(tick), y: axisY + 18, 'text-anchor': 'middle', class: 'svg-tick' }, String(tick)));
+      });
+    }
+
+    function renderTeamScatter() {
+      const svg = document.getElementById('team-scatter');
+      const wrapper = document.getElementById('team-scatter-wrap');
+      const width = chartWidth(svg);
+      const height = width < 500 ? 420 : 500;
+      setupSvg(svg, width, height);
+      const margin = { top: 22, right: 24, bottom: 48, left: 52 };
+      const xExtent = [Math.min(...DATA.teams.map((d) => d.netRe)) - 1, Math.max(...DATA.teams.map((d) => d.netRe)) + 1];
+      const yExtent = [Math.min(...DATA.teams.map((d) => d.totalForgoneRe)) - 1, Math.max(...DATA.teams.map((d) => d.totalForgoneRe)) + 1];
+      const x = linear(xExtent[0], xExtent[1], margin.left, width - margin.right);
+      const y = linear(yExtent[0], yExtent[1], height - margin.bottom, margin.top);
+      const attemptScale = linear(Math.min(...DATA.teams.map((d) => d.attempts)), Math.max(...DATA.teams.map((d) => d.attempts)), 10, 19);
+
+      [15, 20, 25, 30].filter((v) => v >= xExtent[0] && v <= xExtent[1]).forEach((tick) => {
+        svg.append(svgNode('line', { x1: x(tick), x2: x(tick), y1: margin.top, y2: height - margin.bottom, stroke: COLORS.grid, opacity: 0.65 }));
+        svg.append(svgNode('text', { x: x(tick), y: height - margin.bottom + 19, 'text-anchor': 'middle', class: 'svg-tick' }, String(tick)));
+      });
+      [40, 45, 50, 55].filter((v) => v >= yExtent[0] && v <= yExtent[1]).forEach((tick) => {
+        svg.append(svgNode('line', { x1: margin.left, x2: width - margin.right, y1: y(tick), y2: y(tick), stroke: COLORS.grid, opacity: 0.65 }));
+        svg.append(svgNode('text', { x: margin.left - 8, y: y(tick) + 4, 'text-anchor': 'end', class: 'svg-tick' }, String(tick)));
+      });
+
+      DATA.teams.forEach((d) => {
+        const group = svgNode('g', { class: d.team === selectedTeam ? 'team-point selected' : 'team-point' });
+        const radius = attemptScale(d.attempts);
+        const colorMix = clamp((d.successRate - 0.42) / 0.24, 0, 1);
+        const fill = colorMix > 0.55 ? COLORS.blue : COLORS.red2;
+        const circle = svgNode('circle', { cx: x(d.netRe), cy: y(d.totalForgoneRe), r: radius, fill, opacity: d.team === selectedTeam ? 1 : 0.72, stroke: d.team === selectedTeam ? COLORS.gold : COLORS.white, 'stroke-width': d.team === selectedTeam ? 4 : 1.5 });
+        const label = svgNode('text', { x: x(d.netRe), y: y(d.totalForgoneRe) + 4, 'text-anchor': 'middle', class: 'svg-point-label' }, d.team);
+        group.append(circle, label);
+        svg.append(group);
+        const html = `<strong>${d.team}</strong><br>${fmt1(d.netRe)} net challenge RE<br>${fmt1(d.totalForgoneRe)} potential RE uncorrected<br><span>${pct(d.successRate)} success · ${d.attempts} attempts</span>`;
+        addHover(wrapper, group, html);
+        group.addEventListener('click', () => selectTeam(d.team));
+      });
+
+      svg.append(svgNode('text', { x: (margin.left + width - margin.right) / 2, y: height - 8, 'text-anchor': 'middle', class: 'svg-axis-title' }, 'Net challenge RE gained'));
+      const yTitle = svgNode('text', { x: 15, y: height / 2, 'text-anchor': 'middle', class: 'svg-axis-title', transform: `rotate(-90 15 ${height / 2})` }, 'Potential RE uncorrected');
+      svg.append(yTitle);
+    }
+
+    function renderRoleComparison() {
+      const root = document.getElementById('role-comparison');
+      const maxAttempts = Math.max(...DATA.playerRoles.map((d) => d.attempts));
+      const maxRe = Math.max(...DATA.playerRoles.map((d) => d.netRe));
+      root.innerHTML = DATA.playerRoles.map((d) => {
+        const color = d.role === 'catcher' ? 'var(--abs-red)' : d.role === 'batter' ? 'var(--abs-blue)' : 'var(--abs-gold)';
+        return `<div class="role-row">
+          <strong>${d.role}</strong>
+          <div class="role-metric"><span>Attempts <b>${comma(d.attempts)}</b></span><div><i style="width:${(d.attempts / maxAttempts) * 100}%;background:${color}"></i></div></div>
+          <div class="role-metric"><span>Success <b>${pct(d.successRate)}</b></span><div><i style="width:${d.successRate * 100}%;background:${color}"></i></div></div>
+          <div class="role-metric"><span>Net RE <b>${fmt1(d.netRe)}</b></span><div><i style="width:${(d.netRe / maxRe) * 100}%;background:${color}"></i></div></div>
+        </div>`;
+      }).join('');
+    }
+
+    function filteredPlayers() {
+      const role = document.getElementById('player-role')?.value || 'all';
+      const min = Number(document.getElementById('player-min')?.value || 20);
+      return DATA.players.filter((d) => d.attempts >= min && (role === 'all' || d.role === role));
+    }
+
+    function renderPlayerScatter() {
+      const svg = document.getElementById('player-scatter');
+      const wrapper = document.getElementById('player-scatter-wrap');
+      const players = filteredPlayers();
+      const width = chartWidth(svg);
+      const height = width < 500 ? 390 : 440;
+      setupSvg(svg, width, height);
+      const margin = { top: 20, right: 24, bottom: 48, left: 52 };
+      if (!players.length) return;
+      const maxAttempts = Math.max(...players.map((d) => d.attempts)) * 1.08;
+      const x = linear(0, maxAttempts, margin.left, width - margin.right);
+      const successMin = Math.max(0, Math.min(...players.map((d) => d.successRate)) - 0.05);
+      const successMax = Math.min(1, Math.max(...players.map((d) => d.successRate)) + 0.05);
+      const y = linear(successMin, successMax, height - margin.bottom, margin.top);
+
+      [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        .filter((tick) => tick >= successMin && tick <= successMax)
+        .forEach((tick) => {
+        svg.append(svgNode('line', { x1: margin.left, x2: width - margin.right, y1: y(tick), y2: y(tick), stroke: COLORS.grid, opacity: 0.7 }));
+        svg.append(svgNode('text', { x: margin.left - 7, y: y(tick) + 4, 'text-anchor': 'end', class: 'svg-tick' }, pct(tick, 0)));
+      });
+      [0, 40, 80, 120].filter((tick) => tick <= maxAttempts).forEach((tick) => {
+        svg.append(svgNode('text', { x: x(tick), y: height - margin.bottom + 19, 'text-anchor': 'middle', class: 'svg-tick' }, String(tick)));
+      });
+
+      players.forEach((d) => {
+        const fill = d.role === 'catcher' ? COLORS.red : d.role === 'batter' ? COLORS.blue : COLORS.gold;
+        const circle = svgNode('circle', { cx: x(d.attempts), cy: y(d.successRate), r: clamp(4 + d.netRe / 3, 4, 10), fill, opacity: 0.72, stroke: COLORS.white, 'stroke-width': 1.2 });
+        svg.append(circle);
+        addHover(wrapper, circle, `<strong>${d.name} · ${d.team}</strong><br>${d.attempts} attempts · ${pct(d.successRate)} success<br><span>${fmt1(d.netRe)} net RE · ${d.role}</span>`);
+      });
+      svg.append(svgNode('text', { x: (margin.left + width - margin.right) / 2, y: height - 8, 'text-anchor': 'middle', class: 'svg-axis-title' }, 'Attempts'));
+      svg.append(svgNode('text', { x: 15, y: height / 2, 'text-anchor': 'middle', class: 'svg-axis-title', transform: `rotate(-90 15 ${height / 2})` }, 'Success rate'));
+    }
+
+    function renderPlayerTable() {
+      const ranking = document.getElementById('player-ranking').value;
+      const players = [...filteredPlayers()].sort((a, b) => b[ranking] - a[ranking]).slice(0, 20);
+      const maxRe = Math.max(...players.map((d) => d.netRe), 1);
+      document.getElementById('player-table-body').innerHTML = players.map((d) => `
+        <tr>
+          <td><strong>${d.name}</strong><span>${d.team}</span></td>
+          <td><span class="role-chip ${d.role}">${d.role}</span></td>
+          <td class="numeric">${d.attempts}</td>
+          <td class="numeric">${pct(d.successRate)}</td>
+          <td class="numeric re-cell"><div><i style="width:${Math.max(2, (d.netRe / maxRe) * 100)}%"></i></div><b>${fmt1(d.netRe)}</b></td>
+        </tr>`).join('');
+      const role = document.getElementById('player-role').value;
+      const min = document.getElementById('player-min').value;
+      document.getElementById('leaderboard-caption').textContent =
+        `${role === 'all' ? 'All roles' : `${role}s`} with at least ${min} attempts.`;
+    }
+
+    function bindPlayerControls() {
+      ['player-role', 'player-min'].forEach((id) => document.getElementById(id).addEventListener('change', () => {
+        renderPlayerScatter();
+        renderPlayerTable();
+      }));
+      document.getElementById('player-ranking').addEventListener('change', renderPlayerTable);
+    }
+
+    function renderCountHeatmap(type, elementId) {
+      const root = document.getElementById(elementId);
+      const data = DATA.situations.count.filter((d) => d.type === type);
+      const max = Math.max(...data.map((d) => d.re));
+      const cells = [];
+      for (let strikes = 2; strikes >= 0; strikes -= 1) {
+        for (let balls = 0; balls <= 3; balls += 1) {
+          const d = data.find((row) => row.balls === balls && row.strikes === strikes);
+          const alpha = 0.1 + 0.8 * (d.re / max);
+          const color = type === 'out' ? `rgba(153,0,0,${alpha})` : `rgba(79,109,168,${alpha})`;
+          cells.push(`<div class="heat-cell" style="background:${color}" aria-label="${balls}-${strikes}: ${fmt1(d.re)} RE">
+            <span>${balls}&ndash;${strikes}</span><strong>${fmt1(d.re)}</strong><small>${d.opportunities} calls</small>
+          </div>`);
+        }
+      }
+      root.innerHTML = cells.join('');
+    }
+
+    function renderInningChart() {
+      const svg = document.getElementById('inning-chart');
+      const wrapper = document.getElementById('inning-wrap');
+      const width = chartWidth(svg);
+      const height = 370;
+      setupSvg(svg, width, height);
+      const margin = { top: 18, right: 18, bottom: 48, left: 44 };
+      const innings = ['1','2','3','4','5','6','7','8','9','10+'];
+      const relevant = DATA.situations.inning.filter((d) => d.type === 'missed' || d.type === 'out');
+      const max = Math.max(...relevant.map((d) => d.re)) * 1.08;
+      const y = linear(0, max, height - margin.bottom, margin.top);
+      const groupWidth = (width - margin.left - margin.right) / innings.length;
+      const barWidth = Math.max(5, groupWidth * 0.32);
+
+      [0, 50, 100, 150].filter((tick) => tick <= max).forEach((tick) => {
+        svg.append(svgNode('line', { x1: margin.left, x2: width - margin.right, y1: y(tick), y2: y(tick), stroke: COLORS.grid, opacity: 0.65 }));
+        svg.append(svgNode('text', { x: margin.left - 7, y: y(tick) + 4, 'text-anchor': 'end', class: 'svg-tick' }, String(tick)));
+      });
+
+      innings.forEach((inning, i) => {
+        const center = margin.left + groupWidth * (i + 0.5);
+        ['missed', 'out'].forEach((type, j) => {
+          const d = relevant.find((row) => row.inning === inning && row.type === type);
+          const x = center + (j === 0 ? -barWidth : 0);
+          const rect = svgNode('rect', { x, y: y(d.re), width: barWidth - 1, height: y(0) - y(d.re), fill: type === 'missed' ? COLORS.blue2 : COLORS.red, rx: 2 });
+          svg.append(rect);
+          addHover(wrapper, rect, `<strong>Inning ${inning}</strong><br>${type === 'missed' ? 'Missed with inventory' : 'Out of challenges'}<br>${fmt1(d.re)} RE · ${d.opportunities} calls`);
+        });
+        svg.append(svgNode('text', { x: center, y: height - margin.bottom + 20, 'text-anchor': 'middle', class: 'svg-tick' }, inning));
+      });
+      svg.append(svgNode('text', { x: (margin.left + width - margin.right) / 2, y: height - 8, 'text-anchor': 'middle', class: 'svg-axis-title' }, 'Inning'));
+
+      const eighth = relevant.find((d) => d.type === 'out' && d.inning === '8')?.re || 0;
+      const ninth = relevant.find((d) => d.type === 'out' && d.inning === '9')?.re || 0;
+      document.getElementById('late-inning-note').textContent =
+        `${pct((eighth + ninth) / DATA.meta.outRe)} of all zero-inventory RE loss occurred in the eighth and ninth innings.`;
+    }
+
+    function situationRows() {
+      const dimension = document.getElementById('situation-dimension')?.value || 'score';
+      const raw = DATA.situations[dimension].filter((d) => d.type === 'missed' || d.type === 'out');
+      if (dimension === 'outs') return raw.map((d) => ({ ...d, label: `${d.outs} out${d.outs === 1 ? '' : 's'}`, order: d.outs }));
+      if (dimension === 'side') return raw.map((d) => ({ ...d, label: d.side[0].toUpperCase() + d.side.slice(1), order: d.side === 'offense' ? 1 : 2 }));
+      return raw.map((d) => ({ ...d, label: d.situation }));
+    }
+
+    function renderSituationChart() {
+      const svg = document.getElementById('situation-chart');
+      const wrapper = document.getElementById('situation-wrap');
+      const rows = situationRows();
+      const labels = [...new Map(rows.sort((a, b) => (a.order || 0) - (b.order || 0)).map((d) => [d.label, d])).keys()];
+      const width = chartWidth(svg);
+      const height = Math.max(260, labels.length * 46 + 58);
+      setupSvg(svg, width, height);
+      const margin = { top: 16, right: 38, bottom: 36, left: Math.min(105, width * 0.28) };
+      const max = Math.max(...rows.map((d) => d.re)) * 1.08;
+      const x = linear(0, max, margin.left, width - margin.right);
+      const groupHeight = (height - margin.top - margin.bottom) / labels.length;
+
+      labels.forEach((label, i) => {
+        const center = margin.top + groupHeight * (i + 0.5);
+        svg.append(svgNode('text', { x: margin.left - 8, y: center + 4, 'text-anchor': 'end', class: 'svg-label' }, label));
+        ['missed', 'out'].forEach((type, j) => {
+          const d = rows.find((row) => row.label === label && row.type === type);
+          const y = center + (j === 0 ? -10 : 2);
+          const rect = svgNode('rect', { x: margin.left, y, width: Math.max(1, x(d.re) - margin.left), height: 9, rx: 2, fill: type === 'missed' ? COLORS.blue2 : COLORS.red });
+          svg.append(rect);
+          addHover(wrapper, rect, `<strong>${label}</strong><br>${type === 'missed' ? 'Missed with inventory' : 'Out of challenges'}<br>${fmt1(d.re)} RE · ${d.opportunities} calls`);
+        });
+      });
+      svg.append(svgNode('text', { x: (margin.left + width - margin.right) / 2, y: height - 7, 'text-anchor': 'middle', class: 'svg-axis-title' }, 'Potential RE'));
+    }
+
+    function renderZone(type, elementId) {
+      const svg = document.getElementById(elementId);
+      const width = Math.max(230, svg.parentElement.clientWidth || 300);
+      const height = 320;
+      setupSvg(svg, width, height);
+      const data = DATA.situations.zone.filter((d) => d.type === type);
+      const margin = { top: 12, right: 12, bottom: 28, left: 28 };
+      const x = linear(-1.35, 1.35, margin.left, width - margin.right);
+      const y = linear(-0.35, 1.35, height - margin.bottom, margin.top);
+      const max = Math.max(...data.map((d) => d.opportunities));
+      data.forEach((d) => {
+        const alpha = 0.06 + 0.9 * (d.opportunities / max);
+        svg.append(svgNode('rect', {
+          x: x(d.x - d.width / 2), y: y(d.z + d.height / 2),
+          width: Math.max(1, x(d.x + d.width / 2) - x(d.x - d.width / 2)),
+          height: Math.max(1, y(d.z - d.height / 2) - y(d.z + d.height / 2)),
+          fill: `rgba(153,0,0,${alpha})`
+        }));
+      });
+      svg.append(svgNode('rect', { x: x(-17 / 24), y: y(1), width: x(17 / 24) - x(-17 / 24), height: y(0) - y(1), fill: 'none', stroke: COLORS.blue, 'stroke-width': 2.5 }));
+      svg.append(svgNode('text', { x: width / 2, y: height - 6, 'text-anchor': 'middle', class: 'svg-tick' }, 'Horizontal location'));
+    }
+
+    function renderAllCharts() {
+      renderValueChart();
+      renderTeamLossChart();
+      renderTeamScatter();
+      renderPlayerScatter();
+      renderInningChart();
+      renderSituationChart();
+      renderZone('missed', 'zone-missed');
+      renderZone('out', 'zone-out');
+    }
+
+    function initialize() {
+      renderKpis();
+      renderOpportunityFlow();
+      renderTeamControls();
+      renderSelectedTeam();
+      renderRoleComparison();
+      bindPlayerControls();
+      renderPlayerTable();
+      renderCountHeatmap('missed', 'count-missed');
+      renderCountHeatmap('out', 'count-out');
+      document.getElementById('situation-dimension').addEventListener('change', renderSituationChart);
+      renderAllCharts();
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(renderAllCharts, 120);
+      });
+    }
+
+    fetch(dataUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        DATA = data;
+        document.getElementById('abs-loading').hidden = true;
+        document.getElementById('abs-app').hidden = false;
+        initialize();
+      })
+      .catch((error) => {
+        console.error(error);
+        document.getElementById('abs-loading').hidden = true;
+        document.getElementById('abs-error').hidden = false;
+      });
+  </script>
+
+  <style is:global>
+    .abs-dashboard {
+      --abs-blue: #011F5B;
+      --abs-blue-2: #4F6DA8;
+      --abs-red: #990000;
+      --abs-red-2: #C95F5F;
+      --abs-gold: #B57C00;
+      --abs-warm: #FAF8F5;
+      --abs-warm-2: #F5F2EB;
+      --abs-border: #D9D4C9;
+      --abs-muted: #5C564C;
+      color: var(--abs-blue);
+      min-height: 100vh;
+    }
+    .abs-wrap { width: min(1180px, calc(100% - 2rem)); margin-inline: auto; }
+    .abs-hero {
+      color: #fff;
+      background:
+        radial-gradient(circle at 86% 22%, rgba(255,255,255,.12), transparent 27%),
+        linear-gradient(128deg, var(--abs-blue) 0%, #082B6C 68%, #213E75 100%);
+      padding: 4.5rem 0 4rem;
+    }
+    .eyebrow { color: #E8EEF8; font-size: .78rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .abs-hero h1 { margin-top: .65rem; max-width: 820px; font-size: clamp(2.35rem, 7vw, 5.2rem); line-height: .97; letter-spacing: -.055em; font-weight: 700; }
+    .dek { margin-top: 1.3rem; max-width: 710px; color: #E8EEF8; font-size: clamp(1rem, 2.2vw, 1.3rem); line-height: 1.55; }
+    .snapshot { margin-top: 1.25rem; color: #D1DAEC; font-size: .82rem; }
+    .section-nav { position: sticky; top: 0; z-index: 20; background: rgba(250,248,245,.96); border-bottom: 1px solid var(--abs-border); backdrop-filter: blur(10px); }
+    .nav-row { display: flex; gap: 1.4rem; overflow-x: auto; padding-block: .85rem; scrollbar-width: none; }
+    .nav-row::-webkit-scrollbar { display: none; }
+    .nav-row a { color: var(--abs-blue); font-size: .82rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+    .nav-row a:hover { color: var(--abs-red); }
+    .dashboard-body { padding-block: 1.25rem 5rem; }
+    .loading-state, .error-state { padding: 5rem 0; text-align: center; color: var(--abs-muted); }
+    .error-state { color: var(--abs-red); }
+    .dashboard-section { padding: 4.5rem 0 1rem; border-bottom: 1px solid var(--abs-border); scroll-margin-top: 3rem; }
+    .section-heading { display: grid; grid-template-columns: 3.2rem 1fr; gap: .9rem; align-items: start; margin-bottom: 2rem; }
+    .section-number { color: var(--abs-red); font-size: .78rem; font-weight: 700; letter-spacing: .09em; }
+    .section-heading h2 { font-size: clamp(1.75rem, 4vw, 2.8rem); line-height: 1.05; letter-spacing: -.035em; font-weight: 700; }
+    .section-heading div p { margin-top: .55rem; max-width: 740px; color: var(--abs-muted); line-height: 1.55; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .85rem; }
+    .kpi-card { min-width: 0; padding: 1.1rem; background: #fff; border: 1px solid var(--abs-border); border-top: 4px solid var(--abs-blue); border-radius: .7rem; }
+    .kpi-card.danger-card { border-top-color: var(--abs-red); }
+    .kpi-card span { display: block; color: var(--abs-muted); font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .kpi-card strong { display: block; margin-top: .35rem; color: var(--abs-blue); font-size: clamp(1.45rem, 3vw, 2rem); line-height: 1; letter-spacing: -.035em; }
+    .kpi-card small { display: block; margin-top: .55rem; color: var(--abs-muted); font-size: .73rem; line-height: 1.35; }
+    .league-answer { display: grid; grid-template-columns: minmax(190px, .6fr) 2fr; gap: 1.4rem; align-items: center; margin-top: 1rem; padding: 1.2rem 0; border-block: 1px solid var(--abs-border); }
+    .answer-label { display: block; color: var(--abs-red); font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .league-answer strong { display: block; margin-top: .2rem; font-size: 1.65rem; letter-spacing: -.03em; }
+    .league-answer p { color: var(--abs-muted); line-height: 1.5; }
+    .visual-grid { display: grid; gap: 2.5rem; margin-top: 2.7rem; }
+    .visual-grid.two-up { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .visual-block { min-width: 0; }
+    .visual-title { margin-bottom: 1rem; }
+    .visual-title h3 { font-size: 1.15rem; line-height: 1.25; font-weight: 700; letter-spacing: -.015em; }
+    .visual-title p { margin-top: .3rem; color: var(--abs-muted); font-size: .82rem; line-height: 1.45; }
+    .chart-wrap { position: relative; min-width: 0; }
+    .chart-wrap svg { display: block; overflow: visible; }
+    .chart-tooltip { display: none; position: absolute; z-index: 5; width: max-content; max-width: 240px; padding: .55rem .65rem; background: var(--abs-blue); color: #fff; border-radius: .45rem; box-shadow: 0 8px 24px rgba(1,31,91,.2); font-size: .72rem; line-height: 1.45; pointer-events: none; }
+    .chart-tooltip span { color: #D1DAEC; }
+    .svg-label { fill: var(--abs-muted); font-size: 12px; }
+    .svg-value { fill: var(--abs-blue); font-size: 12px; font-weight: 700; }
+    .svg-tick { fill: var(--abs-muted); font-size: 10px; }
+    .svg-axis-title { fill: var(--abs-blue); font-size: 11px; font-weight: 700; }
+    .svg-team { fill: var(--abs-muted); font-size: 10px; font-weight: 700; cursor: pointer; }
+    .svg-team.selected { fill: var(--abs-red); }
+    .svg-point-label { fill: #fff; font-size: 8px; font-weight: 700; pointer-events: none; }
+    .team-point { cursor: pointer; }
+    .flow-bar { display: flex; height: 2rem; overflow: hidden; border-radius: .35rem; }
+    .flow-bar div { min-width: 3px; }
+    .flow-legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; margin-top: 1rem; }
+    .flow-legend div { display: grid; grid-template-columns: .7rem 1fr; column-gap: .45rem; align-items: center; }
+    .flow-legend span { width: .7rem; height: .7rem; border-radius: 2px; grid-row: 1 / 3; }
+    .flow-legend strong { font-size: .75rem; }
+    .flow-legend b { grid-column: 2; font-size: 1.15rem; }
+    .flow-legend small { grid-column: 2; color: var(--abs-muted); font-size: .65rem; line-height: 1.3; }
+    .flow-answer { margin-top: 1.2rem; color: var(--abs-muted); font-size: .82rem; line-height: 1.45; }
+    .benchmark-note { display: grid; grid-template-columns: auto 1fr; gap: .65rem; align-items: baseline; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--abs-border); }
+    .benchmark-note strong { color: var(--abs-red); font-size: 1.35rem; }
+    .benchmark-note span { color: var(--abs-muted); font-size: .76rem; line-height: 1.4; }
+    .team-control-row, .player-controls { display: flex; flex-wrap: wrap; gap: .9rem; margin-bottom: 1rem; }
+    .team-control-row label, .player-controls label, .dimension-control, .leaderboard-title label { color: var(--abs-muted); font-size: .72rem; font-weight: 700; }
+    select { display: block; min-width: 160px; margin-top: .32rem; padding: .58rem 2rem .58rem .7rem; color: var(--abs-blue); background: #fff; border: 1px solid var(--abs-border); border-radius: .42rem; font: inherit; font-size: .82rem; }
+    select:focus { outline: 3px solid rgba(1,31,91,.18); outline-offset: 1px; }
+    .selected-team { padding: 1.2rem; background: #fff; border: 1px solid var(--abs-border); border-radius: .7rem; }
+    .selected-team-heading { display: flex; align-items: baseline; gap: .75rem; }
+    .selected-team-heading span { color: var(--abs-muted); font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .selected-team-heading strong { font-size: 1.7rem; }
+    .selected-team-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: .8rem; margin-top: 1rem; }
+    .selected-team-grid div { padding-left: .65rem; border-left: 2px solid var(--abs-border); }
+    .selected-team-grid span { display: block; color: var(--abs-muted); font-size: .66rem; }
+    .selected-team-grid strong { display: block; margin-top: .18rem; font-size: .95rem; }
+    .selected-team > p { margin-top: .9rem; color: var(--abs-muted); font-size: .78rem; }
+    .team-grid { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr) !important; }
+    .chart-footnote { margin-top: .7rem; color: var(--abs-muted); font-size: .72rem; line-height: 1.45; }
+    .role-comparison { display: grid; gap: 1rem; }
+    .role-row { display: grid; grid-template-columns: 4rem repeat(3, 1fr); gap: .8rem; align-items: end; }
+    .role-row > strong { color: var(--abs-blue); font-size: .82rem; text-transform: capitalize; }
+    .role-metric span { display: flex; justify-content: space-between; gap: .5rem; color: var(--abs-muted); font-size: .65rem; }
+    .role-metric span b { color: var(--abs-blue); }
+    .role-metric > div { height: .42rem; margin-top: .25rem; overflow: hidden; background: var(--abs-warm-2); border-radius: 99px; }
+    .role-metric i { display: block; height: 100%; border-radius: 99px; }
+    .leaderboard-block { margin-top: 2.8rem; }
+    .leaderboard-title { display: flex; justify-content: space-between; gap: 1rem; align-items: end; }
+    .table-scroll { overflow-x: auto; }
+    .leaderboard-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .leaderboard-table th { padding: .65rem .55rem; color: var(--abs-muted); border-bottom: 2px solid var(--abs-blue); font-size: .68rem; text-align: left; text-transform: uppercase; letter-spacing: .04em; }
+    .leaderboard-table td { padding: .62rem .55rem; border-bottom: 1px solid var(--abs-border); }
+    .leaderboard-table td > span:not(.role-chip) { display: block; color: var(--abs-muted); font-size: .65rem; }
+    .leaderboard-table .numeric { text-align: right; font-variant-numeric: tabular-nums; }
+    .role-chip { display: inline-block; padding: .2rem .42rem; border-radius: 99px; background: #E8EEF8; color: var(--abs-blue); font-size: .65rem; text-transform: capitalize; }
+    .role-chip.catcher { background: #FCE8E8; color: var(--abs-red); }
+    .role-chip.pitcher { background: #F8EECF; color: #714D00; }
+    .re-cell { display: grid; grid-template-columns: minmax(70px, 1fr) 2.5rem; gap: .55rem; align-items: center; }
+    .re-cell div { height: .4rem; overflow: hidden; background: var(--abs-warm-2); border-radius: 99px; }
+    .re-cell i { display: block; height: 100%; background: var(--abs-blue); border-radius: 99px; }
+    .heatmap-pair, .zone-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.1rem; }
+    .heatmap-pair h4, .zone-pair h4 { margin-bottom: .55rem; color: var(--abs-muted); font-size: .72rem; font-weight: 700; text-align: center; }
+    .count-heatmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+    .heat-cell { min-height: 76px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--abs-blue); }
+    .heat-cell span { font-size: .62rem; font-weight: 700; }
+    .heat-cell strong { margin-top: .1rem; font-size: .95rem; }
+    .heat-cell small { margin-top: .08rem; font-size: .58rem; opacity: .78; }
+    .dimension-control { display: inline-block; margin-bottom: .9rem; }
+    .zone-pair svg { display: block; width: 100%; }
+    .methods-section { border-bottom: 0; }
+    .methods-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem 2rem; }
+    .methods-grid h3 { font-size: .9rem; font-weight: 700; }
+    .methods-grid p { margin-top: .35rem; color: var(--abs-muted); font-size: .78rem; line-height: 1.55; }
+    .methods-footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--abs-border); color: var(--abs-muted); font-size: .72rem; }
+
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .visual-grid.two-up, .team-grid { grid-template-columns: 1fr !important; }
+      .selected-team-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .abs-wrap { width: min(100% - 1.1rem, 1180px); }
+      .abs-hero { padding: 3.5rem 0 3rem; }
+      .dashboard-section { padding-top: 3.5rem; }
+      .section-heading { grid-template-columns: 2rem 1fr; }
+      .kpi-grid { gap: .55rem; }
+      .kpi-card { padding: .85rem; }
+      .kpi-card strong { font-size: 1.35rem; }
+      .league-answer { grid-template-columns: 1fr; gap: .65rem; }
+      .flow-legend { grid-template-columns: 1fr; }
+      .flow-legend div { grid-template-columns: .7rem 4.5rem 3.2rem 1fr; }
+      .flow-legend span { grid-row: auto; }
+      .flow-legend b, .flow-legend small { grid-column: auto; }
+      .selected-team-grid { grid-template-columns: repeat(2, 1fr); }
+      .role-row { grid-template-columns: 3.6rem 1fr; }
+      .role-metric { grid-column: 2; }
+      .heatmap-pair, .zone-pair { grid-template-columns: 1fr; }
+      .leaderboard-title { align-items: start; flex-direction: column; }
+      .methods-grid { grid-template-columns: 1fr; }
+      .re-cell div { display: none; }
+      .re-cell { display: table-cell; }
+      .team-control-row label, .player-controls label { flex: 1 1 140px; }
+      select { width: 100%; min-width: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</Layout>

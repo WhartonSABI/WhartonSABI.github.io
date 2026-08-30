@@ -90,6 +90,7 @@ people:
     bio: Combat Sports, Tennis.
     github: aiwenli123
     linkedin: https://www.linkedin.com/in/aiwen-li/
+    projects: [server-quality]
     programs:
       - lab 2025
       - seminar 2025
@@ -150,7 +151,7 @@ people:
     bio: Soccer, Rugby.
     github: kennyws
     linkedin: https://www.linkedin.com/in/kenny-watts-222810216/
-    projects: [rugby-ep, nfl-elo]
+    projects: [rugby-ep, nfl-elo, dummy-rapm]
     programs:
       - lab 2025
       - seminar 2025
@@ -190,7 +191,7 @@ people:
     role: 4y PhD
     roleYear: 2025
     bio: Football, Basketball.
-    github: Gebauermj31
+    github: Max-Gebauer
     linkedin: https://www.linkedin.com/in/maximilian-gebauer-6b2a33365/
     projects: [nfl-elo]
     programs:
@@ -253,6 +254,7 @@ people:
     bio: Rowing, Track & Field.
     github: abalajee
     linkedin: https://www.linkedin.com/in/amrita-balajee-291497286/
+    projects: [server-quality]
     programs:
       - lab 2025
       - seminar 2025
@@ -321,7 +323,9 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/evan-harford/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        type: associate
 
   - name: Amrah Rasheed-Rahji
     email: amraher@seas.upenn.edu
@@ -376,7 +380,9 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/jacob-glazer-9632481a6/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        type: associate
 
   - name: Kai Wang
     email: kaiwang1@wharton.upenn.edu
@@ -389,6 +395,7 @@ people:
       - program: seminar
         year: 2024
         role: junior
+        type: associate
 
   - name: Lindsay Yao
     email: lindsyao@wharton.upenn.edu
@@ -410,7 +417,9 @@ people:
     github: geolexxx
     linkedin: https://www.linkedin.com/in/lingxuangao/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        type: associate
 
   - name: Lyev Pitram
     email: lpitram@wharton.upenn.edu
@@ -528,7 +537,7 @@ people:
     role: senior
     roleYear: 2026
     bio: Soccer, Basketball, Football.
-    github: null
+    github: tasnimch-design
     linkedin: null
     programs:
       - lab 2026
@@ -590,7 +599,9 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/seth-rothbaum/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        type: associate
 
   - name: James Duong
     email: duongja@wharton.upenn.edu
@@ -639,7 +650,9 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/bruno-basner-5059bb24a/
     programs:
-      - seminar 2024
+      - program: seminar
+        year: 2024
+        type: associate
 
   - name: Dylan Perlstein
     email: dperl123@wharton.upenn.edu
@@ -649,7 +662,9 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/dylan-perlstein/
     programs:
-      - seminar 2024
+      - program: seminar
+        year: 2024
+        type: associate
 
   - name: Elan Roth
     email: elanroth@sas.upenn.edu
@@ -679,7 +694,9 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/jake-federman/
     programs:
-      - seminar 2024
+      - program: seminar
+        year: 2024
+        type: associate
 
   - name: Kaishu Mason
     email: kaishu@wharton.upenn.edu

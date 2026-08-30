@@ -8,11 +8,11 @@ const allConfigs = loadPeople();
 const peopleConfigs = allConfigs.filter((c) => c.program === 'seminar');
 ---
 
-<Layout title="People | Weekly Seminar" description="Organizers and members by year.">
+<Layout title="People | Weekly Seminar" description="Organizers, members, and associates by year.">
   <Nav />
   <main class="mx-auto max-w-5xl px-4 md:px-6 py-10 md:py-16">
     <h1 class="text-3xl font-bold text-penn-blue">People</h1>
-    <p class="mt-2 text-warm-600">Organizers and members by year.</p>
+    <p class="mt-2 text-warm-600">Organizers, members, and associates by year.</p>
 
     <div class="mt-6 space-y-4">
       {peopleConfigs.map((config, i) => {
@@ -26,11 +26,12 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'seminar');
               </svg>
             </summary>
             <div class="border-t border-warm-200 px-4 md:px-6 py-6">
-              {config.instructors && config.instructors.length > 0 && (
+              {((config.instructors && config.instructors.length > 0) || config.placeholder) && (
                 <div class="mb-8">
                   <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Organizers</h3>
-                  <div class="grid gap-4 sm:grid-cols-2">
-                {config.instructors.map((person) => {
+                  {config.instructors && config.instructors.length > 0 ? (
+                    <div class="grid gap-4 sm:grid-cols-2">
+                      {config.instructors.map((person) => {
                   const slugs = person.projects ?? (person.project ? [person.project] : []);
                   const projectLinks = slugs
                     .map((s) => getProjectLink(s))
@@ -49,33 +50,64 @@ const peopleConfigs = allConfigs.filter((c) => c.program === 'seminar');
                     />
                   );
                 })}
+                    </div>
+                  ) : (
+                    <p class="text-sm text-warm-600">Organizers will be announced soon.</p>
+                  )}
+                </div>
+              )}
+              {config.people.length > 0 && (
+                <div class={config.associates && config.associates.length > 0 ? 'mb-8' : ''}>
+                  <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Members</h3>
+                  <div class="grid gap-4 sm:grid-cols-2">
+                    {config.people.map((person) => {
+                      const slugs = person.projects ?? (person.project ? [person.project] : []);
+                      const projectLinks = slugs
+                        .map((s) => getProjectLink(s))
+                        .filter(Boolean) as { href: string; display: string }[];
+                      projectLinks.sort((a, b) => a.display.localeCompare(b.display));
+                      return (
+                        <PersonCard
+                          name={person.name}
+                          role={person.role}
+                          bio={person.bio}
+                          image={person.image}
+                          email={person.email}
+                          github={person.github}
+                          linkedin={person.linkedin}
+                          projectLinks={projectLinks}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               )}
-              {(config.instructors?.length || 0) > 0 && config.people.length > 0 && (
-                <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Members</h3>
+              {config.associates && config.associates.length > 0 && (
+                <div>
+                  <h3 class="text-sm font-medium text-penn-blue uppercase tracking-wide mb-3">Associates</h3>
+                  <div class="grid gap-4 sm:grid-cols-2">
+                    {config.associates.map((person) => {
+                      const slugs = person.projects ?? (person.project ? [person.project] : []);
+                      const projectLinks = slugs
+                        .map((s) => getProjectLink(s))
+                        .filter(Boolean) as { href: string; display: string }[];
+                      projectLinks.sort((a, b) => a.display.localeCompare(b.display));
+                      return (
+                        <PersonCard
+                          name={person.name}
+                          role={person.role}
+                          bio={person.bio}
+                          image={person.image}
+                          email={person.email}
+                          github={person.github}
+                          linkedin={person.linkedin}
+                          projectLinks={projectLinks}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               )}
-              <div class="grid gap-4 sm:grid-cols-2">
-                {config.people.map((person) => {
-                  const slugs = person.projects ?? (person.project ? [person.project] : []);
-                  const projectLinks = slugs
-                    .map((s) => getProjectLink(s))
-                    .filter(Boolean) as { href: string; display: string }[];
-                  projectLinks.sort((a, b) => a.display.localeCompare(b.display));
-                  return (
-                    <PersonCard
-                      name={person.name}
-                      role={person.role}
-                      bio={person.bio}
-                      image={person.image}
-                      email={person.email}
-                      github={person.github}
-                      linkedin={person.linkedin}
-                      projectLinks={projectLinks}
-                    />
-                  );
-                })}
-              </div>
             </div>
           </details>
         );

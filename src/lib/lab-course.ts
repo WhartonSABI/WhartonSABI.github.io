@@ -176,7 +176,7 @@ const COURSE_CONFIG: Record<number, CourseYearConfig> = {
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/beyond-xg.pptx',
           },
           {
-            label: 'Pass Rush Ratings',
+            label: 'Pass Block Ratings',
             url: 'https://github.com/WhartonSABI/lab-materials/blob/main/2026/research/pass-rush-bt.pdf',
           },
         ],

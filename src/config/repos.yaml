@@ -4,6 +4,20 @@
 seminar:
   org: WhartonSABI
   projects:
+    - name: "Dummy RAPM: Representing Low-Minute Players"
+      repo: dummy-rapm
+      highlights: [Developed from Seminar Discussion]
+      description: Improves NBA RAPM by retaining information about low-minute players through dummy lineup indicators, yielding small but consistent gains in game-margin prediction.
+      preprint: https://arxiv.org/abs/2608.19454
+    - name: ABS Challenge Policy
+      repo: abs
+      hide_code: true
+      highlights: [Research in Progress]
+      description: Develops an optimal challenge policy for MLB's automated ball-strike system by quantifying the run value of challenged and unchallenged calls.
+      deliverables:
+        - label: Interactive Dashboard
+          url: /seminar/projects/abs
+          icon: app
     - name: Curling Power Play Optimization
       repo: curlers
       highlights: [2026 CSAS Data Challenge Winner]
@@ -72,7 +86,7 @@ lab:
         - label: Interactive App
           url: /lab/projects/server-quality
           icon: app
-    - name: NFL Pass Rush Ratings
+    - name: NFL Pass Block Ratings
       repo: nfl-elo
       description: Opponent-adjusted ratings for NFL pass rushers and blockers derived from HUDL tracking data.
       highlights: [In Review at JQAS, Presented at NESSIS 2025]
