@@ -104,11 +104,11 @@ lab:
       description: A more complete probabilistic framework for chance creation and goalscoring in soccer.
       preprint: https://arxiv.org/abs/2512.00203
       deliverables:
-        - label: JSM 2025
-          path: jsm2025/presentation.pdf
-          icon: presentation
         - label: ASIS 2026
           path: asis2026/presentation.pdf
+          icon: presentation
+        - label: JSM 2025
+          path: jsm2025/presentation.pdf
           icon: presentation
         - label: Interactive App
           url: /lab/projects/xg-plus
