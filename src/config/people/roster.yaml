@@ -14,6 +14,7 @@ people:
       - lab 2025 instructor
       - lab 2026 instructor
       - seminar 2025 organizer
+      - seminar 2026 organizer
       - moneyball 2025 organizer
       - moneyball 2026 organizer
       - training-camp-june 2025 instructor
@@ -31,6 +32,7 @@ people:
     linkedin: https://www.linkedin.com/in/abraham-adi-wyner-25424/
     programs:
       - seminar 2025 organizer
+      - seminar 2026 organizer
       - seminar 2024 organizer
       - moneyball 2025 organizer
       - moneyball 2026 organizer
@@ -54,6 +56,7 @@ people:
     linkedin: https://www.linkedin.com/in/rpaulsabin/
     programs:
       - seminar 2025 organizer
+      - seminar 2026 organizer
       - seminar 2024 organizer
 
   - name: Ryan S. Brill
@@ -76,6 +79,7 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - seminar 2026
       - program: moneyball
         year: 2025
         type: head-ta
@@ -94,6 +98,7 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - seminar 2026
       - program: moneyball
         year: 2025
         type: leadership
@@ -176,6 +181,7 @@ people:
       - program: seminar
         year: 2025
         role: junior
+      - seminar 2026
       - program: moneyball
         year: 2025
         type: head-ta
@@ -197,6 +203,7 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - seminar 2026
       - program: moneyball
         year: 2025
         type: leadership
@@ -258,6 +265,7 @@ people:
     programs:
       - lab 2025
       - seminar 2025
+      - seminar 2026
       - program: moneyball
         year: 2025
         type: leadership
@@ -304,6 +312,10 @@ people:
     linkedin: https://www.linkedin.com/in/adamkrasilovsky/
     programs:
       - seminar 2024
+      - program: seminar
+        year: 2026
+        type: associate
+        role: senior
 
   - name: Braden Eberhard
     email: braden.eberhard@pennmedicine.upenn.edu
@@ -314,6 +326,7 @@ people:
     linkedin: https://www.linkedin.com/in/braden-eberhard/
     programs:
       - seminar 2025
+      - seminar 2026
 
   - name: Evan Harford
     email: eharford@wharton.upenn.edu
@@ -326,6 +339,7 @@ people:
       - program: seminar
         year: 2025
         type: associate
+      - seminar 2026 associate
 
   - name: Amrah Rasheed-Rahji
     email: amraher@seas.upenn.edu
@@ -338,6 +352,7 @@ people:
       - program: seminar
         year: 2025
         type: provisional
+      - seminar 2026 provisional
 
   - name: Andreea Rusu
     email: arusu@seas.upenn.edu
@@ -350,6 +365,7 @@ people:
       - program: seminar
         year: 2025
         type: provisional
+      - seminar 2026 provisional
 
   - name: Henry Gaudet
     email: hgaudet@sas.upenn.edu
@@ -363,6 +379,7 @@ people:
         year: 2025
         role: sophomore
         type: provisional
+      - seminar 2026 provisional
       - lab 2026
       - moneyball 2026 leadership
 
@@ -388,6 +405,7 @@ people:
       - program: seminar
         year: 2025
         type: provisional
+      - seminar 2026 associate
 
   - name: Kai Wang
     email: kaiwang1@wharton.upenn.edu
@@ -414,6 +432,7 @@ people:
         year: 2025
         role: sophomore
         type: associate
+      - seminar 2026 associate
 
   - name: Lingxuan Gao
     email: gao459@design.upenn.edu
@@ -438,6 +457,7 @@ people:
       - program: seminar
         year: 2025
         role: freshman
+      - seminar 2026
       - lab 2026
       - moneyball 2026 leadership
 
@@ -464,6 +484,7 @@ people:
         year: 2025
         role: sophomore
         type: provisional
+      - seminar 2026 provisional
       - lab 2026
       - moneyball 2026 leadership
 
@@ -479,6 +500,7 @@ people:
         year: 2025
         role: sophomore
         type: provisional
+      - seminar 2026 provisional
       - lab 2026
       - moneyball 2026 leadership
 
@@ -493,6 +515,7 @@ people:
       - program: seminar
         year: 2025
         role: freshman
+      - seminar 2026
       - lab 2026
       - moneyball 2026 leadership
 
@@ -506,6 +529,7 @@ people:
     programs:
       - lab 2026
       - moneyball 2026 leadership
+      - seminar 2026 provisional
 
   - name: David Sun
     email: dwsun@sas.upenn.edu
@@ -517,6 +541,7 @@ people:
     programs:
       - lab 2026
       - moneyball 2026 leadership
+      - seminar 2026 provisional
 
   - name: Harith Menon
     email: jhmenon1@wharton.upenn.edu
@@ -528,6 +553,67 @@ people:
     programs:
       - lab 2026
       - moneyball 2026 leadership
+      - seminar 2026 provisional
+
+  - name: Alan Lin
+    email: alanlinc@engineering.upenn.edu
+    role: 1y Masters
+    roleYear: 2026
+    bio: Basketball, Surfing.
+    github: null
+    linkedin: https://www.linkedin.com/in/alanlin-/
+    programs:
+      - seminar 2026 provisional
+
+  - name: Eulina Ji
+    email: eulina@sas.upenn.edu
+    role: sophomore
+    roleYear: 2026
+    bio: Pole Vault, Equestrian.
+    github: null
+    linkedin: null
+    programs:
+      - seminar 2026 provisional
+
+  - name: Felix Bian
+    email: fbian@sas.upenn.edu
+    role: junior
+    roleYear: 2026
+    bio: Sports Betting, Forecasting.
+    github: null
+    linkedin: null
+    programs:
+      - seminar 2026 provisional
+
+  - name: Justin White
+    email: jwhite18@wharton.upenn.edu
+    role: sophomore
+    roleYear: 2026
+    bio: Soccer.
+    github: null
+    linkedin: null
+    programs:
+      - seminar 2026 provisional
+
+  - name: Ryan Chang
+    email: rtchang@sas.upenn.edu
+    role: junior
+    roleYear: 2026
+    bio: Golf.
+    github: null
+    linkedin: null
+    programs:
+      - seminar 2026 provisional
+
+  - name: Sucheta Nandy
+    email: snandy21@engineering.upenn.edu
+    role: 2y Masters
+    roleYear: 2026
+    bio: Cricket, Football.
+    github: sucheta-nandy
+    linkedin: null
+    programs:
+      - seminar 2026 provisional
 
   - name: Nawshin Ahana
     email: ahana.nawshin@gmail.com
@@ -561,6 +647,7 @@ people:
     projects: [epl-payroll]
     programs:
       - seminar 2025
+      - seminar 2026
 
   - name: Samen Hossain
     email: samenh@sas.upenn.edu
@@ -572,6 +659,7 @@ people:
     projects: [curlers]
     programs:
       - seminar 2025
+      - seminar 2026
 
   - name: Talia Gabin
     email: tgabin@sas.upenn.edu
@@ -601,6 +689,9 @@ people:
       - program: seminar
         year: 2025
         role: 1y Masters
+      - program: seminar
+        year: 2026
+        role: 2y Masters
 
   - name: Seth Rothbaum
     email: sethroth@wharton.upenn.edu
@@ -613,6 +704,7 @@ people:
       - program: seminar
         year: 2025
         type: associate
+      - seminar 2026 associate
 
   - name: James Duong
     email: duongja@wharton.upenn.edu
@@ -626,6 +718,7 @@ people:
       - program: seminar
         year: 2025
         role: freshman
+      - seminar 2026
 
   - name: Justin Hughes
     email: juhughes@wharton.upenn.edu
