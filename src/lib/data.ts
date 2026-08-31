@@ -71,13 +71,14 @@ export interface PeopleConfig {
   headTAs?: Person[];      // optional – Head Teaching Assistants, shown after instructors
   leadership?: Person[];   // optional – Teaching Assistants, shown after headTAs
   associates?: Person[];   // optional – Seminar associates, shown after members
+  provisionalMembers?: Person[]; // optional – Seminar provisional members, shown after associates
   people: Person[];
 }
 
 interface ProgramEntry {
   program: string;
   year: number;
-  type?: 'instructor' | 'organizer' | 'head-ta' | 'leadership' | 'associate';
+  type?: 'instructor' | 'organizer' | 'head-ta' | 'leadership' | 'associate' | 'provisional';
   role?: string;
 }
 
@@ -105,7 +106,7 @@ function parseProgramEntry(entry: string | ProgramEntry): ProgramEntry {
   if (parts.length < 2) throw new Error(`Invalid program entry: ${entry}`);
   const program = parts[0];
   const year = parseInt(parts[1], 10);
-  const type = parts[2] === 'instructor' || parts[2] === 'organizer' || parts[2] === 'head-ta' || parts[2] === 'leadership' || parts[2] === 'associate' ? parts[2] : undefined;
+  const type = parts[2] === 'instructor' || parts[2] === 'organizer' || parts[2] === 'head-ta' || parts[2] === 'leadership' || parts[2] === 'associate' || parts[2] === 'provisional' ? parts[2] : undefined;
   return { program, year, type };
 }
 
@@ -244,6 +245,9 @@ export function loadPeople(): PeopleConfig[] {
       } else if (parsed.type === 'associate') {
         config.associates = config.associates || [];
         config.associates.push(person);
+      } else if (parsed.type === 'provisional') {
+        config.provisionalMembers = config.provisionalMembers || [];
+        config.provisionalMembers.push(person);
       } else {
         config.people.push(person);
       }
@@ -255,6 +259,7 @@ export function loadPeople(): PeopleConfig[] {
     if (config.headTAs) sortPeopleByFirstName(config.headTAs);
     if (config.leadership) sortPeopleByFirstName(config.leadership);
     if (config.associates) sortPeopleByFirstName(config.associates);
+    if (config.provisionalMembers) sortPeopleByFirstName(config.provisionalMembers);
     sortPeopleByFirstName(config.people);
   }
 

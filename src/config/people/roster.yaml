@@ -335,7 +335,9 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/amrah-rasheed-rahji-ba1391242/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        type: provisional
 
   - name: Andreea Rusu
     email: arusu@seas.upenn.edu
@@ -345,7 +347,9 @@ people:
     github: andreea-rusu
     linkedin: https://www.linkedin.com/in/andreea-rusu-0b2665239/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        type: provisional
 
   - name: Henry Gaudet
     email: hgaudet@sas.upenn.edu
@@ -358,6 +362,7 @@ people:
       - program: seminar
         year: 2025
         role: sophomore
+        type: provisional
       - lab 2026
       - moneyball 2026 leadership
 
@@ -382,7 +387,7 @@ people:
     programs:
       - program: seminar
         year: 2025
-        type: associate
+        type: provisional
 
   - name: Kai Wang
     email: kaiwang1@wharton.upenn.edu
@@ -395,7 +400,7 @@ people:
       - program: seminar
         year: 2024
         role: junior
-        type: associate
+        type: provisional
 
   - name: Lindsay Yao
     email: lindsyao@wharton.upenn.edu
@@ -408,6 +413,7 @@ people:
       - program: seminar
         year: 2025
         role: sophomore
+        type: associate
 
   - name: Lingxuan Gao
     email: gao459@design.upenn.edu
@@ -457,6 +463,7 @@ people:
       - program: seminar
         year: 2025
         role: sophomore
+        type: provisional
       - lab 2026
       - moneyball 2026 leadership
 
@@ -471,6 +478,7 @@ people:
       - program: seminar
         year: 2025
         role: sophomore
+        type: provisional
       - lab 2026
       - moneyball 2026 leadership
 
@@ -573,10 +581,13 @@ people:
     github: tgabin8
     linkedin: https://www.linkedin.com/in/taliagabin/
     programs:
-      - seminar 2025
+      - program: seminar
+        year: 2025
+        type: associate
       - program: seminar
         year: 2024
         role: freshman
+        type: provisional
 
   - name: Trey Elder
     email: telder3@seas.upenn.edu
@@ -640,6 +651,7 @@ people:
       - program: seminar
         year: 2024
         role: freshman
+        type: provisional
 
   # Seminar-only 2024
   - name: Bruno Basner
@@ -726,4 +738,6 @@ people:
     bio: ""
     github: null
     programs:
-      - seminar 2024
+      - program: seminar
+        year: 2024
+        type: provisional
