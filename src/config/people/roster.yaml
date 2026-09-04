@@ -349,7 +349,7 @@ people:
     role: freshman
     roleYear: 2025
     bio: Soccer, Formula 1, NASCAR.
-    github: null
+    github: amraherahji
     linkedin: https://www.linkedin.com/in/amrah-rasheed-rahji-ba1391242/
     programs:
       - program: seminar
@@ -368,7 +368,6 @@ people:
       - program: seminar
         year: 2025
         type: provisional
-      - seminar 2026 provisional
 
   - name: Henry Gaudet
     email: hgaudet@sas.upenn.edu
@@ -387,13 +386,14 @@ people:
       - moneyball 2026 leadership
 
   - name: Isaac Hernandez
-    email: hernan07@seas.upenn.edu
+    email: hernan07@engineering.upenn.edu
     role: sophomore
     roleYear: 2026
     bio: Soccer, Football, Basketball.
     github: IsaacH407
     linkedin: https://www.linkedin.com/in/isaac-hernandez-5881a6300/
     programs:
+      - seminar 2026 provisional
       - lab 2026
       - moneyball 2026 leadership
 
@@ -518,7 +518,6 @@ people:
       - program: seminar
         year: 2025
         role: freshman
-      - seminar 2026
       - lab 2026
       - moneyball 2026 leadership
 
@@ -582,7 +581,7 @@ people:
     email: fbian@sas.upenn.edu
     role: junior
     roleYear: 2026
-    bio: Sports Betting, Forecasting.
+    bio: Basketball, Tennis, Formula 1.
     github: null
     linkedin: null
     programs:
@@ -614,6 +613,16 @@ people:
     roleYear: 2026
     bio: Cricket, Football.
     github: sucheta-nandy
+    linkedin: null
+    programs:
+      - seminar 2026 provisional
+
+  - name: Lily Zhang
+    email: lilyzh@sas.upenn.edu
+    role: junior
+    roleYear: 2026
+    bio: Swimming.
+    github: null
     linkedin: null
     programs:
       - seminar 2026 provisional
@@ -695,6 +704,16 @@ people:
       - program: seminar
         year: 2026
         role: 2y Masters
+
+  - name: Zach Bradlow
+    email: zbradlow@wharton.upenn.edu
+    role: 1y Masters
+    roleYear: 2026
+    bio: Football.
+    github: null
+    linkedin: https://www.linkedin.com/in/zach-bradlow/
+    programs:
+      - seminar 2026
 
   - name: Seth Rothbaum
     email: sethroth@wharton.upenn.edu
