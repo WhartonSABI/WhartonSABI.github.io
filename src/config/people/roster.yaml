@@ -368,6 +368,10 @@ people:
       - program: seminar
         year: 2025
         type: provisional
+      - program: seminar
+        year: 2026
+        role: junior
+        type: provisional
 
   - name: Henry Gaudet
     email: hgaudet@sas.upenn.edu
@@ -613,7 +617,17 @@ people:
     roleYear: 2026
     bio: Cricket, Football.
     github: sucheta-nandy
-    linkedin: null
+    linkedin: https://www.linkedin.com/in/suchetanandy
+    programs:
+      - seminar 2026 provisional
+
+  - name: Melinda Alvey
+    email: mealvey@upenn.edu
+    role: 3y PhD
+    roleYear: 2026
+    bio: Basketball, Soccer, Baseball.
+    github: null
+    linkedin: https://www.linkedin.com/in/melinda-alvey-80a52a8a/
     programs:
       - seminar 2026 provisional
 
