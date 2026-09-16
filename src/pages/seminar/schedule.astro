@@ -1,0 +1,57 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+
+const sessions = [
+  {
+    date: '9/1/2026',
+    topic: 'Welcome Dinner',
+    speaker: 'NA',
+    resource: { label: 'Registration Form', url: 'https://forms.gle/uL3dZ3r4fgP2sCZr6' },
+  },
+  {
+    date: '9/11/2026',
+    topic: 'Predictive Uncertainty',
+    speaker: 'JP',
+    resource: { label: 'CASSIS Talk', url: 'http://ability/tree/main/presentations/cassis2026' },
+  },
+  { date: '9/18/2026', topic: 'Patriots Field Goals', speaker: 'Prof. Wyner' },
+  { date: '9/25/2026', topic: 'Curling Power Play', speaker: 'Trey, Samen' },
+  { date: '10/2/2026', topic: '', speaker: '' },
+  { date: '10/9/2026', topic: '', speaker: '' },
+];
+---
+
+<Layout title="2026 Seminar Schedule | Weekly Seminar" description="Fall 2026 Weekly Seminar schedule, speakers, and materials.">
+  <Nav />
+  <main class="mx-auto max-w-5xl px-4 md:px-6 py-10 md:py-16">
+    <h1 class="text-3xl font-bold text-penn-blue">2026 Seminar Schedule</h1>
+
+    <div class="mt-6 overflow-x-auto rounded-xl border border-warm-200 bg-white">
+      <table class="min-w-full text-left text-sm">
+        <thead class="bg-warm-100 text-penn-blue">
+          <tr>
+            <th scope="col" class="px-4 py-3 font-semibold">Date</th>
+            <th scope="col" class="px-4 py-3 font-semibold">Topic</th>
+            <th scope="col" class="px-4 py-3 font-semibold">Speaker</th>
+            <th scope="col" class="px-4 py-3 font-semibold">Materials</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sessions.map((session) => (
+            <tr class="border-t border-warm-200 align-top">
+              <td class="px-4 py-3 text-warm-700 whitespace-nowrap">{session.date}</td>
+              <td class="px-4 py-3 text-warm-700">{session.topic}</td>
+              <td class="px-4 py-3 text-warm-700">{session.speaker}</td>
+              <td class="px-4 py-3">
+                {session.resource && (
+                  <a href={session.resource.url} class="text-penn-red hover:underline" target="_blank" rel="noopener noreferrer">{session.resource.label}</a>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</Layout>
