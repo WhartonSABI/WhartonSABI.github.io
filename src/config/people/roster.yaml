@@ -611,6 +611,16 @@ people:
     programs:
       - seminar 2026 provisional
 
+  - name: Ryan Saito
+    email: saito3@sas.upenn.edu
+    role: freshman
+    roleYear: 2026
+    bio: ""
+    github: null
+    linkedin: https://www.linkedin.com/in/ryan-saito/
+    programs:
+      - seminar 2026 provisional
+
   - name: Sucheta Nandy
     email: snandy21@engineering.upenn.edu
     role: 2y Masters
