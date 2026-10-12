@@ -11,15 +11,17 @@ const sessions = [
   },
   {
     date: '9/11/2026',
+    timeAndLocation: '11:00 AM · ARB 302',
     topic: 'Predictive Uncertainty',
     speaker: 'JP',
     resource: {
-      label: 'Quantifying Predictive Uncertainty',
+      label: 'CASSIS 2026 Talk',
       url: 'https://github.com/jdpipping/model-stability/blob/main/presentations/cassis2026/presentation.pdf',
     },
   },
   {
     date: '9/18/2026',
+    timeAndLocation: '11:00 AM · ARB 302',
     topic: 'Patriots Field Goals',
     speaker: 'Prof. Wyner',
     // Replace the temporary PDF URL with the Wharton article URL when available.
@@ -27,6 +29,7 @@ const sessions = [
   },
   {
     date: '9/25/2026',
+    timeAndLocation: '11:00 AM · ARB 302',
     topic: 'Curling Power Play Strategy',
     speaker: 'Trey, Samen',
     resource: {
@@ -34,9 +37,34 @@ const sessions = [
       url: 'https://wsb.wharton.upenn.edu/pulling-the-power-play-a-win-probability-strategy-for-mixed-doubles-curling/',
     },
   },
-  { date: '10/6/2026', topic: 'Project Updates', speaker: 'Lab Students' },
-  { date: '10/23/2026', topic: '', speaker: 'Dr. Ryan Brill' },
-  { date: '10/30/2026', topic: '', speaker: '' },
+  {
+    date: '10/9/2026',
+    timeAndLocation: '11:00 AM · ARB 302',
+    topic: 'NFL Big Data Bowl, ABS Challenges',
+    speaker: 'JP',
+    resource: {
+      label: '2027 Big Data Bowl',
+      url: 'https://www.kaggle.com/competitions/nfl-big-data-bowl-2027',
+    },
+  },
+  {
+    date: '10/20/2026',
+    timeAndLocation: '6:30 PM · ARB Collab Lab',
+    topic: 'TBD',
+    speaker: 'Karim Kassam, Teamworks Intelligence',
+  },
+  {
+    date: '10/23/2026',
+    timeAndLocation: '11:00 AM · ARB 302',
+    topic: 'TBD',
+    speaker: 'Dr. Ryan Brill, Utah Jazz',
+  },
+  {
+    date: '10/30/2026',
+    timeAndLocation: '11:00 AM · ARB 302',
+    topic: 'TBD',
+    speaker: 'TBD',
+  },
 ];
 ---
 
@@ -58,7 +86,10 @@ const sessions = [
         <tbody>
           {sessions.map((session) => (
             <tr class="border-t border-warm-200 align-top">
-              <td class="px-4 py-3 text-warm-700 whitespace-nowrap">{session.date}</td>
+              <td class="px-4 py-3 text-warm-700 whitespace-nowrap">
+                {session.date}
+                {session.timeAndLocation && <span class="mt-1 block text-xs text-warm-500">{session.timeAndLocation}</span>}
+              </td>
               <td class="px-4 py-3 text-warm-700">{session.topic}</td>
               <td class="px-4 py-3 text-warm-700">{session.speaker}</td>
               <td class="px-4 py-3">
