@@ -522,6 +522,9 @@ people:
       - program: seminar
         year: 2025
         role: freshman
+      - program: seminar
+        year: 2026
+        type: associate
       - lab 2026
       - moneyball 2026 leadership
 
