@@ -368,10 +368,6 @@ people:
       - program: seminar
         year: 2025
         type: provisional
-      - program: seminar
-        year: 2026
-        role: junior
-        type: provisional
 
   - name: Henry Gaudet
     email: hgaudet@sas.upenn.edu
@@ -385,7 +381,7 @@ people:
         year: 2025
         role: sophomore
         type: provisional
-      - seminar 2026 provisional
+      - seminar 2026
       - lab 2026
       - moneyball 2026 leadership
 
@@ -439,7 +435,6 @@ people:
         year: 2025
         role: sophomore
         type: associate
-      - seminar 2026 associate
 
   - name: Lingxuan Gao
     email: gao459@design.upenn.edu
@@ -550,7 +545,7 @@ people:
     programs:
       - lab 2026
       - moneyball 2026 leadership
-      - seminar 2026 provisional
+      - seminar 2026
 
   - name: Harith Menon
     email: jhmenon1@wharton.upenn.edu
@@ -562,7 +557,6 @@ people:
     programs:
       - lab 2026
       - moneyball 2026 leadership
-      - seminar 2026 provisional
 
   - name: Alan Lin
     email: alanlinc@engineering.upenn.edu
@@ -572,7 +566,7 @@ people:
     github: null
     linkedin: https://www.linkedin.com/in/alanlin-/
     programs:
-      - seminar 2026 provisional
+      - seminar 2026
 
   - name: Eulina Ji
     email: eulina@sas.upenn.edu
@@ -581,8 +575,7 @@ people:
     bio: Pole Vault, Equestrian.
     github: null
     linkedin: null
-    programs:
-      - seminar 2026 provisional
+    programs: []
 
   - name: Felix Bian
     email: fbian@sas.upenn.edu
@@ -591,8 +584,7 @@ people:
     bio: Basketball, Tennis, Formula 1.
     github: null
     linkedin: null
-    programs:
-      - seminar 2026 provisional
+    programs: []
 
   - name: Justin White
     email: jwhite18@wharton.upenn.edu
@@ -632,7 +624,7 @@ people:
     github: sucheta-nandy
     linkedin: https://www.linkedin.com/in/suchetanandy
     programs:
-      - seminar 2026 provisional
+      - seminar 2026
 
   - name: Melinda Alvey
     email: mealvey@upenn.edu
@@ -651,8 +643,7 @@ people:
     bio: Swimming.
     github: null
     linkedin: null
-    programs:
-      - seminar 2026 provisional
+    programs: []
 
   - name: Nawshin Ahana
     email: ahana.nawshin@gmail.com
@@ -883,3 +874,24 @@ people:
       - program: seminar
         year: 2024
         type: provisional
+
+  - name: Daniel Olton
+    role: senior
+    roleYear: 2026
+    bio: Basketball, Tracking Data.
+    programs:
+      - seminar 2026 provisional
+
+  - name: Max Darringer
+    role: freshman
+    roleYear: 2026
+    bio: Baseball.
+    programs:
+      - seminar 2026 provisional
+
+  - name: Tanmay Grandhisiri
+    role: 1y Masters
+    roleYear: 2026
+    bio: Football, Tracking Data, Win Probability.
+    programs:
+      - seminar 2026 provisional
