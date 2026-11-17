@@ -11,8 +11,8 @@ seminar:
       preprint: https://arxiv.org/abs/2608.19454
     - name: ABS Challenge Policy
       repo: abs
-      hide_code: true
       highlights: [Research in Progress]
+      preprint: https://arxiv.org/abs/2610.39452
       description: Develops an optimal challenge policy for MLB's automated ball-strike system by quantifying the run value of challenged and unchallenged calls.
       deliverables:
         - label: Interactive Dashboard
@@ -20,11 +20,14 @@ seminar:
           icon: app
     - name: Curling Power Play Optimization
       repo: curlers
-      highlights: [2026 CSAS Data Challenge Winner]
+      highlights: [2026 CSAS Data Challenge Winner, Presented at 2026 U.S. Olympic & Paralympic Performance Innovation Summit, Presented at WSBS 2026]
       description: A win-probability framework for power play deployment in mixed-doubles curling. Developed for the 2026 CSAS Data Challenge.
       deliverables:
         - label: Article
           url: https://wsb.wharton.upenn.edu/pulling-the-power-play-a-win-probability-strategy-for-mixed-doubles-curling/
+        - label: WSBS 2026
+          url: https://wsb.wharton.upenn.edu/wharton-sports-business-summit-2026/agenda/
+          icon: presentation
         - label: CSAS 2026
           path: poster/poster.pdf
           icon: presentation
@@ -36,17 +39,22 @@ seminar:
           icon: app
     - name: Payroll and Premier League Performance
       repo: epl-payroll
-      highlights: [Developed from Seminar Discussion]
+      highlights: [Developed from Seminar Discussion, Presented at WSBS 2026]
       description: Analyzes whether higher wage bills translate into more Premier League points, both across clubs and within clubs over time.
       deliverables:
         - label: Article
           path: article/main.pdf
+        - label: WSBS 2026
+          url: https://wsb.wharton.upenn.edu/wharton-sports-business-summit-2026/agenda/
+          icon: presentation
     - name: Rugby Expected Points
       repo: rugby-ep
-      highlights: [In Review at JQAS]
+      highlights: [Published in JQAS]
       description: An expected-points framework for rugby union with applications to penalty decisions.
       preprint: https://arxiv.org/abs/2512.00312
       deliverables:
+        - label: Published Paper
+          url: https://doi.org/10.1515/jqas-2025-0183
         - label: Interactive App
           url: /seminar/projects/rugby-ep
           icon: app
@@ -59,7 +67,7 @@ seminar:
           path: writeup/presentation.pdf
           icon: presentation
         - label: Project Report
-          path: writeup/main.pdf
+          path: writeup/submission.pdf
           icon: report
 
 lab:
@@ -92,8 +100,8 @@ lab:
       highlights: [In Review at JQAS, Presented at NESSIS 2025]
       preprint: https://arxiv.org/abs/2604.01491
       deliverables:
-        - label: NESSIS 2025
-          path: results/nflelo.pdf
+        - label: NESSIS 2025 Abstract
+          url: https://www.nessis.org/abstracts-only25.pdf
           icon: presentation
         - label: Interactive App
           url: /lab/projects/nfl-elo
@@ -104,6 +112,8 @@ lab:
       description: A more complete probabilistic framework for chance creation and goalscoring in soccer.
       preprint: https://arxiv.org/abs/2512.00203
       deliverables:
+        - label: Research Note
+          url: https://wsb.wharton.upenn.edu/beyond-expected-goals/
         - label: ASIS 2026
           path: asis2026/presentation.pdf
           icon: presentation
@@ -140,7 +150,7 @@ moneyball:
           url: https://wsb.wharton.upenn.edu/wp-content/uploads/2025/12/WIEAND-serve_performance.pdf
     - name: Lead Distance Optimization in the MLB
       repo: stolen-base-leads
-      highlights: [Published in the Fall 2025 WSA Journal]
+      highlights: [Published in the Fall 2025 WSA Journal, In Review at JSA]
       description: Develops a run expectancy approach to lead distance optimization in the MLB from pitch-by-pitch data.
       deliverables:
         - label: Article
