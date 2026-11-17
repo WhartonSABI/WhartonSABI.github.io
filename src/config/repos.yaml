@@ -20,7 +20,7 @@ seminar:
           icon: app
     - name: Curling Power Play Optimization
       repo: curlers
-      highlights: [2026 CSAS Data Challenge Winner, Presented at USOPC & WSBS 2026]
+      highlights: [2026 CSAS Data Challenge Winner, Presented at USOPC Summit 2026 & WSBS 2026]
       description: A win-probability framework for power play deployment in mixed-doubles curling. Developed for the 2026 CSAS Data Challenge.
       deliverables:
         - label: Article
